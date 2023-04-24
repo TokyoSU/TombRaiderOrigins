@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Custom
+TOMB3-custom/vs/*
+TOMB3-custom/Build/*
+TOMB3-custom/Debug/*
+TOMB3-custom/Release/*
