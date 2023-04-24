@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "winmain.h"
+#include <memory>
 #include "dxshell.h"
 #include "drawprimitive.h"
 #include "hwrender.h"
@@ -19,19 +20,18 @@
 #include "../game/invfunc.h"
 #include "../newstuff/setupdlg.h"
 #include "../tomb3/tomb3.h"
-
-#ifdef DO_LOG
-FILE* logF = 0;
-#endif
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
 
 WINAPP App;
 HWCONFIG HWConfig;
 char* G_lpCmdLine;
 long game_closedown;
 bool GtWindowClosed;
-
 long distanceFogValue;
 long farz;
+
+static std::shared_ptr<spdlog::logger> m_fileLog = spdlog::basic_logger_mt("file", "logs/debug.txt", true);
 
 bool WinDXInit(DEVICEINFO* device, DXCONFIG* config, bool createNew)
 {
@@ -217,6 +217,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	DEVMODE devmode;
 	static ulong bpp;
 
+	InitLog();
 	G_lpCmdLine = lpCmdLine;
 	memset(&App, 0, sizeof(WINAPP));
 	App.hInstance = hInstance;
@@ -350,19 +351,26 @@ void S_ExitSystem(const char* msg)
 	exit(1);
 }
 
-void Log(const char* s, ...)		//NOT present in original code
+
+
+void InitLog()
 {
-#ifdef DO_LOG
+#ifdef _DEBUG
+	if (m_fileLog)
+		m_fileLog->set_level(spdlog::level::trace);
+#endif
+}
+
+void Log(const char* s, ...)		// NOT present in original code
+{
+#ifdef _DEBUG
 	va_list list;
 	char buf[4096];
 
-	if (!logF)
-		logF = fopen("tomb3_log.txt", "w+");
-
 	va_start(list, s);
 	vsprintf(buf, s, list);
-	strcat(buf, "\n");
 	va_end(list);
-	fwrite(buf, strlen(buf), 1, logF);
+
+	m_fileLog->debug(buf);
 #endif
 }

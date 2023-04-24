@@ -51,11 +51,6 @@ void ShutdownGame()
 	DS_Finish();
 	WinFreeDX(1);
 	DXFreeDeviceInfo(&App.DeviceInfo);
-
-#ifdef DO_LOG
-	if (logF)
-		fclose(logF);
-#endif
 }
 
 void CalculateWibbleTable()

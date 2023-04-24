@@ -109,14 +109,12 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 {
 	SPHERE* itemSpheres;
 	SPHERE* laraSpheres;
-	SPHERE slist_baddie[34];
-	SPHERE slist_lara[34];
+	SPHERE slist_baddie[MAX_SPHERES];
+	SPHERE slist_lara[MAX_SPHERES];
 	PHD_VECTOR ip;
 	PHD_VECTOR lp;
-	ulong touch_bits;
 	long nItemSpheres, nLaraSpheres, ir, lr;
 
-	touch_bits = 0;
 	nItemSpheres = GetSpheres(item, slist_baddie, 1);
 	nLaraSpheres = GetSpheres(l, slist_lara, 1);
 
@@ -145,7 +143,7 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 
 					if (SQUARE(lp.x) + SQUARE(lp.y) + SQUARE(lp.z) < SQUARE(lr))
 					{
-						touch_bits |= 1 << i;
+						item->touch_bits |= 1 << i;
 						break;
 					}
 				}
@@ -153,8 +151,7 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 		}
 	}
 
-	item->touch_bits = touch_bits;
-	return touch_bits;
+	return item->touch_bits;
 }
 
 void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)

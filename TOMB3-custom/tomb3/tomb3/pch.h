@@ -9,7 +9,6 @@
 
 //#define RANDO_STUFF	1
 #define TROYESTUFF	1
-//#define DO_LOG	1
 
 #define DIRECT3D_VERSION	0x0500
 #define DIRECTDRAW_VERSION	0x0500
@@ -30,5 +29,11 @@
 #include <mmeapi.h>
 #include <ctime>
 #include <MSAcm.h>
+
+#define ONE_DEGREE 182
+#define CLICK_SIZE 256
+
+extern void InitLog();
+extern void Log(const char* s, ...);		//NOT present in original code
 
 #endif //PCH_H

@@ -89,12 +89,15 @@ typedef unsigned long ulong;
 #define NLAYOUTKEYS		15
 #define MAX_WEATHER		256
 #define MAX_WEATHER_ALIVE	16	//was 8
+#define MAX_SPHERES     34
 
 #define MALLOC_SIZE	15000000	//15 MB (was around 3.6 MB)
 
 #define FRAMES_PER_SECOND	30
 #define TICKS_PER_FRAME		2
 #define TICKS_PER_SECOND	(FRAMES_PER_SECOND * TICKS_PER_FRAME)
+
+#define MESH_BITS(x) (1 << x)
 
 /*enums*/
 enum death_tiles
@@ -670,6 +673,11 @@ struct ITEM_INFO
 	ushort clear_body : 1;
 	ushort ai_bits : 5;
 	ushort really_active : 1;
+
+	bool is_colliding_with_target(int mesh_id)
+	{
+		return touch_bits & MESH_BITS(mesh_id);
+	}
 };
 
 struct BOX_NODE

@@ -118,15 +118,7 @@ void PropellerControl(short item_number)
 
 		if (item->touch_bits & 6)
 		{
-			if (CurrentLevel == LV_ROOFTOPS)
-			{
-				lara_item->hit_points = -1;
-				DoLotsOfBlood(lara_item->pos.x_pos, lara_item->pos.y_pos - 512, lara_item->pos.z_pos,
-					short(GetRandomControl() >> 10), item->pos.y_rot + 0x4000, lara_item->room_number, 5);
-			}
-			else
-				lara_item->hit_points -= 200;
-
+			lara_item->hit_points -= 200;
 			lara_item->hit_status = 1;
 			DoLotsOfBlood(lara_item->pos.x_pos, lara_item->pos.y_pos - 512, lara_item->pos.z_pos,
 				short(GetRandomControl() >> 10), item->pos.y_rot + 0x4000, lara_item->room_number, 3);

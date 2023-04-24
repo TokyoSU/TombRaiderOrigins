@@ -6,11 +6,8 @@
 #include "game.h"
 #include "lara.h"
 #include "effects.h"
-#include <sound.h>
-
-#define MESH_BITS(x) 1 << x
-
-#define WOLF_TOUCH (0x774F)
+#include "sound.h"
+#include "people.h"
 
 enum wolf_anims {
     WOLF_EMPTY, WOLF_STOP, WOLF_WALK, WOLF_RUN, WOLF_JUMP, WOLF_STALK, WOLF_ATTACK,
@@ -24,19 +21,19 @@ enum wolf_anims {
 #define WOLF_SLEEP_ANIM 0
 #define WOLF_DIE_ANIM  20
 
-#define WOLF_WALK_TURN  (2*182)
-#define WOLF_RUN_TURN   (5*182)
-#define WOLF_STALK_TURN (2*182)
+#define WOLF_WALK_TURN  (2*ONE_DEGREE)
+#define WOLF_RUN_TURN   (5*ONE_DEGREE)
+#define WOLF_STALK_TURN (2*ONE_DEGREE)
 
-#define WOLF_ATTACK_RANGE SQUARE(1024*3/2)
-#define WOLF_STALK_RANGE  SQUARE(1024*3)
+#define WOLF_ATTACK_RANGE SQUARE(WALL_SIZE * 3 / 2)
+#define WOLF_STALK_RANGE  SQUARE(WALL_SIZE * 3)
 #define WOLF_BITE_RANGE	  SQUARE(345)
 
 #define WOLF_WAKE_CHANCE  0x20
 #define WOLF_SLEEP_CHANCE 0x20
 #define WOLF_HOWL_CHANCE  0x180
 
-BITE_INFO	wolf_jaw_bite = { 0,-14,174,6 };
+static BITE_INFO wolf_jaw_bite = { 0, -14, 30, 6 };
 
 void InitialiseWolf(short item_number)
 {
@@ -55,9 +52,6 @@ void WolfControl(short item_number)
     AI_INFO info{};
     short head = 0, angle = 0, tilt = 0;
 
-	if (item->hit_status)
-		SoundEffect(SFX_WOLF_HURT, &item->pos, SFX_ALWAYS);
-
     if (item->hit_points <= 0)
     {
 		if (item->current_anim_state != WOLF_DEATH)
@@ -65,11 +59,12 @@ void WolfControl(short item_number)
     }
     else
     {
-		CreatureAIInfo(item, &info);
+		if (item->hit_status)
+			SoundEffect(SFX_WOLF_HURT, &item->pos, SFX_ALWAYS);
 
+		CreatureAIInfo(item, &info);
 		if (info.ahead)
 			head = info.angle;
-
 		GetCreatureMood(item, &info, TIMID);
 		CreatureMood(item, &info, TIMID);
 		angle = CreatureTurn(item, wolf->maximum_turn);
@@ -77,19 +72,23 @@ void WolfControl(short item_number)
         switch (item->current_anim_state)
         {
         case WOLF_SLEEP:
-            head = 0;
+			wolf->maximum_turn = 0;
+			head = 0;
 
-            if (wolf->mood == ESCAPE_MOOD || info.zone_number == info.enemy_zone)
-            {
-                item->required_anim_state = WOLF_CROUCH;
-                item->goal_anim_state = WOLF_STOP;
-            }
-            else if (GetRandomControl() < WOLF_WAKE_CHANCE)
-            {
-                item->required_anim_state = WOLF_WALK;
-                item->goal_anim_state = WOLF_STOP;
-            }
-            break;
+			if (Targetable(item, &info) || item->hit_status) // NOTE: Avoid him wake if lara not found !
+			{
+				if (wolf->mood == ESCAPE_MOOD || info.zone_number == info.enemy_zone)
+				{
+					item->required_anim_state = WOLF_CROUCH;
+					item->goal_anim_state = WOLF_STOP;
+				}
+				else if ((GetRandomControl() < WOLF_WAKE_CHANCE) || item->hit_status)
+				{
+					item->required_anim_state = WOLF_WALK;
+					item->goal_anim_state = WOLF_STOP;
+				}
+			}
+			break;
 		case WOLF_STOP:
 			if (item->required_anim_state)
 				item->goal_anim_state = item->required_anim_state;
@@ -138,8 +137,7 @@ void WolfControl(short item_number)
 				item->goal_anim_state = WOLF_RUN;
 			else if (wolf->mood == ATTACK_MOOD)
 			{
-				if (!info.ahead || info.distance > WOLF_ATTACK_RANGE ||
-					(info.enemy_facing < FRONT_ARC && info.enemy_facing > -FRONT_ARC))
+				if (!info.ahead || info.distance > WOLF_ATTACK_RANGE || (info.enemy_facing < FRONT_ARC && info.enemy_facing > -FRONT_ARC))
 					item->goal_anim_state = WOLF_RUN;
 			}
 			else if (GetRandomControl() < WOLF_HOWL_CHANCE)
@@ -179,7 +177,8 @@ void WolfControl(short item_number)
 
 		case WOLF_ATTACK:
 			tilt = angle / 2;
-			if (!item->required_anim_state && (item->touch_bits & WOLF_TOUCH))
+
+			if (item->required_anim_state == 0 && item->is_colliding_with_target(wolf_jaw_bite.mesh_num))
 			{
 				CreatureEffect(item, &wolf_jaw_bite, DoBloodSplat);
 				lara_item->hit_points -= WOLF_POUNCE_DAMAGE;
@@ -190,7 +189,7 @@ void WolfControl(short item_number)
 			break;
 
 		case WOLF_BITE:
-			if (!item->required_anim_state && (item->touch_bits & WOLF_TOUCH) && info.ahead)
+			if (item->required_anim_state == 0 && item->is_colliding_with_target(wolf_jaw_bite.mesh_num) && info.ahead)
 			{
 				CreatureEffect(item, &wolf_jaw_bite, DoBloodSplat);
 				lara_item->hit_points -= WOLF_BITE_DAMAGE;

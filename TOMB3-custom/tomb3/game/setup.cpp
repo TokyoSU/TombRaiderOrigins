@@ -454,7 +454,6 @@ static void BaddyObjects()
 	obj->control = ControlLaraExtra;
 
 	obj = &objects[COBRA];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseCobra;
@@ -474,7 +473,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[MONKEY];
-
 	if (obj->loaded)
 	{
 		if (!objects[MESHSWAP2].loaded)
@@ -499,7 +497,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[ROBOT_SENTRY_GUN];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseAutogun;
@@ -520,7 +517,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[DIVER];
-
 	if (obj->loaded)
 	{
 		obj->control = DiverControl;
@@ -538,7 +534,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[WHALE];
-
 	if (obj->loaded)
 	{
 		obj->control = OrcaControl;
@@ -1297,16 +1292,17 @@ static void BaddyObjects()
 	{
 		obj->initialise = InitialiseWolf;
 		obj->control = WolfControl;
+		obj->collision = CreatureCollision;
 		obj->shadow_size = 128;
 		obj->hit_points = 6;
-		obj->radius = 256;
+		obj->radius = 102;
 		obj->pivot_length = 375;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
-		bones[obj->bone_index + 2 * 4] |= 4;
+		bones[obj->bone_index + 2 * 4] |= 8;
 	}
 }
 
