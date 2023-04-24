@@ -16,8 +16,7 @@ BOX_INFO* boxes;
 long number_boxes;
 short* overlap;
 
-short* ground_zone[4][2];
-short* fly_zone[2];
+short* zones[MAX_ZONES][2];
 
 void AlertNearbyGuards(ITEM_INFO* item)
 {
@@ -108,35 +107,22 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 		creature->enemy = lara_item;
 	}
 
-	if (creature->LOT.fly)
-		zone = ground_zone[-1][0];
-	else
-		zone = ground_zone[(creature->LOT.step >> 8) - 1][flip_status];
+	zone = zones[creature->LOT.zone][flip_status];
 
 	r = &room[item->room_number];
 	floor = &r->floor[((item->pos.z_pos - r->z) >> WALL_SHIFT) + r->x_size * ((item->pos.x_pos - r->x) >> WALL_SHIFT)];
 	item->box_number = floor->box;
-
-	if (creature->LOT.fly)
-		info->zone_number = 0x2000;
-	else
-		info->zone_number = zone[item->box_number];
+	info->zone_number = zone[item->box_number];
 
 	r = &room[enemy->room_number];
 	floor = &r->floor[((enemy->pos.z_pos - r->z) >> WALL_SHIFT) + r->x_size * ((enemy->pos.x_pos - r->x) >> WALL_SHIFT)];
 	enemy->box_number = floor->box;
+	info->enemy_zone = zone[enemy->box_number];
 
-	if (creature->LOT.fly)
-		info->enemy_zone = 0x2000;
-	else
-		info->enemy_zone = zone[enemy->box_number];
-
-	if (!obj->non_lot && (boxes[enemy->box_number].overlap_index & creature->LOT.block_mask ||
-		creature->LOT.node[item->box_number].search_number == (creature->LOT.search_number | 0x8000)))
+	if (!obj->non_lot && (boxes[enemy->box_number].overlap_index & creature->LOT.block_mask || creature->LOT.node[item->box_number].search_number == (creature->LOT.search_number | 0x8000)))
 		info->enemy_zone |= 0x4000;
 
 	pivot = obj->pivot_length;
-
 	if (enemy == lara_item)
 		ang = lara.move_angle;
 	else
@@ -187,17 +173,8 @@ long SearchLOT(LOT_INFO* LOT, long expansion)
 	long index, done, box_number, overlap_flags, change;
 	short search_zone;
 
-	if (LOT->fly)
-	{
-		zone = ground_zone[-1][0];
-		search_zone = 0x2000;
-		
-	}
-	else
-	{
-		zone = ground_zone[(LOT->step >> 8) - 1][flip_status];
-		search_zone = zone[LOT->head];
-	}
+	zone = zones[LOT->zone][flip_status];
+	search_zone = LOT->fly ? 0x2000 : zone[LOT->head];
 
 	for (int i = 0; i < expansion; i++)
 	{
@@ -336,17 +313,12 @@ long ValidBox(ITEM_INFO* item, short zone_number, short box_number)
 	short* zone;
 
 	creature = (CREATURE_INFO*)item->data;
-
-	if (creature->LOT.fly)
-		zone = ground_zone[-1][0];
-	else
-		zone = ground_zone[(creature->LOT.step >> 8) - 1][flip_status];
+	zone = zones[creature->LOT.zone][flip_status];
 
 	if (!creature->LOT.fly && zone[box_number] != zone_number)
 		return 0;
 
 	box = &boxes[box_number];
-
 	if (box->overlap_index & creature->LOT.block_mask)
 		return 0;
 
@@ -719,7 +691,6 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	{
 		if (info->zone_number == info->enemy_zone)
 			creature->mood = BORED_MOOD;
-
 		LOT->required_box = 2047;
 	}
 
@@ -802,28 +773,26 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	}
 }
 
-long BadFloor(long x, long y, long z, long box_height, long next_height, short room_number, LOT_INFO* LOT)
+long BadFloor(long x, long y, long z, long box_height, long next_height, short room_number, CREATURE_INFO* creature)
 {
 	FLOOR_INFO* floor;
 	BOX_INFO* box;
 
 	floor = GetFloor(x, y, z, &room_number);
-
 	if (floor->box == 2047)
 		return 1;
 
 	box = &boxes[floor->box];
-
-	if (LOT->block_mask & box->overlap_index)
+	if (creature->LOT.block_mask & box->overlap_index)
 		return 1;
 
-	if (box_height - box->height > LOT->step || box_height - box->height < LOT->drop)
+	if (box_height - box->height > creature->LOT.step || box_height - box->height < creature->LOT.drop)
+		return 1;
+	
+	if (box_height - box->height < -creature->LOT.step && box->height > next_height)
 		return 1;
 
-	if (box_height - box->height < -LOT->step && box->height > next_height)
-		return 1;
-
-	if (LOT->fly && y > LOT->fly + box->height)
+	if (creature->LOT.fly && y > creature->LOT.fly + box->height)
 		return 1;
 
 	return 0;
@@ -949,8 +918,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 
 	item = &items[item_number];
 	creature = (CREATURE_INFO*)item->data;
-
-	if (!creature)
+	if (creature == NULL)
 		return 0;
 
 	LOT = &creature->LOT;
@@ -958,11 +926,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 	oldPos.y = item->pos.y_pos;
 	oldPos.z = item->pos.z_pos;
 	height = boxes[item->box_number].height;
-
-	if (LOT->fly)
-		zone = ground_zone[-1][0];
-	else
-		zone = ground_zone[(LOT->step >> 8) - 1][flip_status];
+	zone = zones[creature->LOT.zone][flip_status];
 
 	if (!objects[item->object_number].water_creature)
 	{
@@ -1013,11 +977,9 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 			item->pos.x_pos = oldPos.x & ~WALL_MASK;
 		else if (wx > xShift)
 			item->pos.x_pos = oldPos.x | WALL_MASK;
-
-		//ORIGINAL BUG: should be wz instead of wx here!! (was fixed in TR4)
-		if (wx < zShift)
+		if (wz < zShift)
 			item->pos.z_pos = oldPos.z & ~WALL_MASK;
-		else if (wx > zShift)
+		else if (wz > zShift)
 			item->pos.z_pos = oldPos.z | WALL_MASK;
 
 		floor = GetFloor(item->pos.x_pos, y, item->pos.z_pos, &room_number);
@@ -1048,14 +1010,14 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 
 	if (wz < rad)
 	{
-		if (BadFloor(x, y, z - rad, box_height, next_height, room_number, LOT))
+		if (BadFloor(x, y, z - rad, box_height, next_height, room_number, creature))
 			zShift = rad - wz;
 
 		if (wx < rad)
 		{
-			if (!BadFloor(x - rad, y, z, box_height, next_height, room_number, LOT))
+			if (!BadFloor(x - rad, y, z, box_height, next_height, room_number, creature))
 			{
-				if (!zShift && BadFloor(x - rad, y, z - rad, box_height, next_height, room_number, LOT))
+				if (!zShift && BadFloor(x - rad, y, z - rad, box_height, next_height, room_number, creature))
 				{
 					if (item->pos.y_rot > -0x6000 && item->pos.y_rot < 0x2000)
 						zShift = rad - wz;
@@ -1068,9 +1030,9 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 		}
 		else if (wx > WALL_SIZE - rad)
 		{
-			if (!BadFloor(x + rad, y, z, box_height, next_height, room_number, LOT))
+			if (!BadFloor(x + rad, y, z, box_height, next_height, room_number, creature))
 			{
-				if (!zShift && BadFloor(x + rad, y, z - rad, box_height, next_height, room_number, LOT))
+				if (!zShift && BadFloor(x + rad, y, z - rad, box_height, next_height, room_number, creature))
 				{
 					if (item->pos.y_rot > -0x2000 && item->pos.y_rot < 0x6000)
 						zShift = rad - wz;
@@ -1084,14 +1046,14 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 	}
 	else if (wz > WALL_SIZE - rad)
 	{
-		if (BadFloor(x, y, z + rad, box_height, next_height, room_number, LOT))
+		if (BadFloor(x, y, z + rad, box_height, next_height, room_number, creature))
 			zShift = WALL_SIZE - rad - wz;
 
 		if (wx < rad)
 		{
-			if (!BadFloor(x - rad, y, z, box_height, next_height, room_number, LOT))
+			if (!BadFloor(x - rad, y, z, box_height, next_height, room_number, creature))
 			{
-				if (!zShift && BadFloor(x - rad, y, z + rad, box_height, next_height, room_number, LOT))
+				if (!zShift && BadFloor(x - rad, y, z + rad, box_height, next_height, room_number, creature))
 				{
 					if (item->pos.y_rot > -0x2000 && item->pos.y_rot < 0x6000)
 						xShift = rad - wx;
@@ -1104,9 +1066,9 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 		}
 		else if (wx > WALL_SIZE - rad)
 		{
-			if (!BadFloor(x + rad, y, z, box_height, next_height, room_number, LOT))
+			if (!BadFloor(x + rad, y, z, box_height, next_height, room_number, creature))
 			{
-				if (!zShift && BadFloor(x + rad, y, z + rad, box_height, next_height, room_number, LOT))
+				if (!zShift && BadFloor(x + rad, y, z + rad, box_height, next_height, room_number, creature))
 				{
 					if (item->pos.y_rot > -0x6000 && item->pos.y_rot < 0x2000)
 						xShift = WALL_SIZE - rad - wx;
@@ -1120,12 +1082,12 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 	}
 	else if (wx < rad)
 	{
-		if (BadFloor(x - rad, y, z, box_height, next_height, room_number, LOT))
+		if (BadFloor(x - rad, y, z, box_height, next_height, room_number, creature))
 			xShift = rad - wx;
 	}
 	else if (wx > WALL_SIZE - rad)
 	{
-		if (BadFloor(x + rad, y, z, box_height, next_height, room_number, LOT))
+		if (BadFloor(x + rad, y, z, box_height, next_height, room_number, creature))
 			xShift = WALL_SIZE - rad - wx;
 	}
 
@@ -1536,12 +1498,7 @@ short SameZone(CREATURE_INFO* creature, ITEM_INFO* target_item)
 {
 	ITEM_INFO* item;
 	ROOM_INFO* r;
-	short* zone;
-
-	if (creature->LOT.fly)
-		return 1;
-
-	zone = ground_zone[(creature->LOT.step >> 8) - 1][flip_status];
+	short* zone = zones[creature->LOT.zone][flip_status];
 	item = &items[creature->item_num];
 
 	r = &room[item->room_number];

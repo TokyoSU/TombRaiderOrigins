@@ -413,25 +413,16 @@ long LoadBoxes(HANDLE file)
 
 	for (int i = 0; i < 2; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < MAX_ZONES; j++)
 		{
-			ground_zone[j][i] = (short*)game_malloc(sizeof(short) * number_boxes);
-			MyReadFile(file, ground_zone[j][i], sizeof(short) * number_boxes, &read, 0);
+			zones[j][i] = (short*)game_malloc(sizeof(short) * number_boxes);
+			MyReadFile(file, zones[j][i], sizeof(short) * number_boxes, &read, 0);
 
 			if (read != sizeof(short) * number_boxes)
 			{
 				lstrcpy(exit_message, "LoadBoxes(): Unable to load 'ground_zone'");
 				return 0;
 			}
-		}
-
-		fly_zone[i] = (short*)game_malloc(sizeof(short) * number_boxes);
-		MyReadFile(file, fly_zone[i], sizeof(short) * number_boxes, &read, 0);
-
-		if (read != sizeof(short) * number_boxes)
-		{
-			lstrcpy(exit_message, "LoadBoxes(): Unable to load 'fly_zone'");
-			return 0;
 		}
 	}
 
@@ -456,10 +447,9 @@ long LoadAnimatedTextures(HANDLE file)
 	MyReadFile(file, aranges, sizeof(short) * num, &read, 0);
 
 	MyReadFile(file, &num, sizeof(long), &read, 0);
-
 	if (num > MAX_TINFOS)
 	{
-		lstrcpy(exit_message, "Too many Textures in level");
+		lstrcpy(exit_message, "Too many textures in level");
 		return 0;
 	}
 

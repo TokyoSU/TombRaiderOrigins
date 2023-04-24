@@ -70,6 +70,7 @@ void InitialiseNonLotAI(short item_number, long slot)
 	creature->LOT.drop = -512;
 	creature->LOT.block_mask = 0x4000;
 	creature->LOT.fly = 0;
+	creature->LOT.zone = NORMAL_ZONE;
 
 	switch (item->object_number)
 	{
@@ -78,24 +79,28 @@ void InitialiseNonLotAI(short item_number, long slot)
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 256;
 		break;
-
 	case WHALE:
 	case DIVER:
+		creature->LOT.step = 20480;
+		creature->LOT.drop = -20480;
+		creature->LOT.fly = 16;
+		creature->LOT.zone = WATER_ZONE;
+		break;
 	case CROW:
 	case VULTURE:
 		creature->LOT.step = 20480;
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 16;
-
+		creature->LOT.zone = FLY_ZONE;
 		if (item->object_number == WHALE)
 			creature->LOT.block_mask = 0x8000;
-
 		break;
 
 	case LIZARD_MAN:
 	case MP1:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -1024;
+		creature->LOT.zone = HUMAN_ZONE;
 		break;
 	}
 
@@ -239,8 +244,8 @@ void CreateZone(ITEM_INFO* item)
 	}
 	else
 	{
-		zone = ground_zone[(creature->LOT.step >> 8) - 1][0];
-		flip = ground_zone[(creature->LOT.step >> 8) - 1][1];
+		zone = zones[creature->LOT.zone][0];
+		flip = zones[creature->LOT.zone][1];
 		zone_number = zone[item->box_number];
 		flip_number = flip[item->box_number];
 		creature->LOT.zone_count = 0;
@@ -293,6 +298,7 @@ void InitialiseSlot(short item_number, long slot)
 	creature->LOT.drop = -512;
 	creature->LOT.block_mask = 0x4000;
 	creature->LOT.fly = 0;
+	creature->LOT.zone = NORMAL_ZONE;
 
 	switch (item->object_number)
 	{
@@ -301,16 +307,21 @@ void InitialiseSlot(short item_number, long slot)
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 256;
 		break;
-
 	case WHALE:
 	case DIVER:
+	case CROCODILE:
+		creature->LOT.step = 20480;
+		creature->LOT.drop = -20480;
+		creature->LOT.fly = 16;
+		creature->LOT.zone = WATER_ZONE;
+		break;
 	case CROW:
 	case VULTURE:
-	case CROCODILE:
 	case MUTANT1:
 		creature->LOT.step = 20480;
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 16;
+		creature->LOT.zone = FLY_ZONE;
 
 		if (item->object_number == WHALE)
 			creature->LOT.block_mask = 0x8000;
@@ -326,11 +337,13 @@ void InitialiseSlot(short item_number, long slot)
 	case MONKEY:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -1024;
+		creature->LOT.zone = HUMAN_ZONE;
 		break;
 
 	case LON_BOSS:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -768;
+		creature->LOT.zone = HUMAN_ZONE;
 		break;
 
 	case SHIVA:
@@ -340,7 +353,6 @@ void InitialiseSlot(short item_number, long slot)
 	}
 
 	ClearLOT(&creature->LOT);
-
 	if (item_number != lara.item_number)
 		CreateZone(item);
 

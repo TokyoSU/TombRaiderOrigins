@@ -18,7 +18,7 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number);
 target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT);
 void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent);
 void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent);
-long BadFloor(long x, long y, long z, long box_height, long next_height, short room_number, LOT_INFO* LOT);
+long BadFloor(long x, long y, long z, long box_height, long next_height, short room_number, CREATURE_INFO* creature);
 long CreatureCreature(short item_number);
 void CreatureDie(short item_number, long explode);
 short CreatureTurn(ITEM_INFO* item, short maximum_turn);
@@ -42,5 +42,4 @@ extern BOX_INFO* boxes;
 extern long number_boxes;
 extern short* overlap;
 
-extern short* ground_zone[4][2];
-extern short* fly_zone[2];
+extern short* zones[MAX_ZONES][2];

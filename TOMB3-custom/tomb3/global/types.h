@@ -688,6 +688,18 @@ struct BOX_NODE
 	short box_number;
 };
 
+//NOTE: SKELETON_ZONE Dont exist in TR3 file format !
+
+enum ZONE_TYPE : int
+{
+	NO_ZONE = 0,
+	NORMAL_ZONE,
+	WATER_ZONE,
+	HUMAN_ZONE,
+	FLY_ZONE,
+	MAX_ZONES
+};
+
 struct LOT_INFO
 {
 	BOX_NODE* node;
@@ -702,6 +714,7 @@ struct LOT_INFO
 	short target_box;
 	short required_box;
 	PHD_VECTOR target;
+	ZONE_TYPE zone;
 };
 
 struct CREATURE_INFO

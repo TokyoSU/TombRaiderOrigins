@@ -563,6 +563,9 @@ long S_LoadGame(LPVOID data, long size, long slot)
 
 long S_SaveGame(LPVOID data, long size, long slot)
 {
+	if (!DoFolderExist("saves"))
+		DoCreateFolder("saves");
+
 	HANDLE file;
 	ulong bytes;
 	char buffer[80], counter[16];

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "winmain.h"
+#include <sys/stat.h>
 #include <memory>
 #include "dxshell.h"
 #include "drawprimitive.h"
@@ -373,4 +374,21 @@ void Log(const char* s, ...)		// NOT present in original code
 
 	m_fileLog->debug(buf);
 #endif
+}
+
+bool DoFolderExist(const char* folderName)
+{
+	struct stat sb;
+	return stat(folderName, &sb) == 0;
+}
+
+bool DoFileExist(const char* fileName)
+{
+	struct stat sb;
+	return stat(fileName, &sb) == 0 && !(sb.st_mode & S_IFDIR);
+}
+
+bool DoCreateFolder(const char* folderName)
+{
+	return _mkdir(folderName) == 0;
 }

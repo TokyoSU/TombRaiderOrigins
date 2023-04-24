@@ -36,4 +36,8 @@
 extern void InitLog();
 extern void Log(const char* s, ...);		//NOT present in original code
 
+extern bool DoFolderExist(const char* folderName);
+extern bool DoFileExist(const char* fileName);
+extern bool DoCreateFolder(const char* folderName);
+
 #endif //PCH_H
