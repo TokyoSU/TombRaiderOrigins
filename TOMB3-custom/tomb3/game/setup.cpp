@@ -79,6 +79,11 @@
 #include "biggun.h"
 #include "sub.h"
 #include "wolf.h"
+#include "bear.h"
+
+
+#include "atlantean_centaur.h"
+
 #include "train.h"
 #include "laraflar.h"
 #include "fish.h"
@@ -1287,7 +1292,7 @@ static void BaddyObjects()
 		obj->intelligent = 1;
 	}
 
-	obj = &objects[WOLF];
+	obj = &objects[TR1_WOLF];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseWolf;
@@ -1304,6 +1309,43 @@ static void BaddyObjects()
 		obj->save_anim = 1;
 		bones[obj->bone_index + 2 * 4] |= 8;
 	}
+
+	obj = &objects[TR1_BEAR];
+	if (obj->loaded)
+	{
+		obj->initialise = InitialiseBear;
+		obj->control = BearControl;
+		obj->collision = CreatureCollision;
+		obj->shadow_size = 128;
+		obj->hit_points = 20;
+		obj->radius = 256;
+		obj->pivot_length = 500;
+		obj->intelligent = 1;
+		obj->save_position = 1;
+		obj->save_hitpoints = 1;
+		obj->save_flags = 1;
+		obj->save_anim = 1;
+		bones[obj->bone_index + 13 * 4] |= 8;
+	}
+
+	obj = &objects[TR1_ATLANTEAN_CENTAUR];
+	if (obj->loaded)
+	{
+		obj->initialise = InitialiseAtlanteanCentaur;
+		obj->control = AtlanteanCentaurControl;
+		obj->collision = CreatureCollision;
+		obj->shadow_size = 128;
+		obj->hit_points = 1;
+		obj->radius = 256;
+		obj->pivot_length = 400;
+		obj->intelligent = 1;
+		obj->save_position = 1;
+		obj->save_hitpoints = 1;
+		obj->save_flags = 1;
+		obj->save_anim = 1;
+		bones[obj->bone_index + 10 * 4] |= 8|4;
+	}
+
 }
 
 static void TrapObjects()
@@ -1727,6 +1769,12 @@ static void ObjectObjects()
 	obj->control = ControlMissile;
 
 	obj = &objects[DIVER_HARPOON];
+	obj->control = ControlMissile;
+
+	obj = &objects[TR1_ATLANTEAN_DART];
+	obj->control = ControlMissile;
+
+	obj = &objects[TR1_ATLANTEAN_BOMB];
 	obj->control = ControlMissile;
 
 	obj = &objects[KAYAK];
@@ -2268,9 +2316,9 @@ static void ObjectObjects()
 	}
 
 	obj = &objects[BODY_PART];
-	obj->control = ControlBodyPart;
-	obj->nmeshes = 0;
 	obj->loaded = 1;
+	obj->nmeshes = 0;
+	obj->control = ControlBodyPart;
 
 	obj = &objects[BIRD_TWEETER];
 	obj->control = ControlBirdTweeter;

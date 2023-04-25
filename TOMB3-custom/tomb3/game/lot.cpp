@@ -40,17 +40,9 @@ void InitialiseLOTarray()
 
 void InitialiseNonLotAI(short item_number, long slot)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
-
-	item = &items[item_number];
-	creature = &non_lot_slots[slot];
-
-	if (item_number == lara.item_number)
-		lara.creature = creature;
-	else
-		item->data = creature;
-
+	ITEM_INFO* item = &items[item_number];
+	CREATURE_INFO* creature = &non_lot_slots[slot];
+	item->data = creature;
 	creature->item_num = item_number;
 	creature->mood = BORED_MOOD;
 	creature->joint_rotation[0] = 0;
@@ -174,18 +166,8 @@ void DisableBaddieAI(short item_number)
 	CREATURE_INFO* creature;
 
 	item = &items[item_number];
-
-	if (item_number == lara.item_number)
-	{
-		creature = lara.creature;
-		lara.creature = 0;
-	}
-	else
-	{
-		creature = (CREATURE_INFO*)item->data;
-		item->data = 0;
-	}
-
+	creature = (CREATURE_INFO*)item->data;
+	item->data = NULL;
 	if (creature)
 	{
 		creature->item_num = NO_ITEM;
@@ -268,17 +250,9 @@ void CreateZone(ITEM_INFO* item)
 
 void InitialiseSlot(short item_number, long slot)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
-
-	item = &items[item_number];
-	creature = &baddie_slots[slot];
-
-	if (item_number == lara.item_number)
-		lara.creature = creature;
-	else
-		item->data = creature;
-
+	ITEM_INFO* item = &items[item_number];
+	CREATURE_INFO* creature = &baddie_slots[slot];
+	item->data = creature;
 	creature->item_num = item_number;
 	creature->mood = BORED_MOOD;
 	creature->joint_rotation[0] = 0;
@@ -366,20 +340,10 @@ long EnableBaddieAI(short item_number, long Always)
 	long x, y, z, slot, worstslot, dist, worstdist;
 
 	item = &items[item_number];
-
-	if (lara.item_number == item_number)
-	{
-		if (lara.creature)
-			return 1;
-	}
-	else
-	{
-		if (item->data)
-			return 1;
-
-		if (objects[item->object_number].non_lot)
-			return EnableNonLotAI(item_number, Always);
-	}
+	if (item->data)
+		return 1;
+	if (objects[item->object_number].non_lot)
+		return EnableNonLotAI(item_number, Always);
 
 	if (slots_used < MAX_LOT)
 	{
@@ -406,7 +370,6 @@ long EnableBaddieAI(short item_number, long Always)
 	}
 
 	worstslot = -1;
-
 	for (slot = 0; slot < MAX_LOT; slot++)
 	{
 		creature = &baddie_slots[slot];

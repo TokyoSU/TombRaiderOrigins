@@ -433,6 +433,8 @@
     <ClInclude Include="tomb3\script\scripter.h" />
     <ClInclude Include="tomb3\script\interpreter.h" />
     <ClInclude Include="tomb3\game\tr1\wolf.h" />
+    <ClInclude Include="tomb3\game\tr1\bear.h" />
+    <ClInclude Include="tomb3\game\tr1\atlantean_centaur.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tomb3\game\51baton.cpp">
@@ -835,6 +837,8 @@
     <ClCompile Include="tomb3\script\scripter.cpp" />
     <ClCompile Include="tomb3\script\interpreter.cpp" />
     <ClCompile Include="tomb3\game\tr1\wolf.cpp" />
+    <ClCompile Include="tomb3\game\tr1\bear.cpp" />
+    <ClCompile Include="tomb3\game\tr1\atlantean_centaur.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tomb3.rc" />

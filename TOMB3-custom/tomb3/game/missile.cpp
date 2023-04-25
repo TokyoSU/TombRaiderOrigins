@@ -13,6 +13,15 @@
 #include "lara.h"
 #include "../3dsystem/3d_gen.h"
 
+static void TriggerAtlanteanExplosion(FX_INFO* fx, long lightPower, bool isUnderwater)
+{
+	TriggerExplosionSparks(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, 3, -2, isUnderwater, 0);
+	for (int lp = 0; lp < 2; lp++)
+		TriggerExplosionSparks(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, 3, -1, isUnderwater, 0);
+	SoundEffect(SFX_EXPLOSION2, &fx->pos, SFX_DEFAULT);
+	TriggerDynamic(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, lightPower, 255, 192, GetRandomControl() & 0x3F);
+}
+
 void ControlMissile(short fx_number)
 {
 	FX_INFO* fx;
@@ -36,6 +45,7 @@ void ControlMissile(short fx_number)
 	floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &room_number);
 	h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 	c = GetCeiling(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+	bool isUnderwater = room[room_number].flags & ROOM_UNDERWATER;
 
 	if (fx->pos.y_pos >= h || fx->pos.y_pos <= c)
 	{
@@ -45,6 +55,10 @@ void ControlMissile(short fx_number)
 		{
 			TriggerFireFlame(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1, 0);
 			TriggerDynamic(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, 24, 255, 192, GetRandomControl() & 0x3F);
+		}
+		else if (fx->object_number == TR1_ATLANTEAN_BOMB)
+		{
+			TriggerAtlanteanExplosion(fx, 12, isUnderwater);
 		}
 
 		KillEffect(fx_number);
@@ -72,6 +86,12 @@ void ControlMissile(short fx_number)
 			SoundEffect(SFX_MACAQUE_CHATTER, &fx->pos, SFX_DEFAULT);
 			KillEffect(fx_number);
 		}
+		else if (fx->object_number == TR1_ATLANTEAN_BOMB)
+		{
+			lara_item->hit_points -= fx->flag2;
+			TriggerAtlanteanExplosion(fx, 24, isUnderwater);
+			KillEffect(fx_number);
+		}
 
 		lara_item->hit_status = 1;
 		fx->pos.y_rot = lara_item->pos.y_rot;
@@ -80,11 +100,10 @@ void ControlMissile(short fx_number)
 		fx->frame_number = 0;
 	}
 
-	if (fx->object_number == DIVER_HARPOON && room[fx->room_number].flags & ROOM_UNDERWATER)
+	if (isUnderwater)
 	{
 		if (!(wibble & 0xF))
 			CreateBubble(&fx->pos, room_number, 8, 8);
-
 		TriggerRocketSmoke(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, 64);
 	}
 	else if (fx->object_number == DRAGON_FIRE && !fx->counter--)
@@ -116,7 +135,7 @@ void ShootAtLara(FX_INFO* fx)
 	fx->pos.y_rot += short((GetRandomControl() - 0x4000) / 64);
 }
 
-long ExplodingDeath(short item_number, long mesh_bits, short counter)
+long ExplodingDeath(short item_number, long mesh_bits, short counter, short damage)
 {
 	ITEM_INFO* item;
 	OBJECT_INFO* obj;
@@ -132,6 +151,7 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter)
 	obj = &objects[item->object_number];
 	bone = &bones[obj->bone_index];
 	frame = GetBestFrame(item);
+	bool is_abortion = item->object_number == TR1_DOPPELGANGER;
 	extra_rotation = (short*)item->data;
 
 	phd_PushUnitMatrix();
@@ -146,7 +166,6 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter)
 	if (mesh_bits & bit && item->mesh_bits & bit)
 	{
 		obj_num = item->object_number;
-
 		if (!(GetRandomControl() & 3) || obj_num == SMASH_WINDOW || obj_num == SMASH_OBJECT1 || obj_num == SMASH_OBJECT2 || obj_num == SMASH_OBJECT3)
 		{
 			fx_number = CreateEffect(item->room_number);
@@ -159,14 +178,30 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter)
 				fx->pos.z_pos = item->pos.z_pos + (phd_mxptr[M23] >> W2V_SHIFT);
 				fx->room_number = item->room_number;
 				fx->pos.y_rot = short((GetRandomControl() << 1) + 0x8000);
-				fx->speed = (short)GetRandomControl() >> 8;
-				fx->fallspeed = (short)-GetRandomControl() >> 8;
+
+				if (is_abortion)
+				{
+					fx->speed = (short)GetRandomControl() >> 7;
+					fx->fallspeed = (short)-GetRandomControl() >> 7;
+				}
+				else
+				{
+					fx->speed = (short)GetRandomControl() >> 8;
+					fx->fallspeed = (short)-GetRandomControl() >> 8;
+				}
 
 				if (obj_num == SMASH_WINDOW || obj_num == SMASH_OBJECT1 || obj_num == SMASH_OBJECT2 ||
 					obj_num == SMASH_OBJECT3 || obj_num == MUTANT2 || obj_num == QUADBIKE)
 					fx->counter = 0;
 				else
 					fx->counter = (counter << 2) | GetRandomControl() & 3;
+
+				if (obj_num == TR1_ATLANTEAN_CENTAUR || obj_num == TR1_ATLANTEAN_GIANT || obj_num == TR1_ATLANTEAN_MUMMY ||
+					obj_num == TR1_ATLANTEAN || obj_num == TR1_ATLANTEAN_SOLDIER)
+				{
+					fx->flag1 = 1;
+					fx->flag2 = damage;
+				}
 
 				fx->object_number = BODY_PART;
 				fx->frame_number = obj->mesh_index;
@@ -217,14 +252,30 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter)
 					fx->pos.z_pos = item->pos.z_pos + (phd_mxptr[M23] >> W2V_SHIFT);
 					fx->room_number = item->room_number;
 					fx->pos.y_rot = short((GetRandomControl() << 1) + 0x8000);
-					fx->speed = (short)GetRandomControl() >> 8;
-					fx->fallspeed = (short)-GetRandomControl() >> 8;
+					
+					if (is_abortion)
+					{
+						fx->speed = (short)GetRandomControl() >> 7;
+						fx->fallspeed = (short)-GetRandomControl() >> 7;
+					}
+					else
+					{
+						fx->speed = (short)GetRandomControl() >> 8;
+						fx->fallspeed = (short)-GetRandomControl() >> 8;
+					}
 
 					if (obj_num == SMASH_WINDOW || obj_num == SMASH_OBJECT1 || obj_num == SMASH_OBJECT2 ||
 						obj_num == SMASH_OBJECT3 || obj_num == MUTANT2 || obj_num == QUADBIKE)
 						fx->counter = 0;
 					else
 						fx->counter = (counter << 2) | GetRandomControl() & 3;
+
+					if (obj_num == TR1_ATLANTEAN_CENTAUR || obj_num == TR1_ATLANTEAN_GIANT || obj_num == TR1_ATLANTEAN_MUMMY ||
+						obj_num == TR1_ATLANTEAN || obj_num == TR1_ATLANTEAN_SOLDIER)
+					{
+						fx->flag1 = 1;
+						fx->flag2 = damage;
+					}
 
 					fx->object_number = BODY_PART;
 					fx->frame_number = short(obj->mesh_index + lp);
@@ -246,51 +297,61 @@ void ControlBodyPart(short fx_number)
 {
 	FX_INFO* fx;
 	FLOOR_INFO* floor;
-	long h, c, lp;
+	long h, ceiling, lp;
 	short room_number;
 
 	fx = &effects[fx_number];
-	fx->pos.x_rot += 910;
-	fx->pos.z_rot += 1820;
+	fx->pos.x_rot += ONE_DEGREE * 5;
+	fx->pos.z_rot += ONE_DEGREE * 10;
 	fx->fallspeed += 3;
 	fx->pos.x_pos += (fx->speed * phd_sin(fx->pos.y_rot)) >> (W2V_SHIFT + 2);
 	fx->pos.y_pos += fx->fallspeed;
 	fx->pos.z_pos += (fx->speed * phd_cos(fx->pos.y_rot)) >> (W2V_SHIFT + 2);
 
-	if (!(wibble & 0xC))
+	if (!(wibble & 0xC) && fx->flag1 != 1)
 	{
 		if (fx->counter & 1)
 			TriggerFireFlame(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx_number, 0);
-
 		if (fx->counter & 2)
 			TriggerFireSmoke(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, -1, 0);
 	}
 
 	room_number = fx->room_number;
 	floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &room_number);
-	c = GetCeiling(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+	bool isUnderwater = room[room_number].flags & ROOM_UNDERWATER;
 
-	if (fx->pos.y_pos < c)
+	ceiling = GetCeiling(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
+	if (fx->pos.y_pos < ceiling)
 	{
-		fx->pos.y_pos = c;
-		fx->fallspeed = -fx->fallspeed;
+		if (fx->flag1 == 1) // Atlantean
+		{
+			TriggerAtlanteanExplosion(fx, 12, isUnderwater);
+			KillEffect(fx_number);
+		}
+		else
+		{
+			fx->pos.y_pos = ceiling;
+			fx->fallspeed = -fx->fallspeed;
+		}
 	}
 
 	h = GetHeight(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
-
 	if (fx->pos.y_pos >= h)
 	{
-		if (fx->counter & 3)
+		if (fx->flag1 == 1) // Atlantean
+		{
+			TriggerAtlanteanExplosion(fx, 12, isUnderwater);
+		}
+		else if (fx->counter & 3)
 		{
 			for (lp = 0; lp < 3; lp++)
 			{
 				if (fx->counter & 1)
 					TriggerFireFlame(fx->pos.x_pos, h, fx->pos.z_pos, -1, 0);
-
 				if (fx->counter & 2)
 					TriggerFireSmoke(fx->pos.x_pos, h, fx->pos.z_pos, -1, 0);
 			}
-
+			
 			SoundEffect(SFX_EXPLOSION1, &fx->pos, SFX_DEFAULT);
 		}
 
@@ -298,25 +359,36 @@ void ControlBodyPart(short fx_number)
 		return;
 	}
 
-	if (ItemNearLara(&fx->pos, fx->counter & ~3))
+	if (ItemNearLara(&fx->pos, 200))
 	{
-		lara_item->hit_points -= fx->counter >> 2;
-		lara_item->hit_status = 1;
-
-		if (fx->counter & 3)
+		if (fx->flag1 == 1) // Atlantean
 		{
-			for (lp = 0; lp < 3; lp++)
-			{
-				if (fx->counter & 1)
-					TriggerFireFlame(fx->pos.x_pos, h, fx->pos.z_pos, -1, 0);
-
-				if (fx->counter & 2)
-					TriggerFireSmoke(fx->pos.x_pos, h, fx->pos.z_pos, -1, 0);
-			}
-
-			SoundEffect(SFX_EXPLOSION1, &fx->pos, SFX_DEFAULT);
+			lara_item->hit_points -= fx->flag2;
+			lara_item->hit_status = 1;
+			TriggerAtlanteanExplosion(fx, 24, isUnderwater);
+			lara.spaz_effect_count = 5;
+			lara.spaz_effect = fx;
 		}
+		else
+		{
+			lara_item->hit_points -= fx->counter >> 2;
+			lara_item->hit_status = 1;
 
+			if (fx->counter & 3)
+			{
+				for (lp = 0; lp < 3; lp++)
+				{
+					if (fx->counter & 1)
+						TriggerFireFlame(fx->pos.x_pos, h, fx->pos.z_pos, -1, 0);
+
+					if (fx->counter & 2)
+						TriggerFireSmoke(fx->pos.x_pos, h, fx->pos.z_pos, -1, 0);
+				}
+				
+				SoundEffect(SFX_EXPLOSION1, &fx->pos, SFX_DEFAULT);
+			}
+		}
+		
 		KillEffect(fx_number);
 	}
 

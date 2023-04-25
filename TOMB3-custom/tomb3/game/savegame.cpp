@@ -741,7 +741,6 @@ void ExtractSaveGameInfo()
 
 	ReadSG(&bossdata, sizeof(BOSS_STRUCT));
 	ReadSG(&lara, sizeof(LARA_INFO));
-	lara.creature = 0;
 	lara.spaz_effect = 0;
 
 	for (int i = 0; i < 15; i++)

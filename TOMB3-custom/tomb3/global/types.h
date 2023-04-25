@@ -8,7 +8,7 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;
 
-#define SQUARE(x) ((x)*(x))
+#define SQUARE(x) ((x) * (x))
 #define	TRIGMULT2(a, b)	(((a) * (b)) >> W2V_SHIFT)
 #define	TRIGMULT3(a, b, c)	(TRIGMULT2((TRIGMULT2(a, b)), c))
 #define key_pressed(x) (keymap[x] & 0x80)
@@ -806,7 +806,6 @@ struct LARA_INFO
 	AMMO_INFO rocket;
 	AMMO_INFO grenade;
 	AMMO_INFO m16;
-	CREATURE_INFO* creature;
 };
 
 struct COLL_INFO

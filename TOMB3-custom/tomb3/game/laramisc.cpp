@@ -1134,7 +1134,6 @@ void InitialiseLara(long type)
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
 	lara.poisoned = 0;
-	lara.creature = 0;
 	lara.electric = 0;
 
 	if (type == 1 && GF_LaraStartAnim)
