@@ -151,7 +151,7 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter, short dama
 	obj = &objects[item->object_number];
 	bone = &bones[obj->bone_index];
 	frame = GetBestFrame(item);
-	bool is_abortion = item->object_number == TR1_DOPPELGANGER;
+	bool is_abortion = item->object_number == TR1_ATLANTEAN_GIANT;
 	extra_rotation = (short*)item->data;
 
 	phd_PushUnitMatrix();
