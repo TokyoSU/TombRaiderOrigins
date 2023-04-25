@@ -12,3 +12,6 @@ So i switched to https://github.com/Trxyebeep/tomb3 which is the most stable to 
 # Credits:
 - [Trxyebeep](https://github.com/Trxyebeep) for the TOMB3 decompilation and new features.
 - [TokyoSU](https://github.com/TokyoSU) Project leader.
+
+# Screenshots:
+WIP
