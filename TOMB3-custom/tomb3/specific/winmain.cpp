@@ -268,11 +268,6 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 0;
 	}
 
-	tomb3.WinPlayLoaded = LoadWinPlay();
-
-	if (!tomb3.WinPlayLoaded)
-		MessageBox(0, "Failed to load WinPlay", "tomb3", 0);
-
 	SetWindowPos(App.WindowHandle, 0, tomb3.rScreen.left, tomb3.rScreen.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	desktop = GetDesktopWindow();
 	hdc = GetDC(desktop);

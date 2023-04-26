@@ -118,7 +118,7 @@ enum bite_offsets
 	ARMYSMG_GUN_BITE
 };
 
-enum target_type
+enum TARGET_TYPE
 {
 	NO_TARGET,
 	PRIME_TARGET,
@@ -243,7 +243,7 @@ enum R_flags	//requester flags
 	R_NO_TIME = 1 << 6
 };
 
-enum mood_type
+enum MOOD_TYPE
 {
 	BORED_MOOD,
 	ATTACK_MOOD,
@@ -657,6 +657,7 @@ struct ITEM_INFO
 	short shade;
 	short shadeB;
 	short carried_item;
+	short ocb;
 	short after_death;
 	ushort fired_weapon;
 	short item_flags[4];
@@ -728,7 +729,7 @@ struct CREATURE_INFO
 	ushort reached_goal : 1;
 	ushort hurt_by_lara : 1;
 	ushort patrol2 : 1;
-	mood_type mood;
+	MOOD_TYPE mood;
 	short item_num;
 	PHD_VECTOR target;
 	ITEM_INFO* enemy;

@@ -6,112 +6,25 @@
 #include "input.h"
 #include "audio.h"
 #include "../tomb3/tomb3.h"
+#include "newstuff/pl_mpeg.h"
 
-long fmv_playing;
+long fmv_playing = 0;
+plm_t* plm = NULL;
+unsigned char* rgb_data = NULL;
 
-static LPVOID MovieContext;
-static LPVOID FmvContext;
-static LPVOID FmvSoundContext;
+static void fmv_video(plm_t* self, plm_frame_t* frame, void* user)
+{
+	//plm_frame_to_rgb(frame, rgb_data, frame->width * 3);
 
-#define GET_DLL_PROC(dll, proc) \
-{ \
-	*(FARPROC*)&(proc) = GetProcAddress(dll, #proc); \
-	if(!proc) throw #proc; \
 }
 
-static long(__cdecl* Player_PassInDirectDrawObject)(LPDIRECTDRAWX);
-static long(__cdecl* Player_InitMovie)(LPVOID, long, long, const char*, long);
-static long(__cdecl* Player_InitVideo)(LPVOID, LPVOID, long, long, long, long, long, long, long, long, long, long, long);
-static long(__cdecl* Player_InitPlaybackMode)(HWND, LPVOID, long, long);
-static long(__cdecl* Player_BlankScreen)(long, long, long, long);
-static long(__cdecl* Player_InitSoundSystem)(HWND);
-static long(__cdecl* Player_GetDSErrorCode)();
-static long(__cdecl* Player_InitSound)(LPVOID, long, long, long, long, long, long, long, long);
-static long(__cdecl* Player_SetVolume)(LPVOID, long);
-static long(__cdecl* Player_InitMoviePlayback)(LPVOID, LPVOID, LPVOID);
-static long(__cdecl* Player_StartTimer)(LPVOID);
-static long(__cdecl* Player_StopTimer)(LPVOID);
-static long(__cdecl* Player_PlayFrame)(LPVOID, LPVOID, LPVOID, long, LPRECT, long, long, long);
-static long(__cdecl* Player_ShutDownMovie)(LPVOID);
-static long(__cdecl* Player_ShutDownSound)(LPVOID);
-static long(__cdecl* Player_ShutDownSoundSystem)();
-static long(__cdecl* Player_ShutDownVideo)(LPVOID);
-static long(__cdecl* Player_ReturnPlaybackMode)();
-
-static long(__cdecl* Movie_GetFormat)(LPVOID);
-static long(__cdecl* Movie_GetXSize)(LPVOID);
-static long(__cdecl* Movie_GetYSize)(LPVOID);
-static long(__cdecl* Movie_GetSoundPrecision)(LPVOID);
-static long(__cdecl* Movie_GetSoundRate)(LPVOID);
-static long(__cdecl* Movie_GetSoundChannels)(LPVOID);
-static long(__cdecl* Movie_SetSyncAdjust)(LPVOID, LPVOID, long);
-static long(__cdecl* Movie_GetCurrentFrame)(LPVOID);
-static long(__cdecl* Movie_GetTotalFrames)(LPVOID);
-
-static HMODULE hWinPlay;
-
-bool LoadWinPlay()
+static void fmv_audio(plm_t* self, plm_samples_t* samples, void* user)
 {
-	hWinPlay = LoadLibrary("WINPLAY.DLL");
 
-	if (!hWinPlay)
-		return 0;
-
-	try
-	{
-		GET_DLL_PROC(hWinPlay, Player_PassInDirectDrawObject);
-		GET_DLL_PROC(hWinPlay, Player_InitMovie);
-		GET_DLL_PROC(hWinPlay, Player_InitVideo);
-		GET_DLL_PROC(hWinPlay, Player_InitPlaybackMode);
-		GET_DLL_PROC(hWinPlay, Player_BlankScreen);
-		GET_DLL_PROC(hWinPlay, Player_InitSoundSystem);
-		GET_DLL_PROC(hWinPlay, Player_GetDSErrorCode);
-		GET_DLL_PROC(hWinPlay, Player_InitSound);
-		GET_DLL_PROC(hWinPlay, Player_SetVolume);
-		GET_DLL_PROC(hWinPlay, Player_InitMoviePlayback);
-		GET_DLL_PROC(hWinPlay, Player_StartTimer);
-		GET_DLL_PROC(hWinPlay, Player_StopTimer);
-		GET_DLL_PROC(hWinPlay, Player_PlayFrame);
-		GET_DLL_PROC(hWinPlay, Player_ShutDownMovie);
-		GET_DLL_PROC(hWinPlay, Player_ShutDownSound);
-		GET_DLL_PROC(hWinPlay, Player_ShutDownSoundSystem);
-		GET_DLL_PROC(hWinPlay, Player_ShutDownVideo);
-		GET_DLL_PROC(hWinPlay, Player_ReturnPlaybackMode);
-
-		GET_DLL_PROC(hWinPlay, Movie_GetFormat);
-		GET_DLL_PROC(hWinPlay, Movie_GetXSize);
-		GET_DLL_PROC(hWinPlay, Movie_GetYSize);
-		GET_DLL_PROC(hWinPlay, Movie_GetSoundPrecision);
-		GET_DLL_PROC(hWinPlay, Movie_GetSoundRate);
-		GET_DLL_PROC(hWinPlay, Movie_GetSoundChannels);
-		GET_DLL_PROC(hWinPlay, Movie_SetSyncAdjust);
-		GET_DLL_PROC(hWinPlay, Movie_GetCurrentFrame);
-		GET_DLL_PROC(hWinPlay, Movie_GetTotalFrames);
-	}
-	catch (LPCTSTR)
-	{
-		FreeLibrary(hWinPlay);
-		hWinPlay = 0;
-		return 0;
-	}
-
-	return 1;
-}
-
-void FreeWinPlay()
-{
-	if (hWinPlay)
-	{
-		FreeLibrary(hWinPlay);
-		hWinPlay = 0;
-	}
 }
 
 long FMV_Play(char* name)
 {
-	if (tomb3.Windowed || !tomb3.WinPlayLoaded)
-		return 0;
-
 	fmv_playing = 1;
 	S_CDStop();
 	ShowCursor(0);
@@ -129,9 +42,6 @@ long FMV_Play(char* name)
 
 long FMV_PlayIntro(char* name1, char* name2)
 {
-	if (tomb3.Windowed || !tomb3.WinPlayLoaded)
-		return 0;
-
 	fmv_playing = 1;
 	ShowCursor(0);
 	WinFreeDX(0);
@@ -150,57 +60,28 @@ long FMV_PlayIntro(char* name1, char* name2)
 
 void WinPlayFMV(const char* name, bool play)
 {
-	long xSize, ySize, xOffset, yOffset;
-	long lp;
-	RECT r;
-
-	r.left = 0;
-	r.top = 0;
-	r.right = 640;
-	r.bottom = 480;
-
-	if (Player_PassInDirectDrawObject(App.DDraw) || Player_InitMovie(&MovieContext, 0, 0, name, 0x200000) || Movie_GetFormat(MovieContext) != 130)
+	if (!DoFileExist(name))
 		return;
+	auto* plm = plm_create_with_filename(name);
+	int samplerate = plm_get_samplerate(plm);
+	plm_set_video_decode_callback(plm, fmv_video, NULL);
+	plm_set_audio_decode_callback(plm, fmv_audio, NULL);
+	plm_set_loop(plm, FALSE);
+	plm_set_audio_enabled(plm, TRUE);
+	plm_set_audio_stream(plm, 0);
 
-	xSize = Movie_GetXSize(MovieContext);
-	ySize = Movie_GetYSize(MovieContext);
-	xOffset = 0;// 320 - Movie_GetXSize(MovieContext);
-	yOffset = 240 - Movie_GetYSize(MovieContext);
+	if (plm_get_num_audio_streams(plm) > 0) {
 
-	if (Player_InitVideo(&FmvContext, MovieContext, xSize, ySize, xOffset, yOffset, 0, 0, 640, 480, 0, 1, 13) ||
-		(play && Player_InitPlaybackMode(App.WindowHandle, FmvContext, 1, 0)))
-		return;
+	}
 
-	Player_BlankScreen(r.left, r.top, r.right, r.bottom);
+	int num_pixels = plm_get_width(plm) * plm_get_height(plm);
+	rgb_data = (unsigned char*)malloc(num_pixels * 3);
 
-	if (Player_InitSoundSystem(App.WindowHandle) || FAILED(Player_GetDSErrorCode()))
-		return;
-
-	if (Player_InitSound(&FmvSoundContext, 0x4000, Movie_GetSoundPrecision(MovieContext) == 4 ? 4 : 1,
-		Movie_GetSoundPrecision(MovieContext) != 4, 4096, Movie_GetSoundChannels(MovieContext), Movie_GetSoundRate(MovieContext),
-		Movie_GetSoundPrecision(MovieContext), 2))
-		return;
-
-	Player_SetVolume(FmvSoundContext, acm_volume);
-	Movie_SetSyncAdjust(MovieContext, FmvSoundContext, 4);
-
-	if (Player_InitMoviePlayback(MovieContext, FmvContext, FmvSoundContext))
-		return;
-
-	S_UpdateInput();
-	Player_StartTimer(MovieContext);
-	Player_BlankScreen(r.left, r.top, r.right, r.bottom);
-	S_UpdateInput();
-
-	lp = 0;
-
-	while (Movie_GetCurrentFrame(MovieContext) < Movie_GetTotalFrames(MovieContext) && !lp)
+	while (!plm_has_ended(plm) && !GtWindowClosed)
 	{
-		lp = Player_PlayFrame(MovieContext, FmvContext, FmvSoundContext, 0, &r, 0, 0, 0);
-
+		plm_decode(plm, WinFrameRate());
 		if (S_UpdateInput())
 			break;
-
 		if (input & IN_OPTION)
 			break;
 	}
@@ -208,12 +89,15 @@ void WinPlayFMV(const char* name, bool play)
 
 void WinStopFMV(bool play)
 {
-	Player_StopTimer(MovieContext);
-	Player_ShutDownSound(&FmvSoundContext);
-	Player_ShutDownVideo(&FmvContext);
-	Player_ShutDownMovie(&MovieContext);
-	Player_ShutDownSoundSystem();
-
-	if (play)
-		Player_ReturnPlaybackMode();
+	if (plm != NULL)
+	{
+		plm_destroy(plm);
+		plm = NULL;
+	}
+	
+	if (rgb_data != NULL)
+	{
+		free(rgb_data);
+		rgb_data = NULL;
+	}
 }

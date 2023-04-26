@@ -266,6 +266,7 @@
     <ClInclude Include="tomb3\game\tonyboss.h" />
     <ClInclude Include="tomb3\game\tr1\atlantean_centaur.h" />
     <ClInclude Include="tomb3\game\tr1\bear.h" />
+    <ClInclude Include="tomb3\game\tr1\tr1_pierre.h" />
     <ClInclude Include="tomb3\game\tr1\wolf.h" />
     <ClInclude Include="tomb3\game\train.h" />
     <ClInclude Include="tomb3\game\traps.h" />
@@ -283,6 +284,7 @@
     <ClInclude Include="tomb3\newstuff\LaraDraw.h" />
     <ClInclude Include="tomb3\newstuff\map.h" />
     <ClInclude Include="tomb3\newstuff\pausemenu.h" />
+    <ClInclude Include="tomb3\newstuff\pl_mpeg.h" />
     <ClInclude Include="tomb3\newstuff\psxsaves.h" />
     <ClInclude Include="tomb3\newstuff\setupdlg.h" />
     <ClInclude Include="tomb3\script\interpreter.h" />
@@ -412,6 +414,7 @@
     <ClCompile Include="tomb3\game\tonyboss.cpp" />
     <ClCompile Include="tomb3\game\tr1\atlantean_centaur.cpp" />
     <ClCompile Include="tomb3\game\tr1\bear.cpp" />
+    <ClCompile Include="tomb3\game\tr1\tr1_pierre.cpp" />
     <ClCompile Include="tomb3\game\tr1\wolf.cpp" />
     <ClCompile Include="tomb3\game\train.cpp" />
     <ClCompile Include="tomb3\game\traps.cpp" />

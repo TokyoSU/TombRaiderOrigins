@@ -356,7 +356,7 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
 	return enemy_quad != baddie_quad || abs(enemy_quad - box_quad) != 2;
 }
 
-target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
+TARGET_TYPE CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
 {
 	BOX_INFO* box;
 	long box_number, box_left, box_right, box_top, box_bottom;
@@ -674,7 +674,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	CREATURE_INFO* creature;
 	ITEM_INFO* enemy;
 	LOT_INFO* LOT;
-	mood_type mood;
+	MOOD_TYPE mood;
 
 	creature = (CREATURE_INFO*)item->data;
 

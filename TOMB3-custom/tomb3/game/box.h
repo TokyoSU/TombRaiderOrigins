@@ -15,7 +15,7 @@ void TargetBox(LOT_INFO* LOT, short box_number);
 long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number);
 long ValidBox(ITEM_INFO* item, short zone_number, short box_number);
 long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number);
-target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT);
+TARGET_TYPE CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT);
 void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent);
 void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent);
 long BadFloor(long x, long y, long z, long box_height, long next_height, short room_number, CREATURE_INFO* creature);
