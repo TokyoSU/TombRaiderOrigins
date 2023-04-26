@@ -81,7 +81,8 @@
 #include "wolf.h"
 #include "bear.h"
 
-
+#include "tr1_larson.h"
+#include "tr1_pierre.h"
 #include "atlantean_centaur.h"
 
 #include "train.h"
@@ -1346,6 +1347,41 @@ static void BaddyObjects()
 		bones[obj->bone_index + 10 * 4] |= 8|4;
 	}
 
+	obj = &objects[TR1_PIERRE];
+	if (obj->loaded)
+	{
+		obj->initialise = InitialiseTR1Pierre;
+		obj->control = TR1PierreControl;
+		obj->collision = CreatureCollision;
+		obj->shadow_size = 128;
+		obj->hit_points = 70;
+		obj->radius = 102;
+		obj->pivot_length = 0;
+		obj->intelligent = 1;
+		obj->save_position = 1;
+		obj->save_hitpoints = 1;
+		obj->save_flags = 1;
+		obj->save_anim = 1;
+		bones[obj->bone_index + 6 * 4] |= 8;
+	}
+
+	obj = &objects[TR1_LARSON];
+	if (obj->loaded)
+	{
+		obj->initialise = InitialiseTR1Larson;
+		obj->control = TR1LarsonControl;
+		obj->collision = CreatureCollision;
+		obj->shadow_size = 128;
+		obj->hit_points = 50;
+		obj->radius = 102;
+		obj->pivot_length = 0;
+		obj->intelligent = 1;
+		obj->save_position = 1;
+		obj->save_hitpoints = 1;
+		obj->save_flags = 1;
+		obj->save_anim = 1;
+		bones[obj->bone_index + 6 * 4] |= 8;
+	}
 }
 
 static void TrapObjects()

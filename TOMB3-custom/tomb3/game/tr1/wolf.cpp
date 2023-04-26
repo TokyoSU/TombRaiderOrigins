@@ -55,7 +55,7 @@ void WolfControl(short item_number)
     if (item->hit_points <= 0)
     {
 		if (item->current_anim_state != WOLF_DEATH)
-			SetAnimation(item, WOLF_DIE_ANIM);
+			SetAnimation(item, WOLF_DIE_ANIM + (short)(GetRandomControl() / 11000));
     }
     else
     {
