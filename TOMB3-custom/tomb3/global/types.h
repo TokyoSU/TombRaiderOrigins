@@ -636,6 +636,7 @@ struct ITEM_LIGHT
 
 struct ITEM_INFO
 {
+	short index;
 	long floor;
 	ulong touch_bits;
 	ulong mesh_bits;
@@ -659,7 +660,7 @@ struct ITEM_INFO
 	short carried_item;
 	short ocb;
 	short after_death;
-	ushort fired_weapon;
+	ushort fired_weapon[2];
 	short item_flags[4];
 	void* data;
 	PHD_3DPOS pos;
@@ -720,6 +721,7 @@ struct LOT_INFO
 
 struct CREATURE_INFO
 {
+	short index;
 	short joint_rotation[4];
 	short maximum_turn;
 	short flags;
@@ -730,7 +732,6 @@ struct CREATURE_INFO
 	ushort hurt_by_lara : 1;
 	ushort patrol2 : 1;
 	MOOD_TYPE mood;
-	short item_num;
 	PHD_VECTOR target;
 	ITEM_INFO* enemy;
 	LOT_INFO LOT;
@@ -1150,6 +1151,31 @@ struct SAVEGAME_INFO
 	char buffer[0x40000];
 };
 
+struct BITE_INFO
+{
+	long x;
+	long y;
+	long z;
+	long joint_index;
+};
+
+struct OBJECT_BITE_INFO
+{
+	BITE_INFO bite; // The gun_flash position and mesh.
+	bool is_enabled = false; // Does this gun_flash is enabled for rendering.
+	bool is_mp5_flash = false; // Is the gun_flash model the m16 gun_flash ?
+	bool is_rotated_x = true; // Does the gun_flash is rotated in the x axis ?
+	bool is_rotated_z = true; // Does the gun_flash is rotated in the z axis ?
+
+	OBJECT_BITE_INFO()
+	{
+		is_enabled = false;
+		is_mp5_flash = false;
+		is_rotated_x = true;
+		is_rotated_z = true;
+	}
+};
+
 struct OBJECT_INFO
 {
 	short nmeshes;
@@ -1161,13 +1187,14 @@ struct OBJECT_INFO
 	void (*floor)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*ceiling)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*draw_routine)(ITEM_INFO* item);
+	void (*draw_routine_extra)(ITEM_INFO* item);
 	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
 	short anim_index;
 	short hit_points;
 	short pivot_length;
 	short radius;
 	short shadow_size;
-	ushort bite_offset;	//bite_offsets enum
+	OBJECT_BITE_INFO gun_flash[2];
 	ushort loaded : 1;
 	ushort intelligent : 1;
 	ushort non_lot : 1;
@@ -1591,14 +1618,6 @@ struct HWCONFIG
 	long nFilter;
 	long nShadeMode;
 	long nFillMode;
-};
-
-struct BITE_INFO
-{
-	long x;
-	long y;
-	long z;
-	long mesh_num;
 };
 
 struct WATERTAB

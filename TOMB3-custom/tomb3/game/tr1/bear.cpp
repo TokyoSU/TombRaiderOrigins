@@ -115,7 +115,7 @@ void BearControl(short item_number)
 		case BEAR_STROLL:
 			bear->maximum_turn = BEAR_WALK_TURN;
 
-			if (dead_enemy && item->is_colliding_with_target(bear_head_bite.mesh_num) && info.ahead)
+			if (dead_enemy && item->is_colliding_with_target(bear_head_bite.joint_index) && info.ahead)
 			{
 				item->goal_anim_state = BEAR_STOP;
 			}
@@ -138,7 +138,7 @@ void BearControl(short item_number)
 		case BEAR_RUN:
 			bear->maximum_turn = BEAR_RUN_TURN;
 
-			if (item->is_colliding_with_target(bear_head_bite.mesh_num))
+			if (item->is_colliding_with_target(bear_head_bite.joint_index))
 			{
 				lara_item->hit_points -= BEAR_CHARGE_DAMAGE;
 				lara_item->hit_status = 1;
@@ -194,7 +194,7 @@ void BearControl(short item_number)
 				item->required_anim_state = BEAR_STROLL;
 				item->goal_anim_state = BEAR_REAR;
 			}
-			else if (info.ahead && item->is_colliding_with_target(bear_head_bite.mesh_num))
+			else if (info.ahead && item->is_colliding_with_target(bear_head_bite.joint_index))
 			{
 				item->goal_anim_state = BEAR_REAR;
 			}
@@ -217,13 +217,13 @@ void BearControl(short item_number)
 			break;
 
 		case BEAR_ATTACK2:
-			if (!item->required_anim_state && item->is_colliding_with_target(bear_handfront_left_bite.mesh_num))
+			if (!item->required_anim_state && item->is_colliding_with_target(bear_handfront_left_bite.joint_index))
 			{
 				lara_item->hit_points -= BEAR_PAT_DAMAGE / 2;
 				lara_item->hit_status = 1;
 			}
 
-			if (!item->required_anim_state && item->is_colliding_with_target(bear_handfront_right_bite.mesh_num))
+			if (!item->required_anim_state && item->is_colliding_with_target(bear_handfront_right_bite.joint_index))
 			{
 				lara_item->hit_points -= BEAR_PAT_DAMAGE / 2;
 				lara_item->hit_status = 1;
@@ -233,7 +233,7 @@ void BearControl(short item_number)
 			break;
 
 		case BEAR_ATTACK1:
-			if (!item->required_anim_state && item->is_colliding_with_target(bear_head_bite.mesh_num))
+			if (!item->required_anim_state && item->is_colliding_with_target(bear_head_bite.joint_index))
 			{
 				CreatureEffect(item, &bear_head_bite, DoBloodSplat);
 				lara_item->hit_points -= BEAR_ATTACK_DAMAGE;

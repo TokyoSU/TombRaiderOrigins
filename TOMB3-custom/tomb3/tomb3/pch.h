@@ -29,6 +29,7 @@
 #include <mmeapi.h>
 #include <ctime>
 #include <MSAcm.h>
+#include "types.h"
 
 #define ONE_DEGREE 182
 #define CLICK_SIZE 256

@@ -57,10 +57,10 @@ void RaptorControl(short item_number)
 		{
 			for (lp = 0; lp < MAX_LOT; lp++)
 			{
-				if (baddie_slots[lp].item_num == NO_ITEM || baddie_slots[lp].item_num == item_number)
+				if (baddie_slots[lp].index == NO_ITEM || baddie_slots[lp].index == item_number)
 					continue;
 
-				candidate = &items[baddie_slots[lp].item_num];
+				candidate = &items[baddie_slots[lp].index];
 				x = (candidate->pos.x_pos - item->pos.x_pos) >> 6;
 				y = (candidate->pos.y_pos - item->pos.y_pos) >> 6;
 				z = (candidate->pos.z_pos - item->pos.z_pos) >> 6;

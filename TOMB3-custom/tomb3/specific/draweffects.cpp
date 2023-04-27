@@ -2257,12 +2257,12 @@ void TriggerTribeBossHeadElectricity(ITEM_INFO* item, long copy)
 		pos1.x = tribeboss_hit[i].x;
 		pos1.y = tribeboss_hit[i].y;
 		pos1.z = tribeboss_hit[i].z;
-		GetJointAbsPosition(item, &pos1, tribeboss_hit[i].mesh_num);
+		GetJointAbsPosition(item, &pos1, tribeboss_hit[i].joint_index);
 
 		pos2.x = tribeboss_hit[i + 1].x;
 		pos2.y = tribeboss_hit[i + 1].y;
 		pos2.z = tribeboss_hit[i + 1].z;
-		GetJointAbsPosition(item, &pos2, tribeboss_hit[i + 1].mesh_num);
+		GetJointAbsPosition(item, &pos2, tribeboss_hit[i + 1].joint_index);
 
 		if (i == 2)
 			TrigDynamics[0] = pos1;
@@ -2358,12 +2358,12 @@ void TriggerTribeBossHeadElectricity(ITEM_INFO* item, long copy)
 			pos1.x = tribeboss_hit[i].x;
 			pos1.y = tribeboss_hit[i].y;
 			pos1.z = tribeboss_hit[i].z;
-			GetJointAbsPosition(item, &pos1, tribeboss_hit[i].mesh_num);
+			GetJointAbsPosition(item, &pos1, tribeboss_hit[i].joint_index);
 
 			pos2.x = tribeboss_hit[5].x;
 			pos2.y = tribeboss_hit[5].y;
 			pos2.z = tribeboss_hit[5].z;
-			GetJointAbsPosition(item, &pos2, tribeboss_hit[5].mesh_num);
+			GetJointAbsPosition(item, &pos2, tribeboss_hit[5].joint_index);
 
 			pos1.x -= item->pos.x_pos;
 			pos1.y -= item->pos.y_pos;
@@ -3710,7 +3710,7 @@ void S_DrawSparks()
 				pos.x = NodeOffsets[sptr->NodeNumber].x;
 				pos.y = NodeOffsets[sptr->NodeNumber].y;
 				pos.z = NodeOffsets[sptr->NodeNumber].z;
-				GetJointAbsPosition(item, &pos, NodeOffsets[sptr->NodeNumber].mesh_num);
+				GetJointAbsPosition(item, &pos, NodeOffsets[sptr->NodeNumber].joint_index);
 				x = sptr->x + pos.x;
 				y = sptr->y + pos.y;
 				z = sptr->z + pos.z;
@@ -5100,7 +5100,7 @@ void S_DrawSubWakeFX(ITEM_INFO* item)
 			pos.x = bite->x;
 			pos.y = bite->y;
 			pos.z = bite->z;
-			GetJointAbsPosition(item, &pos, bite->mesh_num);
+			GetJointAbsPosition(item, &pos, bite->joint_index);
 			x1 = pos.x - lara_item->pos.x_pos;
 			y1 = pos.y + 128 - lara_item->pos.y_pos;
 			z1 = pos.z - lara_item->pos.z_pos;

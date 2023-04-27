@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "tr1_larson.h"
 #include "box.h"
+#include "draw.h"
 #include "control.h"
 #include "people.h"
 #include "lara.h"
@@ -28,7 +29,7 @@ enum LarsonState
 #define LARSON_DIE_ANIM 15
 #define LARSON_POSE_CHANCE 0x60
 
-static BITE_INFO larson_gun = { -60, 170, 0, 14 };
+BITE_INFO larson_gun = { -60, 170, 10, 14 };
 
 void InitialiseTR1Larson(short item_number)
 {
@@ -43,7 +44,7 @@ void TR1LarsonControl(short item_number)
 		return;
 
 	ITEM_INFO* item = &items[item_number];
-	CREATURE_INFO* people = (CREATURE_INFO*)item->data;
+	CREATURE_INFO* larson = (CREATURE_INFO*)item->data;
 	AI_INFO info{};
 	short angle = 0, head = 0, tilt = 0;
 
@@ -58,30 +59,24 @@ void TR1LarsonControl(short item_number)
 		if (info.ahead)
 			head = info.angle;
 		GetCreatureMood(item, &info, TIMID);
-		if (people->flags)
-		{
-			info.enemy_zone = -1;
-			item->hit_status = 1;
-			people->mood = ESCAPE_MOOD;
-		}
 		CreatureMood(item, &info, TIMID);
-		angle = CreatureTurn(item, people->maximum_turn);
+		angle = CreatureTurn(item, larson->maximum_turn);
 
 		switch (item->current_anim_state)
 		{
 		case LARSON_STOP:
 			if (item->required_anim_state)
 				item->goal_anim_state = item->required_anim_state;
-			else if (people->mood == BORED_MOOD)
+			else if (larson->mood == BORED_MOOD)
 				item->goal_anim_state = (GetRandomControl() < LARSON_POSE_CHANCE) ? LARSON_POSE : LARSON_WALK;
-			else if (people->mood == ESCAPE_MOOD)
+			else if (larson->mood == ESCAPE_MOOD)
 				item->goal_anim_state = LARSON_RUN;
 			else
 				item->goal_anim_state = LARSON_WALK;
 			break;
 
 		case LARSON_POSE:
-			if (people->mood != BORED_MOOD)
+			if (larson->mood != BORED_MOOD)
 				item->goal_anim_state = LARSON_STOP;
 			else if (GetRandomControl() < LARSON_POSE_CHANCE)
 			{
@@ -91,14 +86,14 @@ void TR1LarsonControl(short item_number)
 			break;
 
 		case LARSON_WALK:
-			people->maximum_turn = LARSON_WALK_TURN;
+			larson->maximum_turn = LARSON_WALK_TURN;
 
-			if (people->mood == BORED_MOOD && GetRandomControl() < LARSON_POSE_CHANCE)
+			if (larson->mood == BORED_MOOD && GetRandomControl() < LARSON_POSE_CHANCE)
 			{
 				item->required_anim_state = LARSON_POSE;
 				item->goal_anim_state = LARSON_STOP;
 			}
-			else if (people->mood == ESCAPE_MOOD)
+			else if (larson->mood == ESCAPE_MOOD)
 			{
 				item->required_anim_state = LARSON_RUN;
 				item->goal_anim_state = LARSON_STOP;
@@ -116,10 +111,10 @@ void TR1LarsonControl(short item_number)
 			break;
 
 		case LARSON_RUN:
-			people->maximum_turn = LARSON_RUN_TURN;
+			larson->maximum_turn = LARSON_RUN_TURN;
 			tilt = angle / 2;
 
-			if (people->mood == BORED_MOOD && GetRandomControl() < LARSON_POSE_CHANCE)
+			if (larson->mood == BORED_MOOD && GetRandomControl() < LARSON_POSE_CHANCE)
 			{
 				item->required_anim_state = LARSON_POSE;
 				item->goal_anim_state = LARSON_STOP;
@@ -150,10 +145,11 @@ void TR1LarsonControl(short item_number)
 			if (item->required_anim_state == 0)
 			{
 				ShotLara(item, &info, &larson_gun, head, LARSON_SHOT_DAMAGE);
+				item->fired_weapon[0] = 2;
 				item->required_anim_state = LARSON_AIM;
 			}
 
-			if (people->mood == ESCAPE_MOOD)
+			if (larson->mood == ESCAPE_MOOD)
 				item->required_anim_state = LARSON_STOP;
 			break;
 		}

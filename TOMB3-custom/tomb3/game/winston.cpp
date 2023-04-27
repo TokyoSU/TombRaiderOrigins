@@ -92,10 +92,10 @@ void WinstonControl(short item_number)
 		{
 			old = &baddie_slots[i];
 
-			if (items[old->item_num].object_number == WINSTON)
+			if (items[old->index].object_number == WINSTON)
 			{
-				items[old->item_num].status = ITEM_INVISIBLE;
-				CreatureDie(old->item_num, 0);
+				items[old->index].status = ITEM_INVISIBLE;
+				CreatureDie(old->index, 0);
 				break;
 			}
 		}

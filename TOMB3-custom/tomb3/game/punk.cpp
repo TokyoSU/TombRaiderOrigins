@@ -127,7 +127,7 @@ void PunkControl(short item_number)
 		pos.x = (rnd & 0xF) + punk_hit.x - 8;
 		pos.y = ((rnd >> 4) & 0xF) + punk_hit.y - 8;
 		pos.z = ((rnd >> 8) & 0xF) + punk_hit.z - 8;
-		GetJointAbsPosition(item, &pos, punk_hit.mesh_num);
+		GetJointAbsPosition(item, &pos, punk_hit.joint_index);
 		r = 255 - ((rnd >> 4) & 0x1F);
 		g = 192 - ((rnd >> 6) & 0x1F);
 		b = rnd & 0x3F;

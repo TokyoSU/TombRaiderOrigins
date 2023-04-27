@@ -81,15 +81,13 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotat
 		hit = 0;
 	}
 
-	item->fired_weapon = 3;
 	fx_num = CreateEffect(item->room_number);
-
 	if (fx_num != NO_ITEM)
 	{
 		pos.x = bite->x >> 2;
 		pos.y = bite->y >> 2;
 		pos.z = bite->z >> 2;
-		GetJointAbsPosition(item, &pos, bite->mesh_num);
+		GetJointAbsPosition(item, &pos, bite->joint_index);
 		fx = &effects[fx_num];
 		fx->pos.x_pos = pos.x;
 		fx->pos.y_pos = pos.y;
@@ -108,7 +106,7 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotat
 		pos.x = bite->x - (bite->x >> 2);
 		pos.y = bite->y - (bite->y >> 2);
 		pos.z = bite->z - (bite->z >> 2);
-		GetJointAbsPosition(item, &pos, bite->mesh_num);
+		GetJointAbsPosition(item, &pos, bite->joint_index);
 		TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, 1, 32);
 	}
 

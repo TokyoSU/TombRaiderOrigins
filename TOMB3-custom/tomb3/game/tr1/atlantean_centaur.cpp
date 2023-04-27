@@ -138,7 +138,7 @@ void AtlanteanCentaurControl(short item_number)
 			break;
 
 		case CENTAUR_WARNING:
-			if (!item->required_anim_state && item->is_colliding_with_target(centaur_rear.mesh_num))
+			if (!item->required_anim_state && item->is_colliding_with_target(centaur_rear.joint_index))
 			{
 				CreatureEffect(item, &centaur_rear, DoBloodSplat);
 				lara_item->hit_points -= CENTAUR_REAR_DAMAGE;

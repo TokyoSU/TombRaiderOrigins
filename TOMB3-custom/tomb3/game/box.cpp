@@ -1,16 +1,18 @@
 #include "pch.h"
 #include "box.h"
-#include "objects.h"
-#include "../specific/game.h"
+#include "camera.h"
 #include "lot.h"
-#include "../3dsystem/phd_math.h"
-#include "lara.h"
-#include "draw.h"
+#include "3d_gen.h"
 #include "control.h"
+#include "phd_math.h"
+#include "lara.h"
+#include "effect2.h"
+#include "draw.h"
+#include "objects.h"
 #include "missile.h"
 #include "items.h"
 #include "sphere.h"
-#include "camera.h"
+#include "game.h"
 
 BOX_INFO* boxes;
 long number_boxes;
@@ -27,12 +29,10 @@ void AlertNearbyGuards(ITEM_INFO* item)
 	for (int i = 0; i < MAX_LOT; i++)
 	{
 		creature = &baddie_slots[i];
-
-		if (creature->item_num == NO_ITEM)
+		if (creature->index == NO_ITEM)
 			continue;
 
-		target = &items[creature->item_num];
-
+		target = &items[creature->index];
 		if (target->room_number == item->room_number)
 		{
 			creature->alerted = 1;
@@ -43,7 +43,6 @@ void AlertNearbyGuards(ITEM_INFO* item)
 		dy = (target->pos.y_pos - item->pos.y_pos) >> 6;
 		dz = (target->pos.z_pos - item->pos.z_pos) >> 6;
 		dist = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
-
 		if (dist < 8000)
 			creature->alerted = 1;
 	}
@@ -94,8 +93,7 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 	short pivot, ang, state;
 
 	creature = (CREATURE_INFO*)item->data;
-
-	if (!creature)
+	if (creature == NULL)
 		return;
 
 	obj = &objects[item->object_number];
@@ -162,6 +160,22 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 
 	info->ahead = info->angle > -0x4000 && info->angle < 0x4000;
 	info->bite = info->ahead && enemy->hit_points > 0 && abs(enemy->pos.y_pos - item->pos.y_pos) <= 512;
+
+	for (int index = 0; index < 2; index++)
+	{
+		OBJECT_BITE_INFO& objinfo = obj->gun_flash[index];
+		if (objinfo.is_enabled && item->fired_weapon[index] != 0)
+		{
+			PHD_VECTOR pos{};
+			pos.x = objinfo.bite.x;
+			pos.y = objinfo.bite.y;
+			pos.z = objinfo.bite.z;
+			GetJointAbsPosition(item, &pos, objinfo.bite.joint_index);
+			phd_PushMatrix();
+			TriggerDynamic(pos.x, pos.y, pos.z, 3 * (item->fired_weapon[index] << 1) + 8, 255, 128, 64);
+			phd_PopMatrix();
+		}
+	}
 }
 
 long SearchLOT(LOT_INFO* LOT, long expansion)
@@ -1322,7 +1336,7 @@ short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, 
 	pos.x = bite->x;
 	pos.y = bite->y;
 	pos.z = bite->z;
-	GetJointAbsPosition(item, &pos, bite->mesh_num);
+	GetJointAbsPosition(item, &pos, bite->joint_index);
 	return generate(pos.x, pos.y, pos.z, item->speed, item->pos.y_rot, item->room_number);
 }
 
@@ -1439,7 +1453,7 @@ short AIGuard(CREATURE_INFO* creature)
 {
 	long rnd;
 
-	if (items[creature->item_num].ai_bits & MODIFY)
+	if (items[creature->index].ai_bits & MODIFY)
 		return 0;
 
 	rnd = GetRandomControl();
@@ -1484,9 +1498,9 @@ void AlertAllGuards(short item_number)
 	{
 		creature = &baddie_slots[i];
 
-		if (creature->item_num != NO_ITEM)
+		if (creature->index != NO_ITEM)
 		{
-			target = &items[creature->item_num];
+			target = &items[creature->index];
 
 			if (target->object_number == item->object_number && target->status == ITEM_ACTIVE)
 				creature->alerted = 1;
@@ -1499,7 +1513,7 @@ short SameZone(CREATURE_INFO* creature, ITEM_INFO* target_item)
 	ITEM_INFO* item;
 	ROOM_INFO* r;
 	short* zone = zones[creature->LOT.zone][flip_status];
-	item = &items[creature->item_num];
+	item = &items[creature->index];
 
 	r = &room[item->room_number];
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> WALL_SHIFT) + r->x_size * ((item->pos.x_pos - r->x) >> WALL_SHIFT)].box;
@@ -1527,7 +1541,7 @@ void GetAITarget(CREATURE_INFO* creature)
 	else
 		enemy_object = NO_ITEM;
 
-	item = &items[creature->item_num];
+	item = &items[creature->index];
 	ai_bits = item->ai_bits;
 
 	if (ai_bits & GUARD)

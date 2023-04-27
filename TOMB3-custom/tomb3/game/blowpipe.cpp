@@ -37,12 +37,12 @@ static void BlowpipeDart(ITEM_INFO* item)	//NEW FUNCTION, NOT IN ORIGINAL CODE!
 	pos.x = blow_shoot_hit.x;
 	pos.y = blow_shoot_hit.y;
 	pos.z = blow_shoot_hit.z;
-	GetJointAbsPosition(item, &pos, blow_shoot_hit.mesh_num);
+	GetJointAbsPosition(item, &pos, blow_shoot_hit.joint_index);
 
 	pos1.x = blow_shoot_hit.x;
 	pos1.y = blow_shoot_hit.y;
 	pos1.z = blow_shoot_hit.z << 1;
-	GetJointAbsPosition(item, &pos1, blow_shoot_hit.mesh_num);
+	GetJointAbsPosition(item, &pos1, blow_shoot_hit.joint_index);
 
 	phd_GetVectorAngles(pos1.x - pos.x, pos1.y - pos.y, pos1.z - pos.z, angles);
 	dart->pos.x_pos = pos.x;
@@ -58,7 +58,7 @@ static void BlowpipeDart(ITEM_INFO* item)	//NEW FUNCTION, NOT IN ORIGINAL CODE!
 	pos.x = blow_shoot_hit.x;
 	pos.y = blow_shoot_hit.y;
 	pos.z = blow_shoot_hit.z + 96;
-	GetJointAbsPosition(item, &pos, blow_shoot_hit.mesh_num);
+	GetJointAbsPosition(item, &pos, blow_shoot_hit.joint_index);
 
 	for (lp = 0; lp < 2; lp++)
 		TriggerDartSmoke(pos.x, pos.y, pos.z, 0, 0, 1);

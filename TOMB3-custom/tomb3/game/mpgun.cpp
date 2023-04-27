@@ -26,7 +26,6 @@ void MPGunControl(short item_number)
 	FLOOR_INFO* floor;
 	AI_INFO info;
 	AI_INFO lara_info;
-	PHD_VECTOR pos;
 	long dx, dz, x, y, z, h, near_cover;
 	short tilt, torso_y, torso_x, head, angle, room_number;
 
@@ -40,17 +39,6 @@ void MPGunControl(short item_number)
 	torso_x = 0;
 	head = 0;
 	angle = 0;
-
-	if (item->fired_weapon)
-	{
-		phd_PushMatrix();
-		pos.x = mpgun_gun.x;
-		pos.y = mpgun_gun.y;
-		pos.z = mpgun_gun.z;
-		GetJointAbsPosition(item, &pos, mpgun_gun.mesh_num);
-		TriggerDynamic(pos.x, pos.y, pos.z, 2 * item->fired_weapon + 4, 192, 128, 32);
-		phd_PopMatrix();
-	}
 
 	if (boxes[item->box_number].overlap_index & 0x4000)
 	{
@@ -74,9 +62,9 @@ void MPGunControl(short item_number)
 			{
 				target = &baddie_slots[i];
 
-				if (target->item_num != NO_ITEM && target->item_num != item_number)
+				if (target->index != NO_ITEM && target->index != item_number)
 				{
-					candidate = &items[target->item_num];
+					candidate = &items[target->index];
 
 					if (candidate->object_number == LARA || candidate->object_number == BOB)
 					{

@@ -234,7 +234,7 @@ void MonkeyControl(short item_number)
 					break;
 				}
 
-				item->carried_item = enemy - items;
+				item->carried_item = enemy->index;
 				RemoveDrawnItem(item->carried_item);
 				enemy->room_number = NO_ROOM;
 				enemy->carried_item = NO_ITEM;
@@ -243,7 +243,7 @@ void MonkeyControl(short item_number)
 				{
 					slot = &baddie_slots[lp];
 
-					if (slot->item_num != NO_ITEM && slot->item_num != item_number && slot->enemy == enemy)
+					if (slot->index != NO_ITEM && slot->index != item_number && slot->enemy == enemy)
 						slot->enemy = 0;
 				}
 

@@ -20,7 +20,6 @@ void LondSecControl(short item_number)
 	ITEM_INFO* enemy;
 	CREATURE_INFO* sec;
 	FLOOR_INFO* floor;
-	PHD_VECTOR pos;
 	AI_INFO info;
 	AI_INFO larainfo;
 	long x, y, z, mood, h;
@@ -36,17 +35,6 @@ void LondSecControl(short item_number)
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
-
-	if (item->fired_weapon)
-	{
-		phd_PushMatrix();
-		pos.x = londsec_gun.x;
-		pos.y = londsec_gun.y;
-		pos.z = londsec_gun.z;
-		GetJointAbsPosition(item, &pos, londsec_gun.mesh_num);
-		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 4, 192, 128, 32);
-		phd_PopMatrix();
-	}
 
 	if (item->hit_points <= 0)
 	{

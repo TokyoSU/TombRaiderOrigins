@@ -72,9 +72,9 @@ void BatonControl(short item_number)
 			{
 				target = &baddie_slots[i];
 
-				if (target->item_num != NO_ITEM && target->item_num != item_number)
+				if (target->index != NO_ITEM && target->index != item_number)
 				{
-					candidate = &items[target->item_num];
+					candidate = &items[target->index];
 
 					if (candidate->object_number == LARA || candidate->object_number == BOB)
 					{

@@ -127,12 +127,12 @@ static short TriggerLizmanGasThrower(ITEM_INFO* item, BITE_INFO* bite, short spe
 	pos.x = bite->x;
 	pos.y = bite->y;
 	pos.z = bite->z;
-	GetJointAbsPosition(item, &pos, bite->mesh_num);
+	GetJointAbsPosition(item, &pos, bite->joint_index);
 
 	pos1.x = bite->x;
 	pos1.y = bite->y << 3;
 	pos1.z = bite->z << 2;
-	GetJointAbsPosition(item, &pos1, bite->mesh_num);
+	GetJointAbsPosition(item, &pos1, bite->joint_index);
 
 	phd_GetVectorAngles(pos1.x - pos.x, pos1.y - pos.y, pos1.z - pos.z, angles);
 

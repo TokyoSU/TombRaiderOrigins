@@ -20,7 +20,6 @@ void OilRedControl(short item_number)
 	ITEM_INFO* enemy;
 	CREATURE_INFO* red;
 	FLOOR_INFO* floor;
-	PHD_VECTOR pos;
 	AI_INFO info;
 	AI_INFO larainfo;
 	long x, y, z, mood, h;
@@ -36,17 +35,6 @@ void OilRedControl(short item_number)
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
-
-	if (item->fired_weapon)
-	{
-		phd_PushMatrix();
-		pos.x = oilred_gun.x;
-		pos.y = oilred_gun.y;
-		pos.z = oilred_gun.z;
-		GetJointAbsPosition(item, &pos, oilred_gun.mesh_num);
-		TriggerDynamic(pos.x, pos.y, pos.z, 2 * item->fired_weapon + 4, 192, 128, 32);
-		phd_PopMatrix();
-	}
 
 	if (item->hit_points <= 0)
 	{

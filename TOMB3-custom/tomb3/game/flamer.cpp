@@ -175,11 +175,11 @@ static short TriggerFlameThrower(ITEM_INFO* item, BITE_INFO* bite, short speed)
 		pos1.x = bite->x;
 		pos1.y = bite->y;
 		pos1.z = bite->z;
-		GetJointAbsPosition(item, &pos1, bite->mesh_num);
+		GetJointAbsPosition(item, &pos1, bite->joint_index);
 		pos2.x = bite->x;
 		pos2.y = bite->y << 1;
 		pos2.z = bite->z;
-		GetJointAbsPosition(item, &pos2, bite->mesh_num);
+		GetJointAbsPosition(item, &pos2, bite->joint_index);
 		phd_GetVectorAngles(pos2.x - pos1.x, pos2.y - pos1.y, pos2.z - pos1.z, angles);
 		fx->pos.x_pos = pos1.x;
 		fx->pos.y_pos = pos1.y;
@@ -239,7 +239,7 @@ void FlamerControl(short item_number)
 	pos.x = flamer_gun.x;
 	pos.y = flamer_gun.y;
 	pos.z = flamer_gun.z;
-	GetJointAbsPosition(item, &pos, flamer_gun.mesh_num);
+	GetJointAbsPosition(item, &pos, flamer_gun.joint_index);
 	rnd = (short)GetRandomControl();
 
 	if (item->current_anim_state == 6 || item->current_anim_state == 11)
@@ -282,10 +282,10 @@ void FlamerControl(short item_number)
 			{
 				target = &baddie_slots[i];
 
-				if (target->item_num == NO_ITEM || target->item_num == item_number)
+				if (target->index == NO_ITEM || target->index == item_number)
 					continue;
 
-				enemy = &items[target->item_num];
+				enemy = &items[target->index];
 
 				if (enemy->object_number == LARA ||
 					enemy->object_number == WHITE_SOLDIER ||

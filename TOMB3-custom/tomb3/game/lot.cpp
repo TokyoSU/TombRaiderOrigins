@@ -21,7 +21,7 @@ void InitialiseLOTarray()
 	for (int i = 0; i < MAX_LOT; i++)
 	{
 		creature = &baddie_slots[i];
-		creature->item_num = NO_ITEM;
+		creature->index = NO_ITEM;
 		creature->LOT.node = (BOX_NODE*)game_malloc(sizeof(BOX_NODE) * number_boxes);
 	}
 
@@ -32,7 +32,7 @@ void InitialiseLOTarray()
 	for (int i = 0; i < MAX_NONLOT; i++)
 	{
 		creature = &non_lot_slots[i];
-		creature->item_num = NO_ITEM;
+		creature->index = NO_ITEM;
 	}
 
 	nonlot_slots_used = 0;
@@ -43,7 +43,7 @@ void InitialiseNonLotAI(short item_number, long slot)
 	ITEM_INFO* item = &items[item_number];
 	CREATURE_INFO* creature = &non_lot_slots[slot];
 	item->data = creature;
-	creature->item_num = item_number;
+	creature->index = item_number;
 	creature->mood = BORED_MOOD;
 	creature->joint_rotation[0] = 0;
 	creature->joint_rotation[1] = 0;
@@ -113,7 +113,7 @@ long EnableNonLotAI(short item_number, long Always)
 		{
 			creature = &non_lot_slots[i];
 
-			if (creature->item_num == NO_ITEM)
+			if (creature->index == NO_ITEM)
 			{
 				InitialiseNonLotAI(item_number, i);
 				return 1;
@@ -136,7 +136,7 @@ long EnableNonLotAI(short item_number, long Always)
 	for (slot = 0; slot < MAX_NONLOT; slot++)
 	{
 		creature = &non_lot_slots[slot];
-		item = &items[creature->item_num];
+		item = &items[creature->index];
 		x = (item->pos.x_pos - camera.pos.x) >> 8;
 		y = (item->pos.y_pos - camera.pos.y) >> 8;
 		z = (item->pos.z_pos - camera.pos.z) >> 8;
@@ -151,8 +151,8 @@ long EnableNonLotAI(short item_number, long Always)
 
 	if (worstslot >= 0)
 	{
-		items[non_lot_slots[worstslot].item_num].status = ITEM_INVISIBLE;
-		DisableBaddieAI(non_lot_slots[worstslot].item_num);
+		items[non_lot_slots[worstslot].index].status = ITEM_INVISIBLE;
+		DisableBaddieAI(non_lot_slots[worstslot].index);
 		InitialiseNonLotAI(item_number, worstslot);
 		return 1;
 	}
@@ -170,7 +170,7 @@ void DisableBaddieAI(short item_number)
 	item->data = NULL;
 	if (creature)
 	{
-		creature->item_num = NO_ITEM;
+		creature->index = NO_ITEM;
 
 		if (objects[item->object_number].non_lot)
 			nonlot_slots_used--;
@@ -253,7 +253,7 @@ void InitialiseSlot(short item_number, long slot)
 	ITEM_INFO* item = &items[item_number];
 	CREATURE_INFO* creature = &baddie_slots[slot];
 	item->data = creature;
-	creature->item_num = item_number;
+	creature->index = item_number;
 	creature->mood = BORED_MOOD;
 	creature->joint_rotation[0] = 0;
 	creature->joint_rotation[1] = 0;
@@ -351,7 +351,7 @@ long EnableBaddieAI(short item_number, long Always)
 		{
 			creature = &baddie_slots[slot];
 
-			if (creature->item_num == NO_ITEM)
+			if (creature->index == NO_ITEM)
 			{
 				InitialiseSlot(item_number, slot);
 				return 1;
@@ -373,7 +373,7 @@ long EnableBaddieAI(short item_number, long Always)
 	for (slot = 0; slot < MAX_LOT; slot++)
 	{
 		creature = &baddie_slots[slot];
-		item = &items[creature->item_num];
+		item = &items[creature->index];
 		x = (item->pos.x_pos - camera.pos.x) >> 8;
 		y = (item->pos.y_pos - camera.pos.y) >> 8;
 		z = (item->pos.z_pos - camera.pos.z) >> 8;
@@ -388,8 +388,8 @@ long EnableBaddieAI(short item_number, long Always)
 
 	if (worstslot >= 0)
 	{
-		items[baddie_slots[worstslot].item_num].status = ITEM_INVISIBLE;
-		DisableBaddieAI(baddie_slots[worstslot].item_num);
+		items[baddie_slots[worstslot].index].status = ITEM_INVISIBLE;
+		DisableBaddieAI(baddie_slots[worstslot].index);
 		InitialiseSlot(item_number, worstslot);
 		return 1;
 	}

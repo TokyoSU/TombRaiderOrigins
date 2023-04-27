@@ -554,7 +554,7 @@ void LondonBossControl(short item_number)
 		points[lp].x = londonboss_points[lp].x;
 		points[lp].y = londonboss_points[lp].y;
 		points[lp].z = londonboss_points[lp].z;
-		GetJointAbsPosition(item, &points[lp], londonboss_points[lp].mesh_num);
+		GetJointAbsPosition(item, &points[lp], londonboss_points[lp].joint_index);
 	}
 
 	if (item->hit_points <= 0)

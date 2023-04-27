@@ -38,8 +38,8 @@ enum PierreOcb: short
 #define PIERRE_WIMP_CHANCE 0x2000
 #define PIERRE_POSE_CHANCE 0x60
 
-static BITE_INFO pierre_gun1 = { 60, 200, 0, 11 };
-static BITE_INFO pierre_gun2 = { -60, 200, 0, 14 };
+BITE_INFO pierre_gun1 = { 60, 200, 0, 11 };
+BITE_INFO pierre_gun2 = { -60, 200, 0, 14 };
 
 void InitialiseTR1Pierre(short item_number)
 {
@@ -54,14 +54,14 @@ void TR1PierreControl(short item_number)
 		return;
 
 	ITEM_INFO* item = &items[item_number];
-	CREATURE_INFO* people = (CREATURE_INFO*)item->data;
+	CREATURE_INFO* pierre = (CREATURE_INFO*)item->data;
 	AI_INFO info{};
 	short angle = 0, head = 0, tilt = 0;
 
 	if (item->hit_points <= PIERRE_RUN_HITPOINTS && item->ocb & OCB_IMMORTAL)
 	{
 		item->hit_points = PIERRE_RUN_HITPOINTS;
-		people->flags++;
+		pierre->flags++;
 	}
 
 	if (item->hit_points <= 0)
@@ -76,30 +76,30 @@ void TR1PierreControl(short item_number)
 		if (info.ahead)
 			head = info.angle;
 		GetCreatureMood(item, &info, TIMID);
-		if (people->flags)
+		if (pierre->flags)
 		{
 			info.enemy_zone = -1;
 			item->hit_status = 1;
-			people->mood = ESCAPE_MOOD;
+			pierre->mood = ESCAPE_MOOD;
 		}
 		CreatureMood(item, &info, TIMID);
-		angle = CreatureTurn(item, people->maximum_turn);
+		angle = CreatureTurn(item, pierre->maximum_turn);
 
 		switch (item->current_anim_state)
 		{
 		case PIERRE_STOP:
 			if (item->required_anim_state)
 				item->goal_anim_state = item->required_anim_state;
-			else if (people->mood == BORED_MOOD)
+			else if (pierre->mood == BORED_MOOD)
 				item->goal_anim_state = (GetRandomControl() < PIERRE_POSE_CHANCE) ? PIERRE_POSE : PIERRE_WALK;
-			else if (people->mood == ESCAPE_MOOD)
+			else if (pierre->mood == ESCAPE_MOOD)
 				item->goal_anim_state = PIERRE_RUN;
 			else
 				item->goal_anim_state = PIERRE_WALK;
 			break;
 
 		case PIERRE_POSE:
-			if (people->mood != BORED_MOOD)
+			if (pierre->mood != BORED_MOOD)
 				item->goal_anim_state = PIERRE_STOP;
 			else if (GetRandomControl() < PIERRE_POSE_CHANCE)
 			{
@@ -109,14 +109,14 @@ void TR1PierreControl(short item_number)
 			break;
 
 		case PIERRE_WALK:
-			people->maximum_turn = PIERRE_WALK_TURN;
+			pierre->maximum_turn = PIERRE_WALK_TURN;
 
-			if (people->mood == BORED_MOOD && GetRandomControl() < PIERRE_POSE_CHANCE)
+			if (pierre->mood == BORED_MOOD && GetRandomControl() < PIERRE_POSE_CHANCE)
 			{
 				item->required_anim_state = PIERRE_POSE;
 				item->goal_anim_state = PIERRE_STOP;
 			}
-			else if (people->mood == ESCAPE_MOOD)
+			else if (pierre->mood == ESCAPE_MOOD)
 			{
 				item->required_anim_state = PIERRE_RUN;
 				item->goal_anim_state = PIERRE_STOP;
@@ -134,12 +134,12 @@ void TR1PierreControl(short item_number)
 			break;
 
 		case PIERRE_RUN:
-			people->maximum_turn = PIERRE_RUN_TURN;
+			pierre->maximum_turn = PIERRE_RUN_TURN;
 			tilt = angle / 2;
 
-			if (people->flags == 0) // Avoid him trying to target lara
+			if (pierre->flags == 0) // Avoid him trying to target lara
 			{
-				if (people->mood == BORED_MOOD && GetRandomControl() < PIERRE_POSE_CHANCE)
+				if (pierre->mood == BORED_MOOD && GetRandomControl() < PIERRE_POSE_CHANCE)
 				{
 					item->required_anim_state = PIERRE_POSE;
 					item->goal_anim_state = PIERRE_STOP;
@@ -175,7 +175,7 @@ void TR1PierreControl(short item_number)
 				item->required_anim_state = PIERRE_AIM;
 			}
 
-			if (people->mood == ESCAPE_MOOD && GetRandomControl() < PIERRE_WIMP_CHANCE)
+			if (pierre->mood == ESCAPE_MOOD && GetRandomControl() < PIERRE_WIMP_CHANCE)
 				item->required_anim_state = PIERRE_STOP;
 			break;
 		}
@@ -185,7 +185,7 @@ void TR1PierreControl(short item_number)
 	CreatureJoint(item, 0, head);
 	CreatureAnimation(item_number, angle, tilt);
 
-	if (people->flags != 0)
+	if (pierre->flags != 0)
 	{
 		GAME_VECTOR s{}, t{};
 		s.x = item->pos.x_pos;
@@ -198,9 +198,9 @@ void TR1PierreControl(short item_number)
 		t.room_number = camera.pos.room_number;
 		if (LOS(&s, &t))
 		{
-			people->flags = 1;
+			pierre->flags = 1;
 		}
-		else if (people->flags > PIERRE_DISAPPEAR)
+		else if (pierre->flags > PIERRE_DISAPPEAR)
 		{
 			item->hit_points = DONT_TARGET;
 			DisableBaddieAI(item_number);

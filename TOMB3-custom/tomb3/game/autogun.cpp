@@ -30,48 +30,16 @@ void InitialiseAutogun(short item_number)
 
 void AutogunControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* gun;
-	AI_INFO info;
-	PHD_VECTOR pos;
-	short tilt, diff;
-
-	item = &items[item_number];
-
-	if (item->fired_weapon > 1)
-	{
-		item->fired_weapon--;
-
-		if (GetRandomControl() & 1)
-		{
-			objects[item->object_number].bite_offset = AUTOGUN_LEFT_BITE;
-
-			phd_PushMatrix();
-			pos.x = autogun_left.x;
-			pos.y = autogun_left.y;
-			pos.z = autogun_left.z;
-			GetJointAbsPosition(item, &pos, autogun_left.mesh_num);
-		}
-		else
-		{
-			objects[item->object_number].bite_offset = AUTOGUN_RIGHT_BITE;
-
-			phd_PushMatrix();
-			pos.x = autogun_right.x;
-			pos.y = autogun_right.y;
-			pos.z = autogun_right.z;
-			GetJointAbsPosition(item, &pos, autogun_right.mesh_num);
-		}
-
-		TriggerDynamic(pos.x, pos.y, pos.z, 2 * item->fired_weapon + 8, 192, 128, 32);
-		phd_PopMatrix();
-	}
-
 	if (!CreatureActive(item_number))
 		return;
 
-	gun = (CREATURE_INFO*)item->data;
+	ITEM_INFO* item;
+	CREATURE_INFO* gun;
+	AI_INFO info;
+	short tilt, diff;
 
+	item = &items[item_number];
+	gun = (CREATURE_INFO*)item->data;
 	if (!gun)
 		return;
 
@@ -103,12 +71,12 @@ void AutogunControl(short item_number)
 		{
 			item->item_flags[0] = 1;
 
-			if (objects[item->object_number].bite_offset == AUTOGUN_RIGHT_BITE)
-				ShotLara(item, &info, &autogun_left, gun->joint_rotation[0], 10);
-			else
-				ShotLara(item, &info, &autogun_right, gun->joint_rotation[0], 10);
+			//if (objects[item->object_number].bite_offset == AUTOGUN_RIGHT_BITE)
+			//	ShotLara(item, &info, &autogun_left, gun->joint_rotation[0], 10);
+			//else
+			//	ShotLara(item, &info, &autogun_right, gun->joint_rotation[0], 10);
 
-			item->fired_weapon = 10;
+			//item->fired_weapon[0] = 10;
 			SoundEffect(SFX_LARA_UZI_STOP, &item->pos, SFX_DEFAULT);
 		}
 

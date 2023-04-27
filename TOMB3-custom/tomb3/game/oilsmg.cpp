@@ -32,7 +32,6 @@ void OilSMGControl(short item_number)
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	CREATURE_INFO* smg;
-	PHD_VECTOR pos;
 	AI_INFO info;
 	AI_INFO larainfo;
 	long x, z, mood;
@@ -48,17 +47,6 @@ void OilSMGControl(short item_number)
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
-
-	if (item->fired_weapon)
-	{
-		phd_PushMatrix();
-		pos.x = oilsmg_gun.x;
-		pos.y = oilsmg_gun.y;
-		pos.z = oilsmg_gun.z;
-		GetJointAbsPosition(item, &pos, oilsmg_gun.mesh_num);
-		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 8, 192, 128, 32);
-		phd_PopMatrix();
-	}
 
 	if (item->hit_points <= 0)
 	{

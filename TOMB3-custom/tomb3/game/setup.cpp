@@ -511,7 +511,6 @@ static void BaddyObjects()
 		obj->shadow_size = 0;
 		obj->hit_points = 100;
 		obj->radius = 102;
-		obj->bite_offset = AUTOGUN_LEFT_BITE;
 		obj->intelligent = 1;
 		obj->non_lot = 1;
 		obj->save_position = 1;
@@ -816,7 +815,6 @@ static void BaddyObjects()
 		obj->hit_points = 30;
 		obj->radius = 102;
 		obj->pivot_length = 0;
-		obj->bite_offset = WHITE_SOLDIER_BITE;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
@@ -898,7 +896,6 @@ static void BaddyObjects()
 		obj->hit_points = 45;
 		obj->radius = 102;
 		obj->pivot_length = 0;
-		obj->bite_offset = SWAT_GUN_BITE;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
@@ -920,7 +917,6 @@ static void BaddyObjects()
 		obj->hit_points = 30;
 		obj->radius = 102;
 		obj->pivot_length = 0;
-		obj->bite_offset = ARMYSMG_GUN_BITE;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
@@ -1136,7 +1132,6 @@ static void BaddyObjects()
 		obj->hit_points = 34;
 		obj->radius = 102;
 		obj->pivot_length = 0;
-		obj->bite_offset = OILRED_BITE;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
@@ -1157,7 +1152,6 @@ static void BaddyObjects()
 		obj->hit_points = 28;
 		obj->radius = 102;
 		obj->pivot_length = 0;
-		obj->bite_offset = OILRED_BITE;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
@@ -1187,7 +1181,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[MP2];
-
 	if (obj->loaded)
 	{
 		obj->control = MPGunControl;
@@ -1196,7 +1189,6 @@ static void BaddyObjects()
 		obj->hit_points = 28;
 		obj->radius = 102;
 		obj->pivot_length = 0;
-		obj->bite_offset = OILRED_BITE;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
@@ -1208,7 +1200,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[LON_MERCENARY1];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseSwat;
@@ -1218,7 +1209,6 @@ static void BaddyObjects()
 		obj->hit_points = 45;
 		obj->radius = 102;
 		obj->pivot_length = 0;
-		obj->bite_offset = SWAT_GUN_BITE;
 		obj->intelligent = 1;
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
@@ -1230,7 +1220,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[PUNK1];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialisePunk;
@@ -1380,6 +1369,8 @@ static void BaddyObjects()
 		obj->save_hitpoints = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
+		obj->gun_flash[0].is_enabled = true;
+		obj->gun_flash[0].bite = larson_gun;
 		bones[obj->bone_index + 6 * 4] |= 8;
 	}
 }

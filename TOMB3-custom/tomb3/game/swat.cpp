@@ -32,7 +32,6 @@ void SwatControl(short item_number)
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	CREATURE_INFO* swat;
-	PHD_VECTOR pos;
 	AI_INFO info;
 	AI_INFO larainfo;
 	long dx, dz;
@@ -52,17 +51,6 @@ void SwatControl(short item_number)
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
-
-	if (item->fired_weapon)
-	{
-		phd_PushMatrix();
-		pos.x = swat_gun.x;
-		pos.y = swat_gun.y;
-		pos.z = swat_gun.z;
-		GetJointAbsPosition(item, &pos, swat_gun.mesh_num);
-		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 8, 192, 128, 32);
-		phd_PopMatrix();
-	}
 
 	if (boxes[item->box_number].overlap_index & 0x4000)
 	{

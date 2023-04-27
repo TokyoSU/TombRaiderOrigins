@@ -32,7 +32,6 @@ void ArmySMGControl(short item_number)
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	CREATURE_INFO* army;
-	PHD_VECTOR pos;
 	AI_INFO info;
 	long dist, best_dist, x, z, iDist, lp;
 	short tilt, angle, head, torso_x, torso_y, iAngle;
@@ -51,17 +50,6 @@ void ArmySMGControl(short item_number)
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
-
-	if (item->fired_weapon)
-	{
-		phd_PushMatrix();
-		pos.x = army_gun.x;
-		pos.y = army_gun.y;
-		pos.z = army_gun.z;
-		GetJointAbsPosition(item, &pos, army_gun.mesh_num);
-		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 8, 192, 128, 32);
-		phd_PopMatrix();
-	}
 
 	if (item->hit_points <= 0)
 	{
@@ -86,10 +74,10 @@ void ArmySMGControl(short item_number)
 
 			for (lp = 0; lp < MAX_LOT; lp++)
 			{
-				if (baddie_slots[lp].item_num == NO_ITEM || baddie_slots[lp].item_num == item_number)
+				if (baddie_slots[lp].index == NO_ITEM || baddie_slots[lp].index == item_number)
 					continue;
 
-				enemy = &items[baddie_slots[lp].item_num];
+				enemy = &items[baddie_slots[lp].index];
 
 				if (enemy->object_number == LARA || enemy->object_number == STHPAC_MERCENARY || enemy == lara_item)
 					continue;

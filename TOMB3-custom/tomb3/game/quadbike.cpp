@@ -1490,7 +1490,7 @@ long QuadBikeControl()
 			pos.x = quad_bites[i].x;
 			pos.y = quad_bites[i].y;
 			pos.z = quad_bites[i].z;
-			GetJointAbsPosition(item, &pos, quad_bites[i].mesh_num);
+			GetJointAbsPosition(item, &pos, quad_bites[i].joint_index);
 			rot = item->pos.y_rot + (!i ? 0x9000 : 0x7000);
 
 			if (item->speed > 32)

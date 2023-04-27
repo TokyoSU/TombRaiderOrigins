@@ -264,3 +264,248 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 	phd_mxptr = mx;
 	IMptr = imx;
 }
+
+void GetJointAbsMatrix(ITEM_INFO* item, long* mptr, long joint)
+{
+	OBJECT_INFO* obj;
+	long* mx;
+	long* imx;
+	long* bone;
+	short* frm[2];
+	short* extra_rotation;
+	short* rot;
+	short* rot2;
+	long frac, rate, poppush;
+
+	mx = phd_mxptr;
+	imx = IMptr;
+	obj = &objects[item->object_number];
+	frac = GetFrames(item, frm, &rate);
+
+	phd_PushMatrix();
+	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_SetTrans(0, 0, 0);
+	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
+
+	extra_rotation = (short*)item->data;
+
+	if (!extra_rotation)
+		extra_rotation = null_rotations;
+
+	bone = &bones[obj->bone_index];
+
+	if (frac)
+	{
+		InitInterpolate2(frac, rate);
+		rot = frm[0] + 9;
+		rot2 = frm[1] + 9;
+		phd_TranslateRel_ID(frm[0][6], frm[0][7], frm[0][8], frm[1][6], frm[1][7], frm[1][8]);
+		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
+
+		for (int i = 0; i < joint; i++)
+		{
+			poppush = *bone;
+
+			if (poppush & 1)
+				phd_PopMatrix_I();
+
+			if (poppush & 2)
+				phd_PushMatrix_I();
+
+			phd_TranslateRel_I(bone[1], bone[2], bone[3]);
+			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
+
+			if (poppush & 0x1C)
+			{
+				if (poppush & 8)
+					phd_RotY_I(*extra_rotation++);
+
+				if (poppush & 4)
+					phd_RotX_I(*extra_rotation++);
+
+				if (poppush & 0x10)
+					phd_RotZ_I(*extra_rotation++);
+			}
+
+			bone += 4;
+		}
+
+		InterpolateMatrix();
+		mptr[M00] = phd_mxptr[M00];
+		mptr[M01] = phd_mxptr[M01];
+		mptr[M02] = phd_mxptr[M02];
+		mptr[M03] = phd_mxptr[M03];
+		mptr[M10] = phd_mxptr[M10];
+		mptr[M11] = phd_mxptr[M11];
+		mptr[M12] = phd_mxptr[M12];
+		mptr[M13] = phd_mxptr[M13];
+		mptr[M20] = phd_mxptr[M20];
+		mptr[M21] = phd_mxptr[M21];
+		mptr[M22] = phd_mxptr[M22];
+		mptr[M23] = phd_mxptr[M23];
+	}
+	else
+	{
+		phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
+		rot = frm[0] + 9;
+		gar_RotYXZsuperpack(&rot, 0);
+
+		for (int i = 0; i < joint; i++)
+		{
+			poppush = *bone;
+
+			if (poppush & 1)
+				phd_PopMatrix();
+
+			if (poppush & 2)
+				phd_PushMatrix();
+
+			phd_TranslateRel(bone[1], bone[2], bone[3]);
+			gar_RotYXZsuperpack(&rot, 0);
+
+			if (poppush & 0x1C)
+			{
+				if (poppush & 8)
+					phd_RotY(*extra_rotation++);
+
+				if (poppush & 4)
+					phd_RotX(*extra_rotation++);
+
+				if (poppush & 0x10)
+					phd_RotZ(*extra_rotation++);
+			}
+
+			bone += 4;
+		}
+
+		mptr[M00] = phd_mxptr[M00];
+		mptr[M01] = phd_mxptr[M01];
+		mptr[M02] = phd_mxptr[M02];
+		mptr[M03] = phd_mxptr[M03];
+		mptr[M10] = phd_mxptr[M10];
+		mptr[M11] = phd_mxptr[M11];
+		mptr[M12] = phd_mxptr[M12];
+		mptr[M13] = phd_mxptr[M13];
+		mptr[M20] = phd_mxptr[M20];
+		mptr[M21] = phd_mxptr[M21];
+		mptr[M22] = phd_mxptr[M22];
+		mptr[M23] = phd_mxptr[M23];
+	}
+
+	phd_mxptr = mx;
+	IMptr = imx;
+}
+
+void GetJointAbsPositionMatrix(ITEM_INFO* item, PHD_VECTOR* pos, long* mptr, long joint)
+{
+	OBJECT_INFO* obj;
+	long* mx;
+	long* imx;
+	long* bone;
+	short* frm[2];
+	short* extra_rotation;
+	short* rot;
+	short* rot2;
+	long frac, rate, poppush;
+
+	mx = phd_mxptr;
+	imx = IMptr;
+	obj = &objects[item->object_number];
+	frac = GetFrames(item, frm, &rate);
+
+	phd_PushMatrix();
+	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	phd_SetTrans(0, 0, 0);
+	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
+
+	extra_rotation = (short*)item->data;
+
+	if (!extra_rotation)
+		extra_rotation = null_rotations;
+
+	bone = &bones[obj->bone_index];
+
+	if (frac)
+	{
+		InitInterpolate2(frac, rate);
+		rot = frm[0] + 9;
+		rot2 = frm[1] + 9;
+		phd_TranslateRel_ID(frm[0][6], frm[0][7], frm[0][8], frm[1][6], frm[1][7], frm[1][8]);
+		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
+
+		for (int i = 0; i < joint; i++)
+		{
+			poppush = *bone;
+
+			if (poppush & 1)
+				phd_PopMatrix_I();
+
+			if (poppush & 2)
+				phd_PushMatrix_I();
+
+			phd_TranslateRel_I(bone[1], bone[2], bone[3]);
+			gar_RotYXZsuperpack_I(&rot, &rot2, 0);
+
+			if (poppush & 0x1C)
+			{
+				if (poppush & 8)
+					phd_RotY_I(*extra_rotation++);
+
+				if (poppush & 4)
+					phd_RotX_I(*extra_rotation++);
+
+				if (poppush & 0x10)
+					phd_RotZ_I(*extra_rotation++);
+			}
+
+			bone += 4;
+		}
+
+		phd_TranslateRel_I(pos->x, pos->y, pos->z);
+		InterpolateMatrix();
+		mptr = phd_mxptr;
+	}
+	else
+	{
+		phd_TranslateRel(frm[0][6], frm[0][7], frm[0][8]);
+		rot = frm[0] + 9;
+		gar_RotYXZsuperpack(&rot, 0);
+
+		for (int i = 0; i < joint; i++)
+		{
+			poppush = *bone;
+
+			if (poppush & 1)
+				phd_PopMatrix();
+
+			if (poppush & 2)
+				phd_PushMatrix();
+
+			phd_TranslateRel(bone[1], bone[2], bone[3]);
+			gar_RotYXZsuperpack(&rot, 0);
+
+			if (poppush & 0x1C)
+			{
+				if (poppush & 8)
+					phd_RotY(*extra_rotation++);
+
+				if (poppush & 4)
+					phd_RotX(*extra_rotation++);
+
+				if (poppush & 0x10)
+					phd_RotZ(*extra_rotation++);
+			}
+
+			bone += 4;
+		}
+
+		phd_TranslateRel(pos->x, pos->y, pos->z);
+		mptr = phd_mxptr;
+	}
+
+	pos->x = item->pos.x_pos + (phd_mxptr[M03] >> W2V_SHIFT);
+	pos->y = item->pos.y_pos + (phd_mxptr[M13] >> W2V_SHIFT);
+	pos->z = item->pos.z_pos + (phd_mxptr[M23] >> W2V_SHIFT);
+	phd_mxptr = mx;
+	IMptr = imx;
+}

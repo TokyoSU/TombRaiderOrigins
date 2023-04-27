@@ -178,7 +178,7 @@ void WolfControl(short item_number)
 		case WOLF_ATTACK:
 			tilt = angle / 2;
 
-			if (item->required_anim_state == 0 && item->is_colliding_with_target(wolf_jaw_bite.mesh_num))
+			if (item->required_anim_state == 0 && item->is_colliding_with_target(wolf_jaw_bite.joint_index))
 			{
 				CreatureEffect(item, &wolf_jaw_bite, DoBloodSplat);
 				lara_item->hit_points -= WOLF_POUNCE_DAMAGE;
@@ -189,7 +189,7 @@ void WolfControl(short item_number)
 			break;
 
 		case WOLF_BITE:
-			if (item->required_anim_state == 0 && item->is_colliding_with_target(wolf_jaw_bite.mesh_num) && info.ahead)
+			if (item->required_anim_state == 0 && item->is_colliding_with_target(wolf_jaw_bite.joint_index) && info.ahead)
 			{
 				CreatureEffect(item, &wolf_jaw_bite, DoBloodSplat);
 				lara_item->hit_points -= WOLF_BITE_DAMAGE;

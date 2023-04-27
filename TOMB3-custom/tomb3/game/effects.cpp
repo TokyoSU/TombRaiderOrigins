@@ -1020,7 +1020,7 @@ void BaddieBiteEffect(ITEM_INFO* item, BITE_INFO* bite)
 	pos.x = bite->x;
 	pos.y = bite->y;
 	pos.z = bite->z;
-	GetJointAbsPosition(item, &pos, bite->mesh_num);
+	GetJointAbsPosition(item, &pos, bite->joint_index);
 	DoBloodSplat(pos.x, pos.y, pos.z, item->speed, item->pos.y_rot, item->room_number);
 }
 

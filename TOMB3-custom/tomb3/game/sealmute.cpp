@@ -125,12 +125,12 @@ static short TriggerSealmuteGasThrower(ITEM_INFO* item, BITE_INFO* bite, short s
 	pos.x = bite->x;
 	pos.y = bite->y;
 	pos.z = bite->z;
-	GetJointAbsPosition(item, &pos, bite->mesh_num);
+	GetJointAbsPosition(item, &pos, bite->joint_index);
 
 	pos1.x = bite->x;
 	pos1.y = bite->y << 1;
 	pos1.z = bite->z << 3;
-	GetJointAbsPosition(item, &pos1, bite->mesh_num);
+	GetJointAbsPosition(item, &pos1, bite->joint_index);
 
 	phd_GetVectorAngles(pos1.x - pos.x, pos1.y - pos.y, pos1.z - pos.z, angles);
 
@@ -259,10 +259,10 @@ void SealmuteControl(short item_number)
 
 			for (lp = 0; lp < MAX_LOT; lp++)
 			{
-				if (baddie_slots[lp].item_num == NO_ITEM || baddie_slots[lp].item_num == item_number)
+				if (baddie_slots[lp].index == NO_ITEM || baddie_slots[lp].index == item_number)
 					continue;
 
-				enemy = &items[baddie_slots[lp].item_num];
+				enemy = &items[baddie_slots[lp].index];
 				
 				if ((enemy->object_number == LARA || enemy->object_number == FLAMETHROWER_BLOKE) && enemy->hit_points > 0)
 				{

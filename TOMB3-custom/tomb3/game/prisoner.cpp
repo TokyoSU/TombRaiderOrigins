@@ -74,10 +74,10 @@ void PrisonerControl(short item_number)
 
 			for (lp = 0; lp < MAX_LOT; lp++)
 			{
-				if (baddie_slots[lp].item_num == NO_ITEM || baddie_slots[lp].item_num == item_number)
+				if (baddie_slots[lp].index == NO_ITEM || baddie_slots[lp].index == item_number)
 					continue;
 
-				enemy = &items[baddie_slots[lp].item_num];
+				enemy = &items[baddie_slots[lp].index];
 
 				if (enemy->object_number == LARA || enemy->object_number == BOB || enemy->object_number == ROBOT_SENTRY_GUN || enemy->hit_points <= 0)
 					continue;

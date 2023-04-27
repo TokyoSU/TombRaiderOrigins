@@ -965,7 +965,7 @@ static void DoWake(ITEM_INFO* item, short lr)
 			pos.x = bite->x;
 			pos.y = bite->y;
 			pos.z = bite->z;
-			GetJointAbsPosition(item, &pos, bite->mesh_num);
+			GetJointAbsPosition(item, &pos, bite->joint_index);
 			SubWakePts[SubCurrentStartWake][lr].x[i] = pos.x;
 			SubWakePts[SubCurrentStartWake][lr].y[i] = pos.y + 128;
 			SubWakePts[SubCurrentStartWake][lr].z[i] = pos.z;
@@ -1009,7 +1009,7 @@ void SubEffects(short item_number)
 			pos.x = sub_bites[0].x;
 			pos.y = sub_bites[0].y;
 			pos.z = sub_bites[0].z;
-			GetJointAbsPosition(item, &pos, sub_bites[0].mesh_num);
+			GetJointAbsPosition(item, &pos, sub_bites[0].joint_index);
 			TriggerSubMist(pos.x, pos.y + 128, pos.z, abs(sub->Vel) >> 16, item->pos.y_rot + 0x8000);
 
 			if (!(GetRandomControl() & 1))
@@ -1031,7 +1031,7 @@ void SubEffects(short item_number)
 		pos.x = sub_bites[1].x;
 		pos.y = sub_bites[1].y;
 		pos.z = sub_bites[1].z << (6 * i);
-		GetJointAbsPosition(item, &pos, sub_bites[1].mesh_num);
+		GetJointAbsPosition(item, &pos, sub_bites[1].joint_index);
 		c = 255 - (GetRandomControl() & 0x1F);
 
 		if (i == 1)
