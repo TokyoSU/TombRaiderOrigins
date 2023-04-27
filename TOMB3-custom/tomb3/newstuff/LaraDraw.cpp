@@ -949,9 +949,9 @@ void NewDrawLara(ITEM_INFO* item)
 		phd_mxptr[M23] = lara_matrices[indices_count * LMX_HAND_L + M23];
 
 		if (GnGameMode == GAMEMODE_IN_CUTSCENE)
-			DrawGunFlash(LG_PISTOLS, 0);
+			DrawGunFlash(LG_PISTOLS, 0, false);
 		else
-			DrawGunFlash(lara.gun_type, 0);
+			DrawGunFlash(lara.gun_type, 0, false);
 
 		phd_PopMatrix();
 	}
@@ -973,9 +973,9 @@ void NewDrawLara(ITEM_INFO* item)
 		phd_mxptr[M23] = lara_matrices[indices_count * LMX_HAND_R + M23];
 
 		if (GnGameMode == GAMEMODE_IN_CUTSCENE)
-			DrawGunFlash(LG_PISTOLS, 0);
+			DrawGunFlash(LG_PISTOLS, 0, true);
 		else
-			DrawGunFlash(lara.gun_type, 0);
+			DrawGunFlash(lara.gun_type, 0, true);
 
 		phd_PopMatrix();
 	}

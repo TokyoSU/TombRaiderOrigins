@@ -940,46 +940,60 @@ static void PutPolyLara_I(ITEM_INFO* item, char mesh, long clip)
 	}
 }
 
-void DrawGunFlash(long gun_type, long clip)
+// true = right, else left
+void DrawGunFlash(long gun_type, long clip, bool lr)
 {
-	long y, z;
+	PHD_VECTOR pos{};
+	short rotX = -16380;
+	bool mp5flash = false;
 
 	switch (gun_type)
 	{
-	case LG_DESERTEAGLE:
-		y = 215;
-		z = 65;
-		break;
-
-	case LG_UZIS:
-		y = 150;
-		z = 50;
-		break;
-
 	case LG_SHOTGUN:
 	case LG_FLARE:
 		return;
 
-	case LG_MP5:
-		phd_TranslateRel(0, 332, 96);
-		phd_RotYXZ(0, -15470, ((GetRandomDraw() << 1) & 0x4000) + (GetRandomDraw() & 0xFFF) + 6144);
-		S_CalculateStaticLight(600);
-		phd_PutPolygons(meshes[objects[MP5_FLASH].mesh_index], clip);
-		S_DrawSprite(SPR_SEMITRANS | SPR_SCALE | SPR_TINT | SPR_BLEND_ADD | SPR_RGB(63, 48, 8), 0, 0, -65, objects[GLOW].mesh_index, 0, 192);
-		return;
+	case LG_DESERTEAGLE:
+		pos.y = 215;
+		pos.z = 65;
+		break;
 
+	case LG_UZIS:
+		pos.y = 150;
+		pos.z = 50;
+		break;
+
+	case LG_MP5:
+		pos.y = 332;
+		pos.z = 96;
+		rotX = -15470;
+		mp5flash = true;
+		break;
 	case LG_MAGNUM:
+		if (lr)
+			pos.x = -13;
+		else
+			pos.x = 13;
+		pos.y = 170;
+		pos.z = 60;
+		break;
 	case LG_PISTOLS:
-	default:
-		y = 150;
-		z = 40;
+		if (lr)
+			pos.x = -17;
+		else
+			pos.x = 17;
+		pos.y = 150;
+		pos.z = 40;
 		break;
 	}
 
-	phd_TranslateRel(0, y, z);
-	phd_RotYXZ(0, -16380, short(wibble << 8));
+	phd_TranslateRel(pos.x, pos.y, pos.z);
+	phd_RotYXZ(0, rotX, short(wibble << 8));
 	S_CalculateStaticLight(600);
-	phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], clip);
+	if (mp5flash)
+		phd_PutPolygons(meshes[objects[MP5_FLASH].mesh_index], clip);
+	else
+		phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], clip);
 	S_DrawSprite(SPR_SEMITRANS | SPR_SCALE | SPR_TINT | SPR_BLEND_ADD | SPR_RGB(63, 56, 8), 0, 0, 0, objects[GLOW].mesh_index, 0, 192);
 }
 
