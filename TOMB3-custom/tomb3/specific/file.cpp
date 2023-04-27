@@ -286,7 +286,7 @@ long LoadObjects(HANDLE file)
 		MyReadFile(file, &slot, sizeof(long), &read, 0);
 		obj = &objects[slot];
 
-		MyReadFile(file, &obj->nmeshes, sizeof(short), &read, 0);
+		MyReadFile(file, &obj->mesh_count, sizeof(short), &read, 0);
 		MyReadFile(file, &obj->mesh_index, sizeof(short), &read, 0);
 		MyReadFile(file, &obj->bone_index, sizeof(long), &read, 0);
 
@@ -339,7 +339,7 @@ long LoadSprites(HANDLE file)
 		else
 		{
 			obj = &objects[slot];
-			MyReadFile(file, &obj->nmeshes, sizeof(short), &read, 0);
+			MyReadFile(file, &obj->mesh_count, sizeof(short), &read, 0);
 			MyReadFile(file, &obj->mesh_index, sizeof(short), &read, 0);
 			obj->loaded = 1;
 		}

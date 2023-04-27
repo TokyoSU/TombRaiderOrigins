@@ -1351,6 +1351,10 @@ static void BaddyObjects()
 		obj->save_hitpoints = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
+		obj->gun_flash[0].is_enabled = true;
+		obj->gun_flash[0].bite = pierre_gun1;
+		obj->gun_flash[1].is_enabled = true;
+		obj->gun_flash[1].bite = pierre_gun2;
 		bones[obj->bone_index + 6 * 4] |= 8;
 	}
 
@@ -2344,7 +2348,7 @@ static void ObjectObjects()
 
 	obj = &objects[BODY_PART];
 	obj->loaded = 1;
-	obj->nmeshes = 0;
+	obj->mesh_count = 0;
 	obj->control = ControlBodyPart;
 
 	obj = &objects[BIRD_TWEETER];

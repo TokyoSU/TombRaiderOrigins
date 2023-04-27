@@ -499,7 +499,7 @@ void DrawShiva(ITEM_INFO* item)
 		mesh++;
 		swap++;
 
-		for (lp = obj->nmeshes - 1; lp > 0; lp--)
+		for (lp = obj->mesh_count - 1; lp > 0; lp--)
 		{
 			if (bone[0] & 1)
 				phd_PopMatrix_I();
@@ -548,7 +548,7 @@ void DrawShiva(ITEM_INFO* item)
 		mesh++;
 		swap++;
 
-		for (lp = obj->nmeshes - 1; lp > 0; lp--)
+		for (lp = obj->mesh_count - 1; lp > 0; lp--)
 		{
 			if (bone[0] & 1)
 				phd_PopMatrix();

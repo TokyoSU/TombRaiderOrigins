@@ -46,7 +46,7 @@ short GunMiss(long x, long y, long z, short speed, short yrot, short room_number
 	return GunShot(x, y, z, speed, yrot, room_number);
 }
 
-long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotation, long damage)
+long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotation, short damage, bool invert_gunshelldir)
 {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* creature;
@@ -102,7 +102,10 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotat
 		fx->frame_number = objects[GUNSHELL].mesh_index;
 		fx->shade = 0x4210;
 		fx->counter = 1;
-		fx->flag1 = item->pos.y_rot + (GetRandomControl() & 0xFFF) - 0x4800;
+		if (invert_gunshelldir)
+			fx->flag1 = item->pos.y_rot + (GetRandomControl() & 0xFFF) + 0x4800;
+		else
+			fx->flag1 = item->pos.y_rot + (GetRandomControl() & 0xFFF) - 0x4800;
 		pos.x = bite->x - (bite->x >> 2);
 		pos.y = bite->y - (bite->y >> 2);
 		pos.z = bite->z - (bite->z >> 2);
@@ -117,7 +120,7 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotat
 			if (hit)
 			{
 				CreatureEffect(item, bite, GunHit);
-				lara_item->hit_points -= (short)damage;
+				lara_item->hit_points -= damage;
 				lara_item->hit_status = 1;
 			}
 			else if (targetable)
@@ -130,12 +133,12 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotat
 			if (hit)
 			{
 				enemy->hit_status = 1;
-				enemy->hit_points -= short(damage / 10);
-				rnd = GetRandomControl() & 0xF;
+				enemy->hit_points -= damage / 10;
 
-				if (rnd > 14)
+				OBJECT_INFO* obj = &objects[enemy->object_number];
+				rnd = GetRandomControl() & (obj->mesh_count-1);
+				if (rnd > (obj->mesh_count-1))
 					rnd = 0;
-
 				pos.x = 0;
 				pos.y = 0;
 				pos.z = 0;

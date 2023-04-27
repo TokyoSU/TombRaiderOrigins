@@ -170,8 +170,11 @@ void TR1PierreControl(short item_number)
 		case PIERRE_SHOOT:
 			if (item->required_anim_state == 0)
 			{
-				ShotLara(item, &info, &pierre_gun1, head, PIERRE_SHOT_DAMAGE / 2);
-				ShotLara(item, &info, &pierre_gun2, head, PIERRE_SHOT_DAMAGE / 2);
+				ShotLara(item, &info, &pierre_gun1, head, PIERRE_SHOT_DAMAGE / 2, false);
+				item->fired_weapon[0] = 2;
+				ShotLara(item, &info, &pierre_gun2, head, PIERRE_SHOT_DAMAGE / 2, true);
+				item->fired_weapon[1] = 2;
+
 				item->required_anim_state = PIERRE_AIM;
 			}
 

@@ -65,7 +65,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 
 	extra_rot = (short*)item->data;
 
-	for (int i = 0; i < obj->nmeshes - 1; i++, bone += 3)
+	for (int i = 0; i < obj->mesh_count - 1; i++, bone += 3)
 	{
 		poppush = *bone++;
 
@@ -102,7 +102,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	}
 
 	phd_PopMatrix();
-	return obj->nmeshes;
+	return obj->mesh_count;
 }
 
 long TestCollision(ITEM_INFO* item, ITEM_INFO* l)

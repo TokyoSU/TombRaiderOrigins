@@ -165,7 +165,7 @@ void DrawInventoryItem(INVENTORY_ITEM* item)
 	if (!obj->loaded)
 		return;
 
-	if (obj->nmeshes < 0)
+	if (obj->mesh_count < 0)
 	{
 		S_DrawSprite(0, 0, 0, 0, obj->mesh_index, 0, 0);
 		return;
@@ -240,7 +240,7 @@ void DrawInventoryItem(INVENTORY_ITEM* item)
 		phd_PutPolygons(meshes[mesh], clip);
 	}
 
-	for (int i = obj->nmeshes - 1; i > 0; i--, bone += 4)
+	for (int i = obj->mesh_count - 1; i > 0; i--, bone += 4)
 	{
 		mesh++;
 		bit <<= 1;

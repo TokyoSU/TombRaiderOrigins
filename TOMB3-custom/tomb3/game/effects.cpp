@@ -609,7 +609,7 @@ void swap_meshes_with_meshswap1(ITEM_INFO* item)
 
 	obj = &objects[item->object_number];
 
-	for (int i = 0; i < obj->nmeshes; i++)
+	for (int i = 0; i < obj->mesh_count; i++)
 	{
 		tmp = meshes[obj->mesh_index + i];
 		meshes[obj->mesh_index + i] = meshes[objects[MESHSWAP1].mesh_index + i];
@@ -624,7 +624,7 @@ void swap_meshes_with_meshswap2(ITEM_INFO* item)
 
 	obj = &objects[item->object_number];
 
-	for (int i = 0; i < obj->nmeshes; i++)
+	for (int i = 0; i < obj->mesh_count; i++)
 	{
 		tmp = meshes[obj->mesh_index + i];
 		meshes[obj->mesh_index + i] = meshes[objects[MESHSWAP2].mesh_index + i];
@@ -639,7 +639,7 @@ void swap_meshes_with_meshswap3(ITEM_INFO* item)
 
 	obj = &objects[item->object_number];
 
-	for (int i = 0; i < obj->nmeshes; i++)
+	for (int i = 0; i < obj->mesh_count; i++)
 	{
 		tmp = meshes[obj->mesh_index + i];
 		meshes[obj->mesh_index + i] = meshes[objects[MESHSWAP3].mesh_index + i];

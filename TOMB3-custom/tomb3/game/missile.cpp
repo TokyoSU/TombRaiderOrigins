@@ -211,7 +211,7 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter, short dama
 		}
 	}
 
-	for (lp = 1; lp < obj->nmeshes; lp++)
+	for (lp = 1; lp < obj->mesh_count; lp++)
 	{
 		if (bone[0] & 1)
 			phd_PopMatrix();
@@ -290,7 +290,7 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter, short dama
 	}
 
 	phd_PopMatrix();
-	return !(item->mesh_bits & (0x7FFFFFFF >> (31 - obj->nmeshes)));
+	return !(item->mesh_bits & (0x7FFFFFFF >> (31 - obj->mesh_count)));
 }
 
 void ControlBodyPart(short fx_number)

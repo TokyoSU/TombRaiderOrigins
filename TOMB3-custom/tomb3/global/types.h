@@ -1178,7 +1178,7 @@ struct OBJECT_BITE_INFO
 
 struct OBJECT_INFO
 {
-	short nmeshes;
+	short mesh_count;
 	short mesh_index;
 	long bone_index;
 	short* frame_base;

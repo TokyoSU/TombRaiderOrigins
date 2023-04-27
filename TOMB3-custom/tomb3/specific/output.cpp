@@ -311,7 +311,7 @@ static void DrawPickup(short obj_num)
 	phd_PutPolygonsPickup(*meshpp, x + PickupX, y);
 	meshpp++;
 
-	for (int i = 0; i < pickupObj->nmeshes - 1; i++, bone += 4, meshpp++)
+	for (int i = 0; i < pickupObj->mesh_count - 1; i++, bone += 4, meshpp++)
 	{
 		if (bone[0] & 1)
 			phd_PopMatrix();

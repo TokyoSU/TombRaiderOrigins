@@ -790,7 +790,7 @@ void DrawEffect(short fx_number)
 
 	if (fx->object_number == GLOW)
 		S_DrawSprite((fx->pos.y_rot << 16) | (ushort)fx->pos.x_rot, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, obj->mesh_index, fx->shade, fx->frame_number);
-	else if (obj->nmeshes >= 0)
+	else if (obj->mesh_count >= 0)
 	{
 		phd_PushMatrix();
 		phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
@@ -800,7 +800,7 @@ void DrawEffect(short fx_number)
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 			S_CalculateLight(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->room_number, 0);
 
-			if (obj->nmeshes)
+			if (obj->mesh_count)
 				phd_PutPolygons(meshes[obj->mesh_index], -1);
 			else
 				phd_PutPolygons(meshes[fx->frame_number], -1);
@@ -1334,7 +1334,7 @@ void DrawAnimatingItem(ITEM_INFO* item)
 
 		meshpp++;
 
-		for (int i = 0; i < obj->nmeshes - 1; i++, bone += 4, meshpp++)
+		for (int i = 0; i < obj->mesh_count - 1; i++, bone += 4, meshpp++)
 		{
 			if (bone[0] & 1)
 				phd_PopMatrix_I();
@@ -1382,7 +1382,7 @@ void DrawAnimatingItem(ITEM_INFO* item)
 			phd_PutPolygons(*meshpp, clip);
 		meshpp++;
 
-		for (int i = 0; i < obj->nmeshes - 1; i++, bone += 4, meshpp++)
+		for (int i = 0; i < obj->mesh_count - 1; i++, bone += 4, meshpp++)
 		{
 			if (bone[0] & 1)
 				phd_PopMatrix();
