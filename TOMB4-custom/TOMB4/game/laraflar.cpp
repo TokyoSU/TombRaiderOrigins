@@ -287,9 +287,9 @@ void draw_flare()
 			if (ani == 72)
 			{
 				if (room[lara_item->room_number].flags & ROOM_UNDERWATER)
-					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_WATER);
+					SOUND_PlayEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_WATER);
 				else
-					SoundEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_DEFAULT);
+					SOUND_PlayEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_DEFAULT);
 
 				lara.flare_age = 1;
 			}

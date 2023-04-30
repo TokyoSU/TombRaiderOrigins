@@ -3331,7 +3331,7 @@ void lara_as_death(ITEM_INFO* item, COLL_INFO* coll)
 
 void lara_col_death(ITEM_INFO* item, COLL_INFO* coll)
 {
-	StopSoundEffect(SFX_LARA_FALL);
+	SOUND_Stop(SFX_LARA_FALL);
 	lara.move_angle = item->pos.y_rot;
 	coll->bad_pos = 384;
 	coll->bad_neg = -384;
@@ -3351,7 +3351,7 @@ void lara_as_fastfall(ITEM_INFO* item, COLL_INFO* coll)
 	item->speed = 95 * item->speed / 100;
 
 	if (item->fallspeed == 154)
-		SoundEffect(SFX_LARA_FALL, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LARA_FALL, &item->pos, SFX_DEFAULT);
 
 	if (item->frame_number == anims[330].frame_end - 1)		//fall off pole
 		lara.gun_status = LG_NO_ARMS;
@@ -3378,7 +3378,7 @@ void lara_col_fastfall(ITEM_INFO* item, COLL_INFO* coll)
 			item->frame_number = anims[ANIM_LANDFAR].frame_base;
 		}
 
-		StopSoundEffect(SFX_LARA_FALL);
+		SOUND_Stop(SFX_LARA_FALL);
 		item->fallspeed = 0;
 		item->gravity_status = 0;
 
@@ -3401,7 +3401,7 @@ void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll)
 	}
 
 	if (item->anim_number != 226 && item->anim_number != 228)
-		StopSoundEffect(SFX_LARA_SLIPPING);
+		SOUND_Stop(SFX_LARA_SLIPPING);
 
 	if (UseInventoryItems(item))
 		return;
@@ -4065,7 +4065,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll)
 	else
 		item->item_flags[2] += 256;
 
-	SoundEffect(SFX_LARA_POLE_LOOP, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LARA_POLE_LOOP, &item->pos, SFX_DEFAULT);
 
 	if (item->item_flags[2] <= 16384)
 	{
@@ -4299,7 +4299,7 @@ void lara_slide_slope(ITEM_INFO* item, COLL_INFO* coll)
 			if (abs(coll->tilt_x) <= 2 && abs(coll->tilt_z) <= 2)
 			{
 				item->goal_anim_state = AS_STOP;
-				StopSoundEffect(SFX_LARA_SLIPPING);
+				SOUND_Stop(SFX_LARA_SLIPPING);
 			}
 		}
 		else
@@ -4319,7 +4319,7 @@ void lara_slide_slope(ITEM_INFO* item, COLL_INFO* coll)
 				item->goal_anim_state = AS_FALLBACK;
 			}
 
-			StopSoundEffect(SFX_LARA_SLIPPING);
+			SOUND_Stop(SFX_LARA_SLIPPING);
 			item->gravity_status = 1;
 			item->fallspeed = 0;
 		}
@@ -5075,7 +5075,7 @@ void UpdateRopeSwing(ITEM_INFO* item)
 			else
 				LegsSwinging = 0;
 
-			SoundEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
+			SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
 		}
 		else if (lara.RopeLastX < 0 && lara.RopeFrame == lara.RopeDFrame)
 		{
@@ -5101,7 +5101,7 @@ void UpdateRopeSwing(ITEM_INFO* item)
 		else
 			LegsSwinging = 0;
 
-		SoundEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
+		SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
 	}
 	else if (lara.RopeLastX > 0 && lara.RopeFrame == lara.RopeDFrame)
 	{

@@ -1207,8 +1207,8 @@ bool LoadSamples()
 	static long num_sample_infos;
 
 	Log(2, "LoadSamples");
-	sample_lut = (short*)game_malloc(NumSamples * sizeof(short));
-	memcpy(sample_lut, FileData, NumSamples * sizeof(short));
+	samples_maps = (short*)game_malloc(NumSamples * sizeof(short));
+	memcpy(samples_maps, FileData, NumSamples * sizeof(short));
 	FileData += NumSamples * sizeof(short);
 	num_sample_infos = *(long*)FileData;
 	FileData += sizeof(long);

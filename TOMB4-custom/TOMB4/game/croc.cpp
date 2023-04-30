@@ -571,7 +571,7 @@ void UpdateLocusts()
 	if (closestnum != -1)
 	{
 		fx = &Locusts[closestnum];
-		SoundEffect(SFX_LOCUSTS_LOOP, &fx->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LOCUSTS_LOOP, &fx->pos, SFX_DEFAULT);
 	}
 }
 

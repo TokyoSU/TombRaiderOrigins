@@ -102,7 +102,7 @@ void FlameEmitterControl(short item_number)
 	{
 		if ((-item->trigger_flags & 7) == 2 || (-item->trigger_flags & 7) == 7)
 		{
-			SoundEffect(SFX_FLAME_EMITTER, &item->pos, 0);
+			SOUND_PlayEffect(SFX_FLAME_EMITTER, &item->pos, 0);
 			TriggerSuperJetFlame(item, -256 - (3072 * GlobalCounter & 0x1C00), GlobalCounter & 1);
 			TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
 				(GetRandomControl() & 3) + 20, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
@@ -146,7 +146,7 @@ void FlameEmitterControl(short item_number)
 
 			if (item->item_flags[1])
 			{
-				SoundEffect(SFX_FLAME_EMITTER, &item->pos, 0);
+				SOUND_PlayEffect(SFX_FLAME_EMITTER, &item->pos, 0);
 
 				if (item->item_flags[1] > -8192)
 					TriggerSuperJetFlame(item, item->item_flags[1], GlobalCounter & 1);
@@ -159,7 +159,7 @@ void FlameEmitterControl(short item_number)
 				TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 10 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 		}
 
-		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, 0);
+		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, 0);
 	}
 	else
 	{
@@ -167,7 +167,7 @@ void FlameEmitterControl(short item_number)
 		AddFire(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, item->room_number, 0);
 		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 16 - (GetRandomControl() & 1),
 			(GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
-		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 
 		if (!lara.burn && ItemNearLara(&item->pos, 600))
 		{
@@ -270,7 +270,7 @@ void ControlTwoBlockPlatform(short item_number)
 				item->item_flags[1] = -1;
 			else
 			{
-				SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
 				item->pos.y_pos += 4;
 			}
 		}
@@ -280,7 +280,7 @@ void ControlTwoBlockPlatform(short item_number)
 				item->item_flags[1] = 1;
 			else
 			{
-				SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
 				item->pos.y_pos -= 4;
 			}
 		}
@@ -297,7 +297,7 @@ void ControlJobySpike(short item_number)
 
 	if (TriggerActive(item))
 	{
-		SoundEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
 		GetFrames(lara_item, frm, &rate);
 		y = lara_item->pos.y_pos + frm[0][2];
 		h = item->pos.y_pos + (3328 * item->item_flags[1] >> 12);
@@ -410,8 +410,8 @@ void ControlSlicerDicer(short item_number)
 	short room_number;
 
 	item = &items[item_number];
-	SoundEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
-	SoundEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
 	distance = 4608 * phd_cos(item->trigger_flags) >> 14;
 	item->pos.x_pos = 256 * item->item_flags[0] + (phd_sin(item->pos.y_rot) * distance >> 14);
 	item->pos.y_pos = 256 * item->item_flags[1] - (4608 * phd_sin(item->trigger_flags) >> 14);
@@ -459,7 +459,7 @@ void ControlSprinkler(short item_number)
 
 	if (item->item_flags[0] <= 600)
 	{
-		SoundEffect(SFX_SANDHAM_IN_THE_HOUSE, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_SANDHAM_IN_THE_HOUSE, &item->pos, SFX_DEFAULT);
 
 		for (int i = 0; i < 3; i++)
 		{
@@ -563,13 +563,13 @@ void ControlMineHelicopter(short item_number)
 				AddFire(sphere->x, sphere->y, sphere->z, 2, item->room_number, fade);
 		}
 
-		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 	}
 	else
 	{
-		SoundEffect(SFX_EXPLOSION1, &item->pos, SFX_DEFAULT);
-		SoundEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
-		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
 
 		for (int i = 0; i < nSpheres; i++)
 		{
@@ -632,7 +632,7 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			KillItem(i);
 
 			if (!(GetRandomControl() & 3))
-				SoundEffect(SFX_MINE_EXP_OVERLAY, &mines->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_MINE_EXP_OVERLAY, &mines->pos, SFX_DEFAULT);
 
 			mines->status = ITEM_INVISIBLE;
 		}
@@ -651,7 +651,7 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		l->frame_number = anims[ANIM_MINEDEATH].frame_base;
 		l->current_anim_state = AS_DEATH;
 		l->speed = 0;
-		SoundEffect(SFX_MINE_EXP_OVERLAY, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_MINE_EXP_OVERLAY, &item->pos, SFX_DEFAULT);
 	}
 }
 
@@ -692,7 +692,7 @@ void ControlFallingSquishyBlock(short item_number)
 	{
 		if (item->item_flags[0] < 60)
 		{
-			SoundEffect(SFX_EARTHQUAKE_LOOP, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, &item->pos, SFX_DEFAULT);
 			camera.bounce = (item->item_flags[0] - 92) >> 1;
 			item->item_flags[0]++;
 		}
@@ -1004,8 +1004,8 @@ void ControlHammer(short item_number)
 					}
 				}
 
-				SoundEffect(SFX_DOOR_GEN_THUD, &item->pos, SFX_DEFAULT);
-				SoundEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_DOOR_GEN_THUD, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
 			}
 			else
 			{
@@ -1055,7 +1055,7 @@ void ControlStargate(short item_number)
 
 	if (TriggerActive(item))
 	{
-		SoundEffect(SFX_STARGATE_SWIRL, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_STARGATE_SWIRL, &item->pos, SFX_DEFAULT);
 		*(long*)&item->item_flags[0] = 0x36DB600;
 		AnimateItem(item);
 	}
@@ -1268,7 +1268,7 @@ void ControlRaisingBlock(short item_number)
 
 		if (item->item_flags[1] < 4096)
 		{
-			SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
 			item->item_flags[1] += 64;
 
 			if (item->trigger_flags && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240 &&
@@ -1283,7 +1283,7 @@ void ControlRaisingBlock(short item_number)
 	}
 	else if (item->item_flags[1] > 0)
 	{
-		SoundEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_DEFAULT);
 
 		if (item->trigger_flags && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240 &&
 			abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240 && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240)
@@ -1353,7 +1353,7 @@ void ControlScaledSpike(short item_number)
 	else
 	{
 		if (item->item_flags[0] == 1024)
-			SoundEffect(SFX_TEETH_SPIKES, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_TEETH_SPIKES, &item->pos, SFX_DEFAULT);
 
 		item->status = ITEM_ACTIVE;
 		hit = (short)TestBoundsCollideTeethSpikes(item);
@@ -1462,7 +1462,7 @@ void FlameEmitter3Control(short item_number)
 
 	if (item->trigger_flags)
 	{
-		SoundEffect(SFX_ELEC_ARCING_LOOP, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, &item->pos, SFX_DEFAULT);
 		g = (GetRandomControl() & 0x3F) + 192;
 		b = (GetRandomControl() & 0x3F) + 192;
 		s.x = item->pos.x_pos;
@@ -1538,7 +1538,7 @@ void FlameEmitter3Control(short item_number)
 			TriggerFireFlame(item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1, 2);
 		}
 
-		SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 		distance = GetRandomControl();
 		r = (distance & 0x3F) + 192;
 		g = (distance >> 4 & 0x1F) + 96;
@@ -1613,7 +1613,7 @@ void FlameControl(short fx_number)
 		return;
 	}
 
-	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &fx->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &fx->pos, SFX_DEFAULT);
 	lara_item->hit_points -= 7;
 	lara_item->hit_status = 1;
 }
@@ -1690,7 +1690,7 @@ void FlameEmitter2Control(short item_number)
 			TriggerFireFlame(item->pos.x_pos, item->pos.y_pos - 32, item->pos.z_pos, -1, 1);
 	}
 
-	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 }
 
 void LaraBurn()
@@ -1790,7 +1790,7 @@ void ControlRollingBall(short item_number)
 			if (fz < 0x4000)
 				camera.bounce = -(((0x4000 - fz) * abs(item->fallspeed)) >> W2V_SHIFT);
 
-			SoundEffect(SFX_BOULDER_FALL, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_BOULDER_FALL, &item->pos, SFX_DEFAULT);
 		}
 
 		if (item->pos.y_pos - h < 512)
@@ -2110,7 +2110,7 @@ void DartEmitterControl(short item_number)
 
 		AddActiveItem(num);
 		dart->status = ITEM_ACTIVE;
-		SoundEffect(SFX_DART_SPITT, &dart->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_DART_SPITT, &dart->pos, SFX_DEFAULT);
 	}
 }
 
@@ -2166,7 +2166,7 @@ void ControlSmashableBikeWall(short item_number)
 
 	if (TestBoundsCollide(item, &items[lara.vehicle], 1024))
 	{
-		SoundEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_DEFAULT);
 		item->mesh_bits = -2;
 		ExplodingDeath2(item_number, -1, 2305);
 		item->mesh_bits = 0;
@@ -2186,7 +2186,7 @@ void ControlFallingBlock2(short item_number)
 
 	if (item->pos.y_pos == lara_item->pos.y_pos && OnTwoBlockPlatform(item, lara_item->pos.x_pos, lara_item->pos.z_pos) && lara.vehicle != NO_ITEM)
 	{
-		SoundEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_DEFAULT);
 		item->mesh_bits = -2;
 		ExplodingDeath2(item_number, -1, 417);
 		KillItem(item_number);
@@ -2258,7 +2258,7 @@ void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	if (!item->item_flags[0] && !item->trigger_flags && item->pos.y_pos == l->pos.y_pos && !((tx ^ x) & ~1023) && !((z ^ tz) & ~1023))
 	{
-		SoundEffect(SFX_ROCK_FALL_CRUMBLE, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_ROCK_FALL_CRUMBLE, &item->pos, SFX_DEFAULT);
 		AddActiveItem(item_number);
 		item->item_flags[0] = 60;
 		item->status = ITEM_ACTIVE;
@@ -2464,7 +2464,7 @@ void ControlObelisk(short item_number)
 			{
 				if (item->item_flags[3] < 256 && !(GlobalCounter & 3))
 				{
-					SoundEffect(SFX_ELEC_ONE_SHOT, &item->pos, SFX_DEFAULT);
+					SOUND_PlayEffect(SFX_ELEC_ONE_SHOT, &item->pos, SFX_DEFAULT);
 					rad = (GetRandomControl() & 0xFFF) + 3456;
 				}
 
@@ -2492,7 +2492,7 @@ void ControlObelisk(short item_number)
 			s.x = item->pos.x_pos + ((0x2000 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 			s.y = item->pos.y_pos;
 			s.z = item->pos.z_pos + ((0x2000 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
-			SoundEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&s, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&s, SFX_DEFAULT);
 
 			if (GlobalCounter & 1)
 			{
@@ -2514,8 +2514,8 @@ void ControlObelisk(short item_number)
 
 						disc = find_a_fucking_item(PUZZLE_ITEM1_COMBO1);
 						disc->status = ITEM_INACTIVE;
-						SoundEffect(SFX_EXPLOSION1, &disc->pos, SFX_DEFAULT);
-						SoundEffect(SFX_EXPLOSION2, &disc->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_EXPLOSION1, &disc->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_EXPLOSION2, &disc->pos, SFX_DEFAULT);
 					}
 
 					TriggerLightning(&s, &d, (GetRandomControl() & 0xF) + 16, RGBA(r, g, b, 24), 3, 24, 3);

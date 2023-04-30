@@ -210,7 +210,7 @@ void GameStixControl(short item_number)
 	if (item->trigger_flags > -1)
 	{
 		if (item->hit_points == 100)
-			SoundEffect(SFX_SPINNING_PUZZLE, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_SPINNING_PUZZLE, &item->pos, SFX_DEFAULT);
 
 		for (int i = 0; i < 4; i++)
 		{

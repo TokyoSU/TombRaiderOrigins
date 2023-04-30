@@ -365,8 +365,8 @@ void BikeExplode(ITEM_INFO* item)
 	ExplodingDeath2(lara.vehicle, -2, 256);
 	KillItem(lara.vehicle);
 	item->status = ITEM_DEACTIVATED;
-	SoundEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
-	SoundEffect(SFX_EXPLOSION2, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_DEFAULT);
 	lara.vehicle = NO_ITEM;
 }
 
@@ -834,7 +834,7 @@ long BikeBaddieCollision(ITEM_INFO* bike)
 								return 1;
 
 							if (item->hit_points)
-								SoundEffect(SFX_BIKE_HIT_ENEMIES, &item->pos, SFX_DEFAULT);
+								SOUND_PlayEffect(SFX_BIKE_HIT_ENEMIES, &item->pos, SFX_DEFAULT);
 
 							DoLotsOfBlood(item->pos.x_pos, bike->pos.y_pos - 256, item->pos.z_pos, (GetRandomControl() & 3) + 8, bike->pos.y_rot, item->room_number, 3);
 							item->hit_points = 0;
@@ -942,7 +942,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 						BikeBounds[5] < CollidedStaticBounds[4])
 					{
 						ShatterObject(0, mesh, -128, rn, 0);
-						SoundEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1441,14 +1441,14 @@ void BikeControl(short item_number)
 		else if (bike->pitch2 > 0xA000)
 			bike->pitch2 = 0xA000;
 
-		SoundEffect(SFX_BIKE_MOVING, &item->pos, (bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
+		SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, (bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
 	}
 	else
 	{
 		if (driving != -1)
 		{
-			SoundEffect(SFX_BIKE_IDLE, &item->pos, SFX_DEFAULT);
-			SoundEffect(SFX_BIKE_MOVING, &item->pos, (bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
+			SOUND_PlayEffect(SFX_BIKE_IDLE, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, (bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
 		}
 
 		bike->pitch2 = 0;

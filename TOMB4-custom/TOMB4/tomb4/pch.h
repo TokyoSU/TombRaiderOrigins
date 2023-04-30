@@ -9,9 +9,8 @@
 
 // add headers that you want to pre-compile here
 #define DIRECTINPUT_VERSION 0x0800
-#define DIRECTSOUND_VERSION	0x0800
-#define XAUDIO2_HELPER_FUNCTIONS
 #define _USE_MATH_DEFINES
+#define D3D_OVERLOADS
 #include <windows.h>
 #include <windowsx.h>
 #include <d3d.h>
@@ -20,11 +19,7 @@
 #include <stdio.h>
 #include <process.h>
 #include <dinput.h>
-#include <dsound.h>
-#include <xaudio2.h>
-#include <xaudio2fx.h>
 #include <mmreg.h>
-#include <MSAcm.h>
 
 #include "../../resource.h"
 

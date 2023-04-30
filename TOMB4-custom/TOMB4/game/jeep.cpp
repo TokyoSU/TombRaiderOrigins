@@ -209,8 +209,8 @@ void JeepExplode(ITEM_INFO* item)
 	ExplodingDeath2(lara.vehicle, -1, 256);
 	KillItem(lara.vehicle);
 	item->status = ITEM_DEACTIVATED;
-	SoundEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
-	SoundEffect(SFX_EXPLOSION2, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_DEFAULT);
 	lara.vehicle = NO_ITEM;
 }
 
@@ -1236,7 +1236,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 						JeepBounds[5] < CollidedStaticBounds[4])
 					{
 						ShatterObject(0, mesh, -128, rn, 0);
-						SoundEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1548,12 +1548,12 @@ void JeepControl(short item_number)
 		else if (jeep->pitch2 > 0xA000)
 			jeep->pitch2 = 0xA000;
 
-		SoundEffect(SFX_JEEP_MOVE, &item->pos, (jeep->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
+		SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, (jeep->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
 	}
 	else
 	{
 		if (driving != -1)
-			SoundEffect(SFX_JEEP_IDLE, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_JEEP_IDLE, &item->pos, SFX_DEFAULT);
 
 		jeep->pitch2 = 0;
 	}
@@ -2049,5 +2049,5 @@ void EnemyJeepControl(short item_number)
 		item->gravity_status = 0;
 	}
 
-	SoundEffect(SFX_JEEP_MOVE, &item->pos, (item->item_flags[0] << 10) + (SFX_SETPITCH | 0x1000000));
+	SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, (item->item_flags[0] << 10) + (SFX_SETPITCH | 0x1000000));
 }

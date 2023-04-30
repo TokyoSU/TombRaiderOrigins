@@ -25,7 +25,7 @@ short GunHit(long x, long y, long z, short speed, short yrot, short room_number)
 	pos.z = 0;
 	GetJointAbsPosition(lara_item, &pos, (25 * GetRandomControl()) / 0x7FFF);
 	DoBloodSplat(pos.x, pos.y, pos.z, (GetRandomControl() & 3) + 3, lara_item->pos.y_rot, lara_item->room_number);
-	SoundEffect(SFX_LARA_INJURY, &lara_item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LARA_INJURY, &lara_item->pos, SFX_DEFAULT);
 	return GunShot(x, y, z, speed, yrot, room_number);
 }
 

@@ -405,7 +405,7 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					OldPickupPos.x = l->pos.x_pos;
 					OldPickupPos.y = l->pos.y_pos;
 					OldPickupPos.z = l->pos.z_pos;
-					SayNo();
+					SOUND_SayNo();
 				}
 			}
 			else
@@ -470,7 +470,7 @@ void TurnSwitchControl(short item_number)
 
 		if (l->frame_number >= anims[ANIM_TURNSWITCHCB].frame_base && l->frame_number <= anims[ANIM_TURNSWITCHCB].frame_base + 43 ||
 			l->frame_number >= anims[ANIM_TURNSWITCHCB].frame_base + 58 && l->frame_number <= anims[ANIM_TURNSWITCHCB].frame_base + 115)
-			SoundEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
 	}
 	else
 	{
@@ -492,7 +492,7 @@ void TurnSwitchControl(short item_number)
 
 		if (l->frame_number >= anims[ANIM_TURNSWITCHAB].frame_base && l->frame_number <= anims[ANIM_TURNSWITCHAB].frame_base + 43 ||
 			l->frame_number >= anims[ANIM_TURNSWITCHAB].frame_base + 58 && l->frame_number <= anims[ANIM_TURNSWITCHAB].frame_base + 115)
-			SoundEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
 	}
 
 	AnimateItem(item);
@@ -813,7 +813,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				OldPickupPos.x = l->pos.x_pos;
 				OldPickupPos.y = l->pos.y_pos;
 				OldPickupPos.z = l->pos.z_pos;
-				SayNo();
+				SOUND_SayNo();
 			}
 		}
 	}

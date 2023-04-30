@@ -454,7 +454,7 @@ void DoLevel(uchar Name, uchar Audio)
 	InitSpotCamSequences();
 	InitialisePickUpDisplay();
 	//empty func call here
-	SOUND_Stop();
+	SOUND_StopAll();
 	bDisableLaraControl = 0;
 
 	if (gfGameMode == 4)
@@ -569,7 +569,7 @@ void DoLevel(uchar Name, uchar Audio)
 		}
 	}
 
-	S_SoundStopAllSamples();
+	SOUND_StopAll();
 	S_CDStop();
 
 	if (gfStatus == 3)
@@ -718,7 +718,7 @@ long TitleOptions()
 			break;
 		}
 
-		SoundEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
 		menu = 0;
 
 	case 0:
@@ -743,7 +743,7 @@ long TitleOptions()
 			if (selection > 1)
 				selection >>= 1;
 
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		}
 
 		if (dbinput & IN_BACK)
@@ -751,7 +751,7 @@ long TitleOptions()
 			if (selection < flag)
 				selection <<= 1;
 
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		}
 	}
 
@@ -759,13 +759,13 @@ long TitleOptions()
 	{
 		menu = 0;
 		selection = selection_bak;
-		S_SoundStopAllSamples();
-		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		SOUND_StopAll();
+		SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 	}
 
 	if (dbinput & IN_SELECT && !keymap[DIK_LALT] && menu < 2)
 	{
-		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
 		if (!menu)
 		{
@@ -872,7 +872,7 @@ void DoTitle(uchar Name, uchar Audio)
 	SetFogColor(gfFog.r, gfFog.g, gfFog.b);
 	ClearFXFogBulbs();
 	InitialisePickUpDisplay();
-	SOUND_Stop();
+	SOUND_StopAll();
 	S_CDPlay(Audio, 1);
 	IsAtmospherePlaying = 0;
 	S_SetReverbType(1);
@@ -918,7 +918,7 @@ void DoTitle(uchar Name, uchar Audio)
 		gfStatus = ControlPhase(nFrames, 0);
 	}
 
-	S_SoundStopAllSamples();
+	SOUND_StopAll();
 	S_CDStop();
 	bUseSpotCam = 0;
 	bDisableLaraControl = 0;

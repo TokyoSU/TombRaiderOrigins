@@ -1,16 +1,32 @@
 #pragma once
 #include "../global/types.h"
 
-void GetPanVolume(SoundSlot* slot);
-void StopSoundEffect(long sfx);
-void SOUND_Init();
-void SOUND_Stop();
-long SoundEffect(long sfx, PHD_3DPOS* pos, long flags);
-void SayNo();
+#define SOUND_MAX_CHANNELS 32
+
+extern PHD_3DPOS SOUND_Pos2D;
+
+extern float SOUND_DistanceToListener(PHD_3DPOS* pos);
+extern float SOUND_DistanceToListener(PHD_VECTOR* pos);
+extern float SOUND_Attenuate(float gain, float distance, float radius);
+extern void SOUND_FreeSlot(int index, unsigned int fadeout = 0);
+extern void SOUND_FreeSample(int index);
+extern int SOUND_GetFreeSlot();
+extern int SOUND_EffectIsPlaying(int index, PHD_3DPOS* pos);
+extern bool SOUND_EffectIsPlaying(int index);
+extern void SOUND_PauseAll();
+extern void SOUND_ResumeAll();
+extern void SOUND_Stop(int index);
+extern void SOUND_Init();
+extern void SOUND_UpdateScene();
+extern void SOUND_StopAll();
+extern bool SOUND_UpdateEffectPosition(int index, PHD_3DPOS* pos, bool force);
+extern bool SOUND_UpdateEffectAttributes(int index, float pitch, float gain);
+extern int SOUND_PlayEffect(int index, PHD_3DPOS* pos, int flags);
+extern void SOUND_SayNo();
 
 extern SAMPLE_INFO* sample_infos;
-extern SoundSlot LaSlot[32];
-extern short* sample_lut;
+extern SOUND_SLOT LaSlot[SOUND_MAX_CHANNELS];
+extern short* samples_maps;
 extern long sound_active;
 
 enum sfx_options

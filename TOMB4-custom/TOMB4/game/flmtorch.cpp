@@ -62,7 +62,7 @@ void TriggerTorchFlame(short item_number, long node)
 	sptr->Size = (GetRandomControl() & 0x1F) + 80;
 	sptr->sSize = sptr->Size;
 	sptr->dSize = sptr->Size >> 3;
-	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &items[item_number].pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &items[item_number].pos, SFX_DEFAULT);
 }
 
 void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)

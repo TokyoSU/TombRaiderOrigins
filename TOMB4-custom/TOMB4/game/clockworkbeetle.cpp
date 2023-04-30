@@ -135,7 +135,7 @@ void ControlClockworkBeetle(short item_number)
 		}
 	}
 
-	SoundEffect(SFX_BEETLE_CLK_WHIRR, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_BEETLE_CLK_WHIRR, &item->pos, SFX_DEFAULT);
 	item->fallspeed += 12;
 	item->pos.y_pos += item->fallspeed;
 	room_number = item->room_number;
@@ -319,7 +319,7 @@ void ControlClockworkBeetle(short item_number)
 				item->fallspeed = -((rotY >> 1) + GetRandomControl() % rotY);
 			else if (item->item_flags[3] < 30)
 			{
-				SoundEffect(SFX_BEETLE_CLK_EXP, &item->pos, 0);
+				SOUND_PlayEffect(SFX_BEETLE_CLK_EXP, &item->pos, 0);
 				ExplodeItemNode(item, 0, 0, 128);
 				KillItem(item_number);
 			}

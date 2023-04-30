@@ -27,8 +27,6 @@
 #include "../tomb4/troyestuff.h"
 #include "drawbars.h"
 
-long sfx_frequencies[3] = { 11025, 22050, 44100 };
-long SoundQuality = 1;
 long MusicVolume = 40;
 long SFXVolume = 80;
 long ControlMethod;
@@ -59,12 +57,6 @@ void DoOptions()
 	{
 		sfx_backup_flag |= 1;
 		sfx_bak = SFXVolume;
-	}
-
-	if (!(sfx_backup_flag & 2))
-	{
-		sfx_backup_flag |= 2;
-		sfx_quality_bak = SoundQuality;
 	}
 
 	f = font_height - 4;
@@ -128,13 +120,13 @@ void DoOptions()
 		{
 			if (dbinput & IN_FORWARD)
 			{
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 				sel >>= 1;
 			}
 
 			if (dbinput & IN_BACK)
 			{
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 				sel <<= 1;
 			}
 		}
@@ -145,7 +137,7 @@ void DoOptions()
 
 			if (keymap[DIK_ESCAPE])
 			{
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				sel2 = 0;
 				dbinput = 0;
 				waiting_for_key = 0;
@@ -209,7 +201,7 @@ void DoOptions()
 
 		if (dbinput & IN_SELECT && sel > 1 && ControlMethod < 2)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			sel2 = sel;
 			waiting_for_key = 1;
 			memset(keymap, 0, sizeof(keymap));
@@ -217,7 +209,7 @@ void DoOptions()
 
 		if (dbinput & IN_SELECT && ControlMethod == 2)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			ControlMethod = 0;
 			memcpy(layout[1], layout, 72);
 		}
@@ -226,13 +218,13 @@ void DoOptions()
 		{
 			if (dbinput & IN_LEFT)
 			{
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				ControlMethod--;
 			}
 
 			if (dbinput & IN_RIGHT)
 			{
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				ControlMethod++;
 			}
 
@@ -265,7 +257,7 @@ void DoOptions()
 
 		if (dbinput & IN_DESELECT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
 			if (ControlMethod < 2)
 				menu = 0;
@@ -287,13 +279,6 @@ void DoOptions()
 		DoSlider(400, 3 * font_height - (font_height >> 1) + f + 4, 200, 16, MusicVolume, 0xFF1F1F1F, 0xFF3F3FFF, mSliderCol);
 		DoSlider(400, f + 4 * font_height + 4 - (font_height >> 1), 200, 16, SFXVolume, 0xFF1F1F1F, 0xFF3F3FFF, sSliderCol);
 
-		if (!SoundQuality)
-			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_Low), 0);
-		else if (SoundQuality == 1)
-			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_Medium), 0);
-		else if (SoundQuality == 2)
-			PrintString(phd_centerx + (phd_centerx >> 2), f + 5 * font_height, sel & 8 ? 1 : 6, SCRIPT_TEXT(TXT_High), 0);
-
 		if (App.AutoTarget)
 			PrintString(phd_centerx + (phd_centerx >> 2), f + 6 * font_height, sel & 0x10 ? 1 : 6, SCRIPT_TEXT(TXT_Automatic), 0);
 		else
@@ -303,25 +288,25 @@ void DoOptions()
 
 		if (dbinput & IN_FORWARD)
 		{
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			sel >>= 1;
 		}
 
 		if (dbinput & IN_BACK)
 		{
-			SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			sel <<= 1;
 		}
 
 		if (dbinput & IN_SELECT && sel & 1)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			menu = 1;
 		}
 
 		if (dbinput & IN_SELECT && sel & 0x20)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			sel = 1;
 			menu = 200;
 		}
@@ -369,42 +354,19 @@ void DoOptions()
 
 			if (SFXVolume != sfx_bak)
 			{
-				if (sfx_breath_db == -1 || !DSIsChannelPlaying(0))
+				if (sfx_breath_db == -1 || !SOUND_EffectIsPlaying(0))
 				{
-					S_SoundStopAllSamples();
+					SOUND_StopAll();
 					sfx_bak = SFXVolume;
-					sfx_breath_db = SoundEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
-					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
+					sfx_breath_db = SOUND_PlayEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
+					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
 				}
-				else if (sfx_breath_db != -1 && DSIsChannelPlaying(0))
-					DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
+				//else if (sfx_breath_db != -1 && DSIsChannelPlaying(0))
+					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
 			}
 
 			mSliderCol = 0xFF3F3F3F;
 			sSliderCol = 0xFF7F7F7F;
-		}
-		else if (sel & 8)
-		{
-			sfx_bak = SFXVolume;
-
-			if (dbinput & IN_LEFT)
-				SoundQuality--;
-
-			if (dbinput & IN_RIGHT)
-				SoundQuality++;
-
-			if (SoundQuality > 2)
-				SoundQuality = 2;
-			else if (SoundQuality < 0)
-				SoundQuality = 0;
-
-			if (SoundQuality != sfx_quality_bak)
-			{
-				S_SoundStopAllSamples();
-				DXChangeOutputFormat(sfx_frequencies[SoundQuality], 0);
-				sfx_quality_bak = SoundQuality;
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
-			}
 		}
 		else if (sel & 16)
 		{
@@ -413,7 +375,7 @@ void DoOptions()
 				if (App.AutoTarget)
 					App.AutoTarget = 0;
 
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			}
 
 			if (dbinput & IN_RIGHT)
@@ -421,7 +383,7 @@ void DoOptions()
 				if (!App.AutoTarget)
 					App.AutoTarget = 1;
 
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			}
 
 			savegame.AutoTarget = App.AutoTarget;
@@ -490,7 +452,7 @@ long S_DisplayPauseMenu(long reset)
 				if (selection > 1)
 					selection >>= 1;
 
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			}
 
 			if (dbinput & IN_BACK)
@@ -498,18 +460,18 @@ long S_DisplayPauseMenu(long reset)
 				if (selection < 4)
 					selection <<= 1;
 
-				SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 			}
 
 			if (dbinput & IN_DESELECT)
 			{
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 				return 1;
 			}
 
 			if (dbinput & IN_SELECT && !keymap[DIK_LALT])
 			{
-				SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
 				if (selection & 1)
 					menu = 2;
@@ -527,7 +489,7 @@ long S_DisplayPauseMenu(long reset)
 		if (dbinput & IN_DESELECT)
 		{
 			menu = 0;
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 		}
 	}
 	else if (menu == 2)
@@ -537,7 +499,7 @@ long S_DisplayPauseMenu(long reset)
 		if (dbinput & IN_DESELECT)
 		{
 			menu = 0;
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 		}
 	}
 
@@ -598,13 +560,13 @@ long DoLoadSave(long LoadSave)
 	if (dbinput & IN_FORWARD)
 	{
 		selection--;
-		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 	}
 
 	if (dbinput & IN_BACK)
 	{
 		selection++;
-		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 	}
 
 	if (selection < 0)
@@ -617,7 +579,7 @@ long DoLoadSave(long LoadSave)
 		if (SaveGames[selection].valid || LoadSave == IN_SAVE)
 			return selection;
 
-		SoundEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
 	}
 
 	return -1;

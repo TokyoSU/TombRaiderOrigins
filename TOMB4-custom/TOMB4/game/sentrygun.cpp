@@ -119,8 +119,8 @@ void AutogunControl(short item_number)
 		for (int i = 0; i < 2; i++)
 			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos - 768, item->pos.z_pos, 3, -1, 0, item->room_number);
 
-		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
-		SoundEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
+		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
 	}
 	else
 	{
@@ -159,7 +159,7 @@ void AutogunControl(short item_number)
 					{
 						item->item_flags[0] = 2;
 						ShotLara(item, &info, &AGOffsets, autogun->joint_rotation[0], 5);
-						SoundEffect(SFX_AUTOGUNS, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_AUTOGUNS, &item->pos, SFX_DEFAULT);
 						item->item_flags[2] += 256;
 
 						if (item->item_flags[2] > 6144)

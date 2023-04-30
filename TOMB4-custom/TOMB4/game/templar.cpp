@@ -143,7 +143,7 @@ void TemplarControl(short item_number)
 					if (!((pos.z ^ mesh->z) & ~0x3FF) && !((pos.x ^ mesh->x) & ~0x3FF) && mesh->static_number >= SHATTER0)
 					{
 						ShatterObject(0, mesh, -64, lara_item->room_number, 0);
-						SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
 						mesh->Flags &= ~1;
 						floor->stopper = 0;
 						GetHeight(floor, pos.x, pos.y, pos.z);

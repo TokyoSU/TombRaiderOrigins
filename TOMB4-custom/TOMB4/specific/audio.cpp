@@ -133,7 +133,6 @@ static char source_wav_format[50] =
 };
 #pragma warning(pop)
 
-HACMDRIVER hACMDriver;
 uchar* wav_file_buffer = 0;
 uchar* ADPCMBuffer = 0;
 bool acm_ready = 0;
@@ -142,11 +141,6 @@ long XATrack = -1;
 long XAFlag = 7;
 static long XAReqTrack = 0;
 
-static LPDIRECTSOUNDBUFFER DSBuffer = 0;
-static LPDIRECTSOUNDNOTIFY DSNotify = 0;
-static ACMSTREAMHEADER StreamHeaders[4];
-static HACMDRIVERID hACMDriverID = 0;
-static HACMSTREAM hACMStream = 0;
 static HANDLE NotifyEventHandles[2];
 static HANDLE NotificationThreadHandle = 0;
 static FILE* audio_stream_fp;
@@ -214,15 +208,6 @@ void GetADPCMData()
 
 void ACMSetVolume()
 {
-	long volume;
-
-	if (!MusicVolume)
-		volume = -10000;
-	else
-		volume = -4000 * (100 - MusicVolume) / 100;
-
-	if (DSBuffer)
-		DSBuffer->SetVolume(volume);
 }
 
 void ACMEmulateCDPlay(long track, long mode)
@@ -240,11 +225,6 @@ void ACMEmulateCDPlay(long track, long mode)
 	auido_play_mode = mode;
 }
 
-BOOL __stdcall ACMEnumCallBack(HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport)
-{
-	return 0;
-}
-
 long ACMSetupNotifications()
 {
 	return 0;
@@ -257,7 +237,7 @@ void FillADPCMBuffer(char* p, long track)
 
 long ACMHandleNotifications()
 {
-	return DS_OK;
+	return 0;
 }
 
 bool ACMInit()

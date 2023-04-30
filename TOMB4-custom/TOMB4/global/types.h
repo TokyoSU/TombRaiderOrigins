@@ -1,5 +1,6 @@
 #pragma once
 #include "math_tbls.h"
+#include "../tomb4/bass.h"
 
 #pragma pack(push, 1)
 
@@ -1959,13 +1960,6 @@ struct SAMPLE_INFO
 	short flags;
 };
 
-struct DS_SAMPLE
-{
-	LPDIRECTSOUNDBUFFER buffer;
-	long frequency;
-	long playing;
-};
-
 struct BUBBLE_STRUCT
 {
 	PHD_VECTOR pos;
@@ -2135,14 +2129,23 @@ struct FIRE_LIST
 	short room_number;
 };
 
-struct SoundSlot
+enum SoundState
 {
-	long OrigVolume;
-	long nVolume;
-	long nPan;
-	long nPitch;
-	long nSampleInfo;
-	ulong distance;
+	SS_IsPlaying,
+	SS_IsEnding,
+	SS_IsEnded,
+};
+
+struct SOUND_SLOT
+{
+	float OrigVolume;
+	float nVolume;
+	float nPan;
+	float nPitch;
+	int nSampleInfo;
+	float distance;
+	SoundState state;
+	HCHANNEL channel;
 	PHD_VECTOR pos;
 };
 

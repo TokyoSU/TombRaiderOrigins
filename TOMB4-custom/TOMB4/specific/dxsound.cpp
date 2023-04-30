@@ -8,39 +8,18 @@
 #include "winmain.h"
 #include "../tomb4/tomb4.h"
 
-#define SOUND_32BIT_SILENCE_LEVEL 4.9e-04f
-
 char* samples_buffer;
 HSAMPLE SamplePointer[NumSamples];
-
-bool DXChangeOutputFormat(long nSamplesPerSec, bool force)
-{
-	return 1;
-}
-
-void DSChangeVolume(long num, long volume)
-{
-}
-
-void DSAdjustPitch(long num, long pitch)
-{
-}
-
-void DSAdjustPan(long num, long pan)
-{
-}
-
-bool DXSetOutputFormat()
-{
-	Log(1, "Can't Get Primary Sound Buffer");
-	return 0;
-}
 
 bool DXDSCreate()
 {
 	Log(2, "DXDSCreate");
-	sound_active = BASS_Init(-1, 22050, BASS_DEVICE_16BITS|BASS_DEVICE_FREQ, App.hWnd, NULL);
+	sound_active = BASS_Init(-1, 44100, BASS_DEVICE_3D, App.hWnd, NULL);
 	Log(2, sound_active ? "DXDSCreate Success" : "DXDSCreate Failed");
+	BASS_Set3DFactors(SOUND_BASS_UNITS, 1.5f, 0.5f);
+	BASS_SetConfig(BASS_CONFIG_3DALGORITHM, BASS_3DALG_FULL);
+	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 2);
+	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 10);
 	return 1;
 }
 
@@ -82,7 +61,7 @@ bool DXCreateSampleADPCM(char* data, long comp_size, long uncomp_size, long num)
 
 	WAVEFORMATEX* wf = (WAVEFORMATEX*)(uncompBuffer + 20);
 	wf->wFormatTag = 3;
-	wf->nChannels = info.chans;
+	wf->nChannels = (WORD)info.chans;
 	wf->wBitsPerSample = 32;
 	wf->nSamplesPerSec = info.freq;
 	wf->nBlockAlign = wf->nChannels * wf->wBitsPerSample / 8;
@@ -113,81 +92,11 @@ bool DXCreateSampleADPCM(char* data, long comp_size, long uncomp_size, long num)
 	return 1;
 }
 
-void DXStopSample(long num)
-{
-	
-}
-
-bool DSIsChannelPlaying(long num)
-{
-	return 0;
-}
-
-long DSGetFreeChannel()
-{
-	return -1;
-}
-
-long CalcVolume(long volume)
-{
-	long result = 8000 - long(float(0x7FFF - volume) * 0.30518511F);
-	if (result > 0)
-		result = 0;
-	else if (result < -10000)
-		result = -10000;
-
-	result -= (100 - SFXVolume) * 50;
-
-	if (result > 0)
-		result = 0;
-
-	if (result < -10000)
-		result = -10000;
-
-	return result;
-}
-
-void S_SoundStopAllSamples()
-{
-	for (int i = 0; i < 32; i++)
-		DXStopSample(i);
-}
-
-void S_SoundStopSample(long num)
-{
-	DXStopSample(num);
-}
-
 void DXFreeSounds()
 {
-	S_SoundStopAllSamples();
-
+	SOUND_StopAll();
 	for (int i = 0; i < NumSamples; i++)
-	{
-		BASS_SampleFree(SamplePointer[i]);
-	}
-}
-
-long S_SoundSampleIsPlaying(long num)
-{
-	if (sound_active && DSIsChannelPlaying(num))
-		return 1;
-	return 0;
-}
-
-void S_SoundSetPanAndVolume(long num, short pan, ushort volume)
-{
-	if (sound_active)
-	{
-		DSChangeVolume(num, CalcVolume(volume));
-		DSAdjustPan(num, pan);
-	}
-}
-
-void S_SoundSetPitch(long num, long pitch)
-{
-	if (sound_active)
-		DSAdjustPitch(num, pitch);
+		SOUND_FreeSample(i);
 }
 
 void S_SetReverbType(long reverb)

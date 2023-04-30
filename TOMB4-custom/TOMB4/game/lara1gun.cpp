@@ -144,7 +144,7 @@ void FireCrossbow(PHD_3DPOS* pos)
 		else
 			item->item_flags[0] = 3;
 
-		SoundEffect(SFX_LARA_CROSSBOW, 0, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LARA_CROSSBOW, 0, SFX_DEFAULT);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -239,8 +239,8 @@ void FireShotgun()
 		}
 
 		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
-		SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x1400000 | SFX_SETPITCH);
-		SoundEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x1400000 | SFX_SETPITCH);
+		SOUND_PlayEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFX_DEFAULT);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -410,15 +410,15 @@ void AnimateShotgun(long weapon_type)
 			{
 				if (m16_firing)
 				{
-					SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
+					SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
 					m16_firing = 0;
 				}
 			}
 		}
 		else if (m16_firing)
 		{
-			SoundEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
-			SoundEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
+			SOUND_PlayEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_DEFAULT);
 		}
 		else if (weapon_type == 4 && !(input & IN_ACTION) && !lara.left_arm.lock)
 			item->goal_anim_state = 4;
@@ -933,8 +933,8 @@ void ControlCrossbow(short item_number)
 		}
 
 		AlertNearbyGuards(item);
-		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
-		SoundEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
+		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
 	}
 
 	if (collided || exploded)
@@ -1282,8 +1282,8 @@ void ControlGrenade(short item_number)
 		}
 
 		AlertNearbyGuards(item);
-		SoundEffect(SFX_EXPLOSION1, &item->pos, 0x1800004);
-		SoundEffect(SFX_EXPLOSION2, &item->pos, 0);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, 0x1800004);
+		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, 0);
 
 		if (item->item_flags[0] == 1 || item->item_flags[0] == 4)
 			KillItem(item_number);

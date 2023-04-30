@@ -178,7 +178,7 @@ void WraithControl(short item_number)
 	short rotY, rotX, speed, room_number;
 
 	item = &items[item_number];
-	SoundEffect(SFX_WRAITH_WHISPERS, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_WRAITH_WHISPERS, &item->pos, SFX_DEFAULT);
 
 	if (item->hit_points)
 		target = &items[item->hit_points];

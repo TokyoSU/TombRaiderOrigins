@@ -163,7 +163,7 @@ void floor_shake_effect(ITEM_INFO* item)
 
 void SoundFlipEffect(ITEM_INFO* item)
 {
-	SoundEffect(TriggerTimer, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(TriggerTimer, 0, SFX_DEFAULT);
 	flipeffect = -1;
 }
 
@@ -187,7 +187,7 @@ void RubbleFX(ITEM_INFO* item)
 
 void PoseidonSFX(ITEM_INFO* item)
 {
-	SoundEffect(SFX_WATER_FLUSHES, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_WATER_FLUSHES, 0, SFX_DEFAULT);
 	flipeffect = -1;
 }
 
@@ -215,7 +215,7 @@ void SwapCrowbar(ITEM_INFO* item)
 
 void ExplosionFX(ITEM_INFO* item)
 {
-	SoundEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
 	camera.bounce = -75;
 	flipeffect = -1;
 }
@@ -434,7 +434,7 @@ void WaterFall(short item_number)
 			TriggerWaterfallMist(item->pos.x_pos + dx, item->pos.y_pos, item->pos.z_pos + dz, item->pos.y_rot >> 4);
 		}
 
-		SoundEffect(SFX_WATERFALL_LOOP, &item->pos, 0);
+		SOUND_PlayEffect(SFX_WATERFALL_LOOP, &item->pos, 0);
 	}
 }
 
@@ -535,61 +535,60 @@ void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_nu
 void Richochet(GAME_VECTOR* pos)
 {
 	TriggerRicochetSpark(pos, mGetAngle(pos->z, pos->x, lara_item->pos.z_pos, lara_item->pos.x_pos) >> 4, 3, 0);
-	SoundEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_DEFAULT);
 }
 
-void SoundEffects()
+void SOUND_PlayEnvironmentEffect()
 {
+	if (!sound_active)
+		return;
+
 	OBJECT_VECTOR* sfx;
-	SoundSlot* slot;
+	SOUND_SLOT* slot;
 
 	for (int i = 0; i < number_sound_effects; i++)
 	{
 		sfx = &sound_effects[i];
-
 		if (flip_status)
 		{
-			if (sfx->flags & 0x40)
-				SoundEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
+			if (sfx->flags & 0x40)  // flipped ?
+				SOUND_PlayEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
 		}
-		else if (sfx->flags & 0x80)
-			SoundEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
+		else if (sfx->flags & 0x80) // not flipped
+			SOUND_PlayEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
 	}
 
 	if (flipeffect != -1)
-		effect_routines[flipeffect](0);
+		effect_routines[flipeffect](NULL);
 
-	if (!sound_active)
-		return;
-
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < SOUND_MAX_CHANNELS; i++)
 	{
 		slot = &LaSlot[i];
-
 		if (slot->nSampleInfo < 0)
 			continue;
 
 		if ((sample_infos[slot->nSampleInfo].flags & 3) != 3)
 		{
-			if (!S_SoundSampleIsPlaying(i))
+			if (!SOUND_EffectIsPlaying(i))
+			{
 				slot->nSampleInfo = -1;
+			}
 			else
 			{
-				GetPanVolume(slot);
-				S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
+				//S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
 			}
 		}
 		else
 		{
 			if (!slot->nVolume)
 			{
-				S_SoundStopSample(i);
+				SOUND_Stop(i);
 				slot->nSampleInfo = -1;
 			}
 			else
 			{
-				S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
-				S_SoundSetPitch(i, slot->nPitch);
+				//S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
+				//S_SoundSetPitch(i, slot->nPitch);
 				slot->nVolume = 0;
 			}
 		}

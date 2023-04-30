@@ -308,13 +308,13 @@ void MovableBlock(short item_number)
 		{
 			if (sfx)
 			{
-				SoundEffect(SFX_PUSH_BLOCK_END, &item->pos, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_PUSH_BLOCK_END, &item->pos, SFX_ALWAYS);
 				sfx = 0;
 			}
 		}
 		else
 		{
-			SoundEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
 			sfx = 1;
 		}
 
@@ -377,13 +377,13 @@ void MovableBlock(short item_number)
 		{
 			if (sfx)
 			{
-				SoundEffect(SFX_PUSH_BLOCK_END, &item->pos, SFX_ALWAYS);
+				SOUND_PlayEffect(SFX_PUSH_BLOCK_END, &item->pos, SFX_ALWAYS);
 				sfx = 0;
 			}
 		}
 		else
 		{
-			SoundEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
 			sfx = 1;
 		}
 
@@ -672,7 +672,7 @@ void ControlPlanetEffect(short item_number)
 					TriggerLightning(&pos2, &pos, (GetRandomControl() & 0x1F) + 32, RGBA(0, g, b, 24), 1, 32, 5);
 
 				TriggerLightningGlow(pos.x, pos.y, pos.z, RGBA(0, g, b, (GetRandomControl() & 0x1F) + 48));
-				SoundEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&pos, SFX_DEFAULT);
 				pos = pos2;
 			}
 

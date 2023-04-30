@@ -52,7 +52,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					l->frame_number = anims[ANIM_FILLSCALE].frame_base;
 				}
 				else if (l->frame_number == anims[ANIM_FILLSCALE].frame_base + 51)
-					SoundEffect(SFX_POUR, &l->pos, SFX_DEFAULT);
+					SOUND_PlayEffect(SFX_POUR, &l->pos, SFX_DEFAULT);
 				else if (l->frame_number == anims[ANIM_FILLSCALE].frame_base + 74)
 				{
 					AddActiveItem(item_number);
@@ -220,7 +220,7 @@ void ExplodeAhmet(ITEM_INFO* item)
 	}
 
 	TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 13, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
-	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
 }
 
 void InitialiseAhmet(short item_number)

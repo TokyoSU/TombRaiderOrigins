@@ -22,7 +22,7 @@ void TroyeMenu(long textY, long& menu, ulong& selection)
 
 	if (dbinput & IN_DESELECT)
 	{
-		SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 		menu = 0;
 		dbinput &= ~IN_DESELECT;
 		page = 0;
@@ -49,13 +49,13 @@ void TroyeMenu(long textY, long& menu, ulong& selection)
 
 	if (dbinput & IN_FORWARD)
 	{
-		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		selection >>= 1;
 	}
 
 	if (dbinput & IN_BACK)
 	{
-		SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 		selection <<= 1;
 	}
 
@@ -69,7 +69,7 @@ void TroyeMenu(long textY, long& menu, ulong& selection)
 	{
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 
 			if (page)
 			{
@@ -168,7 +168,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.footprints = !tomb4.footprints;
 			changed = 1;
 		}
@@ -179,7 +179,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.shadow_mode++;
 
 			if (tomb4.shadow_mode > 4)
@@ -190,7 +190,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.shadow_mode--;
 
 			if (tomb4.shadow_mode < 1)
@@ -205,7 +205,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT || dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.crawltilt = !tomb4.crawltilt;
 			changed = 1;
 		}
@@ -216,7 +216,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT || dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.flexible_crawling = !tomb4.flexible_crawling;
 			changed = 1;
 		}
@@ -227,7 +227,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT || dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.fix_climb_up_delay = !tomb4.fix_climb_up_delay;
 			changed = 1;
 		}
@@ -238,7 +238,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT || dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.gameover = !tomb4.gameover;
 			changed = 1;
 		}
@@ -249,7 +249,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.bar_mode++;
 
 			if (tomb4.bar_mode > 3)
@@ -260,7 +260,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.bar_mode--;
 
 			if (tomb4.bar_mode < 1)
@@ -275,7 +275,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.bars_pos++;
 
 			if (tomb4.bars_pos > 3)
@@ -286,7 +286,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.bars_pos--;
 
 			if (tomb4.bars_pos < 1)
@@ -301,7 +301,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.enemy_bars = !tomb4.enemy_bars;
 			changed = 1;
 		}
@@ -312,7 +312,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.cutseq_skipper = !tomb4.cutseq_skipper;
 			changed = 1;
 		}
@@ -323,7 +323,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.cheats = !tomb4.cheats;
 			changed = 1;
 		}
@@ -334,7 +334,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.loadingtxt = !tomb4.loadingtxt;
 			changed = 1;
 		}
@@ -345,7 +345,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.inv_bg_mode++;
 
 			if (tomb4.inv_bg_mode > 3)
@@ -356,7 +356,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.inv_bg_mode--;
 
 			if (tomb4.inv_bg_mode < 1)
@@ -371,7 +371,7 @@ bool Page0(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.tr5_loadbar = !tomb4.tr5_loadbar;
 			changed = 1;
 		}
@@ -436,7 +436,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.look_transparency = !tomb4.look_transparency;
 			changed = 1;
 		}
@@ -447,7 +447,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.ammo_counter = !tomb4.ammo_counter;
 			changed = 1;
 		}
@@ -458,7 +458,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.ammotype_hotkeys = !tomb4.ammotype_hotkeys;
 			changed = 1;
 		}
@@ -469,7 +469,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.combat_cam_tilt = !tomb4.combat_cam_tilt;
 			changed = 1;
 		}
@@ -480,7 +480,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.hpbar_inv = !tomb4.hpbar_inv;
 			changed = 1;
 		}
@@ -491,7 +491,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT || dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.static_lighting = !tomb4.static_lighting;
 			changed = 1;
 		}
@@ -502,7 +502,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.reverb--;
 
 			if (tomb4.reverb < 1)
@@ -513,7 +513,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.reverb++;
 
 			if (tomb4.reverb > 3)
@@ -528,7 +528,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_RIGHT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.distance_fog++;
 
 			if (tomb4.distance_fog > 30)
@@ -539,7 +539,7 @@ bool Page1(long& num, long textY, ulong selection)
 
 		if (dbinput & IN_LEFT)
 		{
-			SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 			tomb4.distance_fog--;
 
 			if (tomb4.distance_fog < 3)

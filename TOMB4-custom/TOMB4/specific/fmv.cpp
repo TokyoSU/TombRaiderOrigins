@@ -17,7 +17,6 @@
 
 static void (__stdcall* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
 static void(__stdcall* BinkOpenDirectSound)(ulong);
-static void (__stdcall* BinkSetSoundSystem)(LPVOID, LPDIRECTSOUND);
 static LPVOID (__stdcall* BinkOpen)(char*, ulong);
 static long (__stdcall* BinkDDSurfaceType)(LPDIRECTDRAWSURFACEX);
 static long (__stdcall* BinkDoFrame)(BINK_STRUCT*);
@@ -47,7 +46,6 @@ bool LoadBinkStuff()
 	{	
 		GET_DLL_PROC(hBinkW32, BinkCopyToBuffer, "_BinkCopyToBuffer@28");
 		GET_DLL_PROC(hBinkW32, BinkOpenDirectSound, "_BinkOpenDirectSound@4");
-		GET_DLL_PROC(hBinkW32, BinkSetSoundSystem, "_BinkSetSoundSystem@8");
 		GET_DLL_PROC(hBinkW32, BinkOpen, "_BinkOpen@8");
 		GET_DLL_PROC(hBinkW32, BinkDDSurfaceType, "_BinkDDSurfaceType@4");
 		GET_DLL_PROC(hBinkW32, BinkDoFrame, "_BinkDoFrame@4");
@@ -136,7 +134,6 @@ long PlayFmvNow(long num)
 		rm = 1;
 	}
 	
-	Bink = 0;
 	//BinkSetSoundSystem(BinkOpenDirectSound, App.dx.lpDS);
 	Bink = (BINK_STRUCT*)BinkOpen(path, 0);
 
@@ -181,7 +178,6 @@ long PlayFmvNow(long num)
 		SetD3DViewMatrix();
 	}
 
-	DXChangeOutputFormat(sfx_frequencies[SoundQuality], 1);
 	HWInitialise();
 	ClearSurfaces();
 	App.fmv = 0;

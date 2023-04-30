@@ -1901,7 +1901,7 @@ void SetupSplash(SPLASH_SETUP* setup)
 
 		if (n >= 4)
 		{
-			SoundEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
 			return;
 		}
 	}
@@ -1924,7 +1924,7 @@ void SetupSplash(SPLASH_SETUP* setup)
 	splash->OuterRad = setup->MiddleYVel;
 	splash->OuterSize = setup->pad2;
 	splash->OuterRadVel = setup->OuterRad;
-	SoundEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
 }
 
 void UpdateSplashes()	//(and ripples)

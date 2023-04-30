@@ -37,7 +37,7 @@ void Splash(ITEM_INFO* item);
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number);
 void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_number, long num);
 void Richochet(GAME_VECTOR* pos);
-void SoundEffects();
+void SOUND_PlayEnvironmentEffect();
 long ItemNearLara(PHD_3DPOS* pos, long rad);
 
 extern FX_INFO* effects;

@@ -374,7 +374,7 @@ void LaraBubbles(ITEM_INFO* item)
 {
 	PHD_VECTOR pos;
 
-	SoundEffect(SFX_LARA_BUBBLES, &item->pos, SFX_WATER);
+	SOUND_PlayEffect(SFX_LARA_BUBBLES, &item->pos, SFX_WATER);
 	pos.x = 0;
 	pos.y = -4;
 	pos.z = 64;
@@ -1175,7 +1175,7 @@ void UpdateGunShells()
 
 		if (shell->pos.y_pos < c)
 		{
-			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
 			shell->speed -= 4;
 
 			if (shell->speed < 8)
@@ -1192,7 +1192,7 @@ void UpdateGunShells()
 
 		if (shell->pos.y_pos >= h)
 		{
-			SoundEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
 			shell->speed -= 8;
 
 			if (shell->speed < 8)
@@ -1742,7 +1742,7 @@ void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgr
 		sw->g = CLRG(bgrl);
 		sw->b = CLRR(bgrl);
 		sw->life = CLRA(bgrl);
-		SoundEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_DEFAULT);
 	}
 }
 

@@ -59,7 +59,7 @@ void SphinxControl(short item_number)
 			if (mesh->z >> 10 == z >> 10 && mesh->x >> 10 == x >> 10 && mesh->static_number >= SHATTER0)
 			{
 				ShatterObject(0, mesh, -64, item->room_number, 0);
-				SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
 				mesh->Flags &= ~1;
 				floor->stopper = 0;
 				TestTriggers(trigger_index, 1, 0);

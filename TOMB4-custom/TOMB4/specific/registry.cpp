@@ -193,7 +193,6 @@ bool LoadSettings()
 	REG_ReadLong((char*)"MusicVolume", (ulong&)MusicVolume, 80);
 	REG_ReadLong((char*)"SFXVolume", (ulong&)SFXVolume, 90);
 	REG_ReadLong((char*)"ControlMethod", (ulong&)ControlMethod, 0);
-	REG_ReadLong((char*)"SoundQuality", (ulong&)SoundQuality, 1);
 	REG_ReadLong((char*)"AutoTarget", (ulong&)App.AutoTarget, 1);
 	REG_ReadLong((char*)"WindowX", (ulong&)App.dx.rScreen, 0);
 	REG_ReadLong((char*)"WindowY", (ulong&)App.dx.rScreen.top, 0);
@@ -227,7 +226,6 @@ void SaveSettings()
 	REG_WriteLong((char*)"ControlMethod", ControlMethod);
 	REG_WriteLong((char*)"MusicVolume", MusicVolume);
 	REG_WriteLong((char*)"SFXVolume", SFXVolume);
-	REG_WriteLong((char*)"SoundQuality", SoundQuality);
 	REG_WriteLong((char*)"AutoTarget", App.AutoTarget);
 	REG_WriteLong((char*)"WindowX", App.dx.rScreen.left);
 	REG_WriteLong((char*)"WindowY", App.dx.rScreen.top);

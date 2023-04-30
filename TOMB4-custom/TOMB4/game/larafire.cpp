@@ -669,7 +669,7 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade)
 			if (item->object_number == SUPER_RAGHEAD && (item->current_anim_state == 8 || GetRandomControl() & 1) &&
 				(lara.gun_type == WEAPON_PISTOLS || lara.gun_type == WEAPON_SHOTGUN || lara.gun_type == WEAPON_UZI))
 			{
-				SoundEffect(SFX_BAD_SWORD_RICO, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_BAD_SWORD_RICO, &item->pos, SFX_DEFAULT);
 				TriggerRicochetSpark(hitpos, lara_item->pos.y_rot, 3, 0);
 				return;
 			}
@@ -1201,7 +1201,6 @@ void LaraGun()
 
 	if (lara.left_arm.flash_gun > 0)
 		lara.left_arm.flash_gun--;
-
 	if (lara.right_arm.flash_gun > 0)
 		lara.right_arm.flash_gun--;
 
@@ -1400,7 +1399,7 @@ void LaraGun()
 		{
 			if (!*get_current_ammo_pointer(lara.gun_type))
 			{
-				SoundEffect(SFX_SARLID_PALACES, &lara_item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_SARLID_PALACES, &lara_item->pos, SFX_DEFAULT);
 				lara.request_gun_type = WEAPON_PISTOLS;
 				return;
 			}

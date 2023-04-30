@@ -145,14 +145,14 @@ static long S_Death()
 					if (dbinput & IN_FORWARD)
 					{
 						selection = 0;
-						SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+						SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 					}
 
 					if (dbinput & IN_SELECT)
 					{
 						lara.death_count = 0;
 						ret = 1;
-						SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+						SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 					}
 				}
 				else
@@ -160,13 +160,13 @@ static long S_Death()
 					if (dbinput & IN_BACK)
 					{
 						selection = 1;
-						SoundEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+						SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
 					}
 
 					if (dbinput & IN_SELECT)
 					{
 						menu = 1;
-						SoundEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+						SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
 					}
 				}
 			}
@@ -252,7 +252,7 @@ long ControlPhase(long nframes, long demo_mode)
 
 		SetDebounce = 0;
 
-		if (gfCurrentLevel && (dbinput & IN_OPTION || GLOBAL_enterinventory != -1) && !cutseq_trig && lara_item->hit_points > 0)
+		if (gfCurrentLevel != 0 && (dbinput & IN_OPTION || GLOBAL_enterinventory != -1) && !cutseq_trig && lara_item->hit_points > 0)
 		{
 			if (S_CallInventory2())
 				return 2;
@@ -463,7 +463,7 @@ long ControlPhase(long nframes, long demo_mode)
 
 		if (GLOBAL_inventoryitemchosen != -1)
 		{
-			SayNo();
+			SOUND_SayNo();
 			GLOBAL_inventoryitemchosen = -1;
 		}
 
@@ -503,7 +503,8 @@ long ControlPhase(long nframes, long demo_mode)
 		UpdateLightning();
 		AnimateWaterfalls();
 		UpdatePulseColour();
-		SoundEffects();
+		SOUND_PlayEnvironmentEffect();
+		SOUND_UpdateScene();
 		health_bar_timer--;
 		
 		if (!gfGameMode)
@@ -2399,7 +2400,7 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits)
 	if (bits == 256)
 		bits = -64;
 	else
-		SoundEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
 
 	GetSpheres(item, Slist, 3);
 	object = &objects[item->object_number];
@@ -2571,7 +2572,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	if (firing && LaserSight)
 	{
 		if (lara.gun_type == WEAPON_REVOLVER)
-			SoundEffect(SFX_DESERT_EAGLE_FIRE, 0, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_DESERT_EAGLE_FIRE, 0, SFX_DEFAULT);
 	}
 
 	item_no = (short)ObjectOnLOS2(src, dest, &v, &Mesh);
@@ -2598,7 +2599,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						SmashedMesh[SmashedMeshCount] = Mesh;
 						SmashedMeshCount++;
 						Mesh->Flags &= ~1;
-						SoundEffect(SFX_HIT_ROCK, (PHD_3DPOS*)Mesh, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)Mesh, SFX_DEFAULT);
 					}
 
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
@@ -2802,24 +2803,24 @@ void AnimateItem(ITEM_INFO* item)
 					if (objects[item->object_number].water_creature)
 					{
 						if (room[item->room_number].flags & ROOM_UNDERWATER)
-							SoundEffect(num, &item->pos, SFX_WATER);
+							SOUND_PlayEffect(num, &item->pos, SFX_WATER);
 						else
-							SoundEffect(num, &item->pos, SFX_DEFAULT);
+							SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
 					}
 					else if (item->room_number == 255)
 					{
 						item->pos.x_pos = lara_item->pos.x_pos;
 						item->pos.y_pos = lara_item->pos.y_pos - 762;
 						item->pos.z_pos = lara_item->pos.z_pos;
-						SoundEffect(num, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
 					}
 					else if (room[item->room_number].flags & ROOM_UNDERWATER)
 					{
 						if (type == SFX_LANDANDWATER || type == SFX_WATERONLY)
-							SoundEffect(num, &item->pos, SFX_DEFAULT);
+							SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
 					}
 					else if (type == SFX_LANDANDWATER || type == SFX_LANDONLY)
-						SoundEffect(num, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
 				}
 
 				cmd += 2;
