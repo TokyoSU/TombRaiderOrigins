@@ -137,7 +137,7 @@ long PlayFmvNow(long num)
 	}
 	
 	Bink = 0;
-	BinkSetSoundSystem(BinkOpenDirectSound, App.dx.lpDS);
+	//BinkSetSoundSystem(BinkOpenDirectSound, App.dx.lpDS);
 	Bink = (BINK_STRUCT*)BinkOpen(path, 0);
 
 	if (App.dx.Flags & 2)

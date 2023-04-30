@@ -135,7 +135,7 @@ unsigned int __stdcall LoadLevel(void* name)
 		LoadCinematic();
 		S_LoadBar();
 
-		if (acm_ready && !App.SoundDisabled)
+		if (sound_active && !App.SoundDisabled)
 			LoadSamples();
 
 		free(pData);
@@ -1207,9 +1207,9 @@ bool LoadSamples()
 	static long num_sample_infos;
 
 	Log(2, "LoadSamples");
-	sample_lut = (short*)game_malloc(MAX_SAMPLES * sizeof(short));
-	memcpy(sample_lut, FileData, MAX_SAMPLES * sizeof(short));
-	FileData += MAX_SAMPLES * sizeof(short);
+	sample_lut = (short*)game_malloc(NumSamples * sizeof(short));
+	memcpy(sample_lut, FileData, NumSamples * sizeof(short));
+	FileData += NumSamples * sizeof(short);
 	num_sample_infos = *(long*)FileData;
 	FileData += sizeof(long);
 	Log(8, "Number Of Sample Infos %d", num_sample_infos);
@@ -1234,28 +1234,23 @@ bool LoadSamples()
 
 	Log(8, "Number Of Samples %d", num_samples);
 	fread(&num_samples, 1, 4, level_fp);
-	InitSampleDecompress();
-
 	if (num_samples <= 0)
-	{
-		FreeSampleDecompress();
 		return 1;
-	}
 
 	for (int i = 0; i < num_samples; i++)
 	{
 		fread(&uncomp_size, 1, 4, level_fp);
 		fread(&comp_size, 1, 4, level_fp);
+		samples_buffer = (char*)malloc(comp_size);
 		fread(samples_buffer, comp_size, 1, level_fp);
-
-		if (!DXCreateSampleADPCM(samples_buffer, comp_size, uncomp_size, i))
+		DXCreateSampleADPCM(samples_buffer, comp_size, uncomp_size, i);
+		if (samples_buffer != NULL)
 		{
-			FreeSampleDecompress();
-			return 0;
+			free(samples_buffer);
+			samples_buffer = NULL;
 		}
 	}
 
-	FreeSampleDecompress();
 	return 1;
 }
 

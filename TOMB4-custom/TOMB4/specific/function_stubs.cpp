@@ -1,7 +1,10 @@
 #include "../tomb4/pch.h"
 #include "function_stubs.h"
 
+#define DO_LOG
+#ifdef DO_LOG
 FILE* logF = 0;
+#endif
 
 PHD_VECTOR CamPos;
 PHD_VECTOR CamRot;

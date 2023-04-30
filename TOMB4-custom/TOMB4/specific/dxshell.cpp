@@ -274,7 +274,7 @@ long DXGetInfo(DXINFO* dxinfo, HWND hwnd)
 	G_hwnd = hwnd;
 	Log(5, "Enumerating DirectDraw Devices");
 	DXAttempt(DirectDrawEnumerate(DXEnumDirectDraw, dxinfo));
-	DXAttempt(DirectSoundEnumerate(DXEnumDirectSound, dxinfo));
+	//DXAttempt(DirectSoundEnumerate(DXEnumDirectSound, dxinfo));
 	G_dxinfo = dxinfo;
 	return 1;
 }

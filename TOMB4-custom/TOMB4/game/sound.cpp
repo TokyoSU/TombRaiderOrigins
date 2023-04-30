@@ -93,11 +93,8 @@ void StopSoundEffect(long sfx)
 
 void SOUND_Init()
 {
-	//empty func call here
-
 	for (int i = 0; i < 32; i++)
 		LaSlot[i].nSampleInfo = -1;
-
 	sound_active = 1;
 }
 
@@ -142,7 +139,6 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		return 0;
 
 	lut = sample_lut[sfx];
-
 	if (lut == -1)
 	{
 		//empty func call here
@@ -154,14 +150,22 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		return 0;
 
 	info = &sample_infos[lut];
-
+	if (info->number < 0)
+	{
+		Log(1, "No valid samples id for effect: %d", lut);
+		return 0;
+	}
 	if (info->randomness)
 	{
 		if ((GetRandomDraw() & 0xFF) > info->randomness)
 			return 0;
 	}
 
-	radius = (info->radius + 1) << 10;
+	DWORD sampleFlags = BASS_SAMPLE_MONO|BASS_SAMPLE_FLOAT;
+	if (pos != NULL)
+		sampleFlags |= BASS_SAMPLE_3D;
+
+	radius = info->radius * 1024;
 	pan = 0;
 
 	if (pos)
@@ -172,9 +176,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 
 		if (dx < -radius || dx > radius || dy < -radius || dy > radius || dz < -radius || dz > radius)
 			return 0;
-
 		distance = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
-
 		if (distance > SQUARE(radius))
 			return 0;
 
@@ -182,7 +184,6 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 			distance = phd_sqrt(distance) - 1024;
 		else
 			distance = 0;
-
 		if (!(info->flags & 0x1000))
 			pan = (CamRot.y << 4) + phd_atan(dz, dx);
 	}
@@ -290,12 +291,15 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		break;
 	}
 
+	HSTREAM channel = BASS_SampleGetChannel(SamplePointer[sample], flag == 3);
 	if (flag == 3)
-		dx = S_SoundPlaySampleLooped(sample, (ushort)volume, pitch, (short)pan);
-	else
-		dx = S_SoundPlaySample(sample, (ushort)volume, pitch, (short)pan);
-
-	if (dx >= 0)
+		BASS_ChannelFlags(channel, BASS_SAMPLE_LOOP, BASS_SAMPLE_LOOP);
+	BASS_ChannelPlay(channel, false);
+	BASS_ChannelSet3DAttributes(channel, pos ? BASS_3DMODE_NORMAL : BASS_3DMODE_OFF, radius, radius, 360, 360, 0.0f);
+	//Sound_UpdateEffectPosition(channel, position, true);
+	//Sound_UpdateEffectAttributes(freeSlot, pitch, volume);
+	return 1;
+	/*if (dx >= 0)
 	{
 		LaSlot[dx].OrigVolume = OrigVolume;
 		LaSlot[dx].nVolume = volume;
@@ -309,53 +313,8 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		return 1;
 	}
 
-	if (dx == -1)
-	{
-		vol = 0x8000000;
-		slot = -1;
-
-		for (int i = 1; i < 32; i++)
-		{
-			if ((LaSlot[i].nSampleInfo >= 0) && (LaSlot[i].nVolume <= vol))
-			{
-				vol = LaSlot[i].nVolume;
-				slot = i;
-			}
-		}
-
-		if (volume > vol)
-		{
-			S_SoundStopSample(slot);
-			LaSlot[slot].nSampleInfo = -1;
-
-			if (flag == 3)
-				dx = S_SoundPlaySampleLooped(sample, (ushort)volume, pitch, (short)pan);
-			else
-				dx = S_SoundPlaySample(sample, (ushort)volume, pitch, (short)pan);
-
-			if (dx >= 0)
-			{
-				LaSlot[dx].OrigVolume = OrigVolume;
-				LaSlot[dx].nVolume = volume;
-				LaSlot[dx].nPan = pan;
-				LaSlot[dx].nPitch = pitch;
-				LaSlot[dx].nSampleInfo = lut;
-				LaSlot[dx].distance = distance;
-				LaSlot[dx].pos.x = pos->x_pos;
-				LaSlot[dx].pos.y = pos->y_pos;
-				LaSlot[dx].pos.z = pos->z_pos;
-				return 1;
-			}
-		}
-
-		return 0;
-	}
-
-//	if (sample >= 0)
-		//empty func call here
-
 	info->number = -1;
-	return 0;
+	return 0;*/
 }
 
 void SayNo()

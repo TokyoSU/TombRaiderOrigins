@@ -872,7 +872,6 @@ void DoTitle(uchar Name, uchar Audio)
 	SetFogColor(gfFog.r, gfFog.g, gfFog.b);
 	ClearFXFogBulbs();
 	InitialisePickUpDisplay();
-	//empty func call here
 	SOUND_Stop();
 	S_CDPlay(Audio, 1);
 	IsAtmospherePlaying = 0;
@@ -926,9 +925,10 @@ void DoTitle(uchar Name, uchar Audio)
 
 	if (gfLevelComplete == 1 && gfStatus != 2)
 		PlayFmvNow(12);
-
-	if (gfStatus != 4)
-		RenderLoadPic(0);
+	
+	// TODO: Add it later !
+	//if (gfStatus != 4)
+	//	RenderLoadPic(0);
 
 	input = 0;
 }

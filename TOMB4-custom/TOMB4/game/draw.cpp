@@ -1033,7 +1033,6 @@ void GetRoomBounds()
 					door[1] * long(r->y + door[4] - mW2V[M13]) +
 					door[2] * long(r->z + door[5] - mW2V[M23]) < 0)
 					SetRoomBounds(door, rn, r);
-
 				door += 15;
 			}
 		}

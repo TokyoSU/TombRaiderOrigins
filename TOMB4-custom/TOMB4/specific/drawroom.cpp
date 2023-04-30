@@ -70,7 +70,6 @@ void ProcessRoomDynamics(ROOM_INFO* r)
 void ProcessRoomVertices(ROOM_INFO* r)
 {
 	//Transform, project, and light vertices, and store them in MyVertexBuffer.
-
 	ROOM_DYNAMIC* l;
 	FVECTOR lPos;
 	FVECTOR vPos;
@@ -85,8 +84,7 @@ void ProcessRoomVertices(ROOM_INFO* r)
 	char shimmer;
 
 	clip = clipflags;
-
-	if (gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
+	if (gfLevelFlags & GF_TRAIN)
 		DistanceFogStart = 12.0F * 1024.0F;
 	else
 		DistanceFogStart = tomb4.distance_fog * 1024.0F;
