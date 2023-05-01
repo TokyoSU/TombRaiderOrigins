@@ -400,7 +400,8 @@ void DoGameflow()
 			break;
 
 		default:
-			if (n >= CMD_KEY1 && n <= CMD_KEY12)
+			// TODO: Found what i can do with this ...
+			/*if (n >= CMD_KEY1 && n <= CMD_KEY12)
 				n -= 82;
 			else if (n >= CMD_PUZZLE1 && n <= CMD_PUZZLE12)
 				n -= 122;
@@ -421,7 +422,7 @@ void DoGameflow()
 			inventry_objects_list[n].yrot = gf[6] | (gf[7] << 8);
 			inventry_objects_list[n].xrot = gf[8] | (gf[9] << 8);
 			inventry_objects_list[n].zrot = gf[10] | (gf[11] << 8);
-			inventry_objects_list[n].flags = gf[12] | (gf[13] << 8);
+			inventry_objects_list[n].flags = gf[12] | (gf[13] << 8);*/
 			gf += 14;
 			break;
 		}
@@ -430,9 +431,7 @@ void DoGameflow()
 
 void DoLevel(uchar Name, uchar Audio)
 {
-	long gamestatus;
-
-	gamestatus = 0;
+	long gamestatus = 0;
 	SetFade(255, 0);
 
 	if (gfGameMode != 4)
@@ -453,7 +452,6 @@ void DoLevel(uchar Name, uchar Audio)
 	ClearFXFogBulbs();
 	InitSpotCamSequences();
 	InitialisePickUpDisplay();
-	//empty func call here
 	SOUND_StopAll();
 	bDisableLaraControl = 0;
 
@@ -482,8 +480,8 @@ void DoLevel(uchar Name, uchar Audio)
 		else
 			sgRestoreLevel();
 
-		if (gfLevelFlags & GF_REMOVEAMULET)
-			lara.questitems &= ~1;
+		if (gfLevelFlags & GF_REMOVEAMULET && lara.questitems[1])
+			lara.questitems[1]--;
 
 		savegame.Level.Timer = 0;
 		CurrentAtmosphere = Audio;

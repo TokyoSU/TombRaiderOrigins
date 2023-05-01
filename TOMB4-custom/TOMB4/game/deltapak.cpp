@@ -105,7 +105,8 @@ static ulong cutseq_meshswapbits[10];
 static long GLOBAL_numcutseq_frames;
 static long lastcamnum;
 static long numnailed;
-static short old_lara_holster;
+static short old_lara_holster_L;
+static short old_lara_holster_R;
 static short temp_rotation_buffer[160];
 static char cutseq_busy_timeout = 0;
 static char lara_chat_cnt = 0;
@@ -175,13 +176,6 @@ void handle_cutseq_triggering(long name)
 					lara_item->speed = 0;
 					lara_item->fallspeed = 0;
 					lara_item->gravity_status = 0;
-					lara.back_gun = 0;
-
-					if (lara.weapon_item != NO_ITEM)
-					{
-						KillItem(lara.weapon_item);
-						lara.weapon_item = NO_ITEM;
-					}
 				}
 
 				if (gfCurrentLevel)
@@ -689,8 +683,10 @@ void third_cutseq_control()
 
 void fourth_cutseq_init()
 {
-	old_lara_holster = lara.holster;
-	lara.holster = LARA_HOLSTERS;
+	old_lara_holster_L = lara.holster_left;
+	old_lara_holster_R = lara.holster_right;
+	lara.holster_left = LARA_HOLSTERS;
+	lara.holster_right = LARA_HOLSTERS;
 	draw_pistol_meshes(1);
 }
 
@@ -704,7 +700,8 @@ void fourth_cutseq_control()
 	{
 		undraw_pistol_mesh_left(1);
 		undraw_pistol_mesh_right(1);
-		lara.holster = old_lara_holster;
+		lara.holster_left = old_lara_holster_L;
+		lara.holster_right = old_lara_holster_R;
 	}
 	else
 	{
@@ -728,8 +725,8 @@ void fourth_cutseq_control()
 
 void fourth_cutseq_end()
 {
-	trigger_item_in_room(101, ANIMATING9);
-	lara.keyitems |= 0xC00;
+	//trigger_item_in_room(101, ANIMATING9);
+	//lara.keyitems |= 0xC00;
 }
 
 void do_backpack_meshswap()	//optimized out, in Mac symbols.
@@ -896,7 +893,7 @@ void eleventh_cutseq_init()
 	item->status = ITEM_INVISIBLE;
 	item->flags &= ~IFL_CODEBITS;
 	numnailed++;
-	KillActiveBaddies(0);
+	KillActiveBaddies(NULL);
 	cutseq_kill_item(MOTORBIKE);
 	cutseq_kill_item(ANIMATING4);
 	cutseq_kill_item(ANIMATING1);
@@ -982,7 +979,7 @@ void fourteen_end()
 {
 	DelsHandyTeleportLara(27282, 256, 65654, 0);
 	FlipMap(1);
-	lara.questitems |= 1;
+	//lara.questitems |= 1;
 }
 
 void fourteen_control()
@@ -1058,7 +1055,7 @@ void fifteen_control()
 
 void fifteen_end()
 {
-	lara.questitems |= 1;
+	//lara.questitems |= 1;
 }
 
 void sixteen_init()
@@ -1251,14 +1248,16 @@ void twentythree_control()
 void twentythree_end()
 {
 	DelsHandyTeleportLara(17476, 29952, 15872, -16135);
-	lara.questitems = 0;
+	//lara.questitems = 0;
 }
 
 void twentyfour_init()
 {
 	cutseq_kill_item(ANIMATING13);
-	old_lara_holster = lara.holster;
-	lara.holster = LARA_HOLSTERS;
+	old_lara_holster_L = lara.holster_left;
+	old_lara_holster_R = lara.holster_right;
+	lara.holster_left = LARA_HOLSTERS;
+	lara.holster_right = LARA_HOLSTERS;
 	draw_pistol_meshes(1);
 }
 
@@ -1268,7 +1267,8 @@ void twentyfour_control()
 	{
 		undraw_pistol_mesh_left(1);
 		undraw_pistol_mesh_right(1);
-		lara.holster = old_lara_holster;
+		lara.holster_left = old_lara_holster_L;
+		lara.holster_right = old_lara_holster_R;
 	}
 
 	handle_lara_chatting(lara_chat_ranges24);
@@ -1324,7 +1324,7 @@ void twentyseven_init()
 	item = find_a_fucking_item(ANIMATING4);
 	item->flags &= ~IFL_CODEBITS;
 	cutseq_meshbits[1] &= ~0x200;
-	lara.questitems = 0;
+	//lara.questitems = 0;
 }
 
 void twentyseven_control()

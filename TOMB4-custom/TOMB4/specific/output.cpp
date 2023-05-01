@@ -971,7 +971,8 @@ void _InsertRoom(ROOM_INFO* r)
 
 void RenderLoadPic(long unused)
 {
-	short poisoned;
+	if (gfLoadRoom == 255)
+		return;
 
 	camera.pos.y = gfLoadCam.y;
 	camera.pos.x = gfLoadCam.x;
@@ -985,12 +986,9 @@ void RenderLoadPic(long unused)
 	camera.pos.room_number = gfLoadRoom;
 	camera.underwater = room[gfLoadRoom].flags & ROOM_UNDERWATER;
 
-	if (gfLoadRoom == 255)
-		return;
-
-	KillActiveBaddies((ITEM_INFO*)0xABCDEF);
+	KillActiveBaddies(NULL);
 	SetFade(255, 0);
-	poisoned = lara.poisoned;
+	short poisoned = lara.poisoned;
 	FadeScreenHeight = 0;
 	lara.poisoned = 0;
 	GlobalFogOff = 1;
@@ -1053,11 +1051,6 @@ void S_InitialisePolyList()
 
 	if (gfLevelFlags & GF_TRAIN)
 		col = 0xD2B163;
-	else if (gfCurrentLevel == 5 || gfCurrentLevel == 6)
-	{
-		col = FogTableColor[19];
-		SetFogColor(CLRR(col), CLRG(col), CLRB(col));
-	}
 	else
 		col = 0;
 	

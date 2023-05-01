@@ -4,7 +4,7 @@
 #include "cmdline.h"
 #include "registry.h"
 #include "dxshell.h"
-#include <time.h>
+#include "../game/larafire.h"
 #include "../game/text.h"
 #include "lighting.h"
 #include "function_table.h"
@@ -19,6 +19,7 @@
 #include "fmv.h"
 #define SOKOL_IMPL
 #include <sokol_time.h>
+#include <time.h>
 
 static COMMANDLINES commandlines[] =
 {
@@ -582,6 +583,8 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		Decompress(cutseqpakPtr, buf + 4, size - 4, *(long*)buf);
 		free(buf);
 	}
+
+	InitialiseWeaponArray();
 
 	MainThread.active = 1;
 	MainThread.ended = 0;

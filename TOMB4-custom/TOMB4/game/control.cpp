@@ -319,7 +319,7 @@ long ControlPhase(long nframes, long demo_mode)
 		{
 			if (!BinocularRange)
 			{
-				if (lara.gun_type == WEAPON_REVOLVER && lara.sixshooter_type_carried & W_LASERSIGHT && lara.gun_status == LG_READY)
+				if (lara.gun_type == WEAPON_REVOLVER && lara.revolver_type_carried & W_LASERSIGHT && lara.gun_status == LG_READY)
 				{
 					BinocularRange = 128;
 					BinocularOldCamera = camera.old_type;
@@ -2572,7 +2572,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	if (firing && LaserSight)
 	{
 		if (lara.gun_type == WEAPON_REVOLVER)
-			SOUND_PlayEffect(SFX_DESERT_EAGLE_FIRE, 0, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_REVOLVER_FIRE, 0, SFX_DEFAULT);
 	}
 
 	item_no = (short)ObjectOnLOS2(src, dest, &v, &Mesh);

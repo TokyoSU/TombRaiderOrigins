@@ -23,143 +23,7 @@
 #include "lot.h"
 #include "gameflow.h"
 
-WEAPON_INFO weapons[9] =
-{
-	{
-		0, 0, 0, 0,							//WEAPON_NONE
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-	},
-
-	{
-		-10920, 10920, -10920, 10920,		//WEAPON_PISTOLS
-		-30940, 10920, -14560, 14560,
-		-10920, 30940, -14560, 14560,
-		1820,
-		1456,
-		650,
-		8192,
-		1,
-		9,
-		3,
-		0,
-		SFX_LARA_FIRE
-	},
-
-	{
-		-10920, 10920, -10920, 10920,		//WEAPON_REVOLVER
-		-1820, 1820, -14560, 14560,
-		0, 0, 0, 0,
-		1820,
-		728,
-		650,
-		8192,
-		21,
-		16,
-		3,
-		0,
-		SFX_DESERT_EAGLE_FIRE
-	},
-
-	{
-		-10920, 10920, -10920, 10920,		//WEAPON_UZI
-		-30940, 10920, -14560, 14560,
-		-10920, 30940, -14560, 14560,
-		1820,
-		1456,
-		650,
-		8192,
-		1,
-		3,
-		3,
-		0,
-		SFX_LARA_UZI_FIRE
-	},
-
-	{
-		-10920, 10920, -10010, 10010,		//WEAPON_SHOTGUN
-		-14560, 14560, -11830, 11830,
-		-14560, 14560, -11830, 11830,
-		1820,
-		0,
-		500,
-		8192,
-		3,
-		9,
-		3,
-		10,
-		SFX_LARA_SHOTGUN
-	},
-
-	{
-		-10920, 10920, -10010, 10010,		//WEAPON_GRENADE
-		-14560, 14560, -11830, 11830,
-		-14560, 14560, -11830, 11830,
-		1820,
-		1456,
-		500,
-		8192,
-		20,
-		0,
-		2,
-		10,
-		0
-	},
-
-	{
-		-10920, 10920, -10010, 10010,		//WEAPON_CROSSBOW
-		-14560, 14560, -11830, 11830,
-		-14560, 14560, -11830, 11830,
-		1820,
-		1456,
-		500,
-		8192,
-		5,
-		0,
-		2,
-		10,
-		0
-	},
-
-	{
-		0, 0, 0, 0,							//WEAPON_FLARE
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-	},
-
-	{
-		-5460, 5460, -10010, 10010,			//WEAPON_TORCH
-		-5460, 5460, -10010, 10010,
-		-5460, 5460, -10010, 10010,
-		1820,
-		1456,
-		400,
-		8192,
-		3,
-		0,
-		2,
-		0,
-		SFX_LARA_UZI_FIRE
-	},
-};
+std::vector<WEAPON_INFO> weapons;
 
 static short HoldStates[] =
 {
@@ -202,6 +66,300 @@ static long CheckForHoldingState(long state)
 	return 0;
 }
 
+constexpr short ANGLE(short value) { return value * 182; }
+constexpr short DISTANCE(int value) { return value * 1024; }
+
+void InitialiseWeaponArray()
+{
+	WEAPON_INFO none; // WEAPON_NONE
+	none.setLockAngle(0, 0, 0, 0);
+	none.setLeftAngle(0, 0, 0, 0);
+	none.setRightAngle(0, 0, 0, 0);
+	none.setAimSpeed(0);
+	none.setShotAccuracy(0);
+	none.setGunHeight(0);
+	none.setTargetDistance(0);
+	none.setDamage(0);
+	none.setAlternateDamage(0);
+	none.setRecoilFrame(0);
+	none.setFlashTime(0);
+	none.setDrawFrame(0);
+	none.setShotSample(0);
+	weapons.push_back(none);
+
+	WEAPON_INFO flare; // WEAPON_FLARE
+	flare.setLockAngle(0, 0, 0, 0);
+	flare.setLeftAngle(0, 0, 0, 0);
+	flare.setRightAngle(0, 0, 0, 0);
+	flare.setAimSpeed(0);
+	flare.setShotAccuracy(0);
+	flare.setGunHeight(0);
+	flare.setTargetDistance(0);
+	flare.setDamage(0);
+	flare.setAlternateDamage(0);
+	flare.setRecoilFrame(0);
+	flare.setFlashTime(0);
+	flare.setDrawFrame(0);
+	flare.setShotSample(0);
+	weapons.push_back(flare);
+
+	WEAPON_INFO torch; // WEAPON_TORCH
+	torch.setLockAngle(0, 0, 0, 0);
+	torch.setLeftAngle(0, 0, 0, 0);
+	torch.setRightAngle(0, 0, 0, 0);
+	torch.setAimSpeed(0);
+	torch.setShotAccuracy(0);
+	torch.setGunHeight(0);
+	torch.setTargetDistance(0);
+	torch.setDamage(0);
+	torch.setAlternateDamage(0);
+	torch.setRecoilFrame(0);
+	torch.setFlashTime(0);
+	torch.setDrawFrame(0);
+	torch.setShotSample(0);
+	weapons.push_back(torch);
+
+	WEAPON_INFO pistols; // WEAPON_PISTOLS
+	pistols.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	pistols.setLeftAngle(-ANGLE(170), ANGLE(60), -ANGLE(80), ANGLE(80));
+	pistols.setRightAngle(-ANGLE(60), ANGLE(170), -ANGLE(80), ANGLE(80));
+	pistols.setAimSpeed(ANGLE(10));
+	pistols.setShotAccuracy(ANGLE(8));
+	pistols.setGunHeight(650);
+	pistols.setTargetDistance(DISTANCE(8));
+	pistols.setDamage(1);
+	pistols.setAlternateDamage(0);
+	pistols.setRecoilFrame(9);
+	pistols.setFlashTime(3);
+	pistols.setDrawFrame(0);
+	pistols.setShotSample(SFX_LARA_FIRE);
+	weapons.push_back(pistols);
+
+	WEAPON_INFO uzi; // WEAPON_UZI
+	uzi.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	uzi.setLeftAngle(-ANGLE(170), ANGLE(60), -ANGLE(80), ANGLE(80));
+	uzi.setRightAngle(-ANGLE(60), ANGLE(170), -ANGLE(80), ANGLE(80));
+	uzi.setAimSpeed(ANGLE(10));
+	uzi.setShotAccuracy(ANGLE(8));
+	uzi.setGunHeight(650);
+	uzi.setTargetDistance(DISTANCE(8));
+	uzi.setDamage(1);
+	uzi.setAlternateDamage(0);
+	uzi.setRecoilFrame(2);
+	uzi.setFlashTime(3);
+	uzi.setDrawFrame(0);
+	uzi.setShotSample(SFX_LARA_UZI_FIRE);
+	weapons.push_back(uzi);
+
+	WEAPON_INFO magnum; // WEAPON_MAGNUMS
+	magnum.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	magnum.setLeftAngle(-ANGLE(170), ANGLE(60), -ANGLE(80), ANGLE(80));
+	magnum.setRightAngle(-ANGLE(60), ANGLE(170), -ANGLE(80), ANGLE(80));
+	magnum.setAimSpeed(ANGLE(10));
+	magnum.setShotAccuracy(ANGLE(8));
+	magnum.setGunHeight(650);
+	magnum.setTargetDistance(DISTANCE(8));
+	magnum.setDamage(3);
+	magnum.setAlternateDamage(0);
+	magnum.setRecoilFrame(9);
+	magnum.setFlashTime(3);
+	magnum.setDrawFrame(0);
+	magnum.setShotSample(SFX_LARA_FIRE);
+	weapons.push_back(magnum);
+
+	WEAPON_INFO autopistols; // WEAPON_AUTOPISTOLS
+	autopistols.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	autopistols.setLeftAngle(-ANGLE(170), ANGLE(60), -ANGLE(80), ANGLE(80));
+	autopistols.setRightAngle(-ANGLE(60), ANGLE(170), -ANGLE(80), ANGLE(80));
+	autopistols.setAimSpeed(ANGLE(10));
+	autopistols.setShotAccuracy(ANGLE(8));
+	autopistols.setGunHeight(650);
+	autopistols.setTargetDistance(DISTANCE(8));
+	autopistols.setDamage(2);
+	autopistols.setAlternateDamage(0);
+	autopistols.setRecoilFrame(7);
+	autopistols.setFlashTime(3);
+	autopistols.setDrawFrame(0);
+	autopistols.setShotSample(SFX_LARA_FIRE);
+	weapons.push_back(autopistols);
+
+	WEAPON_INFO deserteagle; // WEAPON_DESERTEAGLE
+	deserteagle.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	deserteagle.setLeftAngle(-ANGLE(10), ANGLE(10), -ANGLE(80), ANGLE(80));
+	deserteagle.setRightAngle(0, 0, 0, 0);
+	deserteagle.setAimSpeed(ANGLE(10));
+	deserteagle.setShotAccuracy(ANGLE(4));
+	deserteagle.setGunHeight(650);
+	deserteagle.setTargetDistance(DISTANCE(8));
+	deserteagle.setDamage(30);
+	deserteagle.setAlternateDamage(0);
+	deserteagle.setRecoilFrame(18);
+	deserteagle.setFlashTime(3);
+	deserteagle.setDrawFrame(0);
+	deserteagle.setShotSample(SFX_REVOLVER_FIRE);
+	weapons.push_back(deserteagle);
+
+	WEAPON_INFO revolver; // WEAPON_REVOLVER
+	revolver.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	revolver.setLeftAngle(-ANGLE(10), ANGLE(10), -ANGLE(80), ANGLE(80));
+	revolver.setRightAngle(0, 0, 0, 0);
+	revolver.setAimSpeed(ANGLE(10));
+	revolver.setShotAccuracy(ANGLE(4));
+	revolver.setGunHeight(650);
+	revolver.setTargetDistance(DISTANCE(8));
+	revolver.setDamage(15);
+	revolver.setAlternateDamage(0);
+	revolver.setRecoilFrame(11);
+	revolver.setFlashTime(3);
+	revolver.setDrawFrame(0);
+	revolver.setShotSample(SFX_REVOLVER_FIRE);
+	weapons.push_back(revolver);
+
+	WEAPON_INFO shotgun; // WEAPON_SHOTGUN
+	shotgun.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	shotgun.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	shotgun.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	shotgun.setAimSpeed(ANGLE(10));
+	shotgun.setShotAccuracy(0);
+	shotgun.setGunHeight(500);
+	shotgun.setTargetDistance(DISTANCE(8));
+	shotgun.setDamage(3);
+	shotgun.setAlternateDamage(0);
+	shotgun.setRecoilFrame(9);
+	shotgun.setFlashTime(3);
+	shotgun.setDrawFrame(10);
+	shotgun.setShotSample(SFX_LARA_SHOTGUN_FIRE);
+	weapons.push_back(shotgun);
+
+	WEAPON_INFO m16; // WEAPON_M16
+	m16.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	m16.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	m16.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	m16.setAimSpeed(ANGLE(10));
+	m16.setShotAccuracy(ANGLE(4));
+	m16.setGunHeight(500);
+	m16.setTargetDistance(DISTANCE(12));
+	m16.setDamage(5); // When standing
+	m16.setAlternateDamage(2); // When running
+	m16.setRecoilFrame(4);
+	m16.setFlashTime(3);
+	m16.setDrawFrame(10);
+	m16.setShotSample(SFX_LARA_FIRE);
+	weapons.push_back(m16);
+
+	WEAPON_INFO mp5; // WEAPON_MP5
+	mp5.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	mp5.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	mp5.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	mp5.setAimSpeed(ANGLE(10));
+	mp5.setShotAccuracy(ANGLE(7));
+	mp5.setGunHeight(500);
+	mp5.setTargetDistance(DISTANCE(12));
+	mp5.setDamage(2); // When standing
+	mp5.setAlternateDamage(1); // When running
+	mp5.setRecoilFrame(2);
+	mp5.setFlashTime(3);
+	mp5.setDrawFrame(16);
+	mp5.setShotSample(SFX_LARA_FIRE);
+	weapons.push_back(mp5);
+
+	WEAPON_INFO crossbow; // WEAPON_CROSSBOW
+	crossbow.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	crossbow.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	crossbow.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	crossbow.setAimSpeed(ANGLE(10));
+	crossbow.setShotAccuracy(ANGLE(8));
+	crossbow.setGunHeight(500);
+	crossbow.setTargetDistance(DISTANCE(8));
+	crossbow.setDamage(5);
+	crossbow.setAlternateDamage(0);
+	crossbow.setRecoilFrame(5);
+	crossbow.setFlashTime(0);
+	crossbow.setDrawFrame(2);
+	crossbow.setShotSample(SFX_LARA_CROSSBOW);
+	weapons.push_back(crossbow);
+
+	WEAPON_INFO harpoon; // WEAPON_HARPOON
+	harpoon.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	harpoon.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	harpoon.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	harpoon.setAimSpeed(ANGLE(10));
+	harpoon.setShotAccuracy(0);
+	harpoon.setGunHeight(500);
+	harpoon.setTargetDistance(DISTANCE(8));
+	harpoon.setDamage(1); // When standing
+	harpoon.setAlternateDamage(10); // When underwater
+	harpoon.setRecoilFrame(5);
+	harpoon.setFlashTime(0);
+	harpoon.setDrawFrame(2);
+	harpoon.setShotSample(SFX_LARA_CROSSBOW);
+	weapons.push_back(harpoon);
+
+	WEAPON_INFO grenade; // WEAPON_GRENADE
+	grenade.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	grenade.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	grenade.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	grenade.setAimSpeed(ANGLE(10));
+	grenade.setShotAccuracy(0);
+	grenade.setGunHeight(500);
+	grenade.setTargetDistance(DISTANCE(8));
+	grenade.setDamage(1); // When standing
+	grenade.setAlternateDamage(10); // When underwater
+	grenade.setRecoilFrame(5);
+	grenade.setFlashTime(0);
+	grenade.setDrawFrame(2);
+	grenade.setShotSample(SFX_LARA_MINI_FIRE);
+	weapons.push_back(grenade);
+
+	WEAPON_INFO rocket; // WEAPON_ROCKET
+	rocket.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	rocket.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	rocket.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	rocket.setAimSpeed(ANGLE(10));
+	rocket.setShotAccuracy(ANGLE(8));
+	rocket.setGunHeight(500);
+	rocket.setTargetDistance(DISTANCE(20));
+	rocket.setDamage(30);
+	rocket.setAlternateDamage(0);
+	rocket.setRecoilFrame(0);
+	rocket.setFlashTime(2);
+	rocket.setDrawFrame(12);
+	rocket.setShotSample(SFX_LARA_MINI_FIRE);
+	weapons.push_back(rocket);
+
+	WEAPON_INFO grappling; // WEAPON_GRAPPLING
+	grappling.setLockAngle(-ANGLE(60), ANGLE(60), -ANGLE(60), ANGLE(60));
+	grappling.setLeftAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	grappling.setRightAngle(-ANGLE(80), ANGLE(80), -ANGLE(65), ANGLE(65));
+	grappling.setAimSpeed(ANGLE(10));
+	grappling.setShotAccuracy(0);
+	grappling.setGunHeight(500);
+	grappling.setTargetDistance(DISTANCE(8));
+	grappling.setDamage(40);
+	grappling.setAlternateDamage(0);
+	grappling.setRecoilFrame(5);
+	grappling.setFlashTime(0);
+	grappling.setDrawFrame(2);
+	grappling.setShotSample(SFX_LARA_MINI_FIRE);
+	weapons.push_back(grappling);
+
+	WEAPON_INFO snowmobilegun; // WEAPON_SNOWMOBILEGUN
+	snowmobilegun.setLockAngle(-ANGLE(30), ANGLE(30), -ANGLE(55), ANGLE(55));
+	snowmobilegun.setLeftAngle(-ANGLE(30), ANGLE(30), -ANGLE(55), ANGLE(55));
+	snowmobilegun.setRightAngle(-ANGLE(30), ANGLE(30), -ANGLE(55), ANGLE(55));
+	snowmobilegun.setAimSpeed(ANGLE(10));
+	snowmobilegun.setShotAccuracy(ANGLE(8));
+	snowmobilegun.setGunHeight(400);
+	snowmobilegun.setTargetDistance(DISTANCE(8));
+	snowmobilegun.setDamage(3);
+	snowmobilegun.setAlternateDamage(0);
+	snowmobilegun.setRecoilFrame(0);
+	snowmobilegun.setFlashTime(2);
+	snowmobilegun.setDrawFrame(0);
+	snowmobilegun.setShotSample(SFX_LARA_UZI_FIRE);
+	weapons.push_back(snowmobilegun);
+}
+
 void InitialiseNewWeapon()
 {
 	lara.right_arm.frame_number = 0;
@@ -222,6 +380,8 @@ void InitialiseNewWeapon()
 	{
 	case WEAPON_PISTOLS:
 	case WEAPON_UZI:
+	case WEAPON_AUTOPISTOLS:
+	case WEAPON_MAGNUMS:
 		lara.left_arm.frame_base = objects[PISTOLS_ANIM].frame_base;
 		lara.right_arm.frame_base = objects[PISTOLS_ANIM].frame_base;
 
@@ -231,10 +391,17 @@ void InitialiseNewWeapon()
 		break;
 
 	case WEAPON_REVOLVER:
+	case WEAPON_DESERTEAGLE:
 	case WEAPON_SHOTGUN:
+	case WEAPON_MP5:
+	case WEAPON_M16:
+	case WEAPON_CROSSBOW:
+	case WEAPON_HARPOON:
 	case WEAPON_GRENADE:
-		lara.left_arm.frame_base = objects[WeaponObject(lara.gun_type)].frame_base;
-		lara.right_arm.frame_base = objects[WeaponObject(lara.gun_type)].frame_base;
+	case WEAPON_ROCKET:
+	case WEAPON_GRAPPLING:
+		lara.left_arm.frame_base = objects[GetWeaponAnimObject(lara.gun_type)].frame_base;
+		lara.right_arm.frame_base = objects[GetWeaponAnimObject(lara.gun_type)].frame_base;
 
 		if (lara.gun_status != LG_NO_ARMS)
 			draw_shotgun_meshes(lara.gun_type);
@@ -341,64 +508,62 @@ void LaraTargetInfo(WEAPON_INFO* winfo)
 	lara.target_angles[1] = ang[1];
 }
 
-short* get_current_ammo_pointer(long weapon_type)
+short& get_current_ammo_pointer(long weapon_type)
 {
-	short* ammo;
-
 	switch (weapon_type)
 	{
-	case WEAPON_REVOLVER:
-		ammo = &lara.num_revolver_ammo;
-		break;
-
+	case WEAPON_PISTOLS:
+		return lara.num_pistols_ammo;
 	case WEAPON_UZI:
-		ammo = &lara.num_uzi_ammo;
-		break;
-
+		return lara.num_uzi_ammo;
+	case WEAPON_MAGNUMS:
+		return lara.num_magnums_ammo;
+	case WEAPON_AUTOPISTOLS:
+		return lara.num_autopistols_ammo;
+	case WEAPON_DESERTEAGLE:
+		return lara.num_deserteagle_ammo;
+	case WEAPON_REVOLVER:
+		return lara.num_revolver_ammo;
 	case WEAPON_SHOTGUN:
-
 		if (lara.shotgun_type_carried & W_AMMO1)
-			ammo = &lara.num_shotgun_ammo1;
-		else
-			ammo = &lara.num_shotgun_ammo2;
-
+			return lara.num_shotgun_ammo1;
+		else if (lara.shotgun_type_carried & W_AMMO2)
+			return lara.num_shotgun_ammo2;
 		break;
-
-	case WEAPON_GRENADE:
-
-		if (lara.grenade_type_carried & W_AMMO1)
-			ammo = &lara.num_grenade_ammo1;
-		else if (lara.grenade_type_carried & W_AMMO2)
-			ammo = &lara.num_grenade_ammo2;
-		else
-			ammo = &lara.num_grenade_ammo3;
-
-		break;
-
+	case WEAPON_M16:
+		return lara.num_m16_ammo;
+	case WEAPON_MP5:
+		return lara.num_mp5_ammo;
 	case WEAPON_CROSSBOW:
-
 		if (lara.crossbow_type_carried & W_AMMO1)
-			ammo = &lara.num_crossbow_ammo1;
+			return lara.num_crossbow_ammo1;
 		else if (lara.crossbow_type_carried & W_AMMO2)
-			ammo = &lara.num_crossbow_ammo2;
-		else
-			ammo = &lara.num_crossbow_ammo3;
-
+			return lara.num_crossbow_ammo2;
+		else if (lara.crossbow_type_carried & W_AMMO3)
+			return lara.num_crossbow_ammo3;
 		break;
-
-	default:
-		ammo = &lara.num_pistols_ammo;
+	case WEAPON_HARPOON:
+		return lara.num_harpoon_ammo;
+	case WEAPON_GRENADE:
+		if (lara.grenade_type_carried & W_AMMO1)
+			return lara.num_grenade_ammo1;
+		else if (lara.grenade_type_carried & W_AMMO2)
+			return lara.num_grenade_ammo2;
+		else if (lara.grenade_type_carried & W_AMMO3)
+			return lara.num_grenade_ammo3;
 		break;
+	case WEAPON_ROCKET:
+		return lara.num_rocket_ammo;
+	case WEAPON_GRAPPLING:
+		return lara.num_grappling_ammo;
 	}
-
-	return ammo;
+	return lara.num_pistols_ammo;
 }
 
 long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angles)
 {
 	WEAPON_INFO* winfo;
 	SPHERE* sptr;
-	short* ammo;
 	long r, nSpheres, bestdist, best;
 	short room_number;
 
@@ -406,16 +571,14 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 	bum_view.y_pos = 0;
 	bum_view.z_pos = 0;
 	GetLaraJointPos((PHD_VECTOR*)&bum_view, 11);
-	ammo = get_current_ammo_pointer(weapon_type);
 
-	if (!*ammo)
+	short& ammo = get_current_ammo_pointer(weapon_type);
+	if (ammo == 0)
 		return 0;
-	
-	if (*ammo != -1)
-		--*ammo;
+	if (ammo != -1)
+		ammo--;
 
 	winfo = &weapons[weapon_type];
-
 	bum_view.x_pos = src->pos.x_pos;
 	bum_view.z_pos = src->pos.z_pos;
 	bum_view.x_rot = short(winfo->shot_accuracy * (GetRandomControl() - 0x4000) / 0x10000 + angles[1]);
@@ -696,59 +859,120 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade)
 	}
 }
 
-long WeaponObject(long weapon_type)
+long GetWeaponMeshObject(long weapon_type)
 {
 	switch (weapon_type)
 	{
-	case WEAPON_REVOLVER:
-		return REVOLVER_ANIM;
-
+	default:
+	case WEAPON_NONE:
+	case WEAPON_PISTOLS:
+		return PISTOLS_ANIM;
+	case WEAPON_FLARE:
+		return FLARE_ANIM;
+	case WEAPON_TORCH:
+		return TORCH_ANIM;
 	case WEAPON_UZI:
 		return UZI_ANIM;
-
-	case WEAPON_SHOTGUN:
-		return SHOTGUN_ANIM;
-
-	case WEAPON_GRENADE:
-		return GRENADE_GUN_ANIM;
-
-	case WEAPON_CROSSBOW:
-		return CROSSBOW_ANIM;
-
-	default:
-		return PISTOLS_ANIM;
-	}
-}
-
-long WeaponObjectMesh(long weapon_type)
-{
-	switch (weapon_type)
-	{
+	case WEAPON_MAGNUMS:
+		return MAGNUMS_ANIM;
+	case WEAPON_AUTOPISTOLS:
+		return AUTOPISTOLS_ANIM;
+	case WEAPON_DESERTEAGLE:
+		return DESERTEAGLE_ANIM;
 	case WEAPON_REVOLVER:
-
-		if (lara.sixshooter_type_carried & W_LASERSIGHT)
+		if (lara.revolver_type_carried & W_LASERSIGHT)
 			return LARA_REVOLVER_LASER_MESH;
 		else
 			return REVOLVER_ANIM;
-
-	case WEAPON_UZI:
-		return UZI_ANIM;
-
+		break;
 	case WEAPON_SHOTGUN:
 		return SHOTGUN_ANIM;
-
-	case WEAPON_GRENADE:
-		return GRENADE_GUN_ANIM;
-
+	case WEAPON_M16:
+		return M16_ANIM;
+	case WEAPON_MP5:
+		if (lara.mp5_type_carried & W_LASERSIGHT)
+			return LARA_MP5_LASER_MESH;
+		else
+			return MP5_ANIM;
+		break;
 	case WEAPON_CROSSBOW:
-
 		if (lara.crossbow_type_carried & W_LASERSIGHT)
 			return LARA_CROSSBOW_LASER_MESH;
 		else
 			return CROSSBOW_ANIM;
+		break;
+	case WEAPON_HARPOON:
+		return HARPOON_GUN_ANIM;
+	case WEAPON_GRENADE:
+		return GRENADE_GUN_ANIM;
+	case WEAPON_ROCKET:
+		return ROCKET_GUN_ANIM;
+	case WEAPON_GRAPPLING:
+		return GRAPPLING_GUN_ANIM;
+	}
+}
 
+long GetWeaponHolsterObject(long weapon_type)
+{
+	switch (weapon_type)
+	{
+		// NORMAL Holsters
 	default:
+	case WEAPON_NONE:
+		return LARA_HOLSTERS;
+	case WEAPON_PISTOLS:
+		return LARA_HOLSTERS_PISTOLS;
+	case WEAPON_UZI:
+		return LARA_HOLSTERS_UZIS;
+	case WEAPON_MAGNUMS:
+		return LARA_HOLSTERS_MAGNUMS;
+	case WEAPON_AUTOPISTOLS:
+		return LARA_HOLSTERS_AUTOPISTOLS;
+	case WEAPON_DESERTEAGLE:
+		return LARA_HOLSTERS_DESERTEAGLE;
+	case WEAPON_REVOLVER:
+		return LARA_HOLSTERS_REVOLVER;
+	}
+}
+
+long GetWeaponAnimObject(long weapon_type)
+{
+	switch (weapon_type)
+	{
+	default:
+	case WEAPON_NONE:
+	case WEAPON_PISTOLS:
 		return PISTOLS_ANIM;
+	case WEAPON_FLARE:
+		return FLARE_ANIM;
+	case WEAPON_TORCH:
+		return TORCH_ANIM;
+	case WEAPON_UZI:
+		return UZI_ANIM;
+	case WEAPON_MAGNUMS:
+		return MAGNUMS_ANIM;
+	case WEAPON_AUTOPISTOLS:
+		return AUTOPISTOLS_ANIM;
+	case WEAPON_DESERTEAGLE:
+		return DESERTEAGLE_ANIM;
+	case WEAPON_REVOLVER:
+		return REVOLVER_ANIM;
+	case WEAPON_SHOTGUN:
+		return SHOTGUN_ANIM;
+	case WEAPON_M16:
+		return M16_ANIM;
+	case WEAPON_MP5:
+		return MP5_ANIM;
+	case WEAPON_CROSSBOW:
+		return CROSSBOW_ANIM;
+	case WEAPON_HARPOON:
+		return HARPOON_GUN_ANIM;
+	case WEAPON_GRENADE:
+		return GRENADE_GUN_ANIM;
+	case WEAPON_ROCKET:
+		return ROCKET_GUN_ANIM;
+	case WEAPON_GRAPPLING:
+		return GRAPPLING_GUN_ANIM;
 	}
 }
 
@@ -1332,7 +1556,10 @@ void LaraGun()
 		{
 		case WEAPON_PISTOLS:
 		case WEAPON_REVOLVER:
+		case WEAPON_DESERTEAGLE:
 		case WEAPON_UZI:
+		case WEAPON_MAGNUMS:
+		case WEAPON_AUTOPISTOLS:
 
 			if (camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA)
 				camera.type = COMBAT_CAMERA;
@@ -1341,8 +1568,13 @@ void LaraGun()
 			break;
 
 		case WEAPON_SHOTGUN:
+		case WEAPON_M16:
+		case WEAPON_MP5:
+		case WEAPON_HARPOON:
+		case WEAPON_ROCKET:
 		case WEAPON_GRENADE:
 		case WEAPON_CROSSBOW:
+		case WEAPON_GRAPPLING:
 
 			if (camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA && camera.type != HEAVY_CAMERA)
 				camera.type = COMBAT_CAMERA;
@@ -1367,12 +1599,20 @@ void LaraGun()
 		switch (lara.gun_type)
 		{
 		case WEAPON_PISTOLS:
+		case WEAPON_MAGNUMS:
+		case WEAPON_AUTOPISTOLS:
 		case WEAPON_REVOLVER:
+		case WEAPON_DESERTEAGLE:
 		case WEAPON_UZI:
 			undraw_pistols(lara.gun_type);
 			break;
 
 		case WEAPON_SHOTGUN:
+		case WEAPON_M16:
+		case WEAPON_MP5:
+		case WEAPON_HARPOON:
+		case WEAPON_ROCKET:
+		case WEAPON_GRAPPLING:
 		case WEAPON_GRENADE:
 		case WEAPON_CROSSBOW:
 			undraw_shotgun(lara.gun_type);
@@ -1397,9 +1637,9 @@ void LaraGun()
 
 		if (input & IN_ACTION)
 		{
-			if (!*get_current_ammo_pointer(lara.gun_type))
+			if (get_current_ammo_pointer(lara.gun_type) == 0)
 			{
-				SOUND_PlayEffect(SFX_SARLID_PALACES, &lara_item->pos, SFX_DEFAULT);
+				//SOUND_PlayEffect(SFX_LARA_RELOAD, &lara_item->pos, SFX_DEFAULT);
 				lara.request_gun_type = WEAPON_PISTOLS;
 				return;
 			}
@@ -1409,11 +1649,19 @@ void LaraGun()
 		{
 		case WEAPON_PISTOLS:
 		case WEAPON_UZI:
+		case WEAPON_MAGNUMS:
+		case WEAPON_AUTOPISTOLS:
 			PistolHandler(lara.gun_type);
 			break;
 
 		case WEAPON_REVOLVER:
+		case WEAPON_DESERTEAGLE:
 		case WEAPON_SHOTGUN:
+		case WEAPON_M16:
+		case WEAPON_MP5:
+		case WEAPON_ROCKET:
+		case WEAPON_HARPOON:
+		case WEAPON_GRAPPLING:
 		case WEAPON_GRENADE:
 		case WEAPON_CROSSBOW:
 			RifleHandler(lara.gun_type);

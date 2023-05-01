@@ -14,12 +14,15 @@
 #include "cmdline.h"
 #include "gamemain.h"
 #include "LoadSave.h"
-#define PL_MPEG_IMPLEMENTATION
-#include "../tomb4/pl_mpeg.h"
-#include <sokol_time.h>
 #include "function_stubs.h"
 #include "output.h"
 #include "time.h"
+#pragma warning(push)
+#pragma warning(disable: 4244)
+#define PL_MPEG_IMPLEMENTATION
+#include "../tomb4/pl_mpeg.h"
+#pragma warning(pop)
+#include <sokol_time.h>
 
 static unsigned char* FmvData;
 static HSTREAM FmvStream = 0;
@@ -41,12 +44,12 @@ long PlayFmvNow(long num)
 {
 	if (MainThread.ended)
 		return 0;
+	if (fmvs_disabled)
+		return 0;
 	if ((1 << num) & FmvSceneTriggered)
 		return 1;
 	FmvSceneTriggered |= 1 << num;
 	S_CDStop();
-	if (fmvs_disabled)
-		return 0;
 
 	char name[80];
 	char path[80];
@@ -91,7 +94,7 @@ long PlayFmvNow(long num)
 	{
 		if (input & IN_OPTION || MainThread.ended)
 			break;
-		float frame = stm_sec(stm_laptime(&timer));
+		double frame = stm_sec(stm_laptime(&timer));
 		plm_decode(file, frame);
 		S_UpdateInput();
 		S_DumpScreen();

@@ -1079,7 +1079,6 @@ void BinocularCamera(ITEM_INFO* item)
 	PHD_VECTOR pos3;
 	PHD_VECTOR Soffset;
 	PHD_VECTOR Eoffset;
-	short* ammo;
 	long shake, speed, c, BinocStep, rndval, dx, dz;
 	short room_number, hxrot, hyrot;
 	char Fire;
@@ -1217,9 +1216,9 @@ void BinocularCamera(ITEM_INFO* item)
 
 	if (LaserSight)
 	{
-		ammo = get_current_ammo_pointer(lara.gun_type);
+		short& ammo = get_current_ammo_pointer(lara.gun_type);
 
-		if (inputBusy & IN_ACTION && !WeaponDelay && ammo[0])
+		if (inputBusy & IN_ACTION && !WeaponDelay && ammo != 0)
 		{
 			Fire = 1;
 
@@ -1231,8 +1230,8 @@ void BinocularCamera(ITEM_INFO* item)
 			else
 				WeaponDelay = 32;
 
-			if (ammo[0] != -1)
-				ammo[0]--;
+			if (ammo != -1)
+				ammo--;
 		}
 		else
 			Fire = 0;

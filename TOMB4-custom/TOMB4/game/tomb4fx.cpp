@@ -307,7 +307,13 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr->Life = (GetRandomControl() & 3) + 40;
 	sptr->sLife = sptr->Life;
 
-	if ((weaponType == WEAPON_PISTOLS || weaponType == WEAPON_REVOLVER || weaponType == WEAPON_UZI) && sptr->dShade > 64u)
+	if ((weaponType == WEAPON_PISTOLS ||
+		weaponType == WEAPON_REVOLVER ||
+		weaponType == WEAPON_UZI ||
+		weaponType == WEAPON_AUTOPISTOLS ||
+		weaponType == WEAPON_MAGNUMS ||
+		weaponType == WEAPON_M16 ||
+		weaponType == WEAPON_MP5) && sptr->dShade > 64u)
 		sptr->dShade = 64;
 
 	sptr->TransType = 2;
@@ -1041,6 +1047,8 @@ void TriggerGunShell(short leftright, short objnum, long weapon)
 		switch (weapon)
 		{
 		case WEAPON_PISTOLS:
+		case WEAPON_MAGNUMS:
+		case WEAPON_AUTOPISTOLS:
 			pos.x = 8;
 			pos.y = 48;
 			pos.z = 40;
@@ -1066,6 +1074,8 @@ void TriggerGunShell(short leftright, short objnum, long weapon)
 		switch (weapon)
 		{
 		case WEAPON_PISTOLS:
+		case WEAPON_MAGNUMS:
+		case WEAPON_AUTOPISTOLS:
 			pos.x = -12;
 			pos.y = 48;
 			pos.z = 40;

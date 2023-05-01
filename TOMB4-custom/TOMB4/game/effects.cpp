@@ -276,7 +276,7 @@ void KillActiveBaddies(ITEM_INFO* item)
 		{
 			target_item->status = ITEM_INVISIBLE;
 
-			if (item != ((void*)0xABCDEF))
+			if (item != NULL)
 			{
 				RemoveActiveItem(item_num);
 				DisableBaddieAI(item_num);

@@ -211,17 +211,27 @@ enum floor_types
 	MINER_TYPE
 };
 
-enum weapon_types
+enum WEAPON_TYPES
 {
 	WEAPON_NONE,
-	WEAPON_PISTOLS,
-	WEAPON_REVOLVER,
-	WEAPON_UZI,
-	WEAPON_SHOTGUN,
-	WEAPON_GRENADE,
-	WEAPON_CROSSBOW,
 	WEAPON_FLARE,
-	WEAPON_TORCH
+	WEAPON_TORCH,
+	WEAPON_PISTOLS,
+	WEAPON_UZI,
+	WEAPON_MAGNUMS,
+	WEAPON_AUTOPISTOLS,
+	WEAPON_DESERTEAGLE,
+	WEAPON_REVOLVER,
+	WEAPON_SHOTGUN,
+	WEAPON_M16,
+	WEAPON_MP5,
+	WEAPON_CROSSBOW,
+	WEAPON_HARPOON,
+	WEAPON_GRENADE,
+	WEAPON_ROCKET,
+	WEAPON_GRAPPLING,
+	WEAPON_SNOWMOBILEGUN,
+	NUM_WEAPONS
 };
 
 enum lara_water_status
@@ -666,11 +676,10 @@ struct LARA_INFO
 	short spaz_effect_count;
 	short flare_age;
 	short vehicle;
-	short weapon_item;
-	short back_gun;
 	short flare_frame;
 	short poisoned;
 	short dpoisoned;
+	short weapon_item;
 	uchar electric;
 	uchar wet[15];
 	ushort flare_control_left : 1;
@@ -706,7 +715,9 @@ struct LARA_INFO
 	short torso_z_rot;
 	LARA_ARM left_arm;
 	LARA_ARM right_arm;
-	ushort holster;
+	ushort holster_right;
+	ushort holster_left;
+	ushort holster_back;
 	CREATURE_INFO* creature;
 	long CornerX;
 	long CornerZ;
@@ -730,10 +741,18 @@ struct LARA_INFO
 	long RopeCount;
 	char pistols_type_carried;
 	char uzis_type_carried;
+	char magnums_type_carried;
+	char autopistols_type_carried;
+	char deserteagle_type_carried;
+	char revolver_type_carried;
 	char shotgun_type_carried;
+	char m16_type_carried;
+	char mp5_type_carried;
 	char crossbow_type_carried;
+	char harpoon_type_carried;
 	char grenade_type_carried;
-	char sixshooter_type_carried;
+	char rocket_type_carried;
+	char grappling_type_carried;
 	char lasersight;
 	char binoculars;
 	char crowbar;
@@ -744,26 +763,34 @@ struct LARA_INFO
 	char examine2;
 	char examine3;
 	char puzzleitems[12];
-	ushort puzzleitemscombo;
-	ushort keyitems;
-	ushort keyitemscombo;
-	ushort pickupitems;
-	ushort pickupitemscombo;
-	short questitems;
+	ushort puzzleitemscombo[16];
+	ushort keyitems[12];
+	ushort keyitemscombo[16];
+	ushort pickupitems[4];
+	ushort pickupitemscombo[8];
+	short questitems[6];
 	short num_small_medipack;
 	short num_large_medipack;
 	short num_flares;
 	short num_pistols_ammo;
 	short num_uzi_ammo;
+	short num_magnums_ammo;
+	short num_autopistols_ammo;
+	short num_deserteagle_ammo;
 	short num_revolver_ammo;
 	short num_shotgun_ammo1;
 	short num_shotgun_ammo2;
-	short num_grenade_ammo1;
-	short num_grenade_ammo2;
-	short num_grenade_ammo3;
+	short num_m16_ammo;
+	short num_mp5_ammo;
 	short num_crossbow_ammo1;
 	short num_crossbow_ammo2;
 	short num_crossbow_ammo3;
+	short num_harpoon_ammo;
+	short num_grenade_ammo1;
+	short num_grenade_ammo2;
+	short num_grenade_ammo3;
+	short num_rocket_ammo;
+	short num_grappling_ammo;
 	char beetle_uses;
 	char blindTimer;
 	char location;
@@ -1456,9 +1483,151 @@ struct INVDRAWITEM
 	ulong mesh_bits;
 };
 
+enum INVOBJ_TYPES
+{
+	INV_NOITEM = -1,
+	INV_UZI_ITEM = 0,
+	INV_PISTOLS_ITEM,
+	INV_SHOTGUN_ITEM,
+	INV_REVOLVER_ITEM,
+	INV_REVOLVER_LASER_ITEM,
+	INV_CROSSBOW_ITEM,
+	INV_CROSSBOW_LASER_ITEM,
+	INV_GRENADEGUN_ITEM,
+	INV_SHOTGUN_AMMO1_ITEM,
+	INV_SHOTGUN_AMMO2_ITEM,
+	INV_GRENADEGUN_AMMO1_ITEM,
+	INV_GRENADEGUN_AMMO2_ITEM,
+	INV_GRENADEGUN_AMMO3_ITEM,
+	INV_CROSSBOW_AMMO1_ITEM,
+	INV_CROSSBOW_AMMO2_ITEM,
+	INV_CROSSBOW_AMMO3_ITEM,
+	INV_REVOLVER_AMMO_ITEM,
+	INV_UZI_AMMO_ITEM,
+	INV_PISTOLS_AMMO_ITEM,
+	INV_M16_ITEM,
+	INV_M16_AMMO_ITEM,
+	INV_MP5_ITEM,
+	INV_MP5_LASER_ITEM,
+	INV_MP5_AMMO_ITEM,
+	INV_MAGNUMS_ITEM,
+	INV_MAGNUMS_AMMO_ITEM,
+	INV_AUTOPISTOLS_ITEM,
+	INV_AUTOPISTOLS_AMMO_ITEM,
+	INV_ROCKET_ITEM,
+	INV_ROCKET_AMMO_ITEM,
+	INV_HARPOON_ITEM,
+	INV_HARPOON_AMMO_ITEM,
+	INV_GRAPPLING_ITEM,
+	INV_GRAPPLING_AMMO_ITEM,
+	INV_DESERTEAGLE_ITEM,
+	INV_DESERTEAGLE_AMMO_ITEM,
+	INV_LASERSIGHT_ITEM,
+	INV_BIGMEDI_ITEM,
+	INV_SMALLMEDI_ITEM,
+	INV_BINOCULARS_ITEM,
+	INV_FLARE_INV_ITEM,
+	INV_COMPASS_ITEM,
+	INV_MEMCARD_LOAD_ITEM,
+	INV_MEMCARD_SAVE_ITEM,
+	INV_WATERSKIN1_EMPTY_ITEM,
+	INV_WATERSKIN1_1_ITEM,
+	INV_WATERSKIN1_2_ITEM,
+	INV_WATERSKIN1_3_ITEM,
+	INV_WATERSKIN2_EMPTY_ITEM,
+	INV_WATERSKIN2_1_ITEM,
+	INV_WATERSKIN2_2_ITEM,
+	INV_WATERSKIN2_3_ITEM,
+	INV_WATERSKIN2_4_ITEM,
+	INV_WATERSKIN2_5_ITEM,
+	INV_PUZZLE1_ITEM,
+	INV_PUZZLE2_ITEM,
+	INV_PUZZLE3_ITEM,
+	INV_PUZZLE4_ITEM,
+	INV_PUZZLE5_ITEM,
+	INV_PUZZLE6_ITEM,
+	INV_PUZZLE7_ITEM,
+	INV_PUZZLE8_ITEM,
+	INV_PUZZLE9_ITEM,
+	INV_PUZZLE10_ITEM,
+	INV_PUZZLE11_ITEM,
+	INV_PUZZLE12_ITEM,
+	INV_PUZZLE1_COMBO1_ITEM,
+	INV_PUZZLE1_COMBO2_ITEM,
+	INV_PUZZLE2_COMBO1_ITEM,
+	INV_PUZZLE2_COMBO2_ITEM,
+	INV_PUZZLE3_COMBO1_ITEM,
+	INV_PUZZLE3_COMBO2_ITEM,
+	INV_PUZZLE4_COMBO1_ITEM,
+	INV_PUZZLE4_COMBO2_ITEM,
+	INV_PUZZLE5_COMBO1_ITEM,
+	INV_PUZZLE5_COMBO2_ITEM,
+	INV_PUZZLE6_COMBO1_ITEM,
+	INV_PUZZLE6_COMBO2_ITEM,
+	INV_PUZZLE7_COMBO1_ITEM,
+	INV_PUZZLE7_COMBO2_ITEM,
+	INV_PUZZLE8_COMBO1_ITEM,
+	INV_PUZZLE8_COMBO2_ITEM,
+	INV_KEY1_ITEM,
+	INV_KEY2_ITEM,
+	INV_KEY3_ITEM,
+	INV_KEY4_ITEM,
+	INV_KEY5_ITEM,
+	INV_KEY6_ITEM,
+	INV_KEY7_ITEM,
+	INV_KEY8_ITEM,
+	INV_KEY9_ITEM,
+	INV_KEY10_ITEM,
+	INV_KEY11_ITEM,
+	INV_KEY12_ITEM,
+	INV_KEY1_COMBO1_ITEM,
+	INV_KEY1_COMBO2_ITEM,
+	INV_KEY2_COMBO1_ITEM,
+	INV_KEY2_COMBO2_ITEM,
+	INV_KEY3_COMBO1_ITEM,
+	INV_KEY3_COMBO2_ITEM,
+	INV_KEY4_COMBO1_ITEM,
+	INV_KEY4_COMBO2_ITEM,
+	INV_KEY5_COMBO1_ITEM,
+	INV_KEY5_COMBO2_ITEM,
+	INV_KEY6_COMBO1_ITEM,
+	INV_KEY6_COMBO2_ITEM,
+	INV_KEY7_COMBO1_ITEM,
+	INV_KEY7_COMBO2_ITEM,
+	INV_KEY8_COMBO1_ITEM,
+	INV_KEY8_COMBO2_ITEM,
+	INV_PICKUP1_ITEM,
+	INV_PICKUP2_ITEM,
+	INV_PICKUP3_ITEM,
+	INV_PICKUP4_ITEM,
+	INV_PICKUP1_COMBO1_ITEM,
+	INV_PICKUP1_COMBO2_ITEM,
+	INV_PICKUP2_COMBO1_ITEM,
+	INV_PICKUP2_COMBO2_ITEM,
+	INV_PICKUP3_COMBO1_ITEM,
+	INV_PICKUP3_COMBO2_ITEM,
+	INV_PICKUP4_COMBO1_ITEM,
+	INV_PICKUP4_COMBO2_ITEM,
+	INV_QUEST1_ITEM,
+	INV_QUEST2_ITEM,
+	INV_QUEST3_ITEM,
+	INV_QUEST4_ITEM,
+	INV_QUEST5_ITEM,
+	INV_QUEST6_ITEM,
+	INV_BURNING_TORCH_ITEM,
+	INV_CROWBAR_ITEM,
+	INV_CLOCKWORK_BEETLE_ITEM,
+	INV_MECHANICAL_SCARAB_ITEM,
+	INV_WINDING_KEY_ITEM,
+	INV_EXAMINE1_ITEM,
+	INV_EXAMINE2_ITEM,
+	INV_EXAMINE3_ITEM,
+	NUM_INVOBJ
+};
+
 struct RINGME
 {
-	OBJLIST current_object_list[119];
+	OBJLIST current_object_list[NUM_INVOBJ];
 	long ringactive;
 	long objlistmovement;
 	long curobjinlist;
@@ -2151,18 +2320,35 @@ struct SOUND_SLOT
 
 struct WEAPON_INFO
 {
-	short lock_angles[4];
-	short left_angles[4];
-	short right_angles[4];
-	short aim_speed;
-	short shot_accuracy;
-	short gun_height;
-	short target_dist;
-	char damage;
-	char recoil_frame;
-	char flash_time;
-	char draw_frame;
-	short sample_num;
+	short lock_angles[4]{ 0, 0, 0, 0 };
+	short left_angles[4]{ 0, 0, 0, 0 };
+	short right_angles[4]{ 0, 0, 0, 0 };
+	short aim_speed = 0;
+	short shot_accuracy = 0;
+	short gun_height = 0;
+	short target_dist = 0;
+	short damage = 0;
+	short alternate_damage = 0;
+	short recoil_frame = 0;
+	short flash_time = 0;
+	short draw_frame = 0;
+	int sample_num = 0;
+
+	WEAPON_INFO() {}
+
+	void setLockAngle(short _0, short _1, short _2, short _3) { lock_angles[0] = _0; lock_angles[1] = _1; lock_angles[2] = _2; lock_angles[3] = _3; }
+	void setLeftAngle(short _0, short _1, short _2, short _3) { left_angles[0] = _0; left_angles[1] = _1; left_angles[2] = _2; left_angles[3] = _3; }
+	void setRightAngle(short _0, short _1, short _2, short _3) { right_angles[0] = _0; right_angles[1] = _1; right_angles[2] = _2; right_angles[3] = _3; }
+	void setAimSpeed(short speed) { aim_speed = speed; }
+	void setShotAccuracy(short accuracy) { shot_accuracy = accuracy; }
+	void setGunHeight(short height) { gun_height = height; }
+	void setTargetDistance(short distance) { target_dist = distance; }
+	void setDamage(short _dmg) { damage = _dmg; }
+	void setAlternateDamage(short _dmg) { alternate_damage = _dmg; }
+	void setRecoilFrame(short frame) { recoil_frame = frame; }
+	void setFlashTime(short time) { flash_time = time; }
+	void setDrawFrame(short frame) { draw_frame = frame; }
+	void setShotSample(int sample) { sample_num = sample; }
 };
 
 struct SCARAB_STRUCT

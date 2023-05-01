@@ -162,7 +162,7 @@ static void DoWeaponHotkey()	//adds extra checks and does ammo type swaps..
 	}
 	else if (keymap[DIK_4])
 	{
-		if (!(lara.sixshooter_type_carried & W_PRESENT))
+		if (!(lara.revolver_type_carried & W_PRESENT))
 			return;
 
 		lara.request_gun_type = WEAPON_REVOLVER;

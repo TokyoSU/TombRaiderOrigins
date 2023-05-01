@@ -15,6 +15,7 @@
 #include <windowsx.h>
 #include <d3d.h>
 #include <d3dtypes.h>
+#include <vector>
 #include <cmath>
 #include <stdio.h>
 #include <process.h>

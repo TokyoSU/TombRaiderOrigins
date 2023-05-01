@@ -44,7 +44,6 @@ long FlashIt()
 void DrawGameInfo(long timed)
 {
 	long flash_state, seconds, length, btm;
-	short ammo;
 	char buf[80];
 
 	if (!GLOBAL_playing_cutseq && !bDisableLaraControl && gfGameMode != 1)
@@ -88,13 +87,11 @@ void DrawGameInfo(long timed)
 		{
 			if (lara.gun_status == LG_READY)
 			{
-				ammo = *get_current_ammo_pointer(lara.gun_type);
-
+				short ammo = get_current_ammo_pointer(lara.gun_type);
 				if (ammo != -1)
 				{
 					if (lara.gun_type == WEAPON_SHOTGUN)
 						ammo /= 6;
-
 					sprintf(buf, "%i", ammo);
 					length = GetStringLength(buf, 0, &btm);
 					PrintString(LaserSight ? phd_centerx + 30 : (phd_winxmax - length - 80), phd_winymax - btm - 70, 0, buf, 0);

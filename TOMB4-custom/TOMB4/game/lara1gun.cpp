@@ -66,13 +66,11 @@ void FireCrossbow(PHD_3DPOS* pos)
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
 	PHD_VECTOR vec;
-	short* ammo;
 	long h;
 	short item_number;
 
-	ammo = get_current_ammo_pointer(WEAPON_CROSSBOW);
-
-	if (!*ammo)
+	short& ammo = get_current_ammo_pointer(WEAPON_CROSSBOW);
+	if (ammo == 0)
 		return;
 
 	lara.has_fired = 1;
@@ -97,8 +95,8 @@ void FireCrossbow(PHD_3DPOS* pos)
 		}
 		else
 		{
-			if (*ammo != -1)
-				--*ammo;
+			if (ammo != -1)
+				ammo--;
 
 			vec.x = 0;
 			vec.y = 228;
@@ -141,7 +139,7 @@ void FireCrossbow(PHD_3DPOS* pos)
 			item->item_flags[0] = 1;
 		else if (lara.crossbow_type_carried & W_AMMO2)
 			item->item_flags[0] = 2;
-		else
+		else if (lara.crossbow_type_carried & W_AMMO3)
 			item->item_flags[0] = 3;
 
 		SOUND_PlayEffect(SFX_LARA_CROSSBOW, 0, SFX_DEFAULT);
@@ -151,13 +149,13 @@ void FireCrossbow(PHD_3DPOS* pos)
 
 void draw_shotgun_meshes(long weapon_type)
 {
-	lara.back_gun = 0;
-	lara.mesh_ptrs[LM_RHAND] = meshes[objects[WeaponObjectMesh(weapon_type)].mesh_index + 2 * LM_RHAND];
+	lara.holster_back = 0;
+	lara.mesh_ptrs[LM_RHAND] = meshes[objects[GetWeaponMeshObject(weapon_type)].mesh_index + 2 * LM_RHAND];
 }
 
 void undraw_shotgun_meshes(long weapon_type)
 {
-	lara.back_gun = (short)WeaponObject(weapon_type);
+	lara.holster_back = (short)GetWeaponMeshObject(weapon_type);
 	lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + 2 * LM_RHAND];
 }
 
@@ -171,7 +169,7 @@ void ready_shotgun(long weapon_type)
 	lara.left_arm.z_rot = 0;
 	lara.left_arm.frame_number = 0;
 	lara.left_arm.lock = 0;
-	lara.left_arm.frame_base = objects[WeaponObject(weapon_type)].frame_base;
+	lara.left_arm.frame_base = objects[GetWeaponAnimObject(weapon_type)].frame_base;
 
 	lara.right_arm.x_rot = 0;
 	lara.right_arm.y_rot = 0;
@@ -233,9 +231,6 @@ void FireShotgun()
 		{
 			for (int i = 0; i < 7; i++)
 				TriggerGunSmoke(pos.x, pos.y, pos.z, pos2.x - pos.x, pos2.y - pos.y, pos2.z - pos.z, 1, SmokeWeapon, 32);
-
-		//	for (int i = 0; i < 12; i++)
-				//empty func call here
 		}
 
 		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
@@ -250,13 +245,11 @@ void FireGrenade()
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
-	short* ammo;
 	long h;
 	short item_number;
 
-	ammo = get_current_ammo_pointer(WEAPON_GRENADE);
-
-	if (!*ammo)
+	short& ammo = get_current_ammo_pointer(WEAPON_GRENADE);
+	if (ammo == 0)
 		return;
 
 	lara.has_fired = 1;
@@ -317,14 +310,14 @@ void FireGrenade()
 	item->hit_points = 120;
 	AddActiveItem(item_number);
 
-	if (*ammo != -1)
-		--*ammo;
+	if (ammo != -1)
+		ammo--;
 
 	if (lara.grenade_type_carried & W_AMMO1)
 		item->item_flags[0] = 1;
 	else if (lara.grenade_type_carried & W_AMMO2)
 		item->item_flags[0] = 2;
-	else
+	else if (lara.grenade_type_carried & W_AMMO3)
 		item->item_flags[0] = 3;
 
 	savegame.Game.AmmoUsed++;
@@ -339,25 +332,25 @@ void AnimateShotgun(long weapon_type)
 
 	item = &items[lara.weapon_item];
 
-	if (SmokeCountL)
+	if (SmokeCountR)
 	{
-		if (SmokeWeapon == WEAPON_GRENADE)
+		switch (SmokeWeapon)
 		{
+		case WEAPON_GRENADE:
 			pos.x = 0;
 			pos.y = 180;
 			pos.z = 80;
-		}
-		else if (SmokeWeapon == WEAPON_SHOTGUN)
-		{
+			break;
+		case WEAPON_SHOTGUN:
 			pos.x = -16;
 			pos.y = 228;
 			pos.z = 32;
+			break;
 		}
 
 		GetLaraJointPos(&pos, 11);
-
 		if (lara_item->mesh_bits)
-			TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, SmokeWeapon, SmokeCountL);
+			TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, SmokeWeapon, SmokeCountR);
 	}
 
 	switch (item->current_anim_state)
@@ -457,15 +450,13 @@ void AnimateShotgun(long weapon_type)
 void RifleHandler(long weapon_type)
 {
 	WEAPON_INFO* winfo;
-	PHD_VECTOR pos;
-	long x, y, z, r, g, b;
+	PHD_VECTOR pos{};
+	long r, g, b;
 
 	winfo = &weapons[weapon_type];
 	LaraGetNewTarget(winfo);
-
 	if (input & IN_ACTION)
 		LaraTargetInfo(winfo);
-
 	AimWeapon(winfo, &lara.left_arm);
 
 	if (lara.left_arm.lock)
@@ -480,7 +471,7 @@ void RifleHandler(long weapon_type)
 		}
 	}
 
-	if (weapon_type == WEAPON_REVOLVER)
+	if (weapon_type == WEAPON_REVOLVER || weapon_type == WEAPON_DESERTEAGLE)
 		AnimatePistols(weapon_type);
 	else
 		AnimateShotgun(weapon_type);
@@ -491,28 +482,23 @@ void RifleHandler(long weapon_type)
 		g = (GetRandomControl() & 0x1F) + 128;
 		b = GetRandomControl() & 63;
 
-		if (weapon_type == WEAPON_SHOTGUN)
+		switch (weapon_type)
 		{
-			x = (GetRandomControl() & 0xFF) + (phd_sin(lara_item->pos.y_rot) >> 4) + lara_item->pos.x_pos;
-			y = ((GetRandomControl() & 0x7F) - 575) + lara_item->pos.y_pos;
-			z = (GetRandomControl() & 0xFF) + (phd_cos(lara_item->pos.y_rot) >> 4) + lara_item->pos.z_pos;
-
-			if (gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
-				TriggerDynamic_MIRROR(x, y, z, 12, r, g, b);
-			else
-				TriggerDynamic(x, y, z, 12, r, g, b);
-		}
-		else if (weapon_type == WEAPON_REVOLVER)
-		{
+		case WEAPON_SHOTGUN:
+		case WEAPON_REVOLVER:
+		case WEAPON_DESERTEAGLE:
+		case WEAPON_M16:
+		case WEAPON_MP5:
 			pos.x = (GetRandomControl() & 0xFF) - 128;
 			pos.y = (GetRandomControl() & 0x7F) - 63;
 			pos.z = (GetRandomControl() & 0xFF) - 128;
 			GetLaraJointPos(&pos, 11);
 
 			if (gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom)
-				TriggerDynamic_MIRROR(pos.x, pos.y, pos.z, 12, r, g, b);
+				TriggerDynamic_MIRROR(pos.x, pos.y, pos.z, 15, r, g, b);
 			else
-				TriggerDynamic(pos.x, pos.y, pos.z, 12, r, g, b);
+				TriggerDynamic(pos.x, pos.y, pos.z, 15, r, g, b);
+			break;
 		}
 	}
 }
@@ -691,13 +677,9 @@ void draw_shotgun(long weapon_type)
 	{
 		lara.weapon_item = CreateItem();
 		item = &items[lara.weapon_item];
-		item->object_number = (short)WeaponObject(weapon_type);
-
-		if (weapon_type == WEAPON_GRENADE)
-			item->anim_number = objects[GRENADE_GUN_ANIM].anim_index;
-		else
-			item->anim_number = objects[item->object_number].anim_index + 1;
-
+		item->object_number = (short)GetWeaponAnimObject(weapon_type);
+		int anim_index = objects[item->object_number].anim_index;
+		item->anim_number = item->object_number != GRENADE_GUN_ANIM ? anim_index + 1 : anim_index;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->status = ITEM_ACTIVE;
 		item->current_anim_state = 1;
@@ -711,7 +693,7 @@ void draw_shotgun(long weapon_type)
 
 	AnimateItem(item);
 
-	if (!item->current_anim_state || item->current_anim_state == 6)
+	if (item->current_anim_state == 0 || item->current_anim_state == 6)
 		ready_shotgun(weapon_type);
 	else if (item->frame_number - anims[item->anim_number].frame_base == weapons[weapon_type].draw_frame)
 		draw_shotgun_meshes(weapon_type);

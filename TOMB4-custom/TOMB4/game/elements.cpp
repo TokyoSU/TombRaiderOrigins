@@ -60,17 +60,19 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
 					item->item_flags[0] = 1;
 				}
-				else if (item->trigger_flags == 1)
+				else if (item->trigger_flags == 1 && lara.pickupitems[2])
 				{
 					item->mesh_bits = 3;
-					lara.pickupitems &= ~2u;
 					item->item_flags[0] = 1;
+					if (lara.pickupitems[2])
+						lara.pickupitems[2]--;
 				}
-				else
+				else if (lara.pickupitems[1])
 				{
 					item->mesh_bits = 12;
 					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
-					lara.pickupitems &= ~1u;
+					if (lara.pickupitems[1])
+						lara.pickupitems[1]--;
 					item->item_flags[0] = 1;
 				}
 			}

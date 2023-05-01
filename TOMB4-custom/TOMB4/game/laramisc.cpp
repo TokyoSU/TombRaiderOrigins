@@ -2,6 +2,7 @@
 #include "laramisc.h"
 #include "objects.h"
 #include "laraswim.h"
+#include "larafire.h"
 #include "lara_states.h"
 #include "control.h"
 #include "collide.h"
@@ -37,17 +38,25 @@ void LaraCheatyBits()
 	{
 		lara.num_large_medipack = -1;
 		lara.num_small_medipack = -1;
-		lara.num_revolver_ammo = -1;
 		lara.num_uzi_ammo = -1;
+		lara.num_magnums_ammo = -1;
+		lara.num_autopistols_ammo = -1;
+		lara.num_deserteagle_ammo = -1;
+		lara.num_revolver_ammo = -1;
+		lara.num_shotgun_ammo1 = -1;
+		lara.num_shotgun_ammo2 = -1;
+		lara.num_m16_ammo = -1;
+		lara.num_mp5_ammo = -1;
+		lara.num_harpoon_ammo = -1;
 		lara.num_crossbow_ammo1 = -1;
 		lara.num_crossbow_ammo2 = -1;
 		lara.num_crossbow_ammo3 = -1;
 		lara.num_grenade_ammo1 = -1;
 		lara.num_grenade_ammo2 = -1;
 		lara.num_grenade_ammo3 = -1;
+		lara.num_rocket_ammo = -1;
+		lara.num_grappling_ammo = -1;
 		lara.num_flares = -1;
-		lara.num_shotgun_ammo1 = -1;
-		lara.num_shotgun_ammo2 = -1;
 		savegame.HaveBikeBooster = 1;
 
 		if (objects[LASERSIGHT_ITEM].loaded)
@@ -57,10 +66,18 @@ void LaraCheatyBits()
 		{
 			lara.pistols_type_carried |= W_PRESENT;
 			lara.uzis_type_carried |= W_PRESENT;
+			lara.magnums_type_carried |= W_PRESENT;
+			lara.autopistols_type_carried |= W_PRESENT;
+			lara.deserteagle_type_carried |= W_PRESENT;
+			lara.revolver_type_carried |= W_PRESENT;
 			lara.shotgun_type_carried |= W_PRESENT;
+			lara.m16_type_carried |= W_PRESENT;
+			lara.mp5_type_carried |= W_PRESENT;
 			lara.crossbow_type_carried |= W_PRESENT;
+			lara.harpoon_type_carried |= W_PRESENT;
 			lara.grenade_type_carried |= W_PRESENT;
-			lara.sixshooter_type_carried |= W_PRESENT;
+			lara.rocket_type_carried |= W_PRESENT;
+			lara.grappling_type_carried |= W_PRESENT;
 		}
 
 		dels_give_lara_items_cheat();
@@ -166,12 +183,22 @@ void LaraInitialiseMeshes()
 		lara.mesh_ptrs[i] = meshes[objects[LARA].mesh_index + i * 2];
 	}
 
-	if (lara.gun_type == WEAPON_GRENADE)
-		lara.back_gun = GRENADE_GUN_ANIM;
-	else if (lara.shotgun_type_carried)
-		lara.back_gun = SHOTGUN_ANIM;
-	else if (lara.grenade_type_carried)
-		lara.back_gun = GRENADE_GUN_ANIM;
+	if (lara.shotgun_type_carried & W_PRESENT)
+		lara.holster_back = (short)GetWeaponHolsterObject(WEAPON_SHOTGUN);
+	else if (lara.m16_type_carried & W_PRESENT)
+		lara.holster_back = (short)GetWeaponHolsterObject(WEAPON_M16);
+	else if (lara.mp5_type_carried & W_PRESENT)
+		lara.holster_back = (short)GetWeaponHolsterObject(WEAPON_MP5);
+	else if (lara.grenade_type_carried & W_PRESENT)
+		lara.holster_back = (short)GetWeaponHolsterObject(WEAPON_GRENADE);
+	else if (lara.harpoon_type_carried & W_PRESENT)
+		lara.holster_back = (short)GetWeaponHolsterObject(WEAPON_HARPOON);
+	else if (lara.rocket_type_carried & W_PRESENT)
+		lara.holster_back = (short)GetWeaponHolsterObject(WEAPON_ROCKET);
+	else if (lara.grappling_type_carried & W_PRESENT)
+		lara.holster_back = (short)GetWeaponHolsterObject(WEAPON_GRAPPLING);
+	else
+		lara.holster_back = 0;
 
 	lara.gun_status = LG_NO_ARMS;
 	lara.left_arm.frame_number = 0;

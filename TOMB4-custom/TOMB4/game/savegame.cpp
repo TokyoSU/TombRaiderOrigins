@@ -57,12 +57,12 @@ void sgInitialiseHub(long dont_save_lara)
 		savegame.HubSavedLara = 1;
 	}
 
-	memset(savegame.Lara.puzzleitems, 0, 12);
-	savegame.Lara.puzzleitemscombo = 0;
-	savegame.Lara.keyitems = 0;
-	savegame.Lara.keyitemscombo = 0;
-	savegame.Lara.pickupitems = 0;
-	savegame.Lara.pickupitemscombo = 0;
+	memset(savegame.Lara.puzzleitems, 0, sizeof(char) * 12);
+	memset(savegame.Lara.puzzleitemscombo, 0, sizeof(ushort) * 16);
+	memset(savegame.Lara.keyitems, 0, sizeof(ushort) * 12);
+	memset(savegame.Lara.keyitemscombo, 0, sizeof(ushort) * 16);
+	memset(savegame.Lara.pickupitems, 0, sizeof(ushort) * 4);
+	memset(savegame.Lara.pickupitemscombo, 0, sizeof(ushort) * 8);
 	savegame.Lara.examine1 = 0;
 	savegame.Lara.examine2 = 0;
 	savegame.Lara.examine3 = 0;

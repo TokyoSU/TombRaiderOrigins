@@ -14,39 +14,41 @@
 #include "gameflow.h"
 #include "control.h"
 
-static PISTOL_DEF PistolTable[4] =
+static PISTOL_DEF PistolTable[NUM_WEAPONS] =
 {
-	{ LARA, 0, 0, 0, 0 },
-	{ PISTOLS_ANIM, 4, 5, 13, 24 },
-	{ REVOLVER_ANIM , 7, 8, 15, 29 },
-	{ UZI_ANIM, 4, 5, 13, 24 }
+	{ LARA, 0, 0, 0, 0 }, // NONE
+	{ FLARE_ANIM, 0, 0, 0, 0 }, // FLARE
+	{ TORCH_ANIM, 0, 0, 0, 0 }, // TORCH
+	{ PISTOLS_ANIM, 4, 5, 13, 24 }, // PISTOLS
+	{ PISTOLS_ANIM, 4, 5, 13, 24 }, // UZIS
+	{ PISTOLS_ANIM, 4, 5, 13, 24 }, // MAGNUMS
+	{ PISTOLS_ANIM, 4, 5, 13, 24 }, // AUTOPISTOLS
+	{ DESERTEAGLE_ANIM , 7, 8, 15, 29 }, // DESERTEAGLE
+	{ REVOLVER_ANIM , 7, 8, 15, 29 }, // REVOLVER
+	{ SHOTGUN_ANIM, 0, 0, 0, 0 }, // SHOTGUN
+	{ M16_ANIM, 0, 0, 0, 0 }, // M16
+	{ MP5_ANIM, 0, 0, 0, 0 }, // MP5
+	{ CROSSBOW_ANIM, 0, 0, 0, 0 }, // CROSSBOW
+	{ HARPOON_GUN_ANIM, 0, 0, 0, 0 }, // HARPOONGUN
+	{ GRENADE_GUN_ANIM, 0, 0, 0, 0 }, // GRENADEGUN
+	{ ROCKET_GUN_ANIM, 0, 0, 0, 0 }, // ROCKETGUN
+	{ GRAPPLING_GUN_ANIM, 0, 0, 0, 0 }, // GRAPPLINGGUN
+	{ 0, 0, 0, 0, 0 }, // SNOWMOBILEGUN
 };
 
 void undraw_pistol_mesh_left(long weapon_type)
 {
-	if (weapon_type != WEAPON_REVOLVER)
+	if (weapon_type != WEAPON_REVOLVER && weapon_type != WEAPON_DESERTEAGLE)
 	{
-		WeaponObject(weapon_type);
 		lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + LM_LHAND * 2];
-
-		if (weapon_type == WEAPON_PISTOLS)
-			lara.holster = LARA_HOLSTERS_PISTOLS;
-		else if (weapon_type == WEAPON_UZI)
-			lara.holster = LARA_HOLSTERS_UZIS;
+		lara.holster_left = GetWeaponHolsterObject(weapon_type);
 	}
 }
 
 void undraw_pistol_mesh_right(long weapon_type)
 {
-	WeaponObject(weapon_type);
 	lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + LM_RHAND * 2];
-
-	if (weapon_type == WEAPON_PISTOLS)
-		lara.holster = LARA_HOLSTERS_PISTOLS;
-	else if (weapon_type == WEAPON_UZI)
-		lara.holster = LARA_HOLSTERS_UZIS;
-	else if (weapon_type == WEAPON_REVOLVER)
-		lara.holster = LARA_HOLSTERS_REVOLVER;
+	lara.holster_right = GetWeaponHolsterObject(weapon_type);
 }
 
 static void set_arm_info(LARA_ARM* arm, long frame)
@@ -89,20 +91,22 @@ void ready_pistols(long weapon_type)
 	lara.target = 0;
 	lara.right_arm.lock = 0;
 	lara.left_arm.lock = 0;
-	lara.right_arm.frame_base = objects[WeaponObject(weapon_type)].frame_base;
+	lara.right_arm.frame_base = objects[GetWeaponAnimObject(weapon_type)].frame_base;
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
 }
 
 void draw_pistol_meshes(long weapon_type)
 {
-	long mesh_index;
+	long mesh_index = objects[GetWeaponMeshObject(weapon_type)].mesh_index;
 
-	mesh_index = objects[WeaponObjectMesh(weapon_type)].mesh_index;
-	lara.holster = LARA_HOLSTERS;
 	lara.mesh_ptrs[LM_RHAND] = meshes[mesh_index + LM_RHAND * 2];
+	lara.holster_right = LARA_HOLSTERS;
 
-	if (weapon_type != WEAPON_REVOLVER)
+	if (weapon_type != WEAPON_REVOLVER && weapon_type != WEAPON_DESERTEAGLE)
+	{
 		lara.mesh_ptrs[LM_LHAND] = meshes[mesh_index + LM_LHAND * 2];
+		lara.holster_left = LARA_HOLSTERS;
+	}
 }
 
 void draw_pistols(long weapon_type)
@@ -222,9 +226,7 @@ void AnimatePistols(long weapon_type)
 	static long uzi_left;
 	static long uzi_right;
 	short angles[2];
-	short anil, anir, sound_already;
-
-	sound_already = 0;
+	short anil, anir, sound_already = 0;
 
 	if (lara_item->mesh_bits)
 	{
@@ -233,12 +235,15 @@ void AnimatePistols(long weapon_type)
 			switch (SmokeWeapon)
 			{
 			case WEAPON_PISTOLS:
+			case WEAPON_MAGNUMS:
+			case WEAPON_AUTOPISTOLS:
 				pos.x = 4;
 				pos.y = 128;
 				pos.z = 40;
 				break;
 
 			case WEAPON_REVOLVER:
+			case WEAPON_DESERTEAGLE:
 				pos.x = 16;
 				pos.y = 160;
 				pos.z = 56;
@@ -260,12 +265,15 @@ void AnimatePistols(long weapon_type)
 			switch (SmokeWeapon)
 			{
 			case WEAPON_PISTOLS:
+			case WEAPON_MAGNUMS:
+			case WEAPON_AUTOPISTOLS:
 				pos.x = -16;
 				pos.y = 128;
 				pos.z = 40;
 				break;
 
 			case WEAPON_REVOLVER:
+			case WEAPON_DESERTEAGLE:
 				pos.x = -32;
 				pos.y = 160;
 				pos.z = 56;
@@ -295,7 +303,7 @@ void AnimatePistols(long weapon_type)
 		{
 			if (input & IN_ACTION)
 			{
-				if (weapon_type != WEAPON_REVOLVER)
+				if (weapon_type != WEAPON_REVOLVER && weapon_type != WEAPON_DESERTEAGLE)
 				{
 					angles[0] = lara.right_arm.y_rot + lara_item->pos.y_rot;
 					angles[1] = lara.right_arm.x_rot;
@@ -309,32 +317,16 @@ void AnimatePistols(long weapon_type)
 						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x2000000 | SFX_SETPITCH);
 						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
 						sound_already = 1;
-
-						if (weapon_type == WEAPON_UZI)
-							uzi_right = 1;
-
 						savegame.Game.AmmoUsed++;
 					}
 				}
 
 				anir = p->RecoilAnim;
 			}
-			else if (uzi_right)
-			{
-				SOUND_PlayEffect(winfo->sample_num + 1, &lara_item->pos, SFX_DEFAULT);
-				uzi_right = 0;
-			}
 		}
 		else if (lara.right_arm.frame_number >= p->RecoilAnim)
 		{
-			if (weapon_type == WEAPON_UZI)
-			{
-				SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
-				uzi_right = 1;
-			}
-
 			anir++;
-
 			if (anir == p->RecoilAnim + winfo->recoil_frame)
 				anir = p->Draw1Anim2;
 		}
@@ -345,12 +337,6 @@ void AnimatePistols(long weapon_type)
 			anir = p->Draw1Anim2;
 		else if (lara.right_arm.frame_number > 0 && lara.right_arm.frame_number <= p->Draw1Anim2)
 			anir--;
-
-		if (uzi_right)
-		{
-			SOUND_PlayEffect(winfo->sample_num + 1, &lara_item->pos, SFX_DEFAULT);
-			uzi_right = 0;
-		}
 	}
 
 	set_arm_info(&lara.right_arm, anir);
@@ -369,18 +355,24 @@ void AnimatePistols(long weapon_type)
 
 				if (FireWeapon(weapon_type, lara.target, lara_item, angles))
 				{
-					if (weapon_type == WEAPON_REVOLVER)
+					switch (weapon_type)
 					{
+					case WEAPON_REVOLVER:
 						SmokeCountR = 28;
 						SmokeWeapon = WEAPON_REVOLVER;
 						lara.right_arm.flash_gun = winfo->flash_time;
-					}
-					else
-					{
+						break;
+					case WEAPON_DESERTEAGLE:
+						SmokeCountR = 28;
+						SmokeWeapon = WEAPON_DESERTEAGLE;
+						lara.right_arm.flash_gun = winfo->flash_time;
+						break;
+					default:
 						SmokeCountL = 28;
 						SmokeWeapon = weapon_type;
 						TriggerGunShell(0, GUNSHELL, weapon_type);
 						lara.left_arm.flash_gun = winfo->flash_time;
+						break;
 					}
 
 					if (!sound_already)
@@ -388,9 +380,6 @@ void AnimatePistols(long weapon_type)
 						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x2000000 | SFX_SETPITCH);
 						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
 					}
-
-					if (weapon_type == WEAPON_UZI)
-						uzi_left = 1;
 
 					savegame.Game.AmmoUsed++;
 				}
@@ -400,14 +389,7 @@ void AnimatePistols(long weapon_type)
 		}
 		else if (lara.left_arm.frame_number >= p->RecoilAnim)
 		{
-			if (weapon_type == WEAPON_UZI)
-			{
-				SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
-				uzi_left = 1;
-			}
-
 			anil++;
-
 			if (anil == p->RecoilAnim + winfo->recoil_frame)
 				anil = p->Draw1Anim2;
 		}
@@ -418,12 +400,6 @@ void AnimatePistols(long weapon_type)
 			anil = p->Draw1Anim2;
 		else if (lara.left_arm.frame_number > 0 && lara.left_arm.frame_number <= p->Draw1Anim2)
 			anil--;
-
-		if (uzi_left)
-		{
-			SOUND_PlayEffect(winfo->sample_num + 1, &lara_item->pos, SFX_DEFAULT);
-			uzi_left = 0;
-		}
 	}
 
 	set_arm_info(&lara.left_arm, anil);

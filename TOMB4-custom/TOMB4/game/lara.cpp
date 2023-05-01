@@ -1403,8 +1403,15 @@ void lara_as_dash(ITEM_INFO* item, COLL_INFO* coll)
 
 	DashTimer--;
 
-	if (input & IN_DUCK && (lara.gun_status == LG_NO_ARMS || lara.gun_type == WEAPON_NONE || lara.gun_type == WEAPON_PISTOLS ||
-		lara.gun_type == WEAPON_REVOLVER || lara.gun_type == WEAPON_UZI || lara.gun_type == WEAPON_FLARE))
+	if (input & IN_DUCK && (lara.gun_status == LG_NO_ARMS ||
+		lara.gun_type == WEAPON_NONE ||
+		lara.gun_type == WEAPON_PISTOLS ||
+		lara.gun_type == WEAPON_REVOLVER ||
+		lara.gun_type == WEAPON_UZI ||
+		lara.gun_type == WEAPON_MAGNUMS ||
+		lara.gun_type == WEAPON_AUTOPISTOLS ||
+		lara.gun_type == WEAPON_DESERTEAGLE ||
+		lara.gun_type == WEAPON_FLARE))
 	{
 		item->goal_anim_state = AS_DUCK;
 		return;
@@ -3015,9 +3022,15 @@ void lara_as_run(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	if (input & IN_DUCK && lara.water_status != LW_WADE &&
-		(lara.gun_status == LG_NO_ARMS || lara.gun_type == WEAPON_NONE || lara.gun_type == WEAPON_PISTOLS ||
-			lara.gun_type == WEAPON_REVOLVER || lara.gun_type == WEAPON_UZI || lara.gun_type == WEAPON_FLARE))
+	if (input & IN_DUCK && lara.water_status != LW_WADE && (lara.gun_status == LG_NO_ARMS ||
+			lara.gun_type == WEAPON_NONE ||
+			lara.gun_type == WEAPON_PISTOLS ||
+			lara.gun_type == WEAPON_REVOLVER ||
+			lara.gun_type == WEAPON_UZI ||
+			lara.gun_type == WEAPON_MAGNUMS ||
+			lara.gun_type == WEAPON_AUTOPISTOLS ||
+			lara.gun_type == WEAPON_DESERTEAGLE ||
+			lara.gun_type == WEAPON_FLARE))
 	{
 		item->goal_anim_state = AS_DUCK;
 		return;
@@ -3415,9 +3428,15 @@ void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	if (input & IN_DUCK && lara.water_status != LW_WADE && item->current_anim_state == AS_STOP &&
-		(lara.gun_status == LG_NO_ARMS || lara.gun_type == WEAPON_NONE || lara.gun_type == WEAPON_PISTOLS ||
-			lara.gun_type == WEAPON_REVOLVER || lara.gun_type == WEAPON_UZI || lara.gun_type == WEAPON_FLARE))
+	if (input & IN_DUCK && lara.water_status != LW_WADE && item->current_anim_state == AS_STOP && (lara.gun_status == LG_NO_ARMS ||
+			lara.gun_type == WEAPON_NONE ||
+			lara.gun_type == WEAPON_PISTOLS ||
+			lara.gun_type == WEAPON_REVOLVER ||
+			lara.gun_type == WEAPON_UZI ||
+			lara.gun_type == WEAPON_MAGNUMS ||
+			lara.gun_type == WEAPON_AUTOPISTOLS ||
+			lara.gun_type == WEAPON_DESERTEAGLE ||
+			lara.gun_type == WEAPON_FLARE))
 	{
 		item->goal_anim_state = AS_DUCK;
 		return;
