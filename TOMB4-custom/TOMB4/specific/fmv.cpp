@@ -14,172 +14,109 @@
 #include "cmdline.h"
 #include "gamemain.h"
 #include "LoadSave.h"
+#define PL_MPEG_IMPLEMENTATION
+#include "../tomb4/pl_mpeg.h"
+#include <sokol_time.h>
+#include "function_stubs.h"
+#include "output.h"
+#include "time.h"
 
-static void (__stdcall* BinkCopyToBuffer)(BINK_STRUCT*, LPVOID, LONG, long, long, long, long);
-static void(__stdcall* BinkOpenDirectSound)(ulong);
-static LPVOID (__stdcall* BinkOpen)(char*, ulong);
-static long (__stdcall* BinkDDSurfaceType)(LPDIRECTDRAWSURFACEX);
-static long (__stdcall* BinkDoFrame)(BINK_STRUCT*);
-static void (__stdcall* BinkNextFrame)(BINK_STRUCT*);
-static long (__stdcall* BinkWait)(BINK_STRUCT*);
-static void (__stdcall* BinkClose)(BINK_STRUCT*);
-static HMODULE hBinkW32;
+static unsigned char* FmvData;
+static HSTREAM FmvStream = 0;
+static uint64_t timer;
 
-static BINK_STRUCT* Bink;
-static LPDIRECTDRAWSURFACEX BinkSurface;
-static long BinkSurfaceType;
+static void FmvVideo(plm_t* self, plm_frame_t* frame, void* user)
+{
+	plm_frame_to_rgb(frame, FmvData, frame->width * 3);
 
-#define GET_DLL_PROC(dll, proc, n) \
-{ \
-	*(FARPROC *)&(proc) = GetProcAddress((dll), n); \
-	if(!proc) throw #proc; \
 }
 
-bool LoadBinkStuff()
+static void FmvAudio(plm_t* self, plm_samples_t* samples, void* user)
 {
-	hBinkW32 = LoadLibrary("binkw32.dll");
-
-	if (!hBinkW32)
-		return 0;
-
-	try
-	{	
-		GET_DLL_PROC(hBinkW32, BinkCopyToBuffer, "_BinkCopyToBuffer@28");
-		GET_DLL_PROC(hBinkW32, BinkOpenDirectSound, "_BinkOpenDirectSound@4");
-		GET_DLL_PROC(hBinkW32, BinkOpen, "_BinkOpen@8");
-		GET_DLL_PROC(hBinkW32, BinkDDSurfaceType, "_BinkDDSurfaceType@4");
-		GET_DLL_PROC(hBinkW32, BinkDoFrame, "_BinkDoFrame@4");
-		GET_DLL_PROC(hBinkW32, BinkNextFrame, "_BinkNextFrame@4");
-		GET_DLL_PROC(hBinkW32, BinkWait, "_BinkWait@4");
-		GET_DLL_PROC(hBinkW32, BinkClose, "_BinkClose@4");
-	}
-	catch (LPCTSTR)
-	{
-		FreeLibrary(hBinkW32);
-		hBinkW32 = 0;
-		return 0;
-	}
-
-	return 1;
-}
-
-void FreeBinkStuff()
-{
-	if (hBinkW32)
-	{
-		FreeLibrary(hBinkW32);
-		hBinkW32 = 0;
-	}
-}
-
-void ShowBinkFrame()
-{
-	DDSURFACEDESCX surf;
-
-	memset(&surf, 0, sizeof(surf));
-	surf.dwSize = sizeof(DDSURFACEDESCX);
-	DXAttempt(BinkSurface->Lock(0, &surf, DDLOCK_NOSYSLOCK, 0));
-	BinkCopyToBuffer(Bink, surf.lpSurface, surf.lPitch, Bink->num, 0, 0, BinkSurfaceType);
-	DXAttempt(BinkSurface->Unlock(0));
-
-	if (App.dx.Flags & 2)
-		DXShowFrame();
+	if (FmvStream != NULL)
+		BASS_StreamPutData(FmvStream, samples->interleaved, sizeof(float) * samples->count * 2);
 }
 
 long PlayFmvNow(long num)
 {
-	DXDISPLAYMODE* modes;
-	DXDISPLAYMODE* current;
-	long dm, rm, ndms;
-	char name[80];
-	char path[80];
-
 	if (MainThread.ended)
 		return 0;
-
 	if ((1 << num) & FmvSceneTriggered)
 		return 1;
-
 	FmvSceneTriggered |= 1 << num;
 	S_CDStop();
-
 	if (fmvs_disabled)
 		return 0;
 
-	sprintf(name, "fmv\\fmv%02d.bik", num);
+	char name[80];
+	char path[80];
+	sprintf(name, "fmv/fmv%02d.mpg", num);
 	memset(path, 0, sizeof(path));
 	strcat(path, name);
-	App.fmv = 1;
-	modes = G_dxinfo->DDInfo[App.DXInfo.nDD].D3DDevices[App.DXInfo.nD3D].DisplayModes;
-	rm = 0;
-	dm = App.DXInfo.nDisplayMode;
-	current = &modes[dm];
 
-	if (current->bpp != 32 || current->w != 640 || current->h != 480)
+	Log(2, "Fmv path: %s", path);
+	plm_t* file = plm_create_with_filename(path);
+	if (file == NULL)
+		return 0;
+	int samplerate = plm_get_samplerate(file);
+	plm_set_video_decode_callback(file, FmvVideo, NULL);
+	plm_set_audio_decode_callback(file, FmvAudio, NULL);
+	plm_set_loop(file, FALSE);
+	plm_set_audio_enabled(file, TRUE);
+	plm_set_audio_stream(file, 0);
+
+	if (plm_get_num_audio_streams(file) > 0)
 	{
-		ndms = G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].nDisplayModes;
-
-		for (int i = 0; i < ndms; i++, modes++)
+		FmvStream = BASS_StreamCreate(44100, 2, BASS_SAMPLE_FLOAT, STREAMPROC_PUSH, NULL);
+		if (FmvStream != NULL)
 		{
-			if (modes->bpp == 32 && modes->w == 640 && modes->h == 480)
-			{
-				App.DXInfo.nDisplayMode = i;
-				break;
-			}
+			BASS_ChannelPlay(FmvStream, FALSE);
 		}
-
-		DXChangeVideoMode();
-		HWInitialise();
-		ClearSurfaces();
-		rm = 1;
+		else
+		{
+			Log(1, "PlayFmvNow, failed to setup a sound stream !");
+		}
+		plm_set_audio_lead_time(file, 4096.0 / (double)samplerate);
 	}
-	
-	//BinkSetSoundSystem(BinkOpenDirectSound, App.dx.lpDS);
-	Bink = (BINK_STRUCT*)BinkOpen(path, 0);
 
-	if (App.dx.Flags & 2)
-		BinkSurface = App.dx.lpBackBuffer;
-	else
-		BinkSurface = App.dx.lpPrimaryBuffer;
+	int num_pixels = plm_get_width(file) * plm_get_height(file);
+	FmvData = (unsigned char*)malloc(num_pixels * 3);
 
-	BinkSurfaceType = BinkDDSurfaceType(BinkSurface);
+	HWInitialise();
+	ClearSurfaces();
 
-	if (Bink)
+	App.fmv = true;
+	S_UpdateInput();
+	while (!plm_has_ended(file))
 	{
-		BinkDoFrame(Bink);
+		if (input & IN_OPTION || MainThread.ended)
+			break;
+		float frame = stm_sec(stm_laptime(&timer));
+		plm_decode(file, frame);
 		S_UpdateInput();
-
-		for (int i = 0; i != Bink->num2; i++)
-		{
-			if (input & IN_OPTION || MainThread.ended)
-				break;
-
-			BinkNextFrame(Bink);
-
-			while (BinkWait(Bink));
-
-			ShowBinkFrame();
-			BinkDoFrame(Bink);
-			S_UpdateInput();
-		}
-
-
-		BinkClose(Bink);
-		Bink = 0;
+		S_DumpScreen();
 	}
 
-	if (rm)
+	if (file != NULL)
 	{
-		App.DXInfo.nDisplayMode = dm;
-		DXChangeVideoMode();
-		InitWindow(0, 0, App.dx.dwRenderWidth, App.dx.dwRenderHeight, 20, 20480, 80, App.dx.dwRenderWidth, App.dx.dwRenderHeight);
-		InitFont();
-		S_InitD3DMatrix();
-		SetD3DViewMatrix();
+		plm_destroy(file);
+		file = NULL;
+	}
+
+	if (FmvData != NULL)
+	{
+		free(FmvData);
+		FmvData = NULL;
+	}
+
+	if (FmvStream != NULL)
+	{
+		BASS_StreamFree(FmvStream);
+		FmvStream = NULL;
 	}
 
 	HWInitialise();
 	ClearSurfaces();
-	App.fmv = 0;
+	App.fmv = false;
 	return 0;
 }

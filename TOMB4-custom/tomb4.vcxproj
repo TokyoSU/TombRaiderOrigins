@@ -277,6 +277,7 @@
     <ClInclude Include="TOMB4\specific\texture.h" />
     <ClInclude Include="TOMB4\specific\time.h" />
     <ClInclude Include="TOMB4\specific\winmain.h" />
+    <ClInclude Include="TOMB4\tomb4\bass.h" />
     <ClInclude Include="TOMB4\tomb4\libs\discordRPC\discord_register.h" />
     <ClInclude Include="TOMB4\tomb4\libs\discordRPC\discord_rpc.h" />
     <ClInclude Include="TOMB4\tomb4\libs\zlib\zlib.h" />

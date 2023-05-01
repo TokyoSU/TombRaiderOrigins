@@ -17,6 +17,8 @@
 #include "dxsound.h"
 #include "gamemain.h"
 #include "fmv.h"
+#define SOKOL_IMPL
+#include <sokol_time.h>
 
 static COMMANDLINES commandlines[] =
 {
@@ -134,7 +136,6 @@ void WinClose()
 	DXFreeInfo(&App.DXInfo);
 	DestroyAcceleratorTable(App.hAccel);
 	DXClose();
-	FreeBinkStuff();
 
 	if (!G_dxptr)
 		return;
@@ -493,6 +494,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	char* buf;
 	long size;
 
+	stm_setup();
 	start_setup = 0;
 	App.mmx = 0;
 	App.SetupComplete = 0;
@@ -531,15 +533,6 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		}
 
 		LoadSettings();
-	}
-
-	if (!fmvs_disabled)
-	{
-		if (!LoadBinkStuff())
-		{
-			MessageBox(0, "Failed to load Bink, disabling FMVs.", "Tomb Raider IV", 0);
-			fmvs_disabled = 1;
-		}
 	}
 
 	SetWindowPos(App.hWnd, 0, App.dx.rScreen.left, App.dx.rScreen.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER);

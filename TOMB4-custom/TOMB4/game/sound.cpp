@@ -77,13 +77,13 @@ int SOUND_GetFreeSlot()
 	}
 
 	// No free slot, get a old one !
-	int minDistance = 0;
+	float minDistance = 0.0f;
 	int farSlot = -1;
 
 	for (int i = 0; i < SOUND_MAX_CHANNELS; i++)
 	{
 		auto& slot = LaSlot[i];
-		int distance = phd_GetDistanceFromVectorAndGameVector(&slot.pos, &camera.pos);
+		float distance = phd_GetDistanceFromVectorAndGameVector(&slot.pos, &camera.pos);
 		if (distance > minDistance)
 		{
 			minDistance = distance;
@@ -215,15 +215,15 @@ void SOUND_UpdateScene()
 	}
 
 	// Apply current listener position.
-	D3DVECTOR vec1 = D3DVECTOR(camera.target.x, camera.target.y, camera.target.z);
-	D3DVECTOR vec2 = D3DVECTOR(camera.mike_pos.x, camera.mike_pos.y, camera.mike_pos.z);
+	D3DVECTOR vec1 = D3DVECTOR((float)camera.target.x, (float)camera.target.y, (float)camera.target.z);
+	D3DVECTOR vec2 = D3DVECTOR((float)camera.pos.x, (float)camera.pos.y, (float)camera.pos.z);
 	D3DVECTOR result = vec2 - vec1;
 	D3DNormalise(&result);
-	auto mikePos = BASS_3DVECTOR(camera.mike_pos.x, camera.mike_pos.y, camera.mike_pos.z);
-	auto laraVel = BASS_3DVECTOR(lara.current_xvel, lara.current_yvel, lara.current_zvel);
+	auto pos = BASS_3DVECTOR((float)camera.pos.x, (float)camera.pos.y, (float)camera.pos.z);
+	auto laraVel = BASS_3DVECTOR((float)lara.current_xvel, (float)lara.current_yvel, (float)lara.current_zvel);
 	auto atVec = BASS_3DVECTOR(result.x, result.y, result.z);
 	auto upVec = BASS_3DVECTOR(0.0f, 1.0f, 0.0f);
-	BASS_Set3DPosition(&mikePos, &laraVel, &atVec, &upVec);
+	BASS_Set3DPosition(&pos, &laraVel, &atVec, &upVec);
 	BASS_Apply3D();
 }
 
@@ -250,8 +250,8 @@ bool SOUND_UpdateEffectPosition(int index, PHD_3DPOS* pos, bool force)
 			slot.pos.y = pos->y_pos;
 			slot.pos.z = pos->z_pos;
 
-			auto position = BASS_3DVECTOR(pos->x_pos, pos->y_pos, pos->z_pos);
-			auto rotation = BASS_3DVECTOR(pos->x_rot, pos->y_rot, pos->z_rot);
+			auto position = BASS_3DVECTOR((float)pos->x_pos, (float)pos->y_pos, (float)pos->z_pos);
+			auto rotation = BASS_3DVECTOR((float)pos->x_rot, (float)pos->y_rot, (float)pos->z_rot);
 			BASS_ChannelSet3DPosition(slot.channel, &position, &rotation, NULL);
 			BASS_Apply3D();
 		}

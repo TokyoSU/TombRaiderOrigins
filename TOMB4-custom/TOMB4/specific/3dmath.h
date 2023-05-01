@@ -111,7 +111,7 @@ __inline float phd_GetDistanceFrom3DPos(PHD_3DPOS* src, PHD_3DPOS* target)
 	int x = src->x_pos - target->x_pos;
 	int y = src->y_pos - target->y_pos;
 	int z = src->z_pos - target->z_pos;
-	return 1.0F / sqrt(x + y + z);
+	return 1.0F / (float)sqrt(x + y + z);
 }
 
 __inline float phd_GetDistanceFrom3DPosAndVector(PHD_3DPOS* src, PHD_VECTOR* target)
@@ -119,7 +119,7 @@ __inline float phd_GetDistanceFrom3DPosAndVector(PHD_3DPOS* src, PHD_VECTOR* tar
 	int x = src->x_pos - target->x;
 	int y = src->y_pos - target->y;
 	int z = src->z_pos - target->z;
-	return 1.0F / sqrt(x + y + z);
+	return 1.0F / (float)sqrt(x + y + z);
 }
 
 __inline float phd_GetDistanceFromVectorAndVector(PHD_VECTOR* src, PHD_VECTOR* target)
@@ -127,7 +127,7 @@ __inline float phd_GetDistanceFromVectorAndVector(PHD_VECTOR* src, PHD_VECTOR* t
 	int x = src->x - target->x;
 	int y = src->y - target->y;
 	int z = src->z - target->z;
-	return 1.0F / sqrt(x + y + z);
+	return 1.0F / (float)sqrt(x + y + z);
 }
 
 __inline float phd_GetDistanceFrom3DPosAndGameVector(PHD_3DPOS* src, GAME_VECTOR* target)
@@ -135,7 +135,7 @@ __inline float phd_GetDistanceFrom3DPosAndGameVector(PHD_3DPOS* src, GAME_VECTOR
 	int x = src->x_pos - target->x;
 	int y = src->y_pos - target->y;
 	int z = src->z_pos - target->z;
-	return 1.0F / sqrt(x + y + z);
+	return 1.0F / (float)sqrt(x + y + z);
 }
 
 __inline float phd_GetDistanceFromVectorAndGameVector(PHD_VECTOR* src, GAME_VECTOR* target)
@@ -143,5 +143,5 @@ __inline float phd_GetDistanceFromVectorAndGameVector(PHD_VECTOR* src, GAME_VECT
 	int x = src->x - target->x;
 	int y = src->y - target->y;
 	int z = src->z - target->z;
-	return 1.0F / sqrt(x + y + z);
+	return 1.0f / (float)sqrt(x + y + z);
 }
