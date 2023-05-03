@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "ahmet.h"
 #include "collide.h"
 #include "lara_states.h"
@@ -52,7 +52,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					l->frame_number = anims[ANIM_FILLSCALE].frame_base;
 				}
 				else if (l->frame_number == anims[ANIM_FILLSCALE].frame_base + 51)
-					SOUND_PlayEffect(SFX_POUR, &l->pos, SFX_DEFAULT);
+					SOUND_PlayEffect(SFX_POUR, &l->pos, SFX_LAND);
 				else if (l->frame_number == anims[ANIM_FILLSCALE].frame_base + 74)
 				{
 					AddActiveItem(item_number);
@@ -220,7 +220,7 @@ void ExplodeAhmet(ITEM_INFO* item)
 	}
 
 	TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 13, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
-	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
 }
 
 void InitialiseAhmet(short item_number)

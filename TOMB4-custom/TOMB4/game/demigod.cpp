@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "demigod.h"
 #include "items.h"
 #include "../specific/function_stubs.h"
@@ -153,7 +153,7 @@ void TriggerHammerSmoke(long x, long y, long z, long num)
 			else
 				sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
 		}
-		else if (room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+		else if (rooms[lara_item->room_number].flags & ROOM_NOT_INSIDE)
 			sptr->Flags = 256;
 		else
 			sptr->Flags = 0;
@@ -290,7 +290,7 @@ void DemigodControl(short item_number)
 
 	if (gfCurrentLevel == 24)	//Chambers of Tulun
 	{
-		r = &room[lara_item->room_number];
+		r = &rooms[lara_item->room_number];
 		zone = ground_zone[god->LOT.zone][flip_status];
 		lara_item->box_number = r->floor[((lara_item->pos.z_pos - r->z) >> 10) + r->x_size * ((lara_item->pos.x_pos - r->x) >> 10)].box;
 

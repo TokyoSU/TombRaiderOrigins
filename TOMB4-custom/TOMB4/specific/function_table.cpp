@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "function_table.h"
 #include "function_stubs.h"
 #include "dxshell.h"

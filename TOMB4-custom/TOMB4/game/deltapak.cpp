@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "deltapak.h"
 #include "tomb4fx.h"
 #include "lara_states.h"
@@ -1686,7 +1686,7 @@ void trigger_item_in_room(long room_number, long object_number)
 	ITEM_INFO* item;
 	short item_number;
 
-	for (item_number = room[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item)
+	for (item_number = rooms[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item)
 	{
 		item = &items[item_number];
 
@@ -1707,7 +1707,7 @@ void untrigger_item_in_room(long room_number, long object_number)
 	ITEM_INFO* item;
 	short item_number;
 
-	for (item_number = room[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item)
+	for (item_number = rooms[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item)
 	{
 		item = &items[item_number];
 

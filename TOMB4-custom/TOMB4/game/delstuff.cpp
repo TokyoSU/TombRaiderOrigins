@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "delstuff.h"
 #include "../specific/specificfx.h"
 #include "../specific/3dmath.h"
@@ -348,7 +348,7 @@ void SetLaraUnderwaterNodes()
 	pos.z = lara_item->pos.z_pos;
 	room_num = lara_item->room_number;
 	GetFloor(pos.x, pos.y, pos.z, &room_num);
-	bLaraInWater = room[room_num].flags & ROOM_UNDERWATER ? 1 : 0;
+	bLaraInWater = rooms[room_num].flags & ROOM_UNDERWATER ? 1 : 0;
 	bit = 0;
 
 	for (int i = 14; i >= 0; i--)
@@ -366,21 +366,21 @@ void SetLaraUnderwaterNodes()
 
 		room_num = lara_item->room_number;
 		GetFloor(pos.x, pos.y, pos.z, &room_num);
-		LaraNodeUnderwater[i] = room[room_num].flags & ROOM_UNDERWATER;
+		LaraNodeUnderwater[i] = rooms[room_num].flags & ROOM_UNDERWATER;
 
-		if (room[room_num].flags & ROOM_UNDERWATER)
+		if (rooms[room_num].flags & ROOM_UNDERWATER)
 		{
 			lara.wet[i] = 252;
 
 			if (!(bit & 1))
 			{
-				LaraNodeAmbient[1] = room[room_num].ambient;
+				LaraNodeAmbient[1] = rooms[room_num].ambient;
 				bit |= 1;
 			}
 		}
 		else if (!(bit & 2))
 		{
-			LaraNodeAmbient[0] = room[room_num].ambient;
+			LaraNodeAmbient[0] = rooms[room_num].ambient;
 			bit |= 2;
 		}
 	}

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "elements.h"
 #include "objects.h"
 #include "lara_states.h"
@@ -148,7 +148,7 @@ void ControlElementPuzzle(short item_number)
 
 	if (item->trigger_flags == 1)
 	{
-		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
 		r = (GetRandomControl() & 0x3F) + 192;
 		g = (GetRandomControl() & 0x1F) + 96;
 
@@ -175,7 +175,7 @@ void ControlElementPuzzle(short item_number)
 	else if (item->trigger_flags == 3)
 	{
 		if (item->item_flags[1] > 90)
-			SOUND_PlayEffect(SFX_JOBY_WIND, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_JOBY_WIND, &item->pos, SFX_LAND);
 
 		if (item->item_flags[1] < 60)
 		{
@@ -200,7 +200,7 @@ void ControlElementPuzzle(short item_number)
 		}
 		else
 		{
-			for (itemNum = room[item->room_number].item_number; itemNum != NO_ITEM; itemNum = item2->next_item)
+			for (itemNum = rooms[item->room_number].item_number; itemNum != NO_ITEM; itemNum = item2->next_item)
 			{
 				item2 = &items[itemNum];
 

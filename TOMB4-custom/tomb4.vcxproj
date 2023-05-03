@@ -93,17 +93,19 @@
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;TOMB4_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>../tomb4/pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalOptions>/IGNORE:4099 /pdbaltpath:%_PDB% %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>winmm.lib;dxguid.lib;ddraw.lib;dinput8.lib;bass.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;dxguid.lib;ddraw.lib;dinput8.lib;bass.lib;bass_fx.lib;bassmix.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)TOMB4\tomb4\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -116,10 +118,12 @@
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;TOMB4_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>../tomb4/pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,7 +132,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalOptions>/IGNORE:4099 /pdbaltpath:%_PDB% %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>winmm.lib;dxguid.lib;ddraw.lib;dinput8.lib;bass.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;dxguid.lib;ddraw.lib;dinput8.lib;bass.lib;bass_fx.lib;bassmix.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)TOMB4\tomb4\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -237,6 +241,7 @@
     <ClInclude Include="TOMB4\game\seth.h" />
     <ClInclude Include="TOMB4\game\setup.h" />
     <ClInclude Include="TOMB4\game\skeleton.h" />
+    <ClInclude Include="TOMB4\game\snowmobile.h" />
     <ClInclude Include="TOMB4\game\sound.h" />
     <ClInclude Include="TOMB4\game\sphere.h" />
     <ClInclude Include="TOMB4\game\sphinx.h" />
@@ -249,6 +254,7 @@
     <ClInclude Include="TOMB4\game\traps.h" />
     <ClInclude Include="TOMB4\game\troops.h" />
     <ClInclude Include="TOMB4\game\voncroy.h" />
+    <ClInclude Include="TOMB4\game\weapons\rocket_gun.h" />
     <ClInclude Include="TOMB4\game\wildboar.h" />
     <ClInclude Include="TOMB4\game\wraith.h" />
     <ClInclude Include="TOMB4\global\math_tbls.h" />
@@ -282,6 +288,7 @@
     <ClInclude Include="TOMB4\tomb4\libs\discordRPC\discord_rpc.h" />
     <ClInclude Include="TOMB4\tomb4\libs\zlib\zlib.h" />
     <ClInclude Include="TOMB4\tomb4\pch.h" />
+    <ClInclude Include="TOMB4\tomb4\pl_mpeg.h" />
     <ClInclude Include="TOMB4\tomb4\tomb4.h" />
     <ClInclude Include="TOMB4\tomb4\troyestuff.h" />
   </ItemGroup>
@@ -352,6 +359,7 @@
     <ClCompile Include="TOMB4\game\seth.cpp" />
     <ClCompile Include="TOMB4\game\setup.cpp" />
     <ClCompile Include="TOMB4\game\skeleton.cpp" />
+    <ClCompile Include="TOMB4\game\snowmobile.cpp" />
     <ClCompile Include="TOMB4\game\sound.cpp" />
     <ClCompile Include="TOMB4\game\sphere.cpp" />
     <ClCompile Include="TOMB4\game\sphinx.cpp" />
@@ -364,6 +372,7 @@
     <ClCompile Include="TOMB4\game\traps.cpp" />
     <ClCompile Include="TOMB4\game\troops.cpp" />
     <ClCompile Include="TOMB4\game\voncroy.cpp" />
+    <ClCompile Include="TOMB4\game\weapons\rocket_gun.cpp" />
     <ClCompile Include="TOMB4\game\wildboar.cpp" />
     <ClCompile Include="TOMB4\game\wraith.cpp" />
     <ClCompile Include="TOMB4\specific\3dmath.cpp" />

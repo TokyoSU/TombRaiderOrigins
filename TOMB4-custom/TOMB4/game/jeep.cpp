@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "jeep.h"
 #include "../specific/function_stubs.h"
 #include "objects.h"
@@ -196,7 +196,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 
 void JeepExplode(ITEM_INFO* item)
 {
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 		TriggerUnderwaterExplosion(item, 1);
 	else
 	{
@@ -209,8 +209,8 @@ void JeepExplode(ITEM_INFO* item)
 	ExplodingDeath2(lara.vehicle, -1, 256);
 	KillItem(lara.vehicle);
 	item->status = ITEM_DEACTIVATED;
-	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
-	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_LAND);
+	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_LAND);
 	lara.vehicle = NO_ITEM;
 }
 
@@ -341,7 +341,7 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 		lara.gun_status = LG_HANDS_BUSY;
 
-		for (short item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item2->next_item)
+		for (short item_num = rooms[item->room_number].item_number; item_num != NO_ITEM; item_num = item2->next_item)
 		{
 			item2 = &items[item_num];
 
@@ -898,7 +898,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed)
 		}
 	}
 
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
 		lara_item->goal_anim_state = 11;
 		lara_item->hit_points = 0;
@@ -1072,7 +1072,7 @@ void JeepBaddieCollision(ITEM_INFO* item)
 	jeep = (JEEPINFO*)item->data;
 	room_count = 1;
 	jroomies[0] = item->room_number;
-	doors = room[item->room_number].door;
+	doors = rooms[item->room_number].door;
 
 	for (int i = *doors++; i > 0; i--, doors += 16)
 	{
@@ -1091,7 +1091,7 @@ void JeepBaddieCollision(ITEM_INFO* item)
 
 	for (int i = 0; i < room_count; i++)
 	{
-		for (item_number = room[jroomies[i]].item_number; item_number != NO_ITEM; item_number = collided->next_item)
+		for (item_number = rooms[jroomies[i]].item_number; item_number != NO_ITEM; item_number = collided->next_item)
 		{
 			collided = &items[item_number];
 			obj = &objects[collided->object_number];
@@ -1165,7 +1165,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 	JeepBounds[5] = z - 256;
 	room_count = 1;
 	jroomies[0] = room_number;
-	doors = room[room_number].door;
+	doors = rooms[room_number].door;
 
 	for (int i = *doors++; i > 0; i--, doors += 16)
 	{
@@ -1185,7 +1185,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 	for (int i = 0; i < room_count; i++)
 	{
 		rn = jroomies[i];
-		r = &room[rn];
+		r = &rooms[rn];
 		mesh = r->mesh;
 
 		for (j = r->num_meshes; j > 0; j--, mesh++)
@@ -1236,7 +1236,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 						JeepBounds[5] < CollidedStaticBounds[4])
 					{
 						ShatterObject(0, mesh, -128, rn, 0);
-						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_LAND);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1548,12 +1548,12 @@ void JeepControl(short item_number)
 		else if (jeep->pitch2 > 0xA000)
 			jeep->pitch2 = 0xA000;
 
-		SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, (jeep->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
+		SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, SFX_SETPITCH, (jeep->pitch2 << 8) + 0x1000000);
 	}
 	else
 	{
 		if (driving != -1)
-			SOUND_PlayEffect(SFX_JEEP_IDLE, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_JEEP_IDLE, &item->pos, SFX_LAND);
 
 		jeep->pitch2 = 0;
 	}
@@ -2049,5 +2049,5 @@ void EnemyJeepControl(short item_number)
 		item->gravity_status = 0;
 	}
 
-	SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, (item->item_flags[0] << 10) + (SFX_SETPITCH | 0x1000000));
+	SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, SFX_SETPITCH, (item->item_flags[0] << 10) + 0x1000000);
 }

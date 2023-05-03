@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "switch.h"
 #include "lara_states.h"
 #include "collide.h"

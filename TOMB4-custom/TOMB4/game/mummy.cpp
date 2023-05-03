@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "mummy.h"
 #include "box.h"
 #include "objects.h"

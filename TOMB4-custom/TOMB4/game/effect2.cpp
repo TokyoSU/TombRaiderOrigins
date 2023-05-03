@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "effect2.h"
 #include "control.h"
 #include "objects.h"
@@ -50,7 +50,7 @@ void ControlSmokeEmitter(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	if (item->object_number == STEAM_EMITTER && room[item->room_number].flags & ROOM_UNDERWATER)
+	if (item->object_number == STEAM_EMITTER && rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
 		if (item->item_flags[0] || !(GetRandomControl() & 0x1F) || item->trigger_flags == 1)
 		{
@@ -206,7 +206,7 @@ void ControlSmokeEmitter(short item_number)
 		sptr->Friction = 3;
 		sptr->Flags = 538;
 
-		if (room[item->room_number].flags & ROOM_OUTSIDE)
+		if (rooms[item->room_number].flags & ROOM_OUTSIDE)
 			sptr->Flags = 794;
 
 		sptr->RotAng = GetRandomControl() & 0xFFF;
@@ -640,7 +640,7 @@ void ControlEnemyMissile(short fx_number)
 
 		if (fx->flag1 == 1)
 		{
-			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x18008040, (((~room[fx->room_number].flags & 0xFF) >> 4) & 2) << 16);	//decipher me
+			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x18008040, (((~rooms[fx->room_number].flags & 0xFF) >> 4) & 2) << 16);	//decipher me
 			TriggerExplosionSparks(ox, oy, oz, 3, -2, 2, fx->room_number);
 		}
 		else if (fx->flag1 == 0)
@@ -682,7 +682,7 @@ void ControlEnemyMissile(short fx_number)
 			lara.BurnGreen = 1;
 		}
 		else if (fx->flag1 == 0)
-			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0x580018, 48, 0x10008040, (((~room[fx->room_number].flags & 0xFF) >> 4) & 2) << 16);
+			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0x580018, 48, 0x10008040, (((~rooms[fx->room_number].flags & 0xFF) >> 4) & 2) << 16);
 		else if (fx->flag1 == 3 || fx->flag1 == 4)
 			TriggerShockwave((PHD_VECTOR*)&fx->pos, 0xA00020, 64, 0x10004080, 0x10000);
 		else if (fx->flag1 == 5)
@@ -1416,6 +1416,103 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 	}
 }
 
+void TriggerRocketFlameTR3(long x, long y, long z, long xv, long yv, long zv, long item_no)
+{
+	SPARKS* sptr = &spark[GetFreeSpark()];
+	sptr->On = TRUE;
+	sptr->sR = 48 + (GetRandomControl() & 31);
+	sptr->sG = sptr->sR;
+	sptr->sB = 192 + (GetRandomControl() & 63);
+	sptr->dR = 192 + (GetRandomControl() & 63);
+	sptr->dG = 128 + (GetRandomControl() & 63);
+	sptr->dB = 32;
+	sptr->ColFadeSpeed = 12 + (GetRandomControl() & 3);
+	sptr->FadeToBlack = 12;
+	sptr->sLife = sptr->Life = (GetRandomControl() & 3) + 28;
+	sptr->TransType = COLADD;
+	sptr->extras = 0;
+	sptr->Dynamic = -1;
+
+	sptr->x = x + ((GetRandomControl() & 31) - 16);
+	sptr->y = y;
+	sptr->z = z + ((GetRandomControl() & 31) - 16);
+
+	sptr->Xvel = xv;
+	sptr->Yvel = yv;
+	sptr->Zvel = zv;
+	sptr->Friction = 3 | (3 << 4);
+
+	if (GetRandomControl() & 1)
+	{
+		sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_ITEM | SP_EXPDEF;
+		sptr->FxObj = item_no;
+		sptr->RotAng = GetRandomControl() & 4095;
+		if (GetRandomControl() & 1)
+			sptr->RotAdd = -(GetRandomControl() & 15) - 16;
+		else
+			sptr->RotAdd = (GetRandomControl() & 15) + 16;
+	}
+	else
+	{
+		sptr->Flags = SP_SCALE | SP_DEF | SP_ITEM | SP_EXPDEF;
+		sptr->FxObj = item_no;
+	}
+
+	sptr->Gravity = 0;
+	sptr->MaxYvel = 0;
+	sptr->Def = objects[DEFAULT_SPRITES].mesh_index;
+	sptr->Scalar = 2;
+	long size = (GetRandomControl() & 7) + 32;
+	sptr->Size = sptr->sSize = size;
+	sptr->dSize = 2;
+}
+
+void TriggerRocketSmokeTR3(long x, long y, long z, long body_part)
+{
+	SPARKS* sptr = &spark[GetFreeSpark()];
+	sptr->On = 1;
+	sptr->sR = 0;
+	sptr->sG = 0;
+	sptr->sB = 0;
+	sptr->dR = 64 + body_part;
+	sptr->dG = 64 + body_part;
+	sptr->dB = 64 + body_part;
+
+	sptr->ColFadeSpeed = 4 + (GetRandomControl() & 3);
+	sptr->FadeToBlack = 12;
+	sptr->sLife = sptr->Life = (GetRandomControl() & 3) + 20;
+	sptr->TransType = COLADD;
+	sptr->extras = 0;
+	sptr->Dynamic = -1;
+	sptr->x = x + ((GetRandomControl() & 15) - 8);
+	sptr->y = y + ((GetRandomControl() & 15) - 8);
+	sptr->z = z + ((GetRandomControl() & 15) - 8);
+	sptr->Xvel = ((GetRandomControl() & 255) - 128);
+	sptr->Yvel = -(GetRandomControl() & 3) - 4;
+	sptr->Zvel = ((GetRandomControl() & 255) - 128);
+	sptr->Friction = 4;
+
+	if (GetRandomControl() & 1)
+	{
+		sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_EXPDEF;
+		sptr->RotAng = GetRandomControl() & 4095;
+		if (GetRandomControl() & 1)
+			sptr->RotAdd = -(GetRandomControl() & 15) - 16;
+		else
+			sptr->RotAdd = (GetRandomControl() & 15) + 16;
+	}
+	else
+		sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
+
+	sptr->Def = objects[DEFAULT_SPRITES].mesh_index;
+	sptr->Scalar = 3;
+	sptr->Gravity = -(GetRandomControl() & 3) - 4;
+	sptr->MaxYvel = -(GetRandomControl() & 3) - 4;
+	long size = (GetRandomControl() & 7) + 32;
+	sptr->Size = sptr->sSize = size >> 2;
+	sptr->dSize = size;
+}
+
 void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, long uw, short room_number)
 {
 	SPARKS* sptr;
@@ -1448,7 +1545,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 	do
 	{
 		sptr = &spark[GetFreeSpark()];
-		sptr->On = 1;
+		sptr->On = TRUE;
 		sptr->sR = 255;
 
 		if (uw == 1)
@@ -1460,7 +1557,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 			sptr->dB = 0;
 			sptr->ColFadeSpeed = 7;
 			sptr->FadeToBlack = 8;
-			sptr->TransType = 2;
+			sptr->TransType = COLADD;
 			sptr->Life = (GetRandomControl() & 7) + 16;
 			sptr->sLife = sptr->Life;
 			sptr->RoomNumber = (uchar)room_number;
@@ -1474,7 +1571,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 			sptr->dB = 32;
 			sptr->ColFadeSpeed = 8;
 			sptr->FadeToBlack = 16;
-			sptr->TransType = 2;
+			sptr->TransType = COLADD;
 			sptr->Life = (GetRandomControl() & 7) + 24;
 			sptr->sLife = sptr->Life;
 		}
@@ -1840,7 +1937,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly)
 		sptr->Xvel = (short)dy;
 }
 
-void TriggerRocketSmoke(long x, long y, long z, long col)
+void TriggerRocketSmokeTR4(long x, long y, long z, long col)
 {
 	SPARKS* sptr;
 
@@ -1901,7 +1998,7 @@ void SetupSplash(SPLASH_SETUP* setup)
 
 		if (n >= 4)
 		{
-			SOUND_PlayEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_LAND);
 			return;
 		}
 	}
@@ -1924,7 +2021,7 @@ void SetupSplash(SPLASH_SETUP* setup)
 	splash->OuterRad = setup->MiddleYVel;
 	splash->OuterSize = setup->pad2;
 	splash->OuterRadVel = setup->OuterRad;
-	SOUND_PlayEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LARA_SPLASH, (PHD_3DPOS*)setup, SFX_LAND);
 }
 
 void UpdateSplashes()	//(and ripples)

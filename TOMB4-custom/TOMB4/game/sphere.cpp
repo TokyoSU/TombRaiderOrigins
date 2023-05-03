@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "sphere.h"
 #include "../specific/3dmath.h"
 #include "draw.h"

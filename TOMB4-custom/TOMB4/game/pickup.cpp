@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "pickup.h"
 #include "lara_states.h"
 #include "collide.h"
@@ -75,7 +75,7 @@ void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 	else if (l->anim_number == ANIM_SARCOPHAGUS && l->frame_number == anims[ANIM_SARCOPHAGUS].frame_base + 113)
 	{
-		for (pickup_num = room[item->room_number].item_number; pickup_num != NO_ITEM; pickup_num = pickup->next_item)
+		for (pickup_num = rooms[item->room_number].item_number; pickup_num != NO_ITEM; pickup_num = pickup->next_item)
 		{
 			pickup = &items[pickup_num];
 
@@ -191,7 +191,7 @@ short* FindPlinth(ITEM_INFO* item)
 	short item_num;
 
 	o = 0;
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	mesh = r->mesh;
 
 	for (i = r->num_meshes; i > 0; i--)

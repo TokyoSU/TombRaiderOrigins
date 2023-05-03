@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "spotcam.h"
 #include "tomb4fx.h"
 #include "../specific/3dmath.h"

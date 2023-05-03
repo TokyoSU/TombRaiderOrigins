@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "3dmath.h"
 #include "d3dmatrix.h"
 #include "../game/spotcam.h"

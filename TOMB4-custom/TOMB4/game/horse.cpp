@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "horse.h"
 #include "objects.h"
 #include "box.h"
@@ -164,8 +164,8 @@ void HorsemanControl(short item_number)
 							else
 								item->hit_points--;
 
-							SOUND_PlayEffect(SFX_HORSEMAN_TAKEHIT, &item->pos, SFX_DEFAULT);
-							SOUND_PlayEffect(SFX_HORSE_RICOCHETS, &item->pos, SFX_DEFAULT);
+							SOUND_PlayEffect(SFX_HORSEMAN_TAKEHIT, &item->pos, SFX_LAND);
+							SOUND_PlayEffect(SFX_HORSE_RICOCHETS, &item->pos, SFX_LAND);
 							v.x = 0;
 							v.y = -128;
 							v.z = 80;

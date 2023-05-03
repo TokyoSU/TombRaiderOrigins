@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "baboon.h"
 #include "tomb4fx.h"
 #include "objects.h"
@@ -396,7 +396,7 @@ void FindCrowbarSwitch(ITEM_INFO* item, short switch_index)
 	ITEM_INFO* item2;
 	short item_num;
 
-	for (item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item2->next_item)
+	for (item_num = rooms[item->room_number].item_number; item_num != NO_ITEM; item_num = item2->next_item)
 	{
 		item2 = &items[item_num];
 

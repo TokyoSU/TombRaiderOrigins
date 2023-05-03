@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "train.h"
 #include "../specific/3dmath.h"
 #include "../specific/output.h"
@@ -183,7 +183,7 @@ void TrainJeepControl(short item_number)
 	else if (item->item_flags[2] > 1024)
 		item->item_flags[2] -= 512;
 
-	SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, (item->item_flags[2] << 9) + (0x1000000 | SFX_SETPITCH));
+	SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, SFX_SETPITCH, (item->item_flags[2] << 9) + 0x1000000);
 	item->pos.x_pos += item->item_flags[0];
 	AnimateItem(item);
 	room_number = item->room_number;

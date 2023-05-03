@@ -15,6 +15,7 @@
 #include <windowsx.h>
 #include <d3d.h>
 #include <d3dtypes.h>
+#include <directxtk/SimpleMath.h>
 #include <vector>
 #include <cmath>
 #include <stdio.h>
@@ -23,5 +24,9 @@
 #include <mmreg.h>
 
 #include "../../resource.h"
+#define ONE_DEGREE 182
+
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 
 #endif //PCH_H

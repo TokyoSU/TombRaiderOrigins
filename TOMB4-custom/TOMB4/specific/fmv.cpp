@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "fmv.h"
 #include "dxshell.h"
 #include "audio.h"

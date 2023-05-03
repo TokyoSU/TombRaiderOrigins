@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "clockworkbeetle.h"
 #include "lara_states.h"
 #include "items.h"
@@ -47,7 +47,7 @@ ITEM_INFO* TriggerClockworkBeetle(long flag)
 
 			if (item->item_flags[0])
 			{
-				for (item_number = room[item->room_number].item_number; item_number != NO_ITEM; item_number = item2->next_item)
+				for (item_number = rooms[item->room_number].item_number; item_number != NO_ITEM; item_number = item2->next_item)
 				{
 					item2 = &items[item_number];
 
@@ -135,7 +135,7 @@ void ControlClockworkBeetle(short item_number)
 		}
 	}
 
-	SOUND_PlayEffect(SFX_BEETLE_CLK_WHIRR, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_BEETLE_CLK_WHIRR, &item->pos, SFX_LAND);
 	item->fallspeed += 12;
 	item->pos.y_pos += item->fallspeed;
 	room_number = item->room_number;
@@ -213,7 +213,7 @@ void ControlClockworkBeetle(short item_number)
 					lara.beetle_uses--;
 					item->item_flags[2] = 5;
 
-					for (int i = room[item->room_number].item_number; i != NO_ITEM; i = item2->next_item)
+					for (int i = rooms[item->room_number].item_number; i != NO_ITEM; i = item2->next_item)
 					{
 						item2 = &items[i];
 
@@ -319,7 +319,7 @@ void ControlClockworkBeetle(short item_number)
 				item->fallspeed = -((rotY >> 1) + GetRandomControl() % rotY);
 			else if (item->item_flags[3] < 30)
 			{
-				SOUND_PlayEffect(SFX_BEETLE_CLK_EXP, &item->pos, 0);
+				SOUND_PlayEffect(SFX_BEETLE_CLK_EXP, &item->pos);
 				ExplodeItemNode(item, 0, 0, 128);
 				KillItem(item_number);
 			}

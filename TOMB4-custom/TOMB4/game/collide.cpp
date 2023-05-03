@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "collide.h"
 #include "draw.h"
 #include "objects.h"
@@ -41,12 +41,12 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 	short* doors;
 	short* bounds;
 	long j, sy, cy, dx, dy, dz, num;
-	short rooms[22];
+	short room[22];
 	short switch_bounds[6];
 	short room_count, statics_count, items_count, item_number, next_item;
 
-	rooms[0] = item->room_number;
-	r = &room[rooms[0]];
+	room[0] = item->room_number;
+	r = &rooms[room[0]];
 	doors = r->door;
 	room_count = 1;
 	statics_count = 0;
@@ -57,12 +57,12 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 		for (int i = *doors++; i > 0; i--, doors += 16)
 		{
 			for (j = 0; j < room_count; j++)
-				if (rooms[j] == *doors)
+				if (room[j] == *doors)
 					break;
 
 			if (j == room_count)
 			{
-				rooms[room_count] = *doors;
+				room[room_count] = *doors;
 				room_count++;
 			}
 		}
@@ -72,7 +72,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 	{
 		for (int i = 0; i < room_count; i++)
 		{
-			r = &room[rooms[i]];
+			r = &rooms[room[i]];
 			mesh = r->mesh;
 
 			for (j = r->num_meshes; j > 0; j--, mesh++)
@@ -115,7 +115,7 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 
 	for (int i = 0; i < room_count; i++)
 	{
-		item_number = room[rooms[i]].item_number;
+		item_number = rooms[room[i]].item_number;
 
 		while (item_number != NO_ITEM)
 		{
@@ -382,7 +382,7 @@ short GetTiltType(FLOOR_INFO* floor, long x, long y, long z)
 		if (CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[floor->pit_room];
+		r = &rooms[floor->pit_room];
 		floor = &r->floor[((z - r->z) >> 10) + (((x - r->x) >> 10) * r->x_size)];
 	}
 
@@ -460,7 +460,7 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	lzmax = z + coll->radius;
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = room_number;
-	door = room[room_number].door;
+	door = rooms[room_number].door;
 
 	if (door)
 	{
@@ -484,7 +484,7 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 
 	for (i = 0; i < num_nearby_rooms; i++)
 	{
-		r = &room[nearby_rooms[i]];
+		r = &rooms[nearby_rooms[i]];
 		mesh = r->mesh;
 
 		for (j = r->num_meshes; j > 0; j--, mesh++)
@@ -574,7 +574,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = l->room_number;
-	door = room[nearby_rooms[0]].door;
+	door = rooms[nearby_rooms[0]].door;
 
 	if (door)
 	{
@@ -598,7 +598,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 
 	for (i = 0; i < num_nearby_rooms; i++)
 	{
-		r = &room[nearby_rooms[i]];
+		r = &rooms[nearby_rooms[i]];
 		item_number = r->item_number;
 
 		while (item_number != NO_ITEM)
@@ -624,7 +624,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 
 		if (coll->enable_baddie_push)
 		{
-			r = &room[nearby_rooms[i]];
+			r = &rooms[nearby_rooms[i]];
 			mesh = r->mesh;
 
 			for (j = r->num_meshes; j > 0; j--, mesh++)
@@ -753,7 +753,7 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		lara.hit_direction = ushort(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT;	//hmmmmm
 
 		if (!lara.hit_frame)
-			SOUND_PlayEffect(SFX_LARA_INJURY, &l->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_INJURY, &l->pos, SFX_LAND);
 
 		lara.hit_frame++;
 

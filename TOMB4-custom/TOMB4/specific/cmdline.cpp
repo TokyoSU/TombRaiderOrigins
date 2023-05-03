@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "cmdline.h"
 #include "function_stubs.h"
 #include "../game/gameflow.h"

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "lara2gun.h"
 #include "objects.h"
 #include "larafire.h"
@@ -23,8 +23,8 @@ static PISTOL_DEF PistolTable[NUM_WEAPONS] =
 	{ PISTOLS_ANIM, 4, 5, 13, 24 }, // UZIS
 	{ PISTOLS_ANIM, 4, 5, 13, 24 }, // MAGNUMS
 	{ PISTOLS_ANIM, 4, 5, 13, 24 }, // AUTOPISTOLS
-	{ DESERTEAGLE_ANIM , 7, 8, 15, 29 }, // DESERTEAGLE
-	{ REVOLVER_ANIM , 7, 8, 15, 29 }, // REVOLVER
+	{ DESERTEAGLE_ANIM, 7, 8, 15, 29 }, // DESERTEAGLE
+	{ REVOLVER_ANIM, 7, 8, 15, 29 }, // REVOLVER
 	{ SHOTGUN_ANIM, 0, 0, 0, 0 }, // SHOTGUN
 	{ M16_ANIM, 0, 0, 0, 0 }, // M16
 	{ MP5_ANIM, 0, 0, 0, 0 }, // MP5
@@ -41,14 +41,14 @@ void undraw_pistol_mesh_left(long weapon_type)
 	if (weapon_type != WEAPON_REVOLVER && weapon_type != WEAPON_DESERTEAGLE)
 	{
 		lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA].mesh_index + LM_LHAND * 2];
-		lara.holster_left = GetWeaponHolsterObject(weapon_type);
+		lara.holster_left = (short)GetWeaponHolsterObject(weapon_type);
 	}
 }
 
 void undraw_pistol_mesh_right(long weapon_type)
 {
 	lara.mesh_ptrs[LM_RHAND] = meshes[objects[LARA].mesh_index + LM_RHAND * 2];
-	lara.holster_right = GetWeaponHolsterObject(weapon_type);
+	lara.holster_right = (short)GetWeaponHolsterObject(weapon_type);
 }
 
 static void set_arm_info(LARA_ARM* arm, long frame)
@@ -122,7 +122,7 @@ void draw_pistols(long weapon_type)
 	else if (ani == p->Draw2Anim)
 	{
 		draw_pistol_meshes(weapon_type);
-		SOUND_PlayEffect(SFX_LARA_DRAW, &lara_item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LARA_DRAW, &lara_item->pos, SFX_LAND);
 	}
 	else if (ani == p->RecoilAnim - 1)
 	{
@@ -164,7 +164,7 @@ void undraw_pistols(long weapon_type)
 		if (anil == p->Draw2Anim - 1)
 		{
 			undraw_pistol_mesh_left(weapon_type);
-			SOUND_PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos, SFX_LAND);
 		}
 	}
 
@@ -193,7 +193,7 @@ void undraw_pistols(long weapon_type)
 		if (anir == p->Draw2Anim - 1)
 		{
 			undraw_pistol_mesh_right(weapon_type);
-			SOUND_PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos, SFX_LAND);
 		}
 	}
 
@@ -314,8 +314,8 @@ void AnimatePistols(long weapon_type)
 						SmokeWeapon = weapon_type;
 						TriggerGunShell(1, GUNSHELL, weapon_type);
 						lara.right_arm.flash_gun = winfo->flash_time;
-						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x2000000 | SFX_SETPITCH);
-						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_LAND);
 						sound_already = 1;
 						savegame.Game.AmmoUsed++;
 					}
@@ -377,8 +377,8 @@ void AnimatePistols(long weapon_type)
 
 					if (!sound_already)
 					{
-						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x2000000 | SFX_SETPITCH);
-						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_LAND);
 					}
 
 					savegame.Game.AmmoUsed++;

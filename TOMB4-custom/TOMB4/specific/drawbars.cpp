@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "LoadSave.h"
 #include "function_table.h"
 #include "3dmath.h"

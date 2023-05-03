@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "lighting.h"
 #include "dxshell.h"
 #include "3dmath.h"
@@ -251,7 +251,7 @@ void CreateLightList(ITEM_INFO* item)
 	long bakNum, dx, dy, dz, range;
 	bool in_range;
 
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 
 	if (item->il.room_number != item->room_number)
 	{
@@ -500,7 +500,7 @@ void CalcAmbientLight(ITEM_INFO* item)
 
 	room_number = item->room_number;
 	GetFloor(item->il.item_pos.x, item->il.item_pos.y, item->il.item_pos.z, &room_number);
-	r = &room[room_number];
+	r = &rooms[room_number];
 
 	if (item->il.ambient != r->ambient)
 	{

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "flmtorch.h"
 #include "effect2.h"
 #include "../specific/function_stubs.h"
@@ -62,7 +62,7 @@ void TriggerTorchFlame(short item_number, long node)
 	sptr->Size = (GetRandomControl() & 0x1F) + 80;
 	sptr->sSize = sptr->Size;
 	sptr->dSize = sptr->Size >> 3;
-	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &items[item_number].pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &items[item_number].pos, SFX_LAND);
 }
 
 void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
@@ -301,7 +301,7 @@ void FlameTorchControl(short item_number)
 	item->pos.x_pos += xv;
 	item->pos.z_pos += zv;
 
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
 		item->fallspeed += (5 - item->fallspeed) >> 1;
 		item->speed += (5 - item->speed) >> 1;

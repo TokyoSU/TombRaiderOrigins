@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "raghead.h"
 #include "box.h"
 #include "objects.h"
@@ -180,7 +180,7 @@ void RagheadControl(short item_number)
 
 	if (item->item_flags[1] != item->room_number && gfCurrentLevel != 5)
 	{
-		for (target_num = room[item->room_number].item_number; target_num != NO_ITEM; target_num = target->next_item)
+		for (target_num = rooms[item->room_number].item_number; target_num != NO_ITEM; target_num = target->next_item)
 		{
 			target = &items[target_num];
 
@@ -269,7 +269,7 @@ void RagheadControl(short item_number)
 
 			if (item->trigger_flags > 999)
 			{
-				for (target_num = room[2].item_number; target_num != NO_ITEM; target_num = target->next_item)
+				for (target_num = rooms[2].item_number; target_num != NO_ITEM; target_num = target->next_item)
 				{
 					target = &items[target_num];
 

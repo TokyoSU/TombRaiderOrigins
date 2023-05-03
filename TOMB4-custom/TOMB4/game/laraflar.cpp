@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "laraflar.h"
 #include "../specific/3dmath.h"
 #include "objects.h"
@@ -286,10 +286,10 @@ void draw_flare()
 		{
 			if (ani == 72)
 			{
-				if (room[lara_item->room_number].flags & ROOM_UNDERWATER)
+				if (rooms[lara_item->room_number].flags & ROOM_UNDERWATER)
 					SOUND_PlayEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_WATER);
 				else
-					SOUND_PlayEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_DEFAULT);
+					SOUND_PlayEffect(SFX_OBJ_GEM_SMASH, &lara_item->pos, SFX_LAND);
 
 				lara.flare_age = 1;
 			}
@@ -434,7 +434,7 @@ void FlareControl(short item_number)
 	flare->pos.x_pos += xv;
 	flare->pos.z_pos += zv;
 
-	if (room[flare->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[flare->room_number].flags & ROOM_UNDERWATER)
 	{
 		flare->fallspeed += (5 - flare->fallspeed) >> 1;
 		flare->speed += (5 - flare->speed) >> 1;

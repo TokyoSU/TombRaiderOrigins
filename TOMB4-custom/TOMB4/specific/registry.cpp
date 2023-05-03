@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "registry.h"
 #include "LoadSave.h"
 #include "cmdline.h"

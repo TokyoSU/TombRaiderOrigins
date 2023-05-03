@@ -1,6 +1,10 @@
 #pragma once
 #include "../global/types.h"
 
+#define	ROCKET_YOFF	180
+#define	ROCKET_ZOFF	72
+#define ROCKET_SPEED 512
+
 void InitialiseWeaponArray();
 void InitialiseNewWeapon();
 void LaraTargetInfo(WEAPON_INFO* winfo);

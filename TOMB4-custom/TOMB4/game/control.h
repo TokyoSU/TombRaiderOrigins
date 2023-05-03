@@ -40,7 +40,7 @@ long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z);
 
 extern ITEM_INFO* items;
 extern ANIM_STRUCT* anims;
-extern ROOM_INFO* room;
+extern ROOM_INFO* rooms;
 extern short** meshes;
 extern long* bones;
 extern long level_items;

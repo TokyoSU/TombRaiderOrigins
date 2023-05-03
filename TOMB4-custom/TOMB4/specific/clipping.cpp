@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "clipping.h"
 #include "3dmath.h"
 

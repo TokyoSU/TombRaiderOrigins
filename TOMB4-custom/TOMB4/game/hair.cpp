@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "hair.h"
 #include "objects.h"
 #include "draw.h"
@@ -383,7 +383,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 			hair->pos.y_pos += 3 * hair->vel.y / 4;
 			hair->pos.z_pos += 3 * hair->vel.z / 4;
 
-			if (lara.water_status == LW_ABOVE_WATER && room[room_num].flags & ROOM_NOT_INSIDE)
+			if (lara.water_status == LW_ABOVE_WATER && rooms[room_num].flags & ROOM_NOT_INSIDE)
 			{
 				hair->pos.x_pos += SmokeWindX;
 				hair->pos.z_pos += SmokeWindZ;

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "laradouble.h"
 #include "box.h"
 #include "sound.h"
@@ -15,7 +15,7 @@ void LaraDoubleControl(short item_number)
 	ITEM_INFO* item;
 
 	item = &items[item_number];
-	SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_LAND);
 
 	if (!CreatureActive(item_number))
 		return;

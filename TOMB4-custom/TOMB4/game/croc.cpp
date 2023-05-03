@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "croc.h"
 #include "box.h"
 #include "objects.h"
@@ -28,7 +28,7 @@ void InitialiseCroc(short item_number)
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
 		item->anim_number = objects[CROCODILE].anim_index + 12;
 		item->frame_number = anims[item->anim_number].frame_base;
@@ -88,7 +88,7 @@ void CrocControl(short item_number)
 
 		if (item->current_anim_state != 7 && item->current_anim_state != 10)
 		{
-			if (room[item->room_number].flags & ROOM_UNDERWATER)
+			if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 			{
 				item->anim_number = objects[CROCODILE].anim_index + 16;
 				item->frame_number = anims[item->anim_number].frame_base;
@@ -105,7 +105,7 @@ void CrocControl(short item_number)
 			}
 		}
 
-		if (room[item->room_number].flags & ROOM_UNDERWATER)
+		if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 			CreatureFloat(item_number);
 	}
 	else
@@ -277,9 +277,9 @@ void CrocControl(short item_number)
 	room_number = item->room_number;
 	GetFloor(x, item->pos.y_pos, z, &room_number);
 
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
-		if (room[room_number].flags & 1)
+		if (rooms[room_number].flags & 1)
 		{
 			if (item->current_anim_state == 2)
 			{
@@ -571,7 +571,7 @@ void UpdateLocusts()
 	if (closestnum != -1)
 	{
 		fx = &Locusts[closestnum];
-		SOUND_PlayEffect(SFX_LOCUSTS_LOOP, &fx->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LOCUSTS_LOOP, &fx->pos, SFX_LAND);
 	}
 }
 

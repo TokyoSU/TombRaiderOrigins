@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "footprnt.h"
 #include "delstuff.h"
 #include "control.h"
@@ -41,7 +41,7 @@ void AddFootPrint(ITEM_INFO* item)
 	floor = GetFloor(pos.x, pos.y, pos.z, &room_num);
 
 	if (floor->fx != 6 && floor->fx != 5 && floor->fx != 11)
-		SOUND_PlayEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &lara_item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &lara_item->pos, SFX_LAND);
 
 	if (floor->fx < 3 && !OnObject)
 	{

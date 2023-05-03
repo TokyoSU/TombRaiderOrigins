@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "lara.h"
 #include "lara_states.h"
 #include "objects.h"
@@ -8,6 +8,7 @@
 #include "control.h"
 #include "bike.h"
 #include "jeep.h"
+#include "snowmobile.h"
 #include "draw.h"
 #include "../specific/audio.h"
 #include "../specific/3dmath.h"
@@ -399,11 +400,18 @@ void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (lara.vehicle != NO_ITEM)
 	{
-		if (items[lara.vehicle].object_number == MOTORBIKE)
+		switch (items[lara.vehicle].object_number)
+		{
+		case MOTORBIKE:
 			BikeControl(lara.vehicle);
-		else
+			break;
+		case JEEP:
 			JeepControl(lara.vehicle);
-
+			break;
+		case SNOWMOBILE:
+			SkidooControl(lara.vehicle);
+			break;
+		}
 		return;
 	}
 
@@ -3364,7 +3372,7 @@ void lara_as_fastfall(ITEM_INFO* item, COLL_INFO* coll)
 	item->speed = 95 * item->speed / 100;
 
 	if (item->fallspeed == 154)
-		SOUND_PlayEffect(SFX_LARA_FALL, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LARA_FALL, &item->pos, SFX_LAND);
 
 	if (item->frame_number == anims[330].frame_end - 1)		//fall off pole
 		lara.gun_status = LG_NO_ARMS;
@@ -4084,7 +4092,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll)
 	else
 		item->item_flags[2] += 256;
 
-	SOUND_PlayEffect(SFX_LARA_POLE_LOOP, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LARA_POLE_LOOP, &item->pos, SFX_LAND);
 
 	if (item->item_flags[2] <= 16384)
 	{
@@ -5094,7 +5102,7 @@ void UpdateRopeSwing(ITEM_INFO* item)
 			else
 				LegsSwinging = 0;
 
-			SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
+			SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos);
 		}
 		else if (lara.RopeLastX < 0 && lara.RopeFrame == lara.RopeDFrame)
 		{
@@ -5120,7 +5128,7 @@ void UpdateRopeSwing(ITEM_INFO* item)
 		else
 			LegsSwinging = 0;
 
-		SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos, 0);
+		SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos);
 	}
 	else if (lara.RopeLastX > 0 && lara.RopeFrame == lara.RopeDFrame)
 	{

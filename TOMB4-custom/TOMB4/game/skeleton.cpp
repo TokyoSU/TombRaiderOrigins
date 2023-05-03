@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "skeleton.h"
 #include "items.h"
 #include "control.h"
@@ -399,7 +399,7 @@ void SkeletonControl(short item_number)
 
 		if (item->frame_number > anims[item->anim_number].frame_base + 15)
 		{
-			r = &room[item->room_number];
+			r = &rooms[item->room_number];
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;
@@ -416,7 +416,7 @@ void SkeletonControl(short item_number)
 					if (mesh->z >> 10 == pos.z >> 10 && mesh->x >> 10 == pos.x >> 10 && mesh->static_number >= SHATTER0)
 					{
 						ShatterObject(0, mesh, -64, lara_item->room_number, 0);
-						SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_LAND);
 						mesh->Flags &= ~1;
 						floor->stopper = 0;
 						GetHeight(floor, pos.x, pos.y, pos.z);
@@ -430,7 +430,7 @@ void SkeletonControl(short item_number)
 				lara_item->hit_points -= 80;
 				lara_item->hit_status = 1;
 				CreatureEffectT(item, &skelly_hit, 10, item->pos.y_rot, DoBloodSplat);
-				SOUND_PlayEffect(SFX_LARA_THUD, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_LARA_THUD, &item->pos, SFX_LAND);
 				skelly->flags = 1;
 			}
 		}
@@ -452,7 +452,7 @@ void SkeletonControl(short item_number)
 			lara_item->hit_points -= 80;
 			lara_item->hit_status = 1;
 			CreatureEffectT(item, &skelly_hit, 15, -1, DoBloodSplat);
-			SOUND_PlayEffect(SFX_LARA_THUD, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_THUD, &item->pos, SFX_LAND);
 			skelly->flags = 1;
 		}
 

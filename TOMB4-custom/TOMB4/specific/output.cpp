@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "output.h"
 #include "d3dmatrix.h"
 #include "../game/objects.h"
@@ -416,7 +416,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 		MyVertexBuffer[i].sy = vPos.y;
 		MyVertexBuffer[i].sz = vPos.z;
 
-		if (!(room[current_item->room_number].flags & ROOM_UNDERWATER) && camera.underwater)
+		if (!(rooms[current_item->room_number].flags & ROOM_UNDERWATER) && camera.underwater)
 		{
 			cR = (cR * water_color_R) >> 8;
 			cG = (cG * water_color_G) >> 8;
@@ -984,7 +984,7 @@ void RenderLoadPic(long unused)
 	camera.target.y = gfLoadTarget.y;
 	camera.target.z = gfLoadTarget.z;
 	camera.pos.room_number = gfLoadRoom;
-	camera.underwater = room[gfLoadRoom].flags & ROOM_UNDERWATER;
+	camera.underwater = rooms[gfLoadRoom].flags & ROOM_UNDERWATER;
 
 	KillActiveBaddies(NULL);
 	SetFade(255, 0);

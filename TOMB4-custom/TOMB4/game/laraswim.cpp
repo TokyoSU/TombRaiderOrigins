@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "laraswim.h"
 #include "lara_states.h"
 #include "lara.h"
@@ -301,7 +301,7 @@ long GetWaterDepth(long x, long y, long z, short room_number)
 	long x_floor, y_floor, h;
 	short door;
 
-	r = &room[room_number];
+	r = &rooms[room_number];
 
 	do
 	{
@@ -337,7 +337,7 @@ long GetWaterDepth(long x, long y, long z, short room_number)
 		if (door != 255)
 		{
 			room_number = door;
-			r = &room[door];
+			r = &rooms[door];
 		}
 
 	} while (door != 255);
@@ -346,7 +346,7 @@ long GetWaterDepth(long x, long y, long z, short room_number)
 	{
 		while (floor->sky_room != 255)
 		{
-			r = &room[floor->sky_room];
+			r = &rooms[floor->sky_room];
 
 			if (!(r->flags & ROOM_UNDERWATER))
 			{
@@ -364,7 +364,7 @@ long GetWaterDepth(long x, long y, long z, short room_number)
 	{
 		while (floor->pit_room != 255)
 		{
-			r = &room[floor->pit_room];
+			r = &rooms[floor->pit_room];
 
 			if (r->flags & ROOM_UNDERWATER)
 			{

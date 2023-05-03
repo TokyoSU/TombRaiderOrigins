@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "scorpion.h"
 #include "box.h"
 #include "objects.h"
@@ -116,7 +116,7 @@ void ScorpionControl(short item_number)
 				item->status = ITEM_INVISIBLE;
 				scorpion->maximum_turn = 0;
 
-				for (target_num = room[item->room_number].item_number; target_num != NO_ITEM; target_num = enemy->next_item)
+				for (target_num = rooms[item->room_number].item_number; target_num != NO_ITEM; target_num = enemy->next_item)
 				{
 					enemy = &items[target_num];
 

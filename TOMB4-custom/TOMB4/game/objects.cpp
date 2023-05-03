@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "objects.h"
 #include "control.h"
 #include "sound.h"
@@ -47,7 +47,7 @@ void ControlMapper(short item_number)
 
 	if (item->frame_number - anims[item->anim_number].frame_base >= 200)
 	{
-		SOUND_PlayEffect(SFX_MAPPER_LAZER, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_MAPPER_LAZER, &item->pos, SFX_LAND);
 		item->mesh_bits |= 2;
 		pos.x = 0;
 		pos.y = 0;
@@ -132,7 +132,7 @@ void ControlLightningConductor(short item_number)
 
 	if (item->item_flags[0])
 	{
-		SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, &item->pos, SFX_LAND);
 		item->item_flags[0]--;
 		b = (GetRandomControl() & 0x3F) + 192;
 		g = b - (GetRandomControl() & 0x1F);
@@ -186,7 +186,7 @@ void ControlLightningConductor(short item_number)
 	}
 	else if (!(GetRandomControl() & 0x3F))
 	{
-		SOUND_PlayEffect(SFX_THUNDER_CRACK, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_THUNDER_CRACK, &item->pos, SFX_LAND);
 		item->item_flags[0] = (GetRandomControl() & 3) + 4;
 		item->item_flags[1] = (GetRandomControl() & 0x3FF) - 512;
 	}
@@ -532,7 +532,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		{
 			if (gfCurrentLevel == 27)
 			{
-				SOUND_PlayEffect(SFX_BOULDER_FALL, 0, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_BOULDER_FALL, 0, SFX_LAND);
 				TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			}
 
@@ -559,9 +559,9 @@ void ControlWaterfall(short item_number)
 		item->status = ITEM_ACTIVE;
 
 		if (item->trigger_flags == 668)
-			SOUND_PlayEffect(SFX_SAND_LOOP, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_SAND_LOOP, &item->pos, SFX_LAND);
 		else if (item->trigger_flags == 777)
-			SOUND_PlayEffect(SFX_WATERFALL_LOOP, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_WATERFALL_LOOP, &item->pos, SFX_LAND);
 	}
 	else
 	{
@@ -738,7 +738,7 @@ void ControlAnimatingSlots(short item_number)
 			pos.y = 0;
 			pos.z = 0;
 			GetJointAbsPosition(item, &pos, 0);
-			SOUND_PlayEffect(SFX_HELICOPTER_LOOP, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_HELICOPTER_LOOP, (PHD_3DPOS*)&pos, SFX_LAND);
 
 			if (item->frame_number == anims[item->anim_number].frame_end)
 				item->flags &= ~IFL_CODEBITS;
@@ -778,15 +778,15 @@ void SmashObject(short item_number)
 	long sector;
 
 	item = &items[item_number];
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	sector = ((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10);
 	box = &boxes[r->floor[sector].box];
 
 	if (box->overlap_index & 0x8000)
 		box->overlap_index &= ~0x4000;
 
-	SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, SFX_DEFAULT);
-	SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, SFX_LAND);
+	SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_LAND);
 	item->collidable = 0;
 	item->mesh_bits = 0xFFFE;
 	ExplodingDeath2(item_number, -1, 256);
@@ -812,12 +812,12 @@ void EarthQuake(short item_number)
 	if (item->trigger_flags == 888)
 	{
 		camera.bounce = -64 - (GetRandomControl() & 0x1F);
-		SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_LAND);
 		item->item_flags[3]++;
 
 		if (item->item_flags[3] > 150)
 		{
-			SOUND_PlayEffect(SFX_DOOR_GEN_THUD, 0, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_DOOR_GEN_THUD, 0, SFX_LAND);
 			KillItem(item_number);
 		}
 	}
@@ -828,7 +828,7 @@ void EarthQuake(short item_number)
 		else
 		{
 			item->item_flags[0]++;
-			SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_LAND);
 		}
 	}
 	else
@@ -862,12 +862,12 @@ void EarthQuake(short item_number)
 			item->item_flags[0] -= (GetRandomControl() & 7) + 2;
 
 		pitch = (item->item_flags[0] << 16) + 0x1000000;
-		SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, 0, pitch | SFX_SETPITCH);
+		SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, NULL);
 		camera.bounce = -item->item_flags[0];
 
 		if (GetRandomControl() < 1024)
 		{
-			for (earth_item = room[item->room_number].item_number; earth_item != NO_ITEM; earth_item = item->next_item)
+			for (earth_item = rooms[item->room_number].item_number; earth_item != NO_ITEM; earth_item = item->next_item)
 			{
 				item = &items[earth_item];
 

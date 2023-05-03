@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "voncroy.h"
 #include "camera.h"
 #include "../specific/3dmath.h"

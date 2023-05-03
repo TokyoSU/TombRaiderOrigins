@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "larafire.h"
 #include "lara_states.h"
 #include "objects.h"
@@ -180,7 +180,7 @@ void InitialiseWeaponArray()
 	autopistols.setRecoilFrame(7);
 	autopistols.setFlashTime(3);
 	autopistols.setDrawFrame(0);
-	autopistols.setShotSample(SFX_LARA_FIRE);
+	autopistols.setShotSample(SFX_AUTOPISTOLS_FIRE);
 	weapons.push_back(autopistols);
 
 	WEAPON_INFO deserteagle; // WEAPON_DESERTEAGLE
@@ -196,7 +196,7 @@ void InitialiseWeaponArray()
 	deserteagle.setRecoilFrame(18);
 	deserteagle.setFlashTime(3);
 	deserteagle.setDrawFrame(0);
-	deserteagle.setShotSample(SFX_REVOLVER_FIRE);
+	deserteagle.setShotSample(SFX_DESERTEAGLE_FIRE);
 	weapons.push_back(deserteagle);
 
 	WEAPON_INFO revolver; // WEAPON_REVOLVER
@@ -259,7 +259,7 @@ void InitialiseWeaponArray()
 	mp5.setAlternateDamage(1); // When running
 	mp5.setRecoilFrame(2);
 	mp5.setFlashTime(3);
-	mp5.setDrawFrame(16);
+	mp5.setDrawFrame(10);
 	mp5.setShotSample(SFX_LARA_FIRE);
 	weapons.push_back(mp5);
 
@@ -275,7 +275,7 @@ void InitialiseWeaponArray()
 	crossbow.setAlternateDamage(0);
 	crossbow.setRecoilFrame(5);
 	crossbow.setFlashTime(0);
-	crossbow.setDrawFrame(2);
+	crossbow.setDrawFrame(10);
 	crossbow.setShotSample(SFX_LARA_CROSSBOW);
 	weapons.push_back(crossbow);
 
@@ -291,7 +291,7 @@ void InitialiseWeaponArray()
 	harpoon.setAlternateDamage(10); // When underwater
 	harpoon.setRecoilFrame(5);
 	harpoon.setFlashTime(0);
-	harpoon.setDrawFrame(2);
+	harpoon.setDrawFrame(10);
 	harpoon.setShotSample(SFX_LARA_CROSSBOW);
 	weapons.push_back(harpoon);
 
@@ -307,7 +307,7 @@ void InitialiseWeaponArray()
 	grenade.setAlternateDamage(10); // When underwater
 	grenade.setRecoilFrame(5);
 	grenade.setFlashTime(0);
-	grenade.setDrawFrame(2);
+	grenade.setDrawFrame(10);
 	grenade.setShotSample(SFX_LARA_MINI_FIRE);
 	weapons.push_back(grenade);
 
@@ -323,8 +323,8 @@ void InitialiseWeaponArray()
 	rocket.setAlternateDamage(0);
 	rocket.setRecoilFrame(0);
 	rocket.setFlashTime(2);
-	rocket.setDrawFrame(12);
-	rocket.setShotSample(SFX_LARA_MINI_FIRE);
+	rocket.setDrawFrame(10);
+	rocket.setShotSample(SFX_BAZOOKA_FIRE);
 	weapons.push_back(rocket);
 
 	WEAPON_INFO grappling; // WEAPON_GRAPPLING
@@ -339,7 +339,7 @@ void InitialiseWeaponArray()
 	grappling.setAlternateDamage(0);
 	grappling.setRecoilFrame(5);
 	grappling.setFlashTime(0);
-	grappling.setDrawFrame(2);
+	grappling.setDrawFrame(10);
 	grappling.setShotSample(SFX_LARA_MINI_FIRE);
 	weapons.push_back(grappling);
 
@@ -356,7 +356,7 @@ void InitialiseWeaponArray()
 	snowmobilegun.setRecoilFrame(0);
 	snowmobilegun.setFlashTime(2);
 	snowmobilegun.setDrawFrame(0);
-	snowmobilegun.setShotSample(SFX_LARA_UZI_FIRE);
+	snowmobilegun.setShotSample(SFX_SNOWMOBILE_SHOOT);
 	weapons.push_back(snowmobilegun);
 }
 
@@ -556,6 +556,8 @@ short& get_current_ammo_pointer(long weapon_type)
 		return lara.num_rocket_ammo;
 	case WEAPON_GRAPPLING:
 		return lara.num_grappling_ammo;
+	case WEAPON_SNOWMOBILEGUN:
+		return lara.num_snowmobile_ammo;
 	}
 	return lara.num_pistols_ammo;
 }
@@ -578,9 +580,12 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 	if (ammo != -1)
 		ammo--;
 
+	int zpos_adder = weapon_type == WEAPON_SNOWMOBILEGUN ? 400 : 0;
+
 	winfo = &weapons[weapon_type];
-	bum_view.x_pos = src->pos.x_pos;
-	bum_view.z_pos = src->pos.z_pos;
+	bum_view.x_pos = src->pos.x_pos + (zpos_adder * phd_sin(src->pos.y_rot) >> W2V_SHIFT);
+	bum_view.y_pos = src->pos.y_pos - (!lara.IsDucked ? winfo->gun_height : 256);
+	bum_view.z_pos = src->pos.z_pos + (zpos_adder * phd_cos(src->pos.y_rot) >> W2V_SHIFT);
 	bum_view.x_rot = short(winfo->shot_accuracy * (GetRandomControl() - 0x4000) / 0x10000 + angles[1]);
 	bum_view.y_rot = short(winfo->shot_accuracy * (GetRandomControl() - 0x4000) / 0x10000 + angles[0]);
 	bum_view.z_rot = 0;
@@ -595,7 +600,8 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 		sptr = &Slist[i];
 		r = sptr->r;
 
-		if (abs(sptr->x) < r && abs(sptr->y) < r && sptr->z > r && SQUARE(sptr->x) + SQUARE(sptr->y) <= SQUARE(r))
+		if (abs(sptr->x) < r && abs(sptr->y) < r &&
+			sptr->z > r && SQUARE(sptr->x) + SQUARE(sptr->y) <= SQUARE(r))
 		{
 			if (sptr->z - r < bestdist)
 			{
@@ -615,9 +621,9 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 
 	if (best < 0)
 	{
-		bum_vdest.x = bum_vsrc.x + long(0x5000 * mMXPtr[M20]);
-		bum_vdest.y = bum_vsrc.y + long(0x5000 * mMXPtr[M21]);
-		bum_vdest.z = bum_vsrc.z + long(0x5000 * mMXPtr[M22]);
+		bum_vdest.x = bum_vsrc.x + long(winfo->target_dist * mMXPtr[M20]);
+		bum_vdest.y = bum_vsrc.y + long(winfo->target_dist * mMXPtr[M21]);
+		bum_vdest.z = bum_vsrc.z + long(winfo->target_dist * mMXPtr[M22]);
 		GetTargetOnLOS(&bum_vsrc, &bum_vdest, 0, 1);
 		return -1;
 	}
@@ -832,7 +838,7 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade)
 			if (item->object_number == SUPER_RAGHEAD && (item->current_anim_state == 8 || GetRandomControl() & 1) &&
 				(lara.gun_type == WEAPON_PISTOLS || lara.gun_type == WEAPON_SHOTGUN || lara.gun_type == WEAPON_UZI))
 			{
-				SOUND_PlayEffect(SFX_BAD_SWORD_RICO, &item->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_BAD_SWORD_RICO, &item->pos, SFX_LAND);
 				TriggerRicochetSpark(hitpos, lara_item->pos.y_rot, 3, 0);
 				return;
 			}

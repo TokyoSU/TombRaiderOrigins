@@ -422,22 +422,84 @@ struct SPHERE
 	long r;
 };
 
+struct PHD_ANGLE
+{
+	short x = 0;
+	short y = 0;
+	short z = 0;
+
+	PHD_ANGLE() {}
+};
+
 struct PHD_VECTOR
 {
-	long x;
-	long y;
-	long z;
+	long x = 0;
+	long y = 0;
+	long z = 0;
+
+	PHD_VECTOR() {}
+	PHD_VECTOR(long _x, long _y, long _z)
+	{
+		x = _x;
+		y = _y;
+		z = _z;
+	}
+
+	Vector3 ToVector3()
+	{
+		return Vector3(float(x), float(y), float(z));
+	}
+
+	BASS_3DVECTOR ToBassVector()
+	{
+		return BASS_3DVECTOR(float(x), float(y), float(z));
+	}
 };
+
+static const PHD_VECTOR PhdVectorEmpty = PHD_VECTOR(0, 0, 0);
 
 struct PHD_3DPOS
 {
-	long x_pos;
-	long y_pos;
-	long z_pos;
-	short x_rot;
-	short y_rot;
-	short z_rot;
+	long x_pos = 0;
+	long y_pos = 0;
+	long z_pos = 0;
+	short x_rot = 0;
+	short y_rot = 0;
+	short z_rot = 0;
+
+	PHD_3DPOS() {}
+	PHD_3DPOS(long _x, long _y, long _z, short _xr, short _yr, short _zr)
+	{
+		x_pos = _x;
+		y_pos = _y;
+		z_pos = _z;
+		x_rot = _xr;
+		y_rot = _yr;
+		z_rot = _zr;
+	}
+
+	PHD_VECTOR ToPhdVector()
+	{
+		return PHD_VECTOR(x_pos, y_pos, z_pos);
+	}
+
+	Vector3 ToVector3()
+	{
+		return Vector3(float(x_pos), float(y_pos), float(z_pos));
+	}
+
+	BASS_3DVECTOR FromPositionToBassVector()
+	{
+		return BASS_3DVECTOR(float(x_pos), float(y_pos), float(z_pos));
+	}
+
+	BASS_3DVECTOR FromRotationToBassVector()
+	{
+		return BASS_3DVECTOR(float(x_rot), float(y_rot), float(z_rot));
+	}
 };
+
+static const PHD_3DPOS Phd3DPosEmpty = PHD_3DPOS(0, 0, 0, 0, 0, 0);
 
 struct GAME_VECTOR
 {
@@ -446,6 +508,16 @@ struct GAME_VECTOR
 	long z;
 	short room_number;
 	short box_number;
+
+	Vector3 ToVector3()
+	{
+		return Vector3(float(x), float(y), float(z));
+	}
+
+	BASS_3DVECTOR ToBassVector()
+	{
+		return BASS_3DVECTOR(float(x), float(y), float(z));
+	}
 };
 
 struct OBJECT_VECTOR
@@ -455,6 +527,16 @@ struct OBJECT_VECTOR
 	long z;
 	short data;
 	short flags;
+
+	Vector3 ToVector3()
+	{
+		return Vector3(float(x), float(y), float(z));
+	}
+
+	BASS_3DVECTOR ToBassVector()
+	{
+		return BASS_3DVECTOR(float(x), float(y), float(z));
+	}
 };
 
 struct FVECTOR
@@ -462,6 +544,16 @@ struct FVECTOR
 	float x;
 	float y;
 	float z;
+
+	Vector3 ToVector3()
+	{
+		return Vector3(x, y, z);
+	}
+
+	BASS_3DVECTOR ToBassVector()
+	{
+		return BASS_3DVECTOR(x, y, z);
+	}
 };
 
 struct SVECTOR
@@ -506,6 +598,16 @@ struct PCLIGHT
 	uchar Active;
 	PHD_VECTOR rlp;
 	long Range;
+
+	Vector3 ToVector3()
+	{
+		return Vector3(float(x), float(y), float(z));
+	}
+
+	BASS_3DVECTOR ToBassVector()
+	{
+		return BASS_3DVECTOR(float(x), float(y), float(z));
+	}
 };
 
 struct ITEM_LIGHT
@@ -531,6 +633,7 @@ struct ITEM_LIGHT
 
 struct ITEM_INFO
 {
+	short index;
 	long floor;
 	ulong touch_bits;
 	ulong mesh_bits;
@@ -791,11 +894,22 @@ struct LARA_INFO
 	short num_grenade_ammo3;
 	short num_rocket_ammo;
 	short num_grappling_ammo;
+	short num_snowmobile_ammo;
 	char beetle_uses;
 	char blindTimer;
 	char location;
 	char highest_location;
 	char locationPad;
+
+	Vector3 FromVelocityToVector3()
+	{
+		return Vector3(float(current_xvel), float(current_yvel), float(current_zvel));
+	}
+
+	BASS_3DVECTOR FromVelocityToBassVector()
+	{
+		return BASS_3DVECTOR(float(current_xvel), float(current_yvel), float(current_zvel));
+	}
 };
 
 struct GAMEFLOW
@@ -2298,24 +2412,23 @@ struct FIRE_LIST
 	short room_number;
 };
 
-enum SoundState
+enum SOUND_STATES
 {
-	SS_IsPlaying,
-	SS_IsEnding,
-	SS_IsEnded,
+	Idle,
+	Ending,
+	Ended,
 };
 
 struct SOUND_SLOT
 {
-	float OrigVolume;
-	float nVolume;
-	float nPan;
-	float nPitch;
-	int nSampleInfo;
-	float distance;
-	SoundState state;
+	PHD_3DPOS origin;
 	HCHANNEL channel;
-	PHD_VECTOR pos;
+	SOUND_STATES state;
+	float volume;
+	float pitch;
+	float distance;
+	bool loop;
+	int sample_index;
 };
 
 struct WEAPON_INFO

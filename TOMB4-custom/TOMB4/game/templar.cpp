@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "templar.h"
 #include "box.h"
 #include "objects.h"
@@ -126,7 +126,7 @@ void TemplarControl(short item_number)
 
 		if (item->frame_number > anims[item->anim_number].frame_base + 42 && item->frame_number < anims[item->anim_number].frame_base + 51)
 		{
-			r = &room[item->room_number];
+			r = &rooms[item->room_number];
 			pos.x = 0;
 			pos.y = 0;
 			pos.z = 0;
@@ -143,7 +143,7 @@ void TemplarControl(short item_number)
 					if (!((pos.z ^ mesh->z) & ~0x3FF) && !((pos.x ^ mesh->x) & ~0x3FF) && mesh->static_number >= SHATTER0)
 					{
 						ShatterObject(0, mesh, -64, lara_item->room_number, 0);
-						SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_LAND);
 						mesh->Flags &= ~1;
 						floor->stopper = 0;
 						GetHeight(floor, pos.x, pos.y, pos.z);

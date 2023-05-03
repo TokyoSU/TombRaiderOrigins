@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "winmain.h"
 #include "function_stubs.h"
 #include "cmdline.h"

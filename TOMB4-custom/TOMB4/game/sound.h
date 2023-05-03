@@ -1,9 +1,29 @@
 #pragma once
 #include "../global/types.h"
 
-#define SOUND_MAX_CHANNELS 32
+constexpr auto SOUND_MAX_CHANNELS = 64;
+constexpr auto NO_SAMPLES = -1;
+constexpr auto SOUND_XFADETIME_BGM = 5000;
+constexpr auto SOUND_XFADETIME_BGM_START = 1500;
+constexpr auto SOUND_XFADETIME_ONESHOT = 200;
+constexpr auto SOUND_XFADETIME_CUTSOUND = 100;
+constexpr auto SOUND_XFADETIME_HIJACKSOUND = 50;
 
-extern PHD_3DPOS SOUND_Pos2D;
+enum SFX_FLAGS
+{
+	SFX_NORMAL = 0,
+	SFX_WAIT = 1,
+	SFX_RESTART = 2,
+	SFX_LOOPED = 3,
+};
+
+enum SFX_OPTIONS
+{
+	SFX_LAND = 0,
+	SFX_WATER = 1,
+	SFX_ALWAYS = 2,
+	SFX_SETPITCH = 4
+};
 
 extern float SOUND_DistanceToListener(PHD_3DPOS* pos);
 extern float SOUND_DistanceToListener(PHD_VECTOR* pos);
@@ -19,25 +39,18 @@ extern void SOUND_Stop(int index);
 extern void SOUND_Init();
 extern void SOUND_UpdateScene();
 extern void SOUND_StopAll();
-extern bool SOUND_UpdateEffectPosition(int index, PHD_3DPOS* pos, bool force);
+extern bool SOUND_UpdateEffectPosition(int index, PHD_3DPOS* pos, bool force = false);
 extern bool SOUND_UpdateEffectAttributes(int index, float pitch, float gain);
-extern int SOUND_PlayEffect(int index, PHD_3DPOS* pos, int flags);
+extern int SOUND_PlayEffect(int index, PHD_3DPOS* pos, int flags = SFX_ALWAYS, float pitchMultiplier = 1.0f, float gainMultiplier = 1.0f);
 extern void SOUND_SayNo();
+extern void SOUND_EndScene();
 
 extern SAMPLE_INFO* sample_infos;
 extern SOUND_SLOT LaSlot[SOUND_MAX_CHANNELS];
 extern short* samples_maps;
 extern long sound_active;
 
-enum sfx_options
-{
-	SFX_DEFAULT =	0,
-	SFX_WATER =		1,
-	SFX_ALWAYS =	2,
-	SFX_SETPITCH =	4
-};
-
-enum sound_effect_names
+enum SOUND_EFFECT_NAMES
 {
 	SFX_LARA_FEET,
 	SFX_LARA_CLIMB2,
@@ -409,6 +422,13 @@ enum sound_effect_names
 	SFX_BIKE_HIT_ENEMIES,
 	SFX_FLAME_EMITTER,
 	SFX_LARA_CLICK_SWITCH,
-
-	NumSamples
+	SFX_AUTOPISTOLS_FIRE,
+	SFX_DESERTEAGLE_FIRE,
+	SFX_SNOWMOBILE_START,
+	SFX_SNOWMOBILE_IDLE,
+	SFX_SNOWMOBILE_ACCEL,
+	SFX_SNOWMOBILE_MOVING,
+	SFX_SNOWMOBILE_STOP,
+	SFX_SNOWMOBILE_SHOOT,
+	SFX_SAMPLES_COUNT
 };

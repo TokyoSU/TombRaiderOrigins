@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "deathsld.h"
 #include "../specific/function_stubs.h"
 #include "lara_states.h"
@@ -117,13 +117,13 @@ void ControlDeathSlide(short item_number)
 				lara_item->fallspeed = item->fallspeed >> 2;
 			}
 
-			SOUND_PlayEffect(SFX_VONCROY_KNIFE_SWISH, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_VONCROY_KNIFE_SWISH, &item->pos, SFX_LAND);
 			RemoveActiveItem(item_number);
 			item->status = ITEM_INACTIVE;
 			item->flags -= IFL_INVISIBLE;
 		}
 		else
-			SOUND_PlayEffect(SFX_TRAIN_DOOR_CLOSE, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_TRAIN_DOOR_CLOSE, &item->pos, SFX_LAND);
 	}
 	else
 	{

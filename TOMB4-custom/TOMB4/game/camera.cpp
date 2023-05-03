@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "camera.h"
 #include "../specific/3dmath.h"
 #include "../specific/function_stubs.h"
@@ -1280,7 +1280,7 @@ void CalculateCamera()
 			camera.speed = 1;
 	}
 
-	if (room[camera.pos.room_number].flags & ROOM_UNDERWATER)
+	if (rooms[camera.pos.room_number].flags & ROOM_UNDERWATER)
 	{
 		SOUND_PlayEffect(SFX_UNDERWATER, NULL, SFX_ALWAYS);
 

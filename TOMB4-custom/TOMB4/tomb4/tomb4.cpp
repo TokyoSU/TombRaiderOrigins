@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "tomb4.h"
 #include "../specific/registry.h"
 #include "libs/discordRPC/discord_rpc.h"

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "lot.h"
 #include "../specific/function_stubs.h"
 #include "objects.h"
@@ -76,7 +76,7 @@ void CreateZone(ITEM_INFO* item)
 	short zone_number, flip_number;
 
 	creature = (CREATURE_INFO*)item->data;
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
 
 	if (creature->LOT.fly)

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "tomb4fx.h"
 #include "../specific/function_stubs.h"
 #include "draw.h"
@@ -293,78 +293,77 @@ void DrawGunshells()
 	}
 }
 
-void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, long notLara, long weaponType, long shade)
+void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, long initial, long weaponType, long shade)
 {
-	SMOKE_SPARKS* sptr;
-	uchar size;
-
-	sptr = &smoke_spark[GetFreeSmokeSpark()];
-	sptr->On = 1;
+	SMOKE_SPARKS* sptr = &smoke_spark[GetFreeSmokeSpark()];
+	sptr->On = TRUE;
 	sptr->sShade = 0;
-	sptr->dShade = uchar(4 * shade);
+	sptr->dShade = shade << 2;
 	sptr->ColFadeSpeed = 4;
-	sptr->FadeToBlack = uchar(32 - 16 * notLara);
+	sptr->FadeToBlack = 32 - (initial << 4);
 	sptr->Life = (GetRandomControl() & 3) + 40;
 	sptr->sLife = sptr->Life;
 
-	if ((weaponType == WEAPON_PISTOLS ||
-		weaponType == WEAPON_REVOLVER ||
-		weaponType == WEAPON_UZI ||
-		weaponType == WEAPON_AUTOPISTOLS ||
-		weaponType == WEAPON_MAGNUMS ||
-		weaponType == WEAPON_M16 ||
-		weaponType == WEAPON_MP5) && sptr->dShade > 64u)
-		sptr->dShade = 64;
-
-	sptr->TransType = 2;
-	sptr->x = (GetRandomControl() & 0x1F) + x - 16;
-	sptr->y = (GetRandomControl() & 0x1F) + y - 16;
-	sptr->z = (GetRandomControl() & 0x1F) + z - 16;
-
-	if (notLara)
+	if (weaponType == WEAPON_PISTOLS || weaponType == WEAPON_REVOLVER || weaponType == WEAPON_UZI || weaponType == WEAPON_AUTOPISTOLS || weaponType == WEAPON_MAGNUMS || weaponType == WEAPON_M16 || weaponType == WEAPON_MP5)
 	{
-		sptr->Xvel = short((GetRandomControl() & 0x3FF) + xVel - 512);
-		sptr->Yvel = short((GetRandomControl() & 0x3FF) + yVel - 512);
-		sptr->Zvel = short((GetRandomControl() & 0x3FF) + zVel - 512);
+		if (sptr->dShade > 64)
+			sptr->dShade = 64;
+	}
+
+	sptr->TransType = COLADD;
+	sptr->x = (GetRandomControl() & 31) + x - 16;
+	sptr->y = (GetRandomControl() & 31) + y - 16;
+	sptr->z = (GetRandomControl() & 31) + z - 16;
+
+	if (initial)
+	{
+		sptr->Xvel = ((GetRandomControl() & 1023) - 512) + (short)xVel;
+		sptr->Yvel = ((GetRandomControl() & 1023) - 512) + (short)yVel;
+		sptr->Zvel = ((GetRandomControl() & 1023) - 512) + (short)zVel;
 	}
 	else
 	{
-		sptr->Xvel = ((GetRandomControl() & 0x1FF) - 256) >> 1;
-		sptr->Yvel = ((GetRandomControl() & 0x1FF) - 256) >> 1;
-		sptr->Zvel = ((GetRandomControl() & 0x1FF) - 256) >> 1;
+		sptr->Xvel = ((GetRandomControl() & 511) - 256) >> 1;
+		sptr->Yvel = ((GetRandomControl() & 511) - 256) >> 1;
+		sptr->Zvel = ((GetRandomControl() & 511) - 256) >> 1;
 	}
 
 	sptr->Friction = 4;
 
 	if (GetRandomControl() & 1)
 	{
-		if (room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
-			sptr->Flags = 272;
+		if (rooms[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+			sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_WIND | SP_EXPDEF;
 
 		else
-			sptr->Flags = 16;
+			sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_EXPDEF;
 
-		sptr->RotAng = GetRandomControl() & 0xFFF;
+		sptr->RotAng = GetRandomControl() & 4095;
 
 		if (GetRandomControl() & 1)
-			sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
+			sptr->RotAdd = -(GetRandomControl() & 15) - 16;
 		else
-			sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
+			sptr->RotAdd = (GetRandomControl() & 15) + 16;
 	}
-	else if (room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
-		sptr->Flags = 256;
 	else
-		sptr->Flags = 0;
+	{
+		if (rooms[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+			sptr->Flags = SP_SCALE | SP_DEF | SP_WIND | SP_EXPDEF;
+		else
+			sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
+	}
 
 	sptr->Gravity = -2 - (GetRandomControl() & 1);
 	sptr->MaxYvel = -2 - (GetRandomControl() & 1);
-	size = (GetRandomControl() & 0xF) - (weaponType != WEAPON_GRENADE ? 24 : 0) + 48;
+	sptr->Def = objects[DEFAULT_SPRITES].mesh_index;
+	sptr->Scalar = 3;
+	uchar size = (GetRandomControl() & 15) + 48;
 
-	if (notLara)
+	if (initial)
 	{
 		sptr->Size = size >> 1;
 		sptr->sSize = size >> 1;
-		sptr->dSize = (size + 4)<<1;
+		sptr->dSize = (size << 1) + 8;
 	}
 	else
 	{
@@ -429,7 +428,7 @@ void UpdateDrips()
 
 		drip->Yvel += drip->Gravity;
 
-		if (room[drip->RoomNumber].flags & ROOM_NOT_INSIDE)
+		if (rooms[drip->RoomNumber].flags & ROOM_NOT_INSIDE)
 		{
 			drip->x += SmokeWindX >> 1;
 			drip->z += SmokeWindZ >> 1;
@@ -439,7 +438,7 @@ void UpdateDrips()
 		floor = GetFloor(drip->x, drip->y, drip->z, &drip->RoomNumber);
 		h = GetHeight(floor, drip->x, drip->y, drip->z);
 
-		if (room[drip->RoomNumber].flags & ROOM_UNDERWATER || drip->y > h)
+		if (rooms[drip->RoomNumber].flags & ROOM_UNDERWATER || drip->y > h)
 			drip->On = 0;
 	}
 }
@@ -767,7 +766,7 @@ void S_DrawFires()
 		bounds[4] = -size;
 		bounds[5] = size;
 
-		r = &room[fire->room_number];
+		r = &rooms[fire->room_number];
 		phd_left = r->left;
 		phd_right = r->right;
 		phd_top = r->top;
@@ -946,7 +945,7 @@ void TriggerShatterSmoke(long x, long y, long z)
 		else
 			sptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
 	}
-	else if (room[lara_item->room_number].flags & ROOM_NOT_INSIDE)
+	else if (rooms[lara_item->room_number].flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 256;
 	else
 		sptr->Flags = 0;
@@ -1151,7 +1150,7 @@ void UpdateGunShells()
 		oroom = shell->room_number;
 		shell->counter--;
 
-		if (room[oroom].flags & ROOM_UNDERWATER)
+		if (rooms[oroom].flags & ROOM_UNDERWATER)
 		{
 			shell->fallspeed++;
 
@@ -1173,10 +1172,10 @@ void UpdateGunShells()
 		shell->pos.z_pos += shell->speed * phd_cos(shell->DirXrot) >> (W2V_SHIFT + 1);
 		floor = GetFloor(shell->pos.x_pos, shell->pos.y_pos, shell->pos.z_pos, &shell->room_number);
 
-		if (room[shell->room_number].flags & ROOM_UNDERWATER && !(room[oroom].flags & ROOM_UNDERWATER))
+		if (rooms[shell->room_number].flags & ROOM_UNDERWATER && !(rooms[oroom].flags & ROOM_UNDERWATER))
 		{
-			TriggerSmallSplash(shell->pos.x_pos, room[shell->room_number].maxceiling, shell->pos.z_pos, 8);
-			SetupRipple(shell->pos.x_pos, room[shell->room_number].maxceiling, shell->pos.z_pos, (GetRandomControl() & 3) + 8, 2);
+			TriggerSmallSplash(shell->pos.x_pos, rooms[shell->room_number].maxceiling, shell->pos.z_pos, 8);
+			SetupRipple(shell->pos.x_pos, rooms[shell->room_number].maxceiling, shell->pos.z_pos, (GetRandomControl() & 3) + 8, 2);
 			shell->fallspeed >>= 5;
 			continue;
 		}
@@ -1185,7 +1184,7 @@ void UpdateGunShells()
 
 		if (shell->pos.y_pos < c)
 		{
-			SOUND_PlayEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_LAND);
 			shell->speed -= 4;
 
 			if (shell->speed < 8)
@@ -1202,7 +1201,7 @@ void UpdateGunShells()
 
 		if (shell->pos.y_pos >= h)
 		{
-			SOUND_PlayEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_LARA_SHOTGUN_SHELL, &shell->pos, SFX_LAND);
 			shell->speed -= 8;
 
 			if (shell->speed < 8)
@@ -1568,7 +1567,7 @@ void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest)
 
 	GetFloor(pos->x_pos, pos->y_pos, pos->z_pos, &room_number);
 
-	if (room[room_number].flags & ROOM_UNDERWATER)
+	if (rooms[room_number].flags & ROOM_UNDERWATER)
 	{
 		bubble_num = GetFreeBubble();
 
@@ -1618,9 +1617,9 @@ void UpdateBubbles()
 			continue;
 		}
 
-		if (!(room[room_number].flags & ROOM_UNDERWATER))
+		if (!(rooms[room_number].flags & ROOM_UNDERWATER))
 		{
-			SetupRipple(bubble->pos.x, room[bubble->room_number].maxceiling, bubble->pos.z, (GetRandomControl() & 0xF) + 48, 2);
+			SetupRipple(bubble->pos.x, rooms[bubble->room_number].maxceiling, bubble->pos.z, (GetRandomControl() & 0xF) + 48, 2);
 			bubble->size = 0;
 			continue;
 		}
@@ -1752,7 +1751,7 @@ void TriggerShockwave(PHD_VECTOR* pos, long InnerOuterRads, long speed, long bgr
 		sw->g = CLRG(bgrl);
 		sw->b = CLRR(bgrl);
 		sw->life = CLRA(bgrl);
-		SOUND_PlayEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_DEMI_SIREN_SWAVE, (PHD_3DPOS*)pos, SFX_LAND);
 	}
 }
 
@@ -2006,7 +2005,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number)
 	SMOKE_SPARKS* sptr;
 	long uw;
 
-	if (room[room_number].flags & ROOM_UNDERWATER)
+	if (rooms[room_number].flags & ROOM_UNDERWATER)
 	{
 		TriggerExplosionBubble(x, y, z, (short)room_number);
 		uw = 1;
@@ -2042,7 +2041,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number)
 		sptr->Friction = 85;
 	}
 
-	if (room[room_number].flags & ROOM_NOT_INSIDE)
+	if (rooms[room_number].flags & ROOM_NOT_INSIDE)
 		sptr->Flags = 272;
 	else
 		sptr->Flags = 16;

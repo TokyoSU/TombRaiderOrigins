@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "objlight.h"
 #include "control.h"
 #include "effect2.h"
@@ -31,14 +31,14 @@ void ControlPulseLight(short item_number)
 		FlashFadeB = 255;
 		FlashFader = 32;
 		camera.bounce = -128;
-		SOUND_PlayEffect(SFX_BOULDER_FALL, 0, 0);
-		SOUND_PlayEffect(SFX_EXPLOSION2, 0, 0);
+		SOUND_PlayEffect(SFX_BOULDER_FALL, NULL);
+		SOUND_PlayEffect(SFX_EXPLOSION2, NULL);
 	}
 	else if (item->trigger_flags == 2)
 	{
-		SOUND_PlayEffect(SFX_MAPPER_PYRAMID_OPEN, &item->pos, 0);
+		SOUND_PlayEffect(SFX_MAPPER_PYRAMID_OPEN, &item->pos);
 
-		if (room[camera.pos.room_number].flags & ROOM_NOT_INSIDE)
+		if (rooms[camera.pos.room_number].flags & ROOM_NOT_INSIDE)
 		{
 			FlashFadeR = 64;
 			FlashFadeG = 128;

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "mirror.h"
 #include "delstuff.h"
 #include "../specific/function_table.h"

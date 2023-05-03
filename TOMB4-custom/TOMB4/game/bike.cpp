@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "bike.h"
 #include "../specific/function_stubs.h"
 #include "../specific/specificfx.h"
@@ -352,7 +352,7 @@ static long CanGetOff(short num)	//always called with num = 1
 
 void BikeExplode(ITEM_INFO* item)
 {
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 		TriggerUnderwaterExplosion(item, 1);
 	else
 	{
@@ -365,8 +365,8 @@ void BikeExplode(ITEM_INFO* item)
 	ExplodingDeath2(lara.vehicle, -2, 256);
 	KillItem(lara.vehicle);
 	item->status = ITEM_DEACTIVATED;
-	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
-	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_LAND);
+	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_LAND);
 	lara.vehicle = NO_ITEM;
 }
 
@@ -554,7 +554,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed)
 		}
 	}
 
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
 		lara_item->goal_anim_state = 20;
 		lara_item->hit_points = 0;
@@ -793,7 +793,7 @@ long BikeBaddieCollision(ITEM_INFO* bike)
 
 	room_count = 1;
 	broomies[0] = bike->room_number;
-	doors = room[bike->room_number].door;
+	doors = rooms[bike->room_number].door;
 
 	for (int i = *doors++; i > 0; i--, doors += 16)
 	{
@@ -812,7 +812,7 @@ long BikeBaddieCollision(ITEM_INFO* bike)
 
 	for (int i = 0; i < room_count; i++)
 	{
-		for (item_number = room[broomies[i]].item_number; item_number != NO_ITEM; item_number = item->next_item)
+		for (item_number = rooms[broomies[i]].item_number; item_number != NO_ITEM; item_number = item->next_item)
 		{
 			item = &items[item_number];
 
@@ -834,7 +834,7 @@ long BikeBaddieCollision(ITEM_INFO* bike)
 								return 1;
 
 							if (item->hit_points)
-								SOUND_PlayEffect(SFX_BIKE_HIT_ENEMIES, &item->pos, SFX_DEFAULT);
+								SOUND_PlayEffect(SFX_BIKE_HIT_ENEMIES, &item->pos, SFX_LAND);
 
 							DoLotsOfBlood(item->pos.x_pos, bike->pos.y_pos - 256, item->pos.z_pos, (GetRandomControl() & 3) + 8, bike->pos.y_rot, item->room_number, 3);
 							item->hit_points = 0;
@@ -871,7 +871,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 	BikeBounds[5] = z - 256;
 	room_count = 1;
 	broomies[0] = room_number;
-	doors = room[room_number].door;
+	doors = rooms[room_number].door;
 
 	for (int i = *doors++; i > 0; i--, doors += 16)
 	{
@@ -891,7 +891,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 	for (int i = 0; i < room_count; i++)
 	{
 		rn = broomies[i];
-		r = &room[rn];
+		r = &rooms[rn];
 		mesh = r->mesh;
 
 		for (j = r->num_meshes; j > 0; j--, mesh++)
@@ -942,7 +942,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 						BikeBounds[5] < CollidedStaticBounds[4])
 					{
 						ShatterObject(0, mesh, -128, rn, 0);
-						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_LAND);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1441,14 +1441,14 @@ void BikeControl(short item_number)
 		else if (bike->pitch2 > 0xA000)
 			bike->pitch2 = 0xA000;
 
-		SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, (bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
+		SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, SFX_SETPITCH, (bike->pitch2 << 8) + 0x1000000);
 	}
 	else
 	{
 		if (driving != -1)
 		{
-			SOUND_PlayEffect(SFX_BIKE_IDLE, &item->pos, SFX_DEFAULT);
-			SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, (bike->pitch2 << 8) + (SFX_SETPITCH | 0x1000000));
+			SOUND_PlayEffect(SFX_BIKE_IDLE, &item->pos, SFX_LAND);
+			SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, SFX_SETPITCH, (bike->pitch2 << 8) + 0x1000000);
 		}
 
 		bike->pitch2 = 0;

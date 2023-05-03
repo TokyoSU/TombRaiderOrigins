@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "polyinsert.h"
 #include "dxshell.h"
 #include "drawroom.h"

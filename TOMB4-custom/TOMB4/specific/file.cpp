@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "../tomb4/libs/zlib/zlib.h"
 #include "file.h"
 #include "function_stubs.h"
@@ -206,11 +206,11 @@ void FreeLevel()
 		}
 	}
 	
-	if (room)
+	if (rooms)
 	{
 		for (int i = 0; i < number_rooms; i++)
 		{
-			r = &room[i];
+			r = &rooms[i];
 
 			if (r->SourceVB)
 			{
@@ -614,14 +614,14 @@ bool LoadRooms()
 		return 0;
 	}
 
-	room = (ROOM_INFO*)game_malloc(number_rooms * sizeof(ROOM_INFO));
+	rooms = (ROOM_INFO*)game_malloc(number_rooms * sizeof(ROOM_INFO));
 
-	if (!room)
+	if (!rooms)
 		return 0;
 
 	for (int i = 0; i < number_rooms; i++)
 	{
-		r = &room[i];
+		r = &rooms[i];
 
 		r->x = *(long*)FileData;
 		FileData += sizeof(long);
@@ -1146,7 +1146,7 @@ bool LoadItems()
 
 	for (int i = 0; i < number_rooms; i++)
 	{
-		r = &room[i];
+		r = &rooms[i];
 
 		for (int j = 0; j < r->num_meshes; j++)
 		{
@@ -1207,9 +1207,9 @@ bool LoadSamples()
 	static long num_sample_infos;
 
 	Log(2, "LoadSamples");
-	samples_maps = (short*)game_malloc(NumSamples * sizeof(short));
-	memcpy(samples_maps, FileData, NumSamples * sizeof(short));
-	FileData += NumSamples * sizeof(short);
+	samples_maps = (short*)game_malloc(SFX_SAMPLES_COUNT * sizeof(short));
+	memcpy(samples_maps, FileData, SFX_SAMPLES_COUNT * sizeof(short));
+	FileData += SFX_SAMPLES_COUNT * sizeof(short);
 	num_sample_infos = *(long*)FileData;
 	FileData += sizeof(long);
 	Log(8, "Number Of Sample Infos %d", num_sample_infos);

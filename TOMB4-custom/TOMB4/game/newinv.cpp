@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "newinv.h"
 #include "../specific/LoadSave.h"
 #include "../specific/3dmath.h"

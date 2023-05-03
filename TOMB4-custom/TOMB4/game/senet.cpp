@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "senet.h"
 #include "objects.h"
 #include "items.h"
@@ -210,7 +210,7 @@ void GameStixControl(short item_number)
 	if (item->trigger_flags > -1)
 	{
 		if (item->hit_points == 100)
-			SOUND_PlayEffect(SFX_SPINNING_PUZZLE, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_SPINNING_PUZZLE, &item->pos, SFX_LAND);
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -521,7 +521,7 @@ void DrawGodHead(ITEM_INFO* item)
 	short* frm[2];
 	long rate, oldAlpha, alpha;
 
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	phd_left = r->left;
 	phd_right = r->right;
 	phd_top = r->top;

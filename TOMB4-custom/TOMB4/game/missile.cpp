@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "missile.h"
 #include "debris.h"
 #include "control.h"
@@ -74,7 +74,7 @@ void ControlBodyPart(short fx_number)
 			KillEffect(fx_number);
 
 			if (fx->flag2 & 0x800)
-				SOUND_PlayEffect(SFX_ROCK_FALL_LAND, &fx->pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_ROCK_FALL_LAND, &fx->pos, SFX_LAND);
 
 			return;
 		}

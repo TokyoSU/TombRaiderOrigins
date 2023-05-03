@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "control.h"
 #include "pickup.h"
 #include "../specific/function_stubs.h"
@@ -45,7 +45,7 @@
 
 ITEM_INFO* items;
 ANIM_STRUCT* anims;
-ROOM_INFO* room;
+ROOM_INFO* rooms;
 short** meshes;
 long* bones;
 long level_items;
@@ -470,7 +470,6 @@ long ControlPhase(long nframes, long demo_mode)
 		if (!GLOBAL_playing_cutseq)
 		{
 			HairControl(0, 0, 0);
-
 			if (gfLevelFlags & GF_YOUNGLARA)
 				HairControl(0, 1, 0);
 		}
@@ -503,8 +502,7 @@ long ControlPhase(long nframes, long demo_mode)
 		UpdateLightning();
 		AnimateWaterfalls();
 		UpdatePulseColour();
-		SOUND_PlayEnvironmentEffect();
-		SOUND_UpdateScene();
+		SoundSources();
 		health_bar_timer--;
 		
 		if (!gfGameMode)
@@ -533,7 +531,7 @@ void FlipMap(long FlipNumber)
 
 	for (int i = 0; i < number_rooms; i++)
 	{
-		r = &room[i];
+		r = &rooms[i];
 
 		if (r->flipped_room >= 0 && r->FlipNumber == FlipNumber)
 		{
@@ -541,7 +539,7 @@ void FlipMap(long FlipNumber)
 				items[j].il.room_number = 255;
 
 			RemoveRoomFlipItems(r);
-			flipped = &room[r->flipped_room];
+			flipped = &rooms[r->flipped_room];
 			memcpy(&temp, r, sizeof(temp));
 			memcpy(r, flipped, sizeof(ROOM_INFO));
 			memcpy(flipped, &temp, sizeof(ROOM_INFO));
@@ -1223,7 +1221,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number)
 	long x_floor, y_floor;
 	short door;
 
-	r = &room[*room_number];
+	r = &rooms[*room_number];
 
 	do
 	{
@@ -1260,7 +1258,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number)
 			break;
 
 		*room_number = door;
-		r = &room[door];
+		r = &rooms[door];
 
 	} while (door != 255);
 
@@ -1274,7 +1272,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number)
 					break;
 
 				*room_number = floor->sky_room;
-				r = &room[floor->sky_room];
+				r = &rooms[floor->sky_room];
 				floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
 				if (y >= GetMinimumCeiling(floor, x, z))
@@ -1291,7 +1289,7 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number)
 				break;
 
 			*room_number = floor->pit_room;
-			r = &room[floor->pit_room];
+			r = &rooms[floor->pit_room];
 			floor = &r->floor[((z - r->z) >> 10) + r->x_size * ((x - r->x) >> 10)];
 
 			if (y < GetMaximumFloor(floor, x, z))
@@ -1312,7 +1310,7 @@ long GetWaterHeight(long x, long y, long z, short room_number)
 	long x_floor, y_floor;
 	short data;
 
-	r = &room[room_number];
+	r = &rooms[room_number];
 
 	do
 	{
@@ -1348,7 +1346,7 @@ long GetWaterHeight(long x, long y, long z, short room_number)
 		if (data != 255)
 		{
 			room_number = data;
-			r = &room[data];
+			r = &rooms[data];
 		}
 
 	} while (data != 255);
@@ -1360,7 +1358,7 @@ long GetWaterHeight(long x, long y, long z, short room_number)
 			if (CheckNoColCeilingTriangle(floor, x, z) == 1)
 				break;
 
-			r = &room[floor->sky_room];
+			r = &rooms[floor->sky_room];
 
 			if (!(r->flags & ROOM_UNDERWATER))
 				break;
@@ -1377,7 +1375,7 @@ long GetWaterHeight(long x, long y, long z, short room_number)
 			if (CheckNoColFloorTriangle(floor, x, z) == 1)
 				break;
 
-			r = &room[floor->pit_room];
+			r = &rooms[floor->pit_room];
 
 			if (r->flags & ROOM_UNDERWATER)
 				return GetMaximumFloor(floor, x, z);
@@ -1408,7 +1406,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z)
 		if (CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[floor->pit_room];
+		r = &rooms[floor->pit_room];
 		floor = &r->floor[((z - r->z) >> 10) + ((x - r->x) >> 10) * r->x_size];
 	}
 
@@ -1618,7 +1616,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z)
 		if (CheckNoColCeilingTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[f->sky_room];
+		r = &rooms[f->sky_room];
 		xoff = (z - r->z) >> 10;
 		yoff = (x - r->x) >> 10;
 		f = &r->floor[xoff + r->x_size * yoff];
@@ -1736,7 +1734,7 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z)
 		if (CheckNoColFloorTriangle(floor, x, z) == 1)
 			break;
 
-		r = &room[floor->pit_room];
+		r = &rooms[floor->pit_room];
 		xoff = (z - r->z) >> 10;
 		yoff = (x - r->x) >> 10;
 		floor = &r->floor[xoff + r->x_size * yoff];
@@ -2400,7 +2398,7 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits)
 	if (bits == 256)
 		bits = -64;
 	else
-		SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_LAND);
 
 	GetSpheres(item, Slist, 3);
 	object = &objects[item->object_number];
@@ -2436,7 +2434,7 @@ long IsRoomOutside(long x, long y, long z)
 
 	if (offset < 0)
 	{
-		r = &room[offset & 0x7FFF];
+		r = &rooms[offset & 0x7FFF];
 
 		if (y >= r->maxceiling && y <= r->minfloor &&
 			z >= r->z + 1024 && z <= ((r->x_size - 1) << 10) + r->z &&
@@ -2463,7 +2461,7 @@ long IsRoomOutside(long x, long y, long z)
 
 		while (*pTable != 255)
 		{
-			r = &room[*pTable];
+			r = &rooms[*pTable];
 
 			if (y >= r->maxceiling && y <= r->minfloor &&
 				z >= r->z + 1024 && z <= ((r->x_size - 1) << 10) + r->z &&
@@ -2509,7 +2507,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 
 	for (int i = 0; i < number_los_rooms; i++)
 	{
-		r = &room[los_rooms[i]];
+		r = &rooms[los_rooms[i]];
 
 		for (item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item)
 		{
@@ -2572,11 +2570,10 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	if (firing && LaserSight)
 	{
 		if (lara.gun_type == WEAPON_REVOLVER)
-			SOUND_PlayEffect(SFX_REVOLVER_FIRE, 0, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_REVOLVER_FIRE, NULL, SFX_LAND);
 	}
 
 	item_no = (short)ObjectOnLOS2(src, dest, &v, &Mesh);
-
 	if (item_no != 999)
 	{
 		target.x = v.x - ((v.x - src->x) >> 5);
@@ -2599,7 +2596,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						SmashedMesh[SmashedMeshCount] = Mesh;
 						SmashedMeshCount++;
 						Mesh->Flags &= ~1;
-						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)Mesh, SFX_DEFAULT);
+						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)Mesh, SFX_LAND);
 					}
 
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
@@ -2802,25 +2799,25 @@ void AnimateItem(ITEM_INFO* item)
 
 					if (objects[item->object_number].water_creature)
 					{
-						if (room[item->room_number].flags & ROOM_UNDERWATER)
+						if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 							SOUND_PlayEffect(num, &item->pos, SFX_WATER);
 						else
-							SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
+							SOUND_PlayEffect(num, &item->pos, SFX_LAND);
 					}
 					else if (item->room_number == 255)
 					{
 						item->pos.x_pos = lara_item->pos.x_pos;
 						item->pos.y_pos = lara_item->pos.y_pos - 762;
 						item->pos.z_pos = lara_item->pos.z_pos;
-						SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(num, &item->pos, SFX_LAND);
 					}
-					else if (room[item->room_number].flags & ROOM_UNDERWATER)
+					else if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 					{
 						if (type == SFX_LANDANDWATER || type == SFX_WATERONLY)
-							SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
+							SOUND_PlayEffect(num, &item->pos, SFX_LAND);
 					}
 					else if (type == SFX_LANDANDWATER || type == SFX_LANDONLY)
-						SOUND_PlayEffect(num, &item->pos, SFX_DEFAULT);
+						SOUND_PlayEffect(num, &item->pos, SFX_LAND);
 				}
 
 				cmd += 2;

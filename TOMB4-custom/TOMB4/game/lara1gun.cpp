@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "lara1gun.h"
 #include "traps.h"
 #include "objects.h"
@@ -23,38 +23,34 @@
 #include "lara.h"
 #include "savegame.h"
 #include "gameflow.h"
+#include "weapons/rocket_gun.h"
 
 void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item)
 {
-	if (baddie->flags & 0x8000)
+	if (baddie->flags & IFL_CLEARBODY)
 		return;
 
-	if (baddie == lara_item && lara_item->hit_points > 0)
+	if (baddie->object_number == LARA && baddie->hit_points > 0)
 	{
-		lara_item->hit_points -= 50;
-
-		if (!(room[item->room_number].flags & ROOM_UNDERWATER) && lara_item->hit_points <= 50)
+		baddie->hit_points -= 50;
+		baddie->hit_status = TRUE;
+		if (!(rooms[item->room_number].flags & ROOM_UNDERWATER) && baddie->hit_points <= 50)
 			LaraBurn();
 	}
 	else if (!item->item_flags[2])
 	{
 		baddie->hit_status = 1;
-
-		if ((!objects[baddie->object_number].undead || baddie->object_number == SKELETON || baddie->object_number == MUMMY) &&
-			baddie->object_number != AHMET)
+		if (!objects[baddie->object_number].undead && baddie->object_number != AHMET)
 		{
 			HitTarget(baddie, 0, 30, 1);
-
-			if (baddie != lara_item)
+			if (baddie->object_number != LARA)
 			{
 				savegame.Game.AmmoHits++;
-
 				if (baddie->hit_points <= 0)
 				{
 					savegame.Level.Kills++;
-
 					if (baddie->object_number != BABOON_NORMAL && baddie->object_number != BABOON_INV && baddie->object_number != BABOON_SILENT)
-						CreatureDie(baddie - items, 1);
+						CreatureDie(baddie->index, TRUE);
 				}
 			}
 		}
@@ -142,7 +138,7 @@ void FireCrossbow(PHD_3DPOS* pos)
 		else if (lara.crossbow_type_carried & W_AMMO3)
 			item->item_flags[0] = 3;
 
-		SOUND_PlayEffect(SFX_LARA_CROSSBOW, 0, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LARA_CROSSBOW, 0, SFX_LAND);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -234,35 +230,29 @@ void FireShotgun()
 		}
 
 		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
-		SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x1400000 | SFX_SETPITCH);
-		SOUND_PlayEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+		SOUND_PlayEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFX_LAND);
 		savegame.Game.AmmoUsed++;
 	}
 }
 
 void FireGrenade()
 {
-	ITEM_INFO* item;
-	PHD_VECTOR pos;
-	PHD_VECTOR pos2;
-	long h;
-	short item_number;
-
 	short& ammo = get_current_ammo_pointer(WEAPON_GRENADE);
 	if (ammo == 0)
 		return;
 
 	lara.has_fired = 1;
-	item_number = CreateItem();
-
+	short item_number = CreateItem();
 	if (item_number == NO_ITEM)
 		return;
 
-	item = &items[item_number];
+	ITEM_INFO* item = &items[item_number];
 	item->shade = -0x3DF0;
 	item->object_number = GRENADE;
 	item->room_number = lara_item->room_number;
 
+	PHD_VECTOR pos;
 	pos.x = 0;
 	pos.y = 276;
 	pos.z = 80;
@@ -270,7 +260,7 @@ void FireGrenade()
 	item->pos.x_pos = pos.x;
 	item->pos.y_pos = pos.y;
 	item->pos.z_pos = pos.z;
-	h = GetHeight(GetFloor(pos.x, pos.y, pos.z, &item->room_number), pos.x, pos.y, pos.z);
+	long h = GetHeight(GetFloor(pos.x, pos.y, pos.z, &item->room_number), pos.x, pos.y, pos.z);
 
 	if (h < pos.y)
 	{
@@ -280,6 +270,7 @@ void FireGrenade()
 		item->room_number = lara_item->room_number;
 	}
 
+	PHD_VECTOR pos2;
 	pos2.x = 0;
 	pos2.y = 1204;
 	pos2.z = 80;
@@ -332,7 +323,7 @@ void AnimateShotgun(long weapon_type)
 
 	item = &items[lara.weapon_item];
 
-	if (SmokeCountR)
+	if (SmokeCountL)
 	{
 		switch (SmokeWeapon)
 		{
@@ -346,11 +337,16 @@ void AnimateShotgun(long weapon_type)
 			pos.y = 228;
 			pos.z = 32;
 			break;
+		case WEAPON_ROCKET:
+			pos.x = 0;
+			pos.y = ROCKET_YOFF;
+			pos.z = ROCKET_ZOFF;
+			break;
 		}
 
 		GetLaraJointPos(&pos, 11);
 		if (lara_item->mesh_bits)
-			TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, SmokeWeapon, SmokeCountR);
+			TriggerGunSmoke(pos.x, pos.y, pos.z, 0, 0, 0, 0, SmokeWeapon, SmokeCountL);
 	}
 
 	switch (item->current_anim_state)
@@ -385,13 +381,21 @@ void AnimateShotgun(long weapon_type)
 				{
 					if (!lara.target || lara.left_arm.lock)
 					{
-						if (weapon_type == WEAPON_GRENADE)
+						switch (weapon_type)
+						{
+						case WEAPON_GRENADE:
 							FireGrenade();
-						else if (weapon_type == WEAPON_CROSSBOW)
+							break;
+						case WEAPON_CROSSBOW:
 							FireCrossbow(0);
-						else
+							break;
+						case WEAPON_SHOTGUN:
 							FireShotgun();
-
+							break;
+						case WEAPON_ROCKET:
+							FireRocket();
+							break;
+						}
 						item->goal_anim_state = 2;
 					}
 				}
@@ -403,15 +407,15 @@ void AnimateShotgun(long weapon_type)
 			{
 				if (m16_firing)
 				{
-					SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
+					SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
 					m16_firing = 0;
 				}
 			}
 		}
 		else if (m16_firing)
 		{
-			SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos, 0x5000000 | SFX_SETPITCH);
-			SOUND_PlayEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+			SOUND_PlayEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_LAND);
 		}
 		else if (weapon_type == 4 && !(input & IN_ACTION) && !lara.left_arm.lock)
 			item->goal_anim_state = 4;
@@ -766,7 +770,7 @@ void ControlCrossbow(short item_number)
 	oldPos.y = item->pos.y_pos;
 	oldPos.z = item->pos.z_pos;
 
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
 		if (item->speed > 64)
 			item->speed -= item->speed >> 4;
@@ -804,7 +808,7 @@ void ControlCrossbow(short item_number)
 	if (item->room_number != room_number)
 		ItemNewRoom(item_number, room_number);
 
-	r = &room[room_number];
+	r = &rooms[room_number];
 
 	if (r->flags & ROOM_UNDERWATER && abovewater)
 	{
@@ -901,7 +905,7 @@ void ControlCrossbow(short item_number)
 
 	if (exploded)
 	{
-		if (room[item->room_number].flags & ROOM_UNDERWATER)
+		if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 			TriggerUnderwaterExplosion(item, 0);
 		else
 		{
@@ -915,8 +919,8 @@ void ControlCrossbow(short item_number)
 		}
 
 		AlertNearbyGuards(item);
-		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, 0x1800000 | SFX_SETPITCH);
-		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos);
+		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_LAND);
 	}
 
 	if (collided || exploded)
@@ -1004,7 +1008,7 @@ void ControlGrenade(short item_number)
 				item2->item_flags[0] = 4;
 				item2->item_flags[2] = item->item_flags[2];
 
-				if (room[item2->room_number].flags & ROOM_UNDERWATER)
+				if (rooms[item2->room_number].flags & ROOM_UNDERWATER)
 					item2->hit_points = 1;
 				else
 					item2->hit_points = 3000;
@@ -1019,7 +1023,7 @@ void ControlGrenade(short item_number)
 	oldPos.z = item->pos.z_pos;
 	item->shade = -0x3DF0;
 
-	if (room[item->room_number].flags & ROOM_UNDERWATER)
+	if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 	{
 		abovewater = 0;
 		item->fallspeed += (5 - item->fallspeed) >> 1;
@@ -1062,7 +1066,7 @@ void ControlGrenade(short item_number)
 		pos.z = (long)mMXPtr[M23];
 		phd_PopMatrix();
 
-		TriggerRocketSmoke(item->pos.x_pos + pos.x, item->pos.y_pos + pos.y, item->pos.z_pos + pos.z, -1);
+		TriggerRocketSmokeTR4(item->pos.x_pos + pos.x, item->pos.y_pos + pos.y, item->pos.z_pos + pos.z, -1);
 	}
 
 	xv = (item->speed * phd_sin(item->goal_anim_state)) >> W2V_SHIFT;
@@ -1093,10 +1097,10 @@ void ControlGrenade(short item_number)
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if (room[room_number].flags & ROOM_UNDERWATER && abovewater)
+	if (rooms[room_number].flags & ROOM_UNDERWATER && abovewater)
 	{
 		splash_setup.x = item->pos.x_pos;
-		splash_setup.y = room[room_number].maxceiling;
+		splash_setup.y = rooms[room_number].maxceiling;
 		splash_setup.z = item->pos.z_pos;
 		splash_setup.InnerRad = 32;
 		splash_setup.InnerSize = 8;
@@ -1250,7 +1254,7 @@ void ControlGrenade(short item_number)
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 			TriggerFlashSmoke(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 		}
-		else if (room[item->room_number].flags & ROOM_UNDERWATER)
+		else if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 			TriggerUnderwaterExplosion(item, 0);
 		else
 		{
@@ -1264,8 +1268,8 @@ void ControlGrenade(short item_number)
 		}
 
 		AlertNearbyGuards(item);
-		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, 0x1800004);
-		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, 0);
+		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos);
+		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos);
 
 		if (item->item_flags[0] == 1 || item->item_flags[0] == 4)
 			KillItem(item_number);

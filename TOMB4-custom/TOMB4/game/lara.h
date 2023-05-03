@@ -1,6 +1,9 @@
 #pragma once
 #include "../global/types.h"
 
+#define DAMAGE_START  140
+#define DAMAGE_LENGTH 14
+
 void lara_void_func(ITEM_INFO* item, COLL_INFO* coll);
 void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll);
 void SetCornerAnim(ITEM_INFO* item, COLL_INFO* coll, short rot, short flip);

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "door.h"
 #include "draw.h"
 #include "control.h"

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "init.h"
 #include "objects.h"
 #include "../specific/function_stubs.h"
@@ -69,7 +69,7 @@ void InitialiseDoor(short item_number)
 	else
 		dy = 1;
 
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	door->d1.floor = &r->floor[(((item->pos.z_pos - r->z) >> 10) + dx) + (((item->pos.x_pos - r->x) >> 10) + dy) * r->x_size];
 	room_number = GetDoor(door->d1.floor);
 
@@ -77,7 +77,7 @@ void InitialiseDoor(short item_number)
 		box_number = door->d1.floor->box;
 	else
 	{
-		b = &room[room_number];
+		b = &rooms[room_number];
 		box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 	}
 
@@ -88,7 +88,7 @@ void InitialiseDoor(short item_number)
 		door->d1flip.floor = 0;
 	else
 	{
-		r = &room[r->flipped_room];
+		r = &rooms[r->flipped_room];
 		door->d1flip.floor = &r->floor[(((item->pos.z_pos - r->z) >> 10) + dx) + (((item->pos.x_pos - r->x) >> 10) + dy) * r->x_size];
 		room_number = GetDoor(door->d1flip.floor);
 
@@ -96,7 +96,7 @@ void InitialiseDoor(short item_number)
 			box_number = door->d1flip.floor->box;
 		else
 		{
-			b = &room[room_number];
+			b = &rooms[room_number];
 			box_number = b->floor[(((item->pos.z_pos - b->z) >> 10) + dx) + (((item->pos.x_pos - b->x) >> 10) + dy) * b->x_size].box;
 		}
 
@@ -115,7 +115,7 @@ void InitialiseDoor(short item_number)
 	}
 	else
 	{
-		r = &room[two_room];
+		r = &rooms[two_room];
 		door->d2.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];
 		room_number = GetDoor(door->d2.floor);
 
@@ -123,7 +123,7 @@ void InitialiseDoor(short item_number)
 			box_number = door->d2.floor->box;
 		else
 		{
-			b = &room[room_number];
+			b = &rooms[room_number];
 			box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 		}
 
@@ -134,7 +134,7 @@ void InitialiseDoor(short item_number)
 			door->d2flip.floor = 0;
 		else
 		{
-			r = &room[r->flipped_room];
+			r = &rooms[r->flipped_room];
 			door->d2flip.floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + ((item->pos.x_pos - r->x) >> 10) * r->x_size];
 			room_number = GetDoor(door->d2flip.floor);
 
@@ -142,7 +142,7 @@ void InitialiseDoor(short item_number)
 				box_number = door->d2flip.floor->box;
 			else
 			{
-				b = &room[room_number];
+				b = &rooms[room_number];
 				box_number = b->floor[((item->pos.z_pos - b->z) >> 10) + ((item->pos.x_pos - b->x) >> 10) * b->x_size].box;
 			}
 
@@ -425,7 +425,7 @@ void InitialiseSmashObject(short item_number)
 	item = &items[item_number];
 	item->flags = 0;
 	item->mesh_bits = 1;
-	rinfo = &room[item->room_number];
+	rinfo = &rooms[item->room_number];
 	floor = &rinfo->floor[((item->pos.z_pos - rinfo->z) >> 10) + ((item->pos.x_pos - rinfo->x) >> 10) * rinfo->x_size];
 
 	if (boxes[floor->box].overlap_index & 0x8000)
@@ -464,7 +464,7 @@ void InitialiseSmokeEmitter(short item_number)
 		else if (item->pos.y_rot == -0x8000)
 			item->pos.z_pos -= 320;
 	}
-	else if (room[item->room_number].flags & ROOM_UNDERWATER && item->trigger_flags == 1)
+	else if (rooms[item->room_number].flags & ROOM_UNDERWATER && item->trigger_flags == 1)
 	{
 		item->item_flags[0] = 20;
 		item->item_flags[1] = 1;

@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "box.h"
 #include "tomb4fx.h"
 #include "items.h"
@@ -33,9 +33,9 @@ void CreatureDie(short item_number, long explode)
 	if (explode)
 	{
 		if (objects[item->object_number].HitEffect == 1)
-			ExplodingDeath2(item_number, -1, 258);
+			ExplodingDeath2(item_number, -1, 258); // BLOOD
 		else
-			ExplodingDeath2(item_number, -1, 256);
+			ExplodingDeath2(item_number, -1, 256); // NORMAL
 
 		KillItem(item_number);
 	}
@@ -136,12 +136,12 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 	}
 
 	zone = ground_zone[creature->LOT.zone][flip_status];
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
 	item->box_number = floor->box;
 	info->zone_number = zone[item->box_number];
 
-	r = &room[enemy->room_number];
+	r = &rooms[enemy->room_number];
 	floor = &r->floor[((enemy->pos.z_pos - r->z) >> 10) + r->x_size * ((enemy->pos.x_pos - r->x) >> 10)];
 	enemy->box_number = floor->box;
 	info->enemy_zone = zone[enemy->box_number];
@@ -851,7 +851,7 @@ long CreatureCreature(short item_number)
 	yrot = item->pos.y_rot;
 	rad = objects[item->object_number].radius;
 
-	for (item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item->next_item)
+	for (item_num = rooms[item->room_number].item_number; item_num != NO_ITEM; item_num = item->next_item)
 	{
 		item = &items[item_num];
 
@@ -1136,7 +1136,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 		{
 			GetFloor(item->pos.x_pos, y + 256, item->pos.z_pos, &room_number);
 
-			if (room[room_number].flags & ROOM_UNDERWATER)
+			if (rooms[room_number].flags & ROOM_UNDERWATER)
 				dy = -LOT->fly;
 		}
 
@@ -1228,7 +1228,7 @@ short CreatureTurn(ITEM_INFO* item, short maximum_turn)
 
 	x = item->pos.x_pos;
 	z = item->pos.z_pos;
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 
 	feelxplus = x + (512 * phd_sin(item->pos.y_rot + 8190) >> W2V_SHIFT);
 	feelzplus = z + (512 * phd_cos(item->pos.y_rot + 8190) >> W2V_SHIFT);
@@ -1613,11 +1613,11 @@ void FindAITargetObject(CREATURE_INFO* creature, short obj_num)
 
 		zone = ground_zone[creature->LOT.zone][flip_status];
 
-		r = &room[item->room_number];
+		r = &rooms[item->room_number];
 		item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
 		zone_number = zone[item->box_number];
 
-		r = &room[aiObj->room_number];
+		r = &rooms[aiObj->room_number];
 		aiObj->box_number = r->floor[((aiObj->z - r->z) >> 10) + r->x_size * ((aiObj->x - r->x) >> 10)].box;
 		ai_zone = zone[aiObj->box_number];
 
@@ -1749,10 +1749,10 @@ short SameZone(CREATURE_INFO* creature, ITEM_INFO* target_item)
 	zone = ground_zone[creature->LOT.zone][flip_status];
 	item = &items[creature->item_num];
 
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
 
-	r = &room[target_item->room_number];
+	r = &rooms[target_item->room_number];
 	target_item->box_number = r->floor[((target_item->pos.z_pos - r->z) >> 10) + r->x_size * ((target_item->pos.x_pos - r->x) >> 10)].box;
 
 	return zone[item->box_number] == zone[target_item->box_number];

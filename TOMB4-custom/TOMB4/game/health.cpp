@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "health.h"
 #include "../specific/drawbars.h"
 #include "text.h"

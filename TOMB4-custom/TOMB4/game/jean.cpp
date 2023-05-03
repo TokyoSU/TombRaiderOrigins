@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "jean.h"
 #include "objects.h"
 #include "../specific/function_stubs.h"

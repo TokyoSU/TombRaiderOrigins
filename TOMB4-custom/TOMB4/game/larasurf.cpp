@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "larasurf.h"
 #include "lara_states.h"
 #include "lara.h"

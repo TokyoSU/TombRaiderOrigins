@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "LoadSave.h"
 #include "../game/text.h"
 #include "../game/sound.h"

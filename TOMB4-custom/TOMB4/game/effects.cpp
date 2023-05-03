@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "effects.h"
 #include "../specific/polyinsert.h"
 #include "../specific/function_table.h"
@@ -163,7 +163,7 @@ void floor_shake_effect(ITEM_INFO* item)
 
 void SoundFlipEffect(ITEM_INFO* item)
 {
-	SOUND_PlayEffect(TriggerTimer, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(TriggerTimer, 0, SFX_LAND);
 	flipeffect = -1;
 }
 
@@ -187,7 +187,7 @@ void RubbleFX(ITEM_INFO* item)
 
 void PoseidonSFX(ITEM_INFO* item)
 {
-	SOUND_PlayEffect(SFX_WATER_FLUSHES, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_WATER_FLUSHES, 0, SFX_LAND);
 	flipeffect = -1;
 }
 
@@ -215,7 +215,7 @@ void SwapCrowbar(ITEM_INFO* item)
 
 void ExplosionFX(ITEM_INFO* item)
 {
-	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_LAND);
 	camera.bounce = -75;
 	flipeffect = -1;
 }
@@ -434,7 +434,7 @@ void WaterFall(short item_number)
 			TriggerWaterfallMist(item->pos.x_pos + dx, item->pos.y_pos, item->pos.z_pos + dz, item->pos.y_rot >> 4);
 		}
 
-		SOUND_PlayEffect(SFX_WATERFALL_LOOP, &item->pos, 0);
+		SOUND_PlayEffect(SFX_WATERFALL_LOOP, &item->pos);
 	}
 }
 
@@ -446,7 +446,7 @@ void WadeSplash(ITEM_INFO* item, long water, long depth)
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if (!(room[room_number].flags & ROOM_UNDERWATER))
+	if (!(rooms[room_number].flags & ROOM_UNDERWATER))
 		return;
 
 	bounds = GetBestFrame(item);
@@ -489,7 +489,7 @@ void Splash(ITEM_INFO* item)
 	room_number = item->room_number;
 	GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
-	if (room[room_number].flags & ROOM_UNDERWATER)
+	if (rooms[room_number].flags & ROOM_UNDERWATER)
 	{
 		splash_setup.x = item->pos.x_pos;
 		splash_setup.y = GetWaterHeight(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, room_number);
@@ -511,7 +511,7 @@ void Splash(ITEM_INFO* item)
 
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number)
 {
-	if (room[room_number].flags & ROOM_UNDERWATER)
+	if (rooms[room_number].flags & ROOM_UNDERWATER)
 		TriggerUnderwaterBlood(x, y, z, speed);
 	else
 		TriggerBlood(x, y, z, ang >> 4, speed);
@@ -535,10 +535,10 @@ void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_nu
 void Richochet(GAME_VECTOR* pos)
 {
 	TriggerRicochetSpark(pos, mGetAngle(pos->z, pos->x, lara_item->pos.z_pos, lara_item->pos.x_pos) >> 4, 3, 0);
-	SOUND_PlayEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_LAND);
 }
 
-void SOUND_PlayEnvironmentEffect()
+void SoundSources()
 {
 	if (!sound_active)
 		return;
@@ -549,50 +549,17 @@ void SOUND_PlayEnvironmentEffect()
 	for (int i = 0; i < number_sound_effects; i++)
 	{
 		sfx = &sound_effects[i];
-		if (flip_status)
-		{
-			if (sfx->flags & 0x40)  // flipped ?
-				SOUND_PlayEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
-		}
-		else if (sfx->flags & 0x80) // not flipped
-			SOUND_PlayEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
+		if (!flip_status && sfx->flags & 0x40)
+			continue;
+		else if (flip_status && sfx->flags & 0x80) // not flipped
+			continue;
+		SOUND_PlayEffect(sfx->data, (PHD_3DPOS*)sfx);
 	}
 
 	if (flipeffect != -1)
 		effect_routines[flipeffect](NULL);
 
-	for (int i = 0; i < SOUND_MAX_CHANNELS; i++)
-	{
-		slot = &LaSlot[i];
-		if (slot->nSampleInfo < 0)
-			continue;
-
-		if ((sample_infos[slot->nSampleInfo].flags & 3) != 3)
-		{
-			if (!SOUND_EffectIsPlaying(i))
-			{
-				slot->nSampleInfo = -1;
-			}
-			else
-			{
-				//S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
-			}
-		}
-		else
-		{
-			if (!slot->nVolume)
-			{
-				SOUND_Stop(i);
-				slot->nSampleInfo = -1;
-			}
-			else
-			{
-				//S_SoundSetPanAndVolume(i, (short)slot->nPan, (ushort)slot->nVolume);
-				//S_SoundSetPitch(i, slot->nPitch);
-				slot->nVolume = 0;
-			}
-		}
-	}
+	SOUND_EndScene();
 }
 
 long ItemNearLara(PHD_3DPOS* pos, long rad)
@@ -607,7 +574,6 @@ long ItemNearLara(PHD_3DPOS* pos, long rad)
 	if (dx >= -rad && dx <= rad && dz >= -rad && dz <= rad && dy >= -3072 && dy <= 3072 && SQUARE(dx) + SQUARE(dz) <= SQUARE(rad))
 	{
 		bounds = GetBoundsAccurate(lara_item);
-
 		if (dy >= bounds[2] && dy <= bounds[3] + 100)
 			return 1;
 	}

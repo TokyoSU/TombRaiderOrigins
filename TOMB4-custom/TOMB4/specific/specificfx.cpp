@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "specificfx.h"
 #include "3dmath.h"
 #include "../game/delstuff.h"
@@ -2126,7 +2126,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 	}
 	else
 	{
-		if (room[camera.pos.room_number].flags & ROOM_NO_LENSFLARE)
+		if (rooms[camera.pos.room_number].flags & ROOM_NO_LENSFLARE)
 			return;
 
 		r = (uchar)gfLensFlareColour.r;
@@ -2175,7 +2175,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 
 	if (rn != 255)
 	{
-		if (room[rn].flags & ROOM_NOT_INSIDE || lfobj)
+		if (rooms[rn].flags & ROOM_NOT_INSIDE || lfobj)
 		{
 			start.y = camera.pos.y;
 			start.z = camera.pos.z;
@@ -2628,7 +2628,7 @@ void DrawDrips()
 
 		pos[1] -= drip->Yvel >> 6;
 
-		if (room[drip->RoomNumber].flags & ROOM_NOT_INSIDE)
+		if (rooms[drip->RoomNumber].flags & ROOM_NOT_INSIDE)
 		{
 			pos[0] -= SmokeWindX >> 1;
 			pos[1] -= SmokeWindZ >> 1;
@@ -4006,7 +4006,7 @@ void DoUwEffect()
 			p->pos.y = lara_item->pos.y_pos + y;
 			p->pos.z = lara_item->pos.z_pos + z;
 
-			if (IsRoomOutside(p->pos.x, p->pos.y, p->pos.z) < 0 || !(room[IsRoomOutsideNo].flags & ROOM_UNDERWATER))
+			if (IsRoomOutside(p->pos.x, p->pos.y, p->pos.z) < 0 || !(rooms[IsRoomOutsideNo].flags & ROOM_UNDERWATER))
 			{
 				p->pos.x = 0;
 				continue;

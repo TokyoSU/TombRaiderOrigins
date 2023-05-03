@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "text.h"
 #include "../specific/polyinsert.h"
 #include "../specific/specificfx.h"

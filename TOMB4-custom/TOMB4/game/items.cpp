@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "items.h"
 #include "effect2.h"
 #include "objects.h"
@@ -64,10 +64,10 @@ void KillItem(short item_num)
 
 	if (item->room_number != 255)
 	{
-		linknum = room[item->room_number].item_number;
+		linknum = rooms[item->room_number].item_number;
 
 		if (linknum == item_num)
-			room[item->room_number].item_number = item->next_item;
+			rooms[item->room_number].item_number = item->next_item;
 		else
 		{
 			for (; linknum != NO_ITEM; linknum = items[linknum].next_item)
@@ -115,6 +115,7 @@ void InitialiseItem(short item_num)
 	FLOOR_INFO* floor;
 
 	item = &items[item_num];
+	item->index = item_num;
 	item->anim_number = objects[item->object_number].anim_index;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = anims[item->anim_number].current_anim_state;
@@ -169,7 +170,7 @@ void InitialiseItem(short item_num)
 		item->status = ITEM_ACTIVE;
 	}
 
-	r = &room[item->room_number];
+	r = &rooms[item->room_number];
 	item->next_item = r->item_number;
 	r->item_number = item_num;
 	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
@@ -219,10 +220,10 @@ void RemoveDrawnItem(short item_num)
 	short linknum;
 
 	item = &items[item_num];
-	linknum = room[item->room_number].item_number;
+	linknum = rooms[item->room_number].item_number;
 
 	if (linknum == item_num)
-		room[item->room_number].item_number = item->next_item;
+		rooms[item->room_number].item_number = item->next_item;
 	else
 	{
 		for (; linknum != NO_ITEM; linknum = items[linknum].next_item)
@@ -274,7 +275,7 @@ void ItemNewRoom(short item_num, short room_num)
 
 	if (item->room_number != 255)
 	{
-		r = &room[item->room_number];
+		r = &rooms[item->room_number];
 		linknum = r->item_number;
 
 		if (linknum == item_num)
@@ -293,8 +294,8 @@ void ItemNewRoom(short item_num, short room_num)
 	}
 
 	item->room_number = room_num;
-	item->next_item = room[room_num].item_number;
-	room[room_num].item_number = item_num;
+	item->next_item = rooms[room_num].item_number;
+	rooms[room_num].item_number = item_num;
 }
 
 void InitialiseFXArray(long allocmem)
@@ -329,7 +330,7 @@ short CreateEffect(short room_num)
 	{
 		fx = &effects[fx_num];
 		next_fx_free = fx->next_fx;
-		r = &room[room_num];
+		r = &rooms[room_num];
 		fx->room_number = room_num;
 		fx->next_fx = r->fx_number;
 		r->fx_number = fx_num;
@@ -370,10 +371,10 @@ void KillEffect(short fx_num)
 		}
 	}
 
-	linknum = room[fx->room_number].fx_number;
+	linknum = rooms[fx->room_number].fx_number;
 
 	if (linknum == fx_num)
-		room[fx->room_number].fx_number = fx->next_fx;
+		rooms[fx->room_number].fx_number = fx->next_fx;
 	else
 	{
 		for (; linknum != NO_ITEM; linknum = effects[linknum].next_fx)
@@ -405,7 +406,7 @@ void EffectNewRoom(short fx_num, short room_num)
 	}
 
 	fx = &effects[fx_num];
-	r = &room[fx->room_number];
+	r = &rooms[fx->room_number];
 
 	if (r->fx_number == fx_num)
 		r->fx_number = fx->next_fx;
@@ -422,6 +423,6 @@ void EffectNewRoom(short fx_num, short room_num)
 	}
 
 	fx->room_number = room_num;
-	fx->next_fx = room[room_num].fx_number;
-	room[room_num].fx_number = fx_num;
+	fx->next_fx = rooms[room_num].fx_number;
+	rooms[room_num].fx_number = fx_num;
 }

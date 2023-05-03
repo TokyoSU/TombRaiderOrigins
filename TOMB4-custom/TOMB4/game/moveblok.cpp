@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "moveblok.h"
 #include "control.h"
 #include "collide.h"
@@ -110,7 +110,7 @@ static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
 
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
-	r = &room[room_number];
+	r = &rooms[room_number];
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -192,7 +192,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
 	z = item->pos.z_pos + destz;
 	room_number = item->room_number;
 	floor = GetFloor(x, y - 256, z, &room_number);
-	r = &room[room_number];
+	r = &rooms[room_number];
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -252,7 +252,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
 	z = lara_item->pos.z_pos + destz;
 	room_number = lara_item->room_number;
 	GetFloor(x, y, z, &room_number);
-	r = &room[room_number];
+	r = &rooms[room_number];
 	rx = (x - r->x) >> 10;
 	rz = (z - r->z) >> 10;
 
@@ -672,7 +672,7 @@ void ControlPlanetEffect(short item_number)
 					TriggerLightning(&pos2, &pos, (GetRandomControl() & 0x1F) + 32, RGBA(0, g, b, 24), 1, 32, 5);
 
 				TriggerLightningGlow(pos.x, pos.y, pos.z, RGBA(0, g, b, (GetRandomControl() & 0x1F) + 48));
-				SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&pos, SFX_DEFAULT);
+				SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&pos, SFX_LAND);
 				pos = pos2;
 			}
 

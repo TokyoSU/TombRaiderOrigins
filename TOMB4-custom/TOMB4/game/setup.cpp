@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "setup.h"
 #include "objects.h"
 #include "pickup.h"
@@ -11,10 +11,12 @@
 #include "clockworkbeetle.h"
 #include "traps.h"
 #include "deathsld.h"
+#include "weapons/rocket_gun.h"
 #include "../specific/specificfx.h"
 #include "door.h"
 #include "bike.h"
 #include "jeep.h"
+#include "snowmobile.h"
 #include "voncroy.h"
 #include "sphinx.h"
 #include "laradouble.h"
@@ -286,6 +288,13 @@ void ObjectObjects()
 	obj = &objects[CROSSBOW_BOLT];
 	obj->initialise = 0;
 	obj->control = ControlCrossbow;
+	obj->collision = 0;
+	obj->draw_routine = DrawWeaponMissile;
+	obj->using_drawanimating_item = 0;
+
+	obj = &objects[ROCKET];
+	obj->initialise = 0;
+	obj->control = ControlRocket;
 	obj->collision = 0;
 	obj->draw_routine = DrawWeaponMissile;
 	obj->using_drawanimating_item = 0;
@@ -812,7 +821,7 @@ void BaddyObjects()
 
 	obj = &objects[MOTORBIKE];
 	obj->initialise = InitialiseBike;
-	obj->control = BikeControl;
+	//obj->control = BikeControl;
 	obj->collision = BikeCollision;
 	obj->draw_routine_extra = DrawBikeExtras;
 	obj->save_hitpoints = 1;
@@ -837,8 +846,18 @@ void BaddyObjects()
 	bones[obj->bone_index + 44] |= 4;
 	bones[obj->bone_index + 48] |= 4;
 
-	obj = &objects[SKELETON];
+	obj = &objects[SNOWMOBILE];
+	obj->initialise = InitialiseSkidoo;
+	//obj->control = SkidooControl;
+	obj->collision = SkidooCollision;
+	obj->draw_routine = DrawSkidoo;
+	obj->draw_routine_extra = DrawSkidooExtras;
+	obj->save_position = 1;
+	obj->save_flags = 1;
+	obj->save_anim = 1;
+	obj->HitEffect = 3;
 
+	obj = &objects[SKELETON];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseSkeleton;
@@ -1674,13 +1693,13 @@ void BuildOutsideTable()
 
 	for (int i = 0; i < number_rooms; i++)
 	{
-		r = &room[i];
+		r = &rooms[i];
 
 		if (r->flipped_room != -1)
 			flipped[r->flipped_room] = 1;
 	}
 
-	r = &room[0];
+	r = &rooms[0];
 	printf("X %d, Y %d, Z %d, Xs %d, Ys %d\n", r->x, r->y, r->z, r->x_size, r->y_size);
 
 	for (int y = 0; y < 108; y += 4)
@@ -1689,7 +1708,7 @@ void BuildOutsideTable()
 		{
 			for (int i = 0; i < number_rooms; i++)
 			{
-				r = &room[i];
+				r = &rooms[i];
 
 				if (flipped[i])
 					continue;
@@ -1849,6 +1868,7 @@ void InitialiseLara()
 	lara.num_small_medipack = 3;
 	lara.num_large_medipack = 1;
 	lara.num_pistols_ammo = -1;
+	lara.num_snowmobile_ammo = -1;
 
 	if (Gameflow->DemoDisc)
 		lara.crowbar = 1;
@@ -1960,7 +1980,7 @@ void GetCarriedItems()
 
 		if (objects[baddy->object_number].intelligent && baddy->object_number != SCORPION)
 		{
-			item_num = room[baddy->room_number].item_number;
+			item_num = rooms[baddy->room_number].item_number;
 
 			while (item_num != NO_ITEM)
 			{

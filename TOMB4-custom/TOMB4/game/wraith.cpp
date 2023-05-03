@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "wraith.h"
 #include "../specific/function_stubs.h"
 #include "effect2.h"
@@ -178,7 +178,7 @@ void WraithControl(short item_number)
 	short rotY, rotX, speed, room_number;
 
 	item = &items[item_number];
-	SOUND_PlayEffect(SFX_WRAITH_WHISPERS, &item->pos, SFX_DEFAULT);
+	SOUND_PlayEffect(SFX_WRAITH_WHISPERS, &item->pos, SFX_LAND);
 
 	if (item->hit_points)
 		target = &items[item->hit_points];
@@ -194,7 +194,7 @@ void WraithControl(short item_number)
 	}
 	else
 	{
-		r = &room[lara_item->room_number];
+		r = &rooms[lara_item->room_number];
 		dx = r->x + (r->y_size << 9) - item->pos.x_pos;
 		dz = r->z + (r->x_size << 9) - item->pos.z_pos;
 		dist = SQUARE(dx) + SQUARE(dz);
@@ -274,7 +274,7 @@ void WraithControl(short item_number)
 	{
 		ItemNewRoom(item_number, IsRoomOutsideNo);
 
-		for (int i = room[item->room_number].item_number; i != NO_ITEM; i = item2->next_item)
+		for (int i = rooms[item->room_number].item_number; i != NO_ITEM; i = item2->next_item)
 		{
 			item2 = &items[i];
 
@@ -294,7 +294,7 @@ void WraithControl(short item_number)
 
 	if (item->object_number != WRAITH3)
 	{
-		if (room[item->room_number].flags & ROOM_UNDERWATER)
+		if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 		{
 			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, -2, 1, item->room_number);
 			item->item_flags[1]--;

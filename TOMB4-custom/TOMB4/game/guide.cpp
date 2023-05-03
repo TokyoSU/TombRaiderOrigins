@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "guide.h"
 #include "box.h"
 #include "objects.h"
@@ -72,7 +72,7 @@ void GuideControl(short item_number)
 		pos.z = guide_hit.z;
 		GetJointAbsPosition(item, &pos, guide_hit.mesh_num);
 		AddFire(pos.x, pos.y, pos.z, 0, item->room_number, 0);
-		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_DEFAULT);
+		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
 		TriggerFireFlame(pos.x, pos.y - 40, pos.z, -1, 7);
 		TriggerDynamic(pos.x, pos.y, pos.z, 15, r, g, b);
 
@@ -511,7 +511,7 @@ void GuideControl(short item_number)
 		{
 			item->meshswap_meshbits &= ~0x40000;
 
-			for (candidate_num = room[item->room_number].item_number; candidate_num != NO_ITEM; candidate_num = candidate->next_item)
+			for (candidate_num = rooms[item->room_number].item_number; candidate_num != NO_ITEM; candidate_num = candidate->next_item)
 			{
 				candidate = &items[candidate_num];
 
@@ -589,7 +589,7 @@ void GuideControl(short item_number)
 		{
 			item->required_anim_state = 3;
 			item->meshswap_meshbits |= 0x200000;
-			SOUND_PlayEffect(SFX_GUIDE_SCARE, &item->pos, SFX_DEFAULT);
+			SOUND_PlayEffect(SFX_GUIDE_SCARE, &item->pos, SFX_LAND);
 		}
 
 		break;

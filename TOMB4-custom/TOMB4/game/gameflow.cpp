@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "gameflow.h"
 #include "../specific/fmv.h"
 #include "../specific/output.h"
@@ -528,6 +528,7 @@ void DoLevel(uchar Name, uchar Audio)
 		}
 
 		nFrames = DrawPhaseGame();
+		SOUND_UpdateScene();
 		handle_cutseq_triggering(Name);
 
 		if (DEL_playingamefmv)
@@ -907,10 +908,8 @@ void DoTitle(uchar Name, uchar Audio)
 	{
 		S_InitialisePolyList();
 		gfStatus = TitleOptions();	//originally inlined
-
 		if (gfStatus)
 			break;
-
 		handle_cutseq_triggering(Name);
 		nFrames = DrawPhaseGame();
 		gfStatus = ControlPhase(nFrames, 0);

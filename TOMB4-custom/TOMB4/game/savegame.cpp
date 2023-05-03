@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "savegame.h"
 #include "objects.h"
 #include "traps.h"
@@ -22,6 +22,7 @@
 #include "rope.h"
 #include "gameflow.h"
 #include "../specific/file.h"
+#include "snowmobile.h"
 
 SAVEGAME_INFO savegame;
 
@@ -219,7 +220,7 @@ void sgRestoreLevel()
 		{
 			item = &items[i];
 
-			if (item->object_number == MOTORBIKE || item->object_number == JEEP)
+			if (item->object_number == MOTORBIKE || item->object_number == JEEP || item->object_number == SNOWMOBILE)
 			{
 				item->pos.x_pos = lara_item->pos.x_pos;
 				item->pos.y_pos = lara_item->pos.y_pos;
@@ -233,10 +234,18 @@ void sgRestoreLevel()
 				item->floor = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 				lara.vehicle = i;
 
-				if (item->object_number == MOTORBIKE)
+				switch (item->object_number)
+				{
+				case MOTORBIKE:
 					BikeStart(item, lara_item);
-				else
+					break;
+				case JEEP:
 					JeepStart(item, lara_item);
+					break;
+				case SNOWMOBILE:
+					// TODO: start with snowmobile here !
+					break;
+				}
 
 				break;
 			}
@@ -392,7 +401,7 @@ void SaveLevelData(long FullSave)
 
 	for (int i = 0; i < number_rooms; i++)
 	{
-		r = &room[i];
+		r = &rooms[i];
 
 		for (int j = 0; j < r->num_meshes; j++)
 		{
@@ -627,6 +636,9 @@ void SaveLevelData(long FullSave)
 
 				if (item->object_number == JEEP)
 					WriteSG(item->data, sizeof(JEEPINFO));
+
+				if (item->object_number == SNOWMOBILE)
+					WriteSG(item->data, sizeof(SNOWMOBILEINFO));
 			}
 			else
 				WriteSG(&packed, sizeof(ushort));
@@ -823,7 +835,7 @@ void RestoreLevelData(long FullSave)
 
 	for (int i = 0; i < number_rooms; i++)
 	{
-		r = &room[i];
+		r = &rooms[i];
 
 		for (int j = 0; j < r->num_meshes; j++)
 		{
@@ -1036,6 +1048,9 @@ void RestoreLevelData(long FullSave)
 
 			if (item->object_number == JEEP)
 				ReadSG(item->data, sizeof(JEEPINFO));
+
+			if (item->object_number == SNOWMOBILE)
+				ReadSG(item->data, sizeof(SNOWMOBILEINFO));
 
 			if (obj->collision == PuzzleHoleCollision)
 			{

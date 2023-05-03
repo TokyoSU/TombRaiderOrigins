@@ -1,4 +1,4 @@
-#include "../tomb4/pch.h"
+#include "pch.h"
 #include "laraskin.h"
 #include "objects.h"
 #include "delstuff.h"
