@@ -120,7 +120,7 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 	SPHERE* laraSpheres;
 	PHD_VECTOR ip;
 	PHD_VECTOR lp;
-	ulong touch_bits;
+	unsigned long touch_bits;
 	long nItemSpheres, nLaraSpheres, ir, lr;
 
 	touch_bits = 0;

@@ -129,8 +129,8 @@ void AlignLaraToRope(ITEM_INFO* l)
 	PHD_VECTOR n, v, u, n2, up;
 	PHD_VECTOR v1, v2;
 	short* frame;
-	long temp[indices_count];
-	static long ropematrix[indices_count];
+	long temp[MATRIX_COUNT];
+	static long ropematrix[MATRIX_COUNT];
 	long i, x, y, z, x1, y1, z1;
 	short xyz[3];
 	static short ropeangle;

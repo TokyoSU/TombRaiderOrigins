@@ -39,7 +39,7 @@ long IM_rate;
 long IM_frac;
 
 float* mIMptr;
-float mIMstack[indices_count * 64];
+float mIMstack[MATRIX_COUNT * 64];
 
 long current_room;
 short no_rotation[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -49,8 +49,8 @@ long outside;
 short SkyPos;
 short SkyPos2;
 
-ushort LightningRGB[3];
-ushort LightningRGBs[3];
+unsigned short LightningRGB[3];
+unsigned short LightningRGBs[3];
 short LightningCount;
 short dLightningRand;
 
@@ -82,14 +82,14 @@ void InitInterpolate(long frac, long rate)
 void phd_PopMatrix_I()
 {
 	phd_PopMatrix();
-	mIMptr -= indices_count;
+	mIMptr -= MATRIX_COUNT;
 }
 
 void phd_PushMatrix_I()
 {
 	phd_PushMatrix();
-	memcpy(mIMptr + indices_count, mIMptr, 48);
-	mIMptr += indices_count;
+	memcpy(mIMptr + MATRIX_COUNT, mIMptr, 48);
+	mIMptr += MATRIX_COUNT;
 }
 
 void phd_RotY_I(short ang)
@@ -170,11 +170,11 @@ void gar_RotYXZsuperpack_I(short** pprot1, short** pprot2, long skip)
 
 void gar_RotYXZsuperpack(short** pprot, long skip)
 {
-	ushort* prot;
+	unsigned short* prot;
 
 	while (skip)
 	{
-		prot = (ushort*)*pprot;
+		prot = (unsigned short*)*pprot;
 
 		if (prot[0] & 0xC000)
 			*pprot += 1;
@@ -184,7 +184,7 @@ void gar_RotYXZsuperpack(short** pprot, long skip)
 		skip--;
 	}
 
-	prot = (ushort*)*pprot;
+	prot = (unsigned short*)*pprot;
 
 	switch (prot[0] >> 14)
 	{
@@ -695,9 +695,8 @@ void DrawRooms(short CurrentRoom)
 
 					if (LightningSFXDelay > -1)
 						LightningSFXDelay--;
-
 					if (!LightningSFXDelay)
-						SOUND_PlayEffect(SFX_THUNDER_RUMBLE, 0, SFX_LAND);
+						Sound.PlayEffect(SFX_THUNDER_RUMBLE);
 				}
 			}
 
@@ -711,11 +710,11 @@ void DrawRooms(short CurrentRoom)
 				if (gfLevelFlags & GF_LIGHTNING)
 					DrawFlatSky(RGBA(LightningRGB[0], LightningRGB[1], LightningRGB[2], 44), SkyPos, -1536, 4);
 				else
-					DrawFlatSky(*(ulong*)&gfLayer1Col, SkyPos, -1536, 4);
+					DrawFlatSky(*(unsigned long*)&gfLayer1Col, SkyPos, -1536, 4);
 			}
 
 			if (gfLevelFlags & GF_LAYER2)
-				DrawFlatSky(0xFF000000 | *(ulong*)&gfLayer2Col, SkyPos2, -1536, 2);
+				DrawFlatSky(0xFF000000 | *(unsigned long*)&gfLayer2Col, SkyPos2, -1536, 2);
 
 			if (gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2)
 				OutputSky();
@@ -791,15 +790,15 @@ void DrawRooms(short CurrentRoom)
 
 	nPolyType = 0;
 
-	for (int i = 0; i < MAX_DYNAMICS; i++)
+	for (auto it = Dynamics.begin(); it != Dynamics.end(); it++)
 	{
-		if (dynamics[i].on)
+		auto& dyn = *it;
+		if (dyn.on)
 		{
-			if (dynamics[i].x < 0)
-				dynamics[i].x = 0;
-
-			if (dynamics[i].z < 0)
-				dynamics[i].z = 0;
+			if (dyn.x < 0)
+				dyn.x = 0;
+			if (dyn.z < 0)
+				dyn.z = 0;
 		}
 	}
 
@@ -917,11 +916,11 @@ void RenderIt(short CurrentRoom)
 				if (gfLevelFlags & GF_LIGHTNING)
 					DrawFlatSky(RGBA(LightningRGB[0], LightningRGB[1], LightningRGB[2], 44), SkyPos, -1536, 4);
 				else
-					DrawFlatSky(*(ulong*)&gfLayer1Col, SkyPos, -1536, 4);
+					DrawFlatSky(*(unsigned long*)&gfLayer1Col, SkyPos, -1536, 4);
 			}
 
 			if (gfLevelFlags & GF_LAYER2)
-				DrawFlatSky(0xFF000000 | *(ulong*)&gfLayer2Col, SkyPos2, -1536, 2);
+				DrawFlatSky(0xFF000000 | *(unsigned long*)&gfLayer2Col, SkyPos2, -1536, 2);
 
 			if (gfLevelFlags & GF_LAYER1 || gfLevelFlags & GF_LAYER2)
 				OutputSky();
@@ -961,7 +960,6 @@ long DrawPhaseGame()
 		frigup_lara();
 
 	SetLaraUnderwaterNodes();
-	SOUND_UpdateScene();
 	DrawRooms(camera.pos.room_number);
 	DrawGameInfo(1);
 	S_OutputPolyList();

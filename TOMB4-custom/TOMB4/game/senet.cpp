@@ -210,7 +210,7 @@ void GameStixControl(short item_number)
 	if (item->trigger_flags > -1)
 	{
 		if (item->hit_points == 100)
-			SOUND_PlayEffect(SFX_SPINNING_PUZZLE, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_SPINNING_PUZZLE, &item->pos);
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -444,7 +444,7 @@ void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-void ShockwaveExplosion(ITEM_INFO* item, ulong col, long speed)
+void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed)
 {
 	PHD_VECTOR pos;
 	long InnerOuter;

@@ -77,7 +77,7 @@ static GouraudBarColourSet enemyBarColourSet =
 	{ 0, 0, 0, 0, 0 }
 };
 
-static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, ulong c0, ulong c1, ulong c2, ulong c3, TEXTURESTRUCT* tex)
+static void DrawColoredRect(float x0, float y0, float x1, float y1, float z, unsigned long c0, unsigned long c1, unsigned long c2, unsigned long c3, TEXTURESTRUCT* tex)
 {
 	D3DTLVERTEX* v;
 
@@ -468,7 +468,7 @@ void DoSlider(long x, long y, long width, long height, long pos, long c1, long c
 	w = (float)GetFixedScale(width);
 	h = (float)GetFixedScale(height >> 1);
 
-	tex.tpage = ushort(nTextures - 1);
+	tex.tpage = unsigned short(nTextures - 1);
 	tex.drawtype = 0;
 	tex.flag = 0;
 	tex.u1 = 0;

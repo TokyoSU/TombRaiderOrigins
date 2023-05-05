@@ -42,6 +42,7 @@
 #include "../specific/dxshell.h"
 #include "savegame.h"
 #include "../specific/file.h"
+#include "../specific/drawroom.h"
 
 ITEM_INFO* items;
 ANIM_STRUCT* anims;
@@ -75,12 +76,12 @@ long InItemControlLoop = 0;
 short ItemNewRooms[256][2];
 short ItemNewRoomNo = 0;
 
-uchar CurrentAtmosphere;
-uchar IsAtmospherePlaying;
+unsigned char CurrentAtmosphere;
+unsigned char IsAtmospherePlaying;
 char cd_flags[128];
 
-ulong FmvSceneTriggered;
-ulong CutSceneTriggered;
+unsigned long FmvSceneTriggered;
+unsigned long CutSceneTriggered;
 long SetDebounce;
 long framecount = 0;
 long reset_flag = 0;
@@ -88,7 +89,7 @@ long WeaponDelay = 0;
 long LaserSightX;
 long LaserSightY;
 long LaserSightZ;
-ushort GlobalCounter = 0;
+unsigned short GlobalCounter = 0;
 short XSoff1;
 short XSoff2;
 short YSoff1;
@@ -145,14 +146,14 @@ static long S_Death()
 					if (dbinput & IN_FORWARD)
 					{
 						selection = 0;
-						SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+						Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 					}
 
 					if (dbinput & IN_SELECT)
 					{
 						lara.death_count = 0;
 						ret = 1;
-						SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+						Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 					}
 				}
 				else
@@ -160,13 +161,13 @@ static long S_Death()
 					if (dbinput & IN_BACK)
 					{
 						selection = 1;
-						SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+						Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 					}
 
 					if (dbinput & IN_SELECT)
 					{
 						menu = 1;
-						SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+						Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 					}
 				}
 			}
@@ -463,7 +464,7 @@ long ControlPhase(long nframes, long demo_mode)
 
 		if (GLOBAL_inventoryitemchosen != -1)
 		{
-			SOUND_SayNo();
+			Sound.SayNo();
 			GLOBAL_inventoryitemchosen = -1;
 		}
 
@@ -502,7 +503,7 @@ long ControlPhase(long nframes, long demo_mode)
 		UpdateLightning();
 		AnimateWaterfalls();
 		UpdatePulseColour();
-		SoundSources();
+		Sound.PlaySoundSources();
 		health_bar_timer--;
 		
 		if (!gfGameMode)
@@ -599,7 +600,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 	ITEM_INFO* camera_item;
 	long switch_off, flip, flip_available, neweffect, key, quad;
 	short camera_flags, camera_timer, type, trigger, value, flags, state;
-	static uchar HeavyTriggered;
+	static unsigned char HeavyTriggered;
 	char timer;
 
 	switch_off = 0;
@@ -635,7 +636,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 	{
 		if (!heavy)
 		{
-			quad = ushort(lara_item->pos.y_rot + 8192) >> 14;
+			quad = unsigned short(lara_item->pos.y_rot + 8192) >> 14;
 
 			if ((1 << (quad + 8)) & *data)
 				lara.climb_status = 1;
@@ -869,7 +870,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 					item->touch_bits = 0;
 					AddActiveItem(value);
 					item->status = ITEM_ACTIVE;
-					HeavyTriggered = (uchar)heavy;
+					HeavyTriggered = (unsigned char)heavy;
 				}
 			}
 
@@ -1393,7 +1394,7 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z)
 	ROOM_INFO* r;
 	short* data;
 	long height;
-	ushort trigger;
+	unsigned short trigger;
 	short type, dx, dz, xoff, yoff, tilt, hadj, tilt0, tilt1, tilt2, tilt3;
 
 	tiltxoff = 0;
@@ -2018,7 +2019,7 @@ void TriggerNormalCDTrack(short value, short flags, short type)
 	{
 		if (CurrentAtmosphere != value)
 		{
-			CurrentAtmosphere = (uchar)value;
+			CurrentAtmosphere = (unsigned char)value;
 
 			if (IsAtmospherePlaying)
 				S_CDPlay(value, 1);
@@ -2398,7 +2399,7 @@ long ExplodeItemNode(ITEM_INFO* item, long Node, long NoXZVel, long bits)
 	if (bits == 256)
 		bits = -64;
 	else
-		SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_HIT_ROCK, &item->pos);
 
 	GetSpheres(item, Slist, 3);
 	object = &objects[item->object_number];
@@ -2420,7 +2421,7 @@ long IsRoomOutside(long x, long y, long z)
 {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	uchar* pTable;
+	unsigned char* pTable;
 	long h, c;
 	short offset, room_no;
 
@@ -2457,7 +2458,7 @@ long IsRoomOutside(long x, long y, long z)
 	}
 	else
 	{
-		pTable = (uchar*)&OutsideRoomTable[offset];
+		pTable = (unsigned char*)&OutsideRoomTable[offset];
 
 		while (*pTable != 255)
 		{
@@ -2570,7 +2571,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	if (firing && LaserSight)
 	{
 		if (lara.gun_type == WEAPON_REVOLVER)
-			SOUND_PlayEffect(SFX_REVOLVER_FIRE, NULL, SFX_LAND);
+			Sound.PlayEffect(SFX_REVOLVER_FIRE);
 	}
 
 	item_no = (short)ObjectOnLOS2(src, dest, &v, &Mesh);
@@ -2596,7 +2597,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						SmashedMesh[SmashedMeshCount] = Mesh;
 						SmashedMeshCount++;
 						Mesh->Flags &= ~1;
-						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)Mesh, SFX_LAND);
+						Sound.PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)Mesh);
 					}
 
 					TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
@@ -2701,9 +2702,10 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 void AnimateItem(ITEM_INFO* item)
 {
 	ANIM_STRUCT* anim;
+	SOUND_EFFECT_NAMES num;
 	short* cmd;
 	long speed, speed2;
-	ushort type, num;
+	unsigned short type;
 
 	anim = &anims[item->anim_number];
 	item->touch_bits = 0;
@@ -2794,30 +2796,30 @@ void AnimateItem(ITEM_INFO* item)
 
 				if (item->frame_number == *cmd)
 				{
-					num = cmd[1] & 0x3FFF;
+					num = (SOUND_EFFECT_NAMES)(cmd[1] & 0x3FFF);
 					type = cmd[1] & 0xC000;
 
 					if (objects[item->object_number].water_creature)
 					{
 						if (rooms[item->room_number].flags & ROOM_UNDERWATER)
-							SOUND_PlayEffect(num, &item->pos, SFX_WATER);
+							Sound.PlayEffect(num, &item->pos, SFXO_WATER);
 						else
-							SOUND_PlayEffect(num, &item->pos, SFX_LAND);
+							Sound.PlayEffect(num, &item->pos);
 					}
 					else if (item->room_number == 255)
 					{
 						item->pos.x_pos = lara_item->pos.x_pos;
 						item->pos.y_pos = lara_item->pos.y_pos - 762;
 						item->pos.z_pos = lara_item->pos.z_pos;
-						SOUND_PlayEffect(num, &item->pos, SFX_LAND);
+						Sound.PlayEffect(num, &item->pos);
 					}
 					else if (rooms[item->room_number].flags & ROOM_UNDERWATER)
 					{
 						if (type == SFX_LANDANDWATER || type == SFX_WATERONLY)
-							SOUND_PlayEffect(num, &item->pos, SFX_LAND);
+							Sound.PlayEffect(num, &item->pos);
 					}
 					else if (type == SFX_LANDANDWATER || type == SFX_LANDONLY)
-						SOUND_PlayEffect(num, &item->pos, SFX_LAND);
+						Sound.PlayEffect(num, &item->pos);
 				}
 
 				cmd += 2;

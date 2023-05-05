@@ -117,13 +117,13 @@ void ControlDeathSlide(short item_number)
 				lara_item->fallspeed = item->fallspeed >> 2;
 			}
 
-			SOUND_PlayEffect(SFX_VONCROY_KNIFE_SWISH, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_VONCROY_KNIFE_SWISH, &item->pos);
 			RemoveActiveItem(item_number);
 			item->status = ITEM_INACTIVE;
 			item->flags -= IFL_INVISIBLE;
 		}
 		else
-			SOUND_PlayEffect(SFX_TRAIN_DOOR_CLOSE, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_TRAIN_DOOR_CLOSE, &item->pos);
 	}
 	else
 	{

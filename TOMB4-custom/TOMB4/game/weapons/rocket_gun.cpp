@@ -149,7 +149,7 @@ void ControlRocket(short item_number)
 		TriggerExplosionSparks(old_x, old_y, old_z, 3, -2, r->flags & ROOM_UNDERWATER, item->room_number);
 		for (int x = 0; x < 2; x++)
 			TriggerExplosionSparks(old_x, old_y, old_z, 3, -1, r->flags & ROOM_UNDERWATER, item->room_number);
-		SOUND_PlayEffect(SFX_EXPLOSION2, NULL, SFX_LAND);
+		Sound.PlayEffect(SFX_EXPLOSION2);
 		KillItem(item_number);
 	}
 }

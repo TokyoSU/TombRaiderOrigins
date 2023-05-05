@@ -16,7 +16,7 @@
 #include "../specific/file.h"
 
 BOX_INFO* boxes;
-ushort* overlap;
+unsigned short* overlap;
 short* ground_zone[5][2];
 long num_boxes;
 
@@ -321,8 +321,8 @@ void TargetBox(LOT_INFO* LOT, short box_number)
 	BOX_INFO* box;
 
 	box = &boxes[box_number & 0x7FF];
-	LOT->target.x = (((ulong)box->bottom - (ulong)box->top - 1) >> 5) * GetRandomControl() + ((ulong)box->top << 10) + 512;
-	LOT->target.z = (((ulong)box->right - (ulong)box->left - 1) >> 5) * GetRandomControl() + ((ulong)box->left << 10) + 512;
+	LOT->target.x = (((unsigned long)box->bottom - (unsigned long)box->top - 1) >> 5) * GetRandomControl() + ((unsigned long)box->top << 10) + 512;
+	LOT->target.z = (((unsigned long)box->right - (unsigned long)box->left - 1) >> 5) * GetRandomControl() + ((unsigned long)box->left << 10) + 512;
 	LOT->required_box = box_number & 0x7FF;
 
 	if (LOT->fly)
@@ -337,8 +337,8 @@ long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
 	long x, z;
 
 	box = &boxes[box_number];
-	x = (((ulong)box->bottom + (ulong)box->top) << 9) - enemy->pos.x_pos;
-	z = (((ulong)box->left + (ulong)box->right) << 9) - enemy->pos.z_pos;
+	x = (((unsigned long)box->bottom + (unsigned long)box->top) << 9) - enemy->pos.x_pos;
+	z = (((unsigned long)box->left + (unsigned long)box->right) << 9) - enemy->pos.z_pos;
 
 	if (x > -5120 && x < 5120 && z > -5120 && z < 5120)
 		return 0;
@@ -377,10 +377,10 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
 		return 0;
 
 	box = &boxes[box_number];
-	x = (((ulong)box->bottom + (ulong)box->top) << 9) - enemy->pos.x_pos;
-	z = (((ulong)box->left + (ulong)box->right) << 9) - enemy->pos.z_pos;
-	xrange = ((ulong)box->bottom - (ulong)box->top + 3) << 10;	//3 is the # of blocks
-	zrange = ((ulong)box->right - (ulong)box->left + 3) << 10;
+	x = (((unsigned long)box->bottom + (unsigned long)box->top) << 9) - enemy->pos.x_pos;
+	z = (((unsigned long)box->left + (unsigned long)box->right) << 9) - enemy->pos.z_pos;
+	xrange = ((unsigned long)box->bottom - (unsigned long)box->top + 3) << 10;	//3 is the # of blocks
+	zrange = ((unsigned long)box->right - (unsigned long)box->left + 3) << 10;
 
 	if (x > xrange || x < -xrange || z > zrange || z < -zrange)
 		return 0;
@@ -400,7 +400,7 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
 	BOX_INFO* box;
 	long box_number, box_left, box_right, box_top, box_bottom;
 	long left, right, top, bottom, prime_free;
-	static ushort loops;
+	static unsigned short loops;
 
 	UpdateLOT(LOT, 5);
 	target->x = item->pos.x_pos;
@@ -1606,7 +1606,7 @@ void FindAITargetObject(CREATURE_INFO* creature, short obj_num)
 
 	for (int i = 0; i < nAIObjects; i++)
 	{
-		aiObj = &AIObjects[i];
+		aiObj = &ai_objects[i];
 
 		if (aiObj->object_number != obj_num || aiObj->trigger_flags != item->item_flags[3] || aiObj->room_number == 255)
 			continue;

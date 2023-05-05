@@ -27,7 +27,6 @@ static BITE_INFO ahmet_right_claw = { 0, 0, 0, 22 };
 void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
 	ITEM_INFO* item;
-	DRIP_STRUCT* drip;
 	PHD_VECTOR pos;
 	short roty;
 
@@ -52,7 +51,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					l->frame_number = anims[ANIM_FILLSCALE].frame_base;
 				}
 				else if (l->frame_number == anims[ANIM_FILLSCALE].frame_base + 51)
-					SOUND_PlayEffect(SFX_POUR, &l->pos, SFX_LAND);
+					Sound.PlayEffect(SFX_POUR, &l->pos);
 				else if (l->frame_number == anims[ANIM_FILLSCALE].frame_base + 74)
 				{
 					AddActiveItem(item_number);
@@ -94,18 +93,20 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		pos.y = 0;
 		pos.z = 0;
 		GetLaraJointPos(&pos, 14);
-		drip = &Drips[GetFreeDrip()];
-		drip->x = pos.x;
-		drip->y = pos.y;
-		drip->z = pos.z;
-		drip->On = 1;
-		drip->R = (GetRandomControl() & 0xF) + 24;
-		drip->G = (GetRandomControl() & 0xF) + 44;
-		drip->B = (GetRandomControl() & 0xF) + 56;
-		drip->Yvel = (GetRandomControl() & 0x1F) + 32;
-		drip->Gravity = (GetRandomControl() & 0x1F) + 32;
-		drip->Life = (GetRandomControl() & 0x1F) + 16;
-		drip->RoomNumber = l->room_number;
+
+		DRIP_STRUCT drip;
+		drip.x = pos.x;
+		drip.y = pos.y;
+		drip.z = pos.z;
+		drip.On = 1;
+		drip.R = (GetRandomControl() & 0xF) + 24;
+		drip.G = (GetRandomControl() & 0xF) + 44;
+		drip.B = (GetRandomControl() & 0xF) + 56;
+		drip.Yvel = (GetRandomControl() & 0x1F) + 32;
+		drip.Gravity = (GetRandomControl() & 0x1F) + 32;
+		drip.Life = (GetRandomControl() & 0x1F) + 16;
+		drip.RoomNumber = l->room_number;
+		Drips.push_back(drip);
 	}
 }
 
@@ -220,7 +221,7 @@ void ExplodeAhmet(ITEM_INFO* item)
 	}
 
 	TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 13, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
-	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
+	Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
 }
 
 void InitialiseAhmet(short item_number)

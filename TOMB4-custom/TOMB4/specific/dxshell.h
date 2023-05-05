@@ -1,7 +1,7 @@
 #pragma once
 #include "../global/types.h"
 
-void DXBitMask2ShiftCnt(ulong mask, uchar* shift, uchar* count);
+void DXBitMask2ShiftCnt(unsigned long mask, unsigned char* shift, unsigned char* count);
 void DXReadKeyboard(char* KeyMap);
 long DXAttempt(HRESULT r);
 void* AddStruct(void* p, long num, long size);

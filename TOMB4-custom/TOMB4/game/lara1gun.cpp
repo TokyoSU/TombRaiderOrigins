@@ -138,7 +138,7 @@ void FireCrossbow(PHD_3DPOS* pos)
 		else if (lara.crossbow_type_carried & W_AMMO3)
 			item->item_flags[0] = 3;
 
-		SOUND_PlayEffect(SFX_LARA_CROSSBOW, 0, SFX_LAND);
+		Sound.PlayEffect(SFX_LARA_CROSSBOW, &lara_item->pos);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -230,8 +230,8 @@ void FireShotgun()
 		}
 
 		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
-		SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
-		SOUND_PlayEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+		Sound.PlayEffect(weapons[WEAPON_SHOTGUN].sample_num, &lara_item->pos, SFXO_LAND);
 		savegame.Game.AmmoUsed++;
 	}
 }
@@ -407,15 +407,15 @@ void AnimateShotgun(long weapon_type)
 			{
 				if (m16_firing)
 				{
-					SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+					Sound.PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
 					m16_firing = 0;
 				}
 			}
 		}
 		else if (m16_firing)
 		{
-			SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
-			SOUND_PlayEffect(SFX_MP5_FIRE, &lara_item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+			Sound.PlayEffect(SFX_MP5_FIRE, &lara_item->pos);
 		}
 		else if (weapon_type == 4 && !(input & IN_ACTION) && !lara.left_arm.lock)
 			item->goal_anim_state = 4;
@@ -919,8 +919,8 @@ void ControlCrossbow(short item_number)
 		}
 
 		AlertNearbyGuards(item);
-		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos);
-		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_EXPLOSION1, &item->pos);
+		Sound.PlayEffect(SFX_EXPLOSION2, &item->pos);
 	}
 
 	if (collided || exploded)
@@ -1268,8 +1268,8 @@ void ControlGrenade(short item_number)
 		}
 
 		AlertNearbyGuards(item);
-		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos);
-		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos);
+		Sound.PlayEffect(SFX_EXPLOSION1, &item->pos);
+		Sound.PlayEffect(SFX_EXPLOSION2, &item->pos);
 
 		if (item->item_flags[0] == 1 || item->item_flags[0] == 4)
 			KillItem(item_number);

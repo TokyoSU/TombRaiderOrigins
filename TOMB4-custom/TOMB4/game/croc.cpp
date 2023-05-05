@@ -520,15 +520,15 @@ void UpdateLocusts()
 			if (fx->Counter > 90)
 			{
 				max_turn = fx->speed << 7;
-				oy = (ushort)angles[0] - (ushort)fx->pos.y_rot;
+				oy = (unsigned short)angles[0] - (unsigned short)fx->pos.y_rot;
 
 				if (abs(oy) > 32768)
-					oy = (ushort)fx->pos.y_rot - (ushort)angles[0];
+					oy = (unsigned short)fx->pos.y_rot - (unsigned short)angles[0];
 
-				ox = (ushort)angles[1] - (ushort)fx->pos.x_rot;
+				ox = (unsigned short)angles[1] - (unsigned short)fx->pos.x_rot;
 
 				if (abs(ox) > 32768)
-					ox = (ushort)fx->pos.x_rot - (ushort)angles[0];
+					ox = (unsigned short)fx->pos.x_rot - (unsigned short)angles[0];
 
 				ox >>= 3;
 				oy >>= 3;
@@ -571,7 +571,7 @@ void UpdateLocusts()
 	if (closestnum != -1)
 	{
 		fx = &Locusts[closestnum];
-		SOUND_PlayEffect(SFX_LOCUSTS_LOOP, &fx->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_LOCUSTS_LOOP, &fx->pos);
 	}
 }
 
@@ -602,53 +602,50 @@ void TriggerCrocgodMissile(PHD_3DPOS* pos, short room_number, short num)
 
 void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv)
 {
-	FX_INFO* fx;
-	SPARKS* sptr;
-	long dx, dz;
-
-	fx = &effects[fx_number];
-	dx = lara_item->pos.x_pos - fx->pos.x_pos;
-	dz = lara_item->pos.z_pos - fx->pos.z_pos;
-
+	FX_INFO* fx = &effects[fx_number];
+	long dx = lara_item->pos.x_pos - fx->pos.x_pos;
+	long dz = lara_item->pos.z_pos - fx->pos.z_pos;
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->sR = (GetRandomControl() & 0x3F) + 128;
-	sptr->sG = sptr->sR >> 1;
-	sptr->sB = 0;
-	sptr->dR = (GetRandomControl() & 0x3F) + 128;
-	sptr->dG = sptr->dR >> 1;
-	sptr->dB = 0;
-	sptr->FadeToBlack = 8;
-	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 8;
-	sptr->TransType = 2;
-	sptr->Dynamic = -1;
-	sptr->Life = (GetRandomControl() & 7) + 32;
-	sptr->sLife = sptr->Life;
-	sptr->x = fx->pos.x_pos + (GetRandomControl() & 0xF) - 8;
-	sptr->y = fx->pos.y_pos;
-	sptr->z = fx->pos.z_pos + (GetRandomControl() & 0xF) - 8;
-	sptr->Xvel = (short)xv;
-	sptr->Yvel = (short)yv;
-	sptr->Zvel = (short)zv;
-	sptr->Friction = 34;
-	sptr->Flags = 538;
-	sptr->RotAng = GetRandomControl() & 0xFFF;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.sR = (GetRandomControl() & 0x3F) + 128;
+	sptr.sG = sptr.sR >> 1;
+	sptr.sB = 0;
+	sptr.dR = (GetRandomControl() & 0x3F) + 128;
+	sptr.dG = sptr.dR >> 1;
+	sptr.dB = 0;
+	sptr.FadeToBlack = 8;
+	sptr.ColFadeSpeed = (GetRandomControl() & 3) + 8;
+	sptr.TransType = 2;
+	sptr.Dynamic = -1;
+	sptr.Life = (GetRandomControl() & 7) + 32;
+	sptr.sLife = sptr.Life;
+	sptr.x = fx->pos.x_pos + (GetRandomControl() & 0xF) - 8;
+	sptr.y = fx->pos.y_pos;
+	sptr.z = fx->pos.z_pos + (GetRandomControl() & 0xF) - 8;
+	sptr.Xvel = (short)xv;
+	sptr.Yvel = (short)yv;
+	sptr.Zvel = (short)zv;
+	sptr.Friction = 34;
+	sptr.Flags = 538;
+	sptr.RotAng = GetRandomControl() & 0xFFF;
 
 	if (GetRandomControl() & 1)
-		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
+		sptr.RotAdd = -32 - (GetRandomControl() & 0x1F);
 	else
-		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+		sptr.RotAdd = (GetRandomControl() & 0x1F) + 32;
 
-	sptr->Gravity = 0;
-	sptr->MaxYvel = 0;
-	sptr->FxObj = (uchar)fx_number;
-	sptr->Scalar = 2;
-	sptr->Size = (GetRandomControl() & 0xF) + 128;
-	sptr->sSize = sptr->Size;
-	sptr->dSize = sptr->Size >> 2;
+	sptr.Gravity = 0;
+	sptr.MaxYvel = 0;
+	sptr.FxObj = (unsigned char)fx_number;
+	sptr.Scalar = 2;
+	sptr.Size = (GetRandomControl() & 0xF) + 128;
+	sptr.sSize = sptr.Size;
+	sptr.dSize = sptr.Size >> 2;
+
+	Sparks.push_back(sptr);
 }
 
 void InitialiseCrocgod(short item_number)

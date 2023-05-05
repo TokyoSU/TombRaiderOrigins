@@ -342,7 +342,7 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 				if (bounds[3] - bounds[2] > 256)
 				{
-					lara.hit_direction = ushort((l->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
+					lara.hit_direction = unsigned short((l->pos.y_rot - phd_atan(rz, rx) - 0x6000)) >> W2V_SHIFT;
 					lara.hit_frame++;
 
 					if (lara.hit_frame > 30)
@@ -750,10 +750,10 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 		z = (bounds[4] + bounds[5]) / 2;
 		dx -= (c * x + s * z) >> W2V_SHIFT;
 		dz -= (c * z - s * x) >> W2V_SHIFT;
-		lara.hit_direction = ushort(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT;	//hmmmmm
+		lara.hit_direction = unsigned short(l->pos.y_rot - phd_atan(dz, dx) - 24576) >> W2V_SHIFT;	//hmmmmm
 
 		if (!lara.hit_frame)
-			SOUND_PlayEffect(SFX_LARA_INJURY, &l->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_LARA_INJURY, &l->pos);
 
 		lara.hit_frame++;
 
@@ -975,7 +975,7 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 	{
 		if (lara.water_status != LW_UNDERWATER)
 		{
-			switch (((ulong(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> 14) - (ushort(dest->y_rot + 8192) >> 14)) & 3)
+			switch (((unsigned long(mGetAngle(dest->x_pos, dest->z_pos, pos->x_pos, pos->z_pos) + 8192) >> 14) - (unsigned short(dest->y_rot + 8192) >> 14)) & 3)
 			{
 			case 0:
 				lara_item->anim_number = 65;
@@ -1220,7 +1220,7 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	coll->shift.x = 0;
 	coll->shift.y = 0;
 	coll->shift.z = 0;
-	coll->quadrant = ushort(coll->facing + 0x2000) / 0x4000;
+	coll->quadrant = unsigned short(coll->facing + 0x2000) / 0x4000;
 
 	ang = abs(lara_item->pos.y_rot - coll->facing) > 0x7000 ? 0x3000 : 0x4000;
 	xright2 = (250 * phd_sin(coll->facing + ang)) >> W2V_SHIFT;

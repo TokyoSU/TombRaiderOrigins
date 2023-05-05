@@ -135,63 +135,62 @@ void DrawJeepExtras(ITEM_INFO* item)
 
 static void TriggerExhaustSmoke(long x, long y, long z, short angle, long velocity, long thing)
 {
-	SPARKS* sptr;
-
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->dR = 16;
-	sptr->dG = 16;
-	sptr->dB = 32;
-	sptr->sR = 0;
-	sptr->sG = 0;
-	sptr->sB = 0;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.dR = 16;
+	sptr.dG = 16;
+	sptr.dB = 32;
+	sptr.sR = 0;
+	sptr.sG = 0;
+	sptr.sB = 0;
 
 	if (thing)
 	{
-		sptr->dR = uchar((16 * velocity) >> 5);
-		sptr->dG = uchar((16 * velocity) >> 5);
-		sptr->dB = uchar((32 * velocity) >> 5);
+		sptr.dR = unsigned char((16 * velocity) >> 5);
+		sptr.dG = unsigned char((16 * velocity) >> 5);
+		sptr.dB = unsigned char((32 * velocity) >> 5);
 	}
 
-	sptr->ColFadeSpeed = 4;
-	sptr->FadeToBlack = 4;
-	sptr->Life = uchar((GetRandomControl() & 3) - (velocity >> 12) + 20);
-	sptr->sLife = sptr->Life;
+	sptr.ColFadeSpeed = 4;
+	sptr.FadeToBlack = 4;
+	sptr.Life = unsigned char((GetRandomControl() & 3) - (velocity >> 12) + 20);
+	sptr.sLife = sptr.Life;
 
-	if (sptr->Life < 9)
+	if (sptr.Life < 9)
 	{
-		sptr->Life = 9;
-		sptr->sLife = 9;
+		sptr.Life = 9;
+		sptr.sLife = 9;
 	}
 
-	sptr->TransType = 2;
-	sptr->x = (GetRandomControl() & 0xF) + x - 8;
-	sptr->y = (GetRandomControl() & 0xF) + y - 8;
-	sptr->z = (GetRandomControl() & 0xF) + z - 8;
-	sptr->Xvel = velocity * phd_sin(angle) >> 16;
-	sptr->Yvel = -8 - (GetRandomControl() & 7);
-	sptr->Zvel = velocity * phd_cos(angle) >> 16;
-	sptr->Friction = 4;
+	sptr.TransType = 2;
+	sptr.x = (GetRandomControl() & 0xF) + x - 8;
+	sptr.y = (GetRandomControl() & 0xF) + y - 8;
+	sptr.z = (GetRandomControl() & 0xF) + z - 8;
+	sptr.Xvel = velocity * phd_sin(angle) >> 16;
+	sptr.Yvel = -8 - (GetRandomControl() & 7);
+	sptr.Zvel = velocity * phd_cos(angle) >> 16;
+	sptr.Friction = 4;
 
 	if (GetRandomControl() & 1)
 	{
-		sptr->Flags = 538;
-		sptr->RotAng = GetRandomControl() & 0xFFF;
+		sptr.Flags = 538;
+		sptr.RotAng = GetRandomControl() & 0xFFF;
 
 		if (GetRandomControl() & 1)
-			sptr->RotAdd = -24 - (GetRandomControl() & 7);
+			sptr.RotAdd = -24 - (GetRandomControl() & 7);
 		else
-			sptr->RotAdd = (GetRandomControl() & 7) + 24;
+			sptr.RotAdd = (GetRandomControl() & 7) + 24;
 	}
 	else
-		sptr->Flags = 522;
+		sptr.Flags = 522;
 
-	sptr->Scalar = 1;
-	sptr->Gravity = -4 - (GetRandomControl() & 3);
-	sptr->MaxYvel = -8 - (GetRandomControl() & 7);
-	sptr->dSize = uchar((GetRandomControl() & 7) + (velocity >> 7) + 32);
-	sptr->sSize = sptr->dSize >> 1;
-	sptr->Size = sptr->dSize >> 1;
+	sptr.Scalar = 1;
+	sptr.Gravity = -4 - (GetRandomControl() & 3);
+	sptr.MaxYvel = -8 - (GetRandomControl() & 7);
+	sptr.dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);
+	sptr.sSize = sptr.dSize >> 1;
+	sptr.Size = sptr.dSize >> 1;
+	Sparks.push_back(sptr);
 }
 
 void JeepExplode(ITEM_INFO* item)
@@ -206,11 +205,11 @@ void JeepExplode(ITEM_INFO* item)
 			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 3, -1, 0, item->room_number);
 	}
 
+	item->status = ITEM_DEACTIVATED;
+	Sound.PlayEffect(SFX_EXPLOSION1, &item->pos);
+	Sound.PlayEffect(SFX_EXPLOSION2, &item->pos);
 	ExplodingDeath2(lara.vehicle, -1, 256);
 	KillItem(lara.vehicle);
-	item->status = ITEM_DEACTIVATED;
-	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_LAND);
-	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_LAND);
 	lara.vehicle = NO_ITEM;
 }
 
@@ -1236,7 +1235,7 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 						JeepBounds[5] < CollidedStaticBounds[4])
 					{
 						ShatterObject(0, mesh, -128, rn, 0);
-						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_LAND);
+						Sound.PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1499,7 +1498,7 @@ void JeepControl(short item_number)
 	long front_left, front_right, front_mid;
 	long hitWall, h, driving, killed, pitch, oldY, hdiff, smokeVel;
 	short room_number, wheelRot, xRot, zRot;
-	static uchar ExhaustSmokeVel;
+	static unsigned char ExhaustSmokeVel;
 
 	driving = -1;
 	killed = 0;
@@ -1542,19 +1541,16 @@ void JeepControl(short item_number)
 	if (jeep->velocity || jeep->unused1)
 	{
 		jeep->pitch2 = pitch;
-
 		if (jeep->pitch2 < -0x8000)
 			jeep->pitch2 = -0x8000;
 		else if (jeep->pitch2 > 0xA000)
 			jeep->pitch2 = 0xA000;
-
-		SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, SFX_SETPITCH, (jeep->pitch2 << 8) + 0x1000000);
+		Sound.PlayEffect(SFX_JEEP_MOVE, &item->pos);
 	}
 	else
 	{
 		if (driving != -1)
-			SOUND_PlayEffect(SFX_JEEP_IDLE, &item->pos, SFX_LAND);
-
+			Sound.PlayEffect(SFX_JEEP_IDLE, &item->pos);
 		jeep->pitch2 = 0;
 	}
 
@@ -1968,7 +1964,7 @@ void EnemyJeepControl(short item_number)
 
 			for (int i = 0; i < nAIObjects; i++)
 			{
-				aiobj = &AIObjects[i];
+				aiobj = &ai_objects[i];
 
 				if (aiobj->trigger_flags == item->item_flags[3] && aiobj->room_number != 255)
 				{
@@ -2049,5 +2045,5 @@ void EnemyJeepControl(short item_number)
 		item->gravity_status = 0;
 	}
 
-	SOUND_PlayEffect(SFX_JEEP_MOVE, &item->pos, SFX_SETPITCH, (item->item_flags[0] << 10) + 0x1000000);
+	Sound.PlayEffect(SFX_JEEP_MOVE, &item->pos);
 }

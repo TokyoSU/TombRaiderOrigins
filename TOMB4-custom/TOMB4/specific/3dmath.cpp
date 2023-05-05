@@ -12,13 +12,13 @@ float FogStart = float(1024 * 12);
 float FogEnd = float(1024 * 20);
 
 float* mMXPtr;
-float mW2V[indices_count];
-float mMXStack[20 * indices_count];
+float mW2V[MATRIX_COUNT];
+float mMXStack[20 * MATRIX_COUNT];
 float fcossin_tbl[65536];
 
 long* phd_mxptr;
-long w2v_matrix[indices_count];
-long matrix_stack[20 * indices_count];
+long w2v_matrix[MATRIX_COUNT];
+long matrix_stack[20 * MATRIX_COUNT];
 
 float f_centerx;
 float f_centery;
@@ -77,24 +77,24 @@ static void mInit()
 
 static void mPushMatrix()
 {
-	mMXPtr[indices_count + M00] = mMXPtr[M00];
-	mMXPtr[indices_count + M01] = mMXPtr[M01];
-	mMXPtr[indices_count + M02] = mMXPtr[M02];
-	mMXPtr[indices_count + M03] = mMXPtr[M03];
-	mMXPtr[indices_count + M10] = mMXPtr[M10];
-	mMXPtr[indices_count + M11] = mMXPtr[M11];
-	mMXPtr[indices_count + M12] = mMXPtr[M12];
-	mMXPtr[indices_count + M13] = mMXPtr[M13];
-	mMXPtr[indices_count + M20] = mMXPtr[M20];
-	mMXPtr[indices_count + M21] = mMXPtr[M21];
-	mMXPtr[indices_count + M22] = mMXPtr[M22];
-	mMXPtr[indices_count + M23] = mMXPtr[M23];
-	mMXPtr += indices_count;
+	mMXPtr[MATRIX_COUNT + M00] = mMXPtr[M00];
+	mMXPtr[MATRIX_COUNT + M01] = mMXPtr[M01];
+	mMXPtr[MATRIX_COUNT + M02] = mMXPtr[M02];
+	mMXPtr[MATRIX_COUNT + M03] = mMXPtr[M03];
+	mMXPtr[MATRIX_COUNT + M10] = mMXPtr[M10];
+	mMXPtr[MATRIX_COUNT + M11] = mMXPtr[M11];
+	mMXPtr[MATRIX_COUNT + M12] = mMXPtr[M12];
+	mMXPtr[MATRIX_COUNT + M13] = mMXPtr[M13];
+	mMXPtr[MATRIX_COUNT + M20] = mMXPtr[M20];
+	mMXPtr[MATRIX_COUNT + M21] = mMXPtr[M21];
+	mMXPtr[MATRIX_COUNT + M22] = mMXPtr[M22];
+	mMXPtr[MATRIX_COUNT + M23] = mMXPtr[M23];
+	mMXPtr += MATRIX_COUNT;
 }
 
 static void mPushUnitMatrix()
 {
-	mMXPtr += indices_count;
+	mMXPtr += MATRIX_COUNT;
 	mMXPtr[M00] = 1;
 	mMXPtr[M01] = 0;
 	mMXPtr[M02] = 0;
@@ -361,26 +361,26 @@ static void mScaleCurrentMatrix(PHD_VECTOR* vec)
 
 void phd_PushMatrix()
 {
-	phd_mxptr[indices_count + M00] = phd_mxptr[M00];
-	phd_mxptr[indices_count + M01] = phd_mxptr[M01];
-	phd_mxptr[indices_count + M02] = phd_mxptr[M02];
-	phd_mxptr[indices_count + M03] = phd_mxptr[M03];
-	phd_mxptr[indices_count + M10] = phd_mxptr[M10];
-	phd_mxptr[indices_count + M11] = phd_mxptr[M11];
-	phd_mxptr[indices_count + M12] = phd_mxptr[M12];
-	phd_mxptr[indices_count + M13] = phd_mxptr[M13];
-	phd_mxptr[indices_count + M20] = phd_mxptr[M20];
-	phd_mxptr[indices_count + M21] = phd_mxptr[M21];
-	phd_mxptr[indices_count + M22] = phd_mxptr[M22];
-	phd_mxptr[indices_count + M23] = phd_mxptr[M23];
-	phd_mxptr += indices_count;
+	phd_mxptr[MATRIX_COUNT + M00] = phd_mxptr[M00];
+	phd_mxptr[MATRIX_COUNT + M01] = phd_mxptr[M01];
+	phd_mxptr[MATRIX_COUNT + M02] = phd_mxptr[M02];
+	phd_mxptr[MATRIX_COUNT + M03] = phd_mxptr[M03];
+	phd_mxptr[MATRIX_COUNT + M10] = phd_mxptr[M10];
+	phd_mxptr[MATRIX_COUNT + M11] = phd_mxptr[M11];
+	phd_mxptr[MATRIX_COUNT + M12] = phd_mxptr[M12];
+	phd_mxptr[MATRIX_COUNT + M13] = phd_mxptr[M13];
+	phd_mxptr[MATRIX_COUNT + M20] = phd_mxptr[M20];
+	phd_mxptr[MATRIX_COUNT + M21] = phd_mxptr[M21];
+	phd_mxptr[MATRIX_COUNT + M22] = phd_mxptr[M22];
+	phd_mxptr[MATRIX_COUNT + M23] = phd_mxptr[M23];
+	phd_mxptr += MATRIX_COUNT;
 
 	mPushMatrix();
 }
 
 void phd_PushUnitMatrix()
 {
-	phd_mxptr += indices_count;
+	phd_mxptr += MATRIX_COUNT;
 	phd_mxptr[M00] = 1 << W2V_SHIFT;
 	phd_mxptr[M01] = 0;
 	phd_mxptr[M02] = 0;
@@ -684,7 +684,7 @@ void phd_GetVectorAngles(long x, long y, long z, short* angles)
 	angles[1] = atan;
 }
 
-ulong mGetAngle(long x, long z, long x1, long z1)
+unsigned long mGetAngle(long x, long z, long x1, long z1)
 {
 	long dx, dz, octant, swap, angle;
 
@@ -791,9 +791,9 @@ long phd_atan(long x, long y)
 	return result;
 }
 
-ulong phd_sqrt(ulong num)
+unsigned long phd_sqrt(unsigned long num)
 {
-	ulong base, result, tmp;
+	unsigned long base, result, tmp;
 
 	base = 0x40000000;
 	result = 0;

@@ -325,7 +325,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 	if (message == WM_COMMAND)
 	{
-		switch ((ushort)wParam)
+		switch ((unsigned short)wParam)
 		{
 		case IDOK:
 
@@ -432,7 +432,7 @@ BOOL CALLBACK DXSetupDlgProc(HWND dlg, UINT message, WPARAM wParam, LPARAM lPara
 
 			if (((wParam >> 16) & 0xFFFF) == BN_CLICKED)
 			{
-				if (SendMessage(GetDlgItem(dlg, (ushort)wParam), BM_GETCHECK, 0, 0))
+				if (SendMessage(GetDlgItem(dlg, (unsigned short)wParam), BM_GETCHECK, 0, 0))
 					EnableWindow(GetDlgItem(dlg, 1005), 0);
 				else
 					EnableWindow(GetDlgItem(dlg, 1005), 1);

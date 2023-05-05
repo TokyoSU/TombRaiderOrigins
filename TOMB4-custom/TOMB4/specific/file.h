@@ -35,7 +35,9 @@ extern long AnimatingWaterfallsV[3];
 
 extern CHANGE_STRUCT* changes;
 extern RANGE_STRUCT* ranges;
-extern AIOBJECT* AIObjects;
+extern AIOBJECT* ai_objects;
+extern SAMPLE_INFO* sample_infos;
+extern short* samples_maps;
 extern short* aranges;
 extern short* frames;
 extern short* commands;

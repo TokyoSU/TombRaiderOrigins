@@ -1,10 +1,8 @@
 #include "pch.h"
-#include "../tomb4/libs/zlib/zlib.h"
 #include "file.h"
 #include "function_stubs.h"
 #include "texture.h"
 #include "lighting.h"
-#include "dxsound.h"
 #include "drawbars.h"
 #include "dxshell.h"
 #include "drawroom.h"
@@ -28,6 +26,7 @@
 #include "../game/lara.h"
 #include "output.h"
 #include "../game/gameflow.h"
+#include <zlib.h>
 
 TEXTURESTRUCT* textinfo;
 SPRITESTRUCT* spriteinfo;
@@ -38,7 +37,9 @@ long AnimatingWaterfallsV[3];
 
 CHANGE_STRUCT* changes;
 RANGE_STRUCT* ranges;
-AIOBJECT* AIObjects;
+AIOBJECT* ai_objects;
+SAMPLE_INFO* sample_infos;
+short* samples_maps;
 short* aranges;
 short* frames;
 short* commands;
@@ -135,7 +136,7 @@ unsigned int __stdcall LoadLevel(void* name)
 		LoadCinematic();
 		S_LoadBar();
 
-		if (sound_active && !App.SoundDisabled)
+		if (!App.SoundDisabled)
 			LoadSamples();
 
 		free(pData);
@@ -225,7 +226,7 @@ void FreeLevel()
 	Log(5, "Free Textures");
 	FreeTextures();
 	Log(5, "Free Lights");
-	DXFreeSounds();
+	Sound.FreeSamples();
 	free(OutsideRoomTable);
 	free(OutsideRoomOffsets);
 	malloc_ptr = malloc_buffer;
@@ -235,7 +236,7 @@ void FreeLevel()
 bool FindCDDrive()
 {
 	HANDLE file;
-	ulong drives, type;
+	unsigned long drives, type;
 	char path[14];
 	char root[5];
 	static char cd_drive;
@@ -341,13 +342,13 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	DXTEXTUREINFO* dxtex;
 	LPDIRECTDRAWSURFACEX tSurf;
 	LPDIRECT3DTEXTUREX pTex;
-	uchar* TextureData;
+	unsigned char* TextureData;
 	long* d;
 	char* pData;
 	char* pComp;
 	char* s;
 	long format, skip, size, compressedSize, nTex, c;
-	uchar r, g, b, a;
+	unsigned char r, g, b, a;
 
 	Log(2, "LoadTextures");
 	nTextures = 1;
@@ -399,7 +400,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 
 	Log(5, "RTPages %d", RTPages);
 	size = RTPages * skip * 0x10000;
-	TextureData = (uchar*)malloc(size);
+	TextureData = (unsigned char*)malloc(size);
 	memcpy(TextureData, FileData, size);
 	FileData += size;
 	S_LoadBar();
@@ -423,7 +424,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 
 	Log(5, "OTPages %d", OTPages);
 	size = OTPages * skip * 0x10000;
-	TextureData = (uchar*)malloc(size);
+	TextureData = (unsigned char*)malloc(size);
 	memcpy(TextureData, FileData, size);
 	FileData += size;
 	S_LoadBar();
@@ -451,7 +452,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	if (BTPages)
 	{
 		size = BTPages * skip * 0x10000;
-		TextureData = (uchar*)malloc(size);
+		TextureData = (unsigned char*)malloc(size);
 		memcpy(TextureData, FileData, size);
 		FileData += size;
 
@@ -503,7 +504,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	free(CompressedData);
 
 	pData = FileData;
-	TextureData = (uchar*)malloc(0x40000);
+	TextureData = (unsigned char*)malloc(0x40000);
 
 	if (!gfCurrentLevel)	//main menu logo
 	{
@@ -1008,9 +1009,9 @@ bool LoadBoxes()
 
 	size = *(long*)FileData;
 	FileData += sizeof(long);
-	overlap = (ushort*)game_malloc(sizeof(ushort) * size);
-	memcpy(overlap, FileData, sizeof(ushort) * size);
-	FileData += sizeof(ushort) * size;
+	overlap = (unsigned short*)game_malloc(sizeof(unsigned short) * size);
+	memcpy(overlap, FileData, sizeof(unsigned short) * size);
+	FileData += sizeof(unsigned short) * size;
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -1193,8 +1194,8 @@ bool LoadAIInfo()
 	if (num_ai)
 	{
 		nAIObjects = (short)num_ai;
-		AIObjects = (AIOBJECT*)game_malloc(sizeof(AIOBJECT) * num_ai);
-		memcpy(AIObjects, FileData, sizeof(AIOBJECT) * num_ai);
+		ai_objects = (AIOBJECT*)game_malloc(sizeof(AIOBJECT) * num_ai);
+		memcpy(ai_objects, FileData, sizeof(AIOBJECT) * num_ai);
 		FileData += sizeof(AIOBJECT) * num_ai;
 	}
 
@@ -1239,11 +1240,11 @@ bool LoadSamples()
 
 	for (int i = 0; i < num_samples; i++)
 	{
-		fread(&uncomp_size, 1, 4, level_fp);
-		fread(&comp_size, 1, 4, level_fp);
-		samples_buffer = (char*)malloc(comp_size);
+		fread(&uncomp_size, sizeof(int), 1, level_fp);
+		fread(&comp_size, sizeof(int), 1, level_fp);
+		char* samples_buffer = (char*)malloc(comp_size);
 		fread(samples_buffer, comp_size, 1, level_fp);
-		DXCreateSampleADPCM(samples_buffer, comp_size, uncomp_size, i);
+		Sound.LoadSample(samples_buffer, comp_size, uncomp_size, i);
 		if (samples_buffer != NULL)
 		{
 			free(samples_buffer);
@@ -1277,7 +1278,7 @@ void AdjustUV(long num)
 {
 	TEXTURESTRUCT* tex;
 	float u, v;
-	ushort type;
+	unsigned short type;
 
 	Log(2, "AdjustUV");
 
@@ -1407,9 +1408,9 @@ void AdjustUV(long num)
 
 bool Decompress(char* pDest, char* pCompressed, long compressedSize, long size)
 {
-	z_stream stream;
-
 	Log(2, "Decompress");
+
+	z_stream stream;
 	memset(&stream, 0, sizeof(z_stream));
 	stream.avail_in = compressedSize;
 	stream.avail_out = size;

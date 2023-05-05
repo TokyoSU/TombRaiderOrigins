@@ -25,7 +25,7 @@ short SPxzoffs[8] = { 0, 0, 0x200, 0, 0, 0, -0x200, 0 };
 short SPyoffs[8] = { -0x400, 0, -0x200, 0, 0, 0, -0x200, 0 };
 short SPDETyoffs[8] = { 0x400, 0x200, 0x200, 0x200, 0, 0x200, 0x200, 0x200 };
 
-static uchar Flame3xzoffs[16][2] =
+static unsigned char Flame3xzoffs[16][2] =
 {
 	{ 9, 9 },
 	{ 24, 9 },
@@ -85,7 +85,7 @@ char LibraryTab[8];
 void FlameEmitterControl(short item_number)
 {
 	ITEM_INFO* item;
-	ulong distance;
+	unsigned long distance;
 	long x, z;
 
 	item = &items[item_number];
@@ -102,7 +102,7 @@ void FlameEmitterControl(short item_number)
 	{
 		if ((-item->trigger_flags & 7) == 2 || (-item->trigger_flags & 7) == 7)
 		{
-			SOUND_PlayEffect(SFX_FLAME_EMITTER, &item->pos);
+			Sound.PlayEffect(SFX_FLAME_EMITTER, &item->pos);
 			TriggerSuperJetFlame(item, -256 - (3072 * GlobalCounter & 0x1C00), GlobalCounter & 1);
 			TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos,
 				(GetRandomControl() & 3) + 20, (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
@@ -146,8 +146,7 @@ void FlameEmitterControl(short item_number)
 
 			if (item->item_flags[1])
 			{
-				SOUND_PlayEffect(SFX_FLAME_EMITTER, &item->pos);
-
+				Sound.PlayEffect(SFX_FLAME_EMITTER, &item->pos);
 				if (item->item_flags[1] > -8192)
 					TriggerSuperJetFlame(item, item->item_flags[1], GlobalCounter & 1);
 				else
@@ -159,15 +158,14 @@ void FlameEmitterControl(short item_number)
 				TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 10 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
 		}
 
-		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
+		Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
 	}
 	else
 	{
 		LibraryTab[item->trigger_flags] = 1;
 		AddFire(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 2, item->room_number, 0);
-		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 16 - (GetRandomControl() & 1),
-			(GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
-		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
+		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 16 - (GetRandomControl() & 1), (GetRandomControl() & 0x3F) + 192, (GetRandomControl() & 0x1F) + 96, 0);
+		Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
 
 		if (!lara.burn && ItemNearLara(&item->pos, 600))
 		{
@@ -270,7 +268,7 @@ void ControlTwoBlockPlatform(short item_number)
 				item->item_flags[1] = -1;
 			else
 			{
-				SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_LAND);
+				Sound.PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos);
 				item->pos.y_pos += 4;
 			}
 		}
@@ -280,7 +278,7 @@ void ControlTwoBlockPlatform(short item_number)
 				item->item_flags[1] = 1;
 			else
 			{
-				SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_LAND);
+				Sound.PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos);
 				item->pos.y_pos -= 4;
 			}
 		}
@@ -297,7 +295,7 @@ void ControlJobySpike(short item_number)
 
 	if (TriggerActive(item))
 	{
-		SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_METAL_SCRAPE_LOOP, &item->pos);
 		GetFrames(lara_item, frm, &rate);
 		y = lara_item->pos.y_pos + frm[0][2];
 		h = item->pos.y_pos + (3328 * item->item_flags[1] >> 12);
@@ -410,8 +408,8 @@ void ControlSlicerDicer(short item_number)
 	short room_number;
 
 	item = &items[item_number];
-	SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP, &item->pos, SFX_LAND);
-	SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_LAND);
+	Sound.PlayEffect(SFX_METAL_SCRAPE_LOOP, &item->pos);
+	Sound.PlayEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos);
 	distance = 4608 * phd_cos(item->trigger_flags) >> 14;
 	item->pos.x_pos = 256 * item->item_flags[0] + (phd_sin(item->pos.y_rot) * distance >> 14);
 	item->pos.y_pos = 256 * item->item_flags[1] - (4608 * phd_sin(item->trigger_flags) >> 14);
@@ -429,9 +427,6 @@ void ControlSlicerDicer(short item_number)
 void ControlSprinkler(short item_number)
 {
 	ITEM_INFO* item;
-	DRIP_STRUCT* drip;
-	SPARKS* sptr;
-	SMOKE_SPARKS* smokeptr;
 	long vel, size;
 
 	item = &items[item_number];
@@ -442,96 +437,99 @@ void ControlSprinkler(short item_number)
 
 		if (!(wibble & 0xF) && (item->item_flags[0] <= 600 || GetRandomControl() % (item->item_flags[0] - 600) < 100))
 		{
-			drip = &Drips[GetFreeDrip()];
-			drip->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
-			drip->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
-			drip->z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
-			drip->On = 1;
-			drip->R = 112;
-			drip->G = (GetRandomControl() & 0x1F) + 128;
-			drip->B = (GetRandomControl() & 0x1F) + 128;
-			drip->Yvel = (GetRandomControl() & 0xF) + 16;
-			drip->Gravity = (GetRandomControl() & 0x1F) + 32;
-			drip->Life = (GetRandomControl() & 0x1F) + 16;
-			drip->RoomNumber = item->room_number;
+			DRIP_STRUCT drip;
+			drip.x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
+			drip.y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
+			drip.z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
+			drip.On = 1;
+			drip.R = 112;
+			drip.G = (GetRandomControl() & 0x1F) + 128;
+			drip.B = (GetRandomControl() & 0x1F) + 128;
+			drip.Yvel = (GetRandomControl() & 0xF) + 16;
+			drip.Gravity = (GetRandomControl() & 0x1F) + 32;
+			drip.Life = (GetRandomControl() & 0x1F) + 16;
+			drip.RoomNumber = item->room_number;
+			Drips.push_back(drip);
 		}
 	}
 
 	if (item->item_flags[0] <= 600)
 	{
-		SOUND_PlayEffect(SFX_SANDHAM_IN_THE_HOUSE, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_SANDHAM_IN_THE_HOUSE, &item->pos);
 
 		for (int i = 0; i < 3; i++)
 		{
-			sptr = &spark[GetFreeSpark()];
-			sptr->On = 1;
-			sptr->sR = 112;
-			sptr->sG = (GetRandomControl() & 0x1F) + 128;
-			sptr->sB = (GetRandomControl() & 0x1F) + 128;
-			sptr->dR = sptr->sR >> 1;
-			sptr->dG = sptr->sG >> 1;
-			sptr->dB = sptr->sB >> 1;
-			sptr->ColFadeSpeed = 4;
-			sptr->FadeToBlack = 8;
-			sptr->Life = 20;
-			sptr->sLife = 20;
-			sptr->TransType = 2;
+			SPARKS sptr;
+			sptr.On = 1;
+			sptr.sR = 112;
+			sptr.sG = (GetRandomControl() & 0x1F) + 128;
+			sptr.sB = (GetRandomControl() & 0x1F) + 128;
+			sptr.dR = sptr.sR >> 1;
+			sptr.dG = sptr.sG >> 1;
+			sptr.dB = sptr.sB >> 1;
+			sptr.ColFadeSpeed = 4;
+			sptr.FadeToBlack = 8;
+			sptr.Life = 20;
+			sptr.sLife = 20;
+			sptr.TransType = 2;
 			vel = ((GlobalCounter & 3) << 10) + (GetRandomControl() & 0x3FF);
-			sptr->Xvel = -rcossin_tbl[vel << 1] >> 2;
-			sptr->Xvel = (sptr->Xvel * (GetRandomControl() & 0xFF)) >> 8;
-			sptr->Yvel = -32 - (GetRandomControl() & 0x1F);
-			sptr->Zvel = rcossin_tbl[(vel << 1) + 1] >> 2;
-			sptr->Zvel = (sptr->Zvel * (GetRandomControl() & 0xFF)) >> 8;
-			sptr->x = item->pos.x_pos + (sptr->Xvel >> 3);
-			sptr->y = (sptr->Yvel >> 5) + item->pos.y_pos - 928;
-			sptr->z = item->pos.z_pos + (sptr->Zvel >> 3);
-			sptr->Friction = 4;
-			sptr->Flags = GetRandomControl() & 0x20;
-			sptr->Gravity = (GetRandomControl() & 0x3F) + 64;
-			sptr->MaxYvel = 0;
+			sptr.Xvel = -rcossin_tbl[vel << 1] >> 2;
+			sptr.Xvel = (sptr.Xvel * (GetRandomControl() & 0xFF)) >> 8;
+			sptr.Yvel = -32 - (GetRandomControl() & 0x1F);
+			sptr.Zvel = rcossin_tbl[(vel << 1) + 1] >> 2;
+			sptr.Zvel = (sptr.Zvel * (GetRandomControl() & 0xFF)) >> 8;
+			sptr.x = item->pos.x_pos + (sptr.Xvel >> 3);
+			sptr.y = (sptr.Yvel >> 5) + item->pos.y_pos - 928;
+			sptr.z = item->pos.z_pos + (sptr.Zvel >> 3);
+			sptr.Friction = 4;
+			sptr.Flags = GetRandomControl() & 0x20;
+			sptr.Gravity = (GetRandomControl() & 0x3F) + 64;
+			sptr.MaxYvel = 0;
+			Sparks.push_back(sptr);
 		}
 
 		for (int i = 0; i < 1; i++)
 		{
-			smokeptr = &smoke_spark[GetFreeSmokeSpark()];
-			smokeptr->On = 1;
-			smokeptr->sShade = 0;
-			smokeptr->dShade = (GetRandomControl() & 0x1F) + 32;
-			smokeptr->ColFadeSpeed = 4;
-			smokeptr->FadeToBlack = 8 - (GetRandomControl() & 3);
-			smokeptr->TransType = 2;
-			smokeptr->Life = (GetRandomControl() & 3) + 24;
-			smokeptr->sLife = smokeptr->Life;
-			smokeptr->x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
-			smokeptr->y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
-			smokeptr->z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
-			smokeptr->Xvel = 2 * (GetRandomControl() & 0x1FF) - 512;
+			SMOKE_SPARKS sptr;
+			sptr.On = 1;
+			sptr.sShade = 0;
+			sptr.dShade = (GetRandomControl() & 0x1F) + 32;
+			sptr.ColFadeSpeed = 4;
+			sptr.FadeToBlack = 8 - (GetRandomControl() & 3);
+			sptr.TransType = 2;
+			sptr.Life = (GetRandomControl() & 3) + 24;
+			sptr.sLife = sptr.Life;
+			sptr.x = (GetRandomControl() & 0x1F) + item->pos.x_pos - 16;
+			sptr.y = (GetRandomControl() & 0x1F) + item->pos.y_pos - 944;
+			sptr.z = (GetRandomControl() & 0x1F) + item->pos.z_pos - 16;
+			sptr.Xvel = 2 * (GetRandomControl() & 0x1FF) - 512;
 
 			if (i)
-				smokeptr->Yvel = (GetRandomControl() & 0x1F) - 16;
+				sptr.Yvel = (GetRandomControl() & 0x1F) - 16;
 			else
-				smokeptr->Yvel = 2 * (GetRandomControl() & 0x1FF) + 512;
+				sptr.Yvel = 2 * (GetRandomControl() & 0x1FF) + 512;
 
-			smokeptr->Zvel = 2 * (GetRandomControl() & 0x1FF) - 512;
-			smokeptr->Friction = 3;
-			smokeptr->Flags = 16;
-			smokeptr->RotAng = GetRandomControl() & 0xFFF;
+			sptr.Zvel = 2 * (GetRandomControl() & 0x1FF) - 512;
+			sptr.Friction = 3;
+			sptr.Flags = 16;
+			sptr.RotAng = GetRandomControl() & 0xFFF;
 
 			if (GetRandomControl() & 1)
-				smokeptr->RotAdd = -64 - (GetRandomControl() & 0x3F);
+				sptr.RotAdd = -64 - (GetRandomControl() & 0x3F);
 			else
-				smokeptr->RotAdd = (GetRandomControl() & 0x3F) + 64;
+				sptr.RotAdd = (GetRandomControl() & 0x3F) + 64;
 
-			smokeptr->MaxYvel = 0;
-			smokeptr->Gravity = -4 - (GetRandomControl() & 3);
+			sptr.MaxYvel = 0;
+			sptr.Gravity = -4 - (GetRandomControl() & 3);
 			size = (GetRandomControl() & 0xF) + 16;
 
 			if (!i)
 				size <<= 2;
 
-			smokeptr->dSize = (uchar)size;
-			smokeptr->sSize = smokeptr->dSize >> 3;
-			smokeptr->Size = smokeptr->dSize >> 3;
+			sptr.dSize = (unsigned char)size;
+			sptr.sSize = sptr.dSize >> 3;
+			sptr.Size = sptr.dSize >> 3;
+			SmokeSparks.push_back(sptr);
 		}
 	}
 }
@@ -563,13 +561,12 @@ void ControlMineHelicopter(short item_number)
 				AddFire(sphere->x, sphere->y, sphere->z, 2, item->room_number, fade);
 		}
 
-		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
 	}
 	else
 	{
-		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, SFX_LAND);
-		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_LAND);
-		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos);
+		Sound.PlayEffect(SFX_EXPLOSION1, &item->pos);
+		Sound.PlayEffect(SFX_EXPLOSION2, &item->pos);
 
 		for (int i = 0; i < nSpheres; i++)
 		{
@@ -632,7 +629,7 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			KillItem(i);
 
 			if (!(GetRandomControl() & 3))
-				SOUND_PlayEffect(SFX_MINE_EXP_OVERLAY, &mines->pos, SFX_LAND);
+				Sound.PlayEffect(SFX_MINE_EXP_OVERLAY, &mines->pos);
 
 			mines->status = ITEM_INVISIBLE;
 		}
@@ -651,7 +648,7 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		l->frame_number = anims[ANIM_MINEDEATH].frame_base;
 		l->current_anim_state = AS_DEATH;
 		l->speed = 0;
-		SOUND_PlayEffect(SFX_MINE_EXP_OVERLAY, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_MINE_EXP_OVERLAY, &item->pos);
 	}
 }
 
@@ -692,7 +689,7 @@ void ControlFallingSquishyBlock(short item_number)
 	{
 		if (item->item_flags[0] < 60)
 		{
-			SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_EARTHQUAKE_LOOP, &item->pos);
 			camera.bounce = (item->item_flags[0] - 92) >> 1;
 			item->item_flags[0]++;
 		}
@@ -709,7 +706,7 @@ void ControlFallingSquishyBlock(short item_number)
 void ControlLRSquishyBlock(short item_number)
 {
 	ITEM_INFO* item;
-	ushort ang;
+	unsigned short ang;
 	short frame;
 
 	item = &items[item_number];
@@ -721,7 +718,7 @@ void ControlLRSquishyBlock(short item_number)
 
 	if (item->touch_bits)
 	{
-		ang = (ushort)phd_atan(item->pos.z_pos - lara_item->pos.z_pos, item->pos.x_pos - lara_item->pos.x_pos) - item->pos.y_rot;
+		ang = (unsigned short)phd_atan(item->pos.z_pos - lara_item->pos.z_pos, item->pos.x_pos - lara_item->pos.x_pos) - item->pos.y_rot;
 
 		if (!frame && ang > 0xA000 && ang < 0xE000)
 		{
@@ -1004,8 +1001,8 @@ void ControlHammer(short item_number)
 					}
 				}
 
-				SOUND_PlayEffect(SFX_DOOR_GEN_THUD, &item->pos, SFX_LAND);
-				SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_LAND);
+				Sound.PlayEffect(SFX_DOOR_GEN_THUD, &item->pos);
+				Sound.PlayEffect(SFX_EXPLOSION2, &item->pos);
 			}
 			else
 			{
@@ -1055,7 +1052,8 @@ void ControlStargate(short item_number)
 
 	if (TriggerActive(item))
 	{
-		SOUND_PlayEffect(SFX_STARGATE_SWIRL, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_STARGATE_SWIRL, &item->pos);
+		// TODO: remove this !
 		*(long*)&item->item_flags[0] = 0x36DB600;
 		AnimateItem(item);
 	}
@@ -1072,6 +1070,7 @@ void ControlPlough(short item_number)
 
 	if (TriggerActive(item))
 	{
+		// TODO: remove this !
 		*(long*)&item->item_flags[0] = 0x3F000;
 		AnimateItem(item);
 	}
@@ -1268,7 +1267,7 @@ void ControlRaisingBlock(short item_number)
 
 		if (item->item_flags[1] < 4096)
 		{
-			SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos);
 			item->item_flags[1] += 64;
 
 			if (item->trigger_flags && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240 &&
@@ -1283,7 +1282,7 @@ void ControlRaisingBlock(short item_number)
 	}
 	else if (item->item_flags[1] > 0)
 	{
-		SOUND_PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_RUMBLE_NEXTDOOR, &item->pos);
 
 		if (item->trigger_flags && abs(item->pos.x_pos - lara_item->pos.x_pos) < 10240 &&
 			abs(item->pos.y_pos - lara_item->pos.y_pos) < 10240 && abs(item->pos.z_pos - lara_item->pos.z_pos) < 10240)
@@ -1353,7 +1352,7 @@ void ControlScaledSpike(short item_number)
 	else
 	{
 		if (item->item_flags[0] == 1024)
-			SOUND_PlayEffect(SFX_TEETH_SPIKES, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_TEETH_SPIKES, &item->pos);
 
 		item->status = ITEM_ACTIVE;
 		hit = (short)TestBoundsCollideTeethSpikes(item);
@@ -1462,7 +1461,7 @@ void FlameEmitter3Control(short item_number)
 
 	if (item->trigger_flags)
 	{
-		SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_ELEC_ARCING_LOOP, &item->pos);
 		g = (GetRandomControl() & 0x3F) + 192;
 		b = (GetRandomControl() & 0x3F) + 192;
 		s.x = item->pos.x_pos;
@@ -1538,7 +1537,7 @@ void FlameEmitter3Control(short item_number)
 			TriggerFireFlame(item->pos.x_pos + x, item->pos.y_pos, item->pos.z_pos + z, -1, 2);
 		}
 
-		SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
 		distance = GetRandomControl();
 		r = (distance & 0x3F) + 192;
 		g = (distance >> 4 & 0x1F) + 96;
@@ -1613,7 +1612,7 @@ void FlameControl(short fx_number)
 		return;
 	}
 
-	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &fx->pos, SFX_LAND);
+	Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &fx->pos);
 	lara_item->hit_points -= 7;
 	lara_item->hit_status = 1;
 }
@@ -1690,7 +1689,7 @@ void FlameEmitter2Control(short item_number)
 			TriggerFireFlame(item->pos.x_pos, item->pos.y_pos - 32, item->pos.z_pos, -1, 1);
 	}
 
-	SOUND_PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos, SFX_LAND);
+	Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
 }
 
 void LaraBurn()
@@ -1765,7 +1764,7 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item)
 void ControlRollingBall(short item_number)
 {
 	ITEM_INFO* item;
-	ushort tyrot, destyrot;
+	unsigned short tyrot, destyrot;
 	short room_number, velnotadjusted;
 	long h, fx, fz, fh, fhf, bz, bh, bhf, rx, rh, rhf, lx, lh, lhf;
 
@@ -1790,7 +1789,7 @@ void ControlRollingBall(short item_number)
 			if (fz < 0x4000)
 				camera.bounce = -(((0x4000 - fz) * abs(item->fallspeed)) >> W2V_SHIFT);
 
-			SOUND_PlayEffect(SFX_BOULDER_FALL, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_BOULDER_FALL, &item->pos);
 		}
 
 		if (item->pos.y_pos - h < 512)
@@ -1951,7 +1950,7 @@ void ControlRollingBall(short item_number)
 	tyrot = item->pos.y_rot;
 
 	if (item->item_flags[1] || item->item_flags[0])
-		destyrot = ushort(phd_atan(item->item_flags[0], item->item_flags[0]));
+		destyrot = unsigned short(phd_atan(item->item_flags[0], item->item_flags[0]));
 	else
 		destyrot = item->pos.y_rot;
 
@@ -2110,7 +2109,7 @@ void DartEmitterControl(short item_number)
 
 		AddActiveItem(num);
 		dart->status = ITEM_ACTIVE;
-		SOUND_PlayEffect(SFX_DART_SPITT, &dart->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_DART_SPITT, &dart->pos);
 	}
 }
 
@@ -2166,7 +2165,7 @@ void ControlSmashableBikeWall(short item_number)
 
 	if (TestBoundsCollide(item, &items[lara.vehicle], 1024))
 	{
-		SOUND_PlayEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_BIKE_HIT_OBJECTS, &item->pos);
 		item->mesh_bits = -2;
 		ExplodingDeath2(item_number, -1, 2305);
 		item->mesh_bits = 0;
@@ -2186,7 +2185,7 @@ void ControlFallingBlock2(short item_number)
 
 	if (item->pos.y_pos == lara_item->pos.y_pos && OnTwoBlockPlatform(item, lara_item->pos.x_pos, lara_item->pos.z_pos) && lara.vehicle != NO_ITEM)
 	{
-		SOUND_PlayEffect(SFX_BIKE_HIT_OBJECTS, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_BIKE_HIT_OBJECTS, &item->pos);
 		item->mesh_bits = -2;
 		ExplodingDeath2(item_number, -1, 417);
 		KillItem(item_number);
@@ -2258,7 +2257,7 @@ void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	if (!item->item_flags[0] && !item->trigger_flags && item->pos.y_pos == l->pos.y_pos && !((tx ^ x) & ~1023) && !((z ^ tz) & ~1023))
 	{
-		SOUND_PlayEffect(SFX_ROCK_FALL_CRUMBLE, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_ROCK_FALL_CRUMBLE, &item->pos);
 		AddActiveItem(item_number);
 		item->item_flags[0] = 60;
 		item->status = ITEM_ACTIVE;
@@ -2348,7 +2347,7 @@ void OpenTrapDoor(ITEM_INFO* item)
 {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	ushort pitsky;
+	unsigned short pitsky;
 
 	pitsky = item->item_flags[3];
 	r = &rooms[item->room_number];
@@ -2376,7 +2375,7 @@ void CloseTrapDoor(ITEM_INFO* item)
 {
 	ROOM_INFO* r;
 	FLOOR_INFO* floor;
-	ushort pitsky;
+	unsigned short pitsky;
 
 	r = &rooms[item->room_number];
 	floor = &r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)];
@@ -2464,7 +2463,7 @@ void ControlObelisk(short item_number)
 			{
 				if (item->item_flags[3] < 256 && !(GlobalCounter & 3))
 				{
-					SOUND_PlayEffect(SFX_ELEC_ONE_SHOT, &item->pos, SFX_LAND);
+					Sound.PlayEffect(SFX_ELEC_ONE_SHOT, &item->pos);
 					rad = (GetRandomControl() & 0xFFF) + 3456;
 				}
 
@@ -2492,7 +2491,7 @@ void ControlObelisk(short item_number)
 			s.x = item->pos.x_pos + ((0x2000 * phd_sin(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
 			s.y = item->pos.y_pos;
 			s.z = item->pos.z_pos + ((0x2000 * phd_cos(item->pos.y_rot + 0x4000)) >> W2V_SHIFT);
-			SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&s, SFX_LAND);
+			Sound.PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&s);
 
 			if (GlobalCounter & 1)
 			{
@@ -2514,8 +2513,8 @@ void ControlObelisk(short item_number)
 
 						disc = find_a_fucking_item(PUZZLE_ITEM1_COMBO1);
 						disc->status = ITEM_INACTIVE;
-						SOUND_PlayEffect(SFX_EXPLOSION1, &disc->pos, SFX_LAND);
-						SOUND_PlayEffect(SFX_EXPLOSION2, &disc->pos, SFX_LAND);
+						Sound.PlayEffect(SFX_EXPLOSION1, &disc->pos);
+						Sound.PlayEffect(SFX_EXPLOSION2, &disc->pos);
 					}
 
 					TriggerLightning(&s, &d, (GetRandomControl() & 0xF) + 16, RGBA(r, g, b, 24), 3, 24, 3);

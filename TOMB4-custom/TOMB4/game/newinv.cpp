@@ -22,7 +22,6 @@
 #include "lara.h"
 #include "savegame.h"
 #include "../tomb4/tomb4.h"
-#include "../specific/dxsound.h"
 #include "../specific/drawbars.h"
 
 #pragma warning(push)
@@ -378,7 +377,7 @@ static MENUTHANG current_options[3];
 static long compass_settle_thang;
 static short examine_mode = 0;
 static short stats_mode;
-static uchar current_selected_option;
+static unsigned char current_selected_option;
 static char menu_active;
 static char ammo_active;
 static char oldLaraBusy;
@@ -411,22 +410,22 @@ static long pcbright = 0x7F7F7F;
 static short inventry_xpos = 0;
 static short inventry_ypos = 0;
 
-static uchar go_left;
-static uchar go_right;
-static uchar go_up;
-static uchar go_down;
-static uchar go_select;
-static uchar go_deselect;
-static uchar left_repeat;
-static uchar left_debounce;
-static uchar right_repeat;
-static uchar right_debounce;
-static uchar up_debounce;
-static uchar down_debounce;
-static uchar select_debounce;
-static uchar deselect_debounce;
-static uchar friggrimmer;
-static uchar friggrimmer2;
+static unsigned char go_left;
+static unsigned char go_right;
+static unsigned char go_up;
+static unsigned char go_down;
+static unsigned char go_select;
+static unsigned char go_deselect;
+static unsigned char left_repeat;
+static unsigned char left_debounce;
+static unsigned char right_repeat;
+static unsigned char right_debounce;
+static unsigned char up_debounce;
+static unsigned char down_debounce;
+static unsigned char select_debounce;
+static unsigned char deselect_debounce;
+static unsigned char friggrimmer;
+static unsigned char friggrimmer2;
 static char loading_or_saving;
 static char use_the_bitch;
 
@@ -691,7 +690,7 @@ void DrawInventoryItemMe(INVDRAWITEM* item, long shade, long overlay, long shagf
 	long* bone;
 	short* rotation1;
 	short* frmptr;
-	ulong bit;
+	unsigned long bit;
 	long poppush, alpha, compass;
 
 	anim = &anims[objects[item->object_number].anim_index];
@@ -1371,9 +1370,9 @@ void fade_ammo_selector()
 	}
 }
 
-void spinback(ushort* cock)
+void spinback(unsigned short* cock)
 {
-	ushort val, val2;
+	unsigned short val, val2;
 
 	val = *cock;
 
@@ -1817,7 +1816,7 @@ void do_examine_mode()
 
 	if (go_deselect)
 	{
-		SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 		go_deselect = 0;
 		examine_mode = 0;
 	}
@@ -1961,7 +1960,9 @@ void use_current_item()
 			}
 		}
 		else
-			SOUND_SayNo();
+		{
+			Sound.SayNo();
+		}
 	}
 	else if (invobject == INV_BINOCULARS_ITEM)
 	{
@@ -1983,7 +1984,7 @@ void use_current_item()
 	{
 		if ((lara_item->hit_points <= 0 || lara_item->hit_points >= 1000) && !lara.poisoned)
 		{
-			SOUND_SayNo();
+			Sound.SayNo();
 			return;
 		}
 
@@ -1996,14 +1997,14 @@ void use_current_item()
 		if (lara_item->hit_points > 1000)
 			lara_item->hit_points = 1000;
 
-		SOUND_PlayEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
+		Sound.PlayEffect(SFX_MENU_MEDI, NULL, SFXO_ALWAYS);
 		savegame.Game.HealthUsed++;
 	}
 	else  if (invobject == INV_BIGMEDI_ITEM)
 	{
 		if ((lara_item->hit_points <= 0 || lara_item->hit_points >= 1000) && !lara.poisoned)
 		{
-			SOUND_SayNo();
+			Sound.SayNo();;
 			return;
 		}
 
@@ -2016,7 +2017,7 @@ void use_current_item()
 		if (lara_item->hit_points > 1000)
 			lara_item->hit_points = 1000;
 
-		SOUND_PlayEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
+		Sound.PlayEffect(SFX_MENU_MEDI, NULL, SFXO_ALWAYS);
 		savegame.Game.HealthUsed++;
 	}
 	else
@@ -2442,7 +2443,7 @@ void handle_inventry_menu()
 				{
 					combine_type_flag = 2;
 					combine_ring_fade_dir = 2;
-					SOUND_PlayEffect(SFX_MENU_COMBINE, 0, SFX_ALWAYS);
+					Sound.PlayEffect(SFX_MENU_COMBINE, NULL, SFXO_ALWAYS);
 				}
 			}
 			else if (ammo_item >= INV_WATERSKIN1_EMPTY_ITEM && ammo_item <= INV_WATERSKIN1_3_ITEM &&	//big one selected
@@ -2452,7 +2453,7 @@ void handle_inventry_menu()
 				{
 					combine_type_flag = 2;
 					combine_ring_fade_dir = 2;
-					SOUND_PlayEffect(SFX_MENU_COMBINE, 0, SFX_ALWAYS);
+					Sound.PlayEffect(SFX_MENU_COMBINE, NULL, SFXO_ALWAYS);
 				}
 			}
 			else if (do_these_objects_combine(inv_item, ammo_item))
@@ -2461,18 +2462,18 @@ void handle_inventry_menu()
 				combine_type_flag = 1;
 				combine_obj1 = inv_item;
 				combine_obj2 = ammo_item;
-				SOUND_PlayEffect(SFX_MENU_COMBINE, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_COMBINE, NULL, SFXO_ALWAYS);
 			}
 			else
 			{
-				SOUND_SayNo();
+				Sound.SayNo();
 				combine_ring_fade_dir = 2;
 			}
 		}
 
 		if (go_deselect)
 		{
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			combine_ring_fade_dir = 2;
 			go_deselect = 0;
 		}
@@ -2603,13 +2604,13 @@ void handle_inventry_menu()
 		if (go_up && current_selected_option)
 		{
 			current_selected_option--;
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 		}
 
 		if (go_down && current_selected_option < num - 1)
 		{
 			current_selected_option++;
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 		}
 
 		if (ammo_active)
@@ -2617,13 +2618,13 @@ void handle_inventry_menu()
 			if (go_left && current_selected_option > 0)
 			{
 				current_selected_option--;
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			}
 
 			if (go_right && current_selected_option < num - 1)
 			{
 				current_selected_option++;
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			}
 
 			*current_ammo_type = current_selected_option;
@@ -2634,7 +2635,7 @@ void handle_inventry_menu()
 			type = current_options[current_selected_option].type;
 
 			if (type != 5 && type != 1)
-				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 
 			switch (type)
 			{
@@ -2693,7 +2694,7 @@ void handle_inventry_menu()
 		{
 			if (ammo_active)
 			{
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 				go_deselect = 0;
 				ammo_active = 0;
 				rings[RING_INVENTORY]->ringactive = 1;
@@ -3062,7 +3063,7 @@ void draw_current_object_list(long ringnum)
 			{
 				if (!rings[ringnum]->objlistmovement)
 				{
-					SOUND_PlayEffect(SFX_MENU_ROTATE, 0, SFX_ALWAYS);
+					Sound.PlayEffect(SFX_MENU_ROTATE, NULL, SFXO_ALWAYS);
 					rings[ringnum]->objlistmovement += 8192;
 
 					if (ammo_selector_flag)
@@ -3074,7 +3075,7 @@ void draw_current_object_list(long ringnum)
 			{
 				if (!rings[ringnum]->objlistmovement)
 				{
-					SOUND_PlayEffect(SFX_MENU_ROTATE, 0, SFX_ALWAYS);
+					Sound.PlayEffect(SFX_MENU_ROTATE, NULL, SFXO_ALWAYS);
 					rings[ringnum]->objlistmovement -= 8192;
 
 					if (ammo_selector_flag)
@@ -3124,7 +3125,7 @@ long S_CallInventory2()
 	init_new_inventry();
 	camera.number_frames = 2;
 	return_value = 0;
-	S_SetReverbType(1);
+	Sound.SetReverbType(RT_Outside);
 
 	while (!reset_flag && !val)
 	{
@@ -3142,7 +3143,7 @@ long S_CallInventory2()
 
 		if (dbinput & IN_OPTION)
 		{
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			val = 1;
 		}
 

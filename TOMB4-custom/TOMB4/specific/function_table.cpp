@@ -29,7 +29,7 @@ void SetFogColor(long r, long g, long b)
 
 void HWInitialise()
 {
-	Log(2, "HWIntialise");	//nice typo
+	Log(2, "HWInitialise");
 	App.dx.lpD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	App.dx.lpD3DDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	App.dx.lpD3DDevice->SetTextureStageState(2, D3DTSS_COLOROP, D3DTOP_DISABLE);
@@ -83,6 +83,7 @@ void HWInitialise()
 	DXAttempt(App.dx.lpD3DDevice->SetLightState(D3DLIGHTSTATE_FOGMODE, D3DFOG_LINEAR));
 	DXAttempt(App.dx.lpD3DDevice->SetLightState(D3DLIGHTSTATE_FOGSTART, *(DWORD*)(&FogStart)));
 	DXAttempt(App.dx.lpD3DDevice->SetLightState(D3DLIGHTSTATE_FOGEND, *(DWORD*)(&FogEnd)));
+
 	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_FOGCOLOR, 0xFF000000);
 	App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_FOGENABLE, 1);
 }
@@ -128,7 +129,7 @@ void InitialiseFunctionTable()
 {
 	_BeginScene = HWBeginScene;
 	_EndScene = HWEndScene;
-	IsVisible = _NVisible;
+	SetCullCCW();
 
 	if (App.dx.lpZBuffer)
 	{

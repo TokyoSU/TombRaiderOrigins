@@ -18,8 +18,7 @@
 #include "../game/gameflow.h"
 #include "../tomb4/tomb4.h"
 
-static ROOM_DYNAMIC RoomDynamics[MAX_DYNAMICS];
-static long nRoomDynamics;
+static std::vector<ROOM_DYNAMIC> RoomDynamics;
 
 MESH_DATA** mesh_vtxbuf;
 TEXTUREBUCKET Bucket[20];
@@ -36,41 +35,32 @@ long water_color_B = 255;
 
 void ProcessRoomDynamics(ROOM_INFO* r)
 {
-	//Collect dynamic lights for room lighting
+	RoomDynamics.clear();
 
-	ROOM_DYNAMIC* l;
-	DYNAMIC* d;
-	float falloff;
-	
-	nRoomDynamics = 0;
-	l = RoomDynamics;
-
-	for (int i = 0; i < MAX_DYNAMICS; i++)
+	// Collect dynamic lights for room lighting
+	for (auto& d : Dynamics)
 	{
-		d = &dynamics[i];
-
-		if (!d->on)
+		if (!d.on)
 			continue;
 
-		falloff = float((d->falloff >> 1) + (d->falloff >> 3));
-		l->x = d->x - r->posx;
-		l->y = d->y - r->posy;
-		l->z = d->z - r->posz;
-		l->r = (float)d->r * (1.0F / 255.0F);
-		l->g = (float)d->g * (1.0F / 255.0F);
-		l->b = (float)d->b * (1.0F / 255.0F);
-		l->falloff = falloff;
-		l->inv_falloff = 1.0F / l->falloff;
-		l->sqr_falloff = SQUARE(l->falloff);
-		l++;
-		nRoomDynamics++;
+		ROOM_DYNAMIC l;
+		l.x = d.x - r->posx;
+		l.y = d.y - r->posy;
+		l.z = d.z - r->posz;
+		l.r = (float)d.r * (1.0F / 255.0F);
+		l.g = (float)d.g * (1.0F / 255.0F);
+		l.b = (float)d.b * (1.0F / 255.0F);
+		l.falloff = float((d.falloff >> 1) + (d.falloff >> 3));
+		l.inv_falloff = 1.0F / l.falloff;
+		l.sqr_falloff = SQUARE(l.falloff);
+
+		RoomDynamics.push_back(l);
 	}
 }
 
 void ProcessRoomVertices(ROOM_INFO* r)
 {
 	//Transform, project, and light vertices, and store them in MyVertexBuffer.
-	ROOM_DYNAMIC* l;
 	FVECTOR lPos;
 	FVECTOR vPos;
 	FVECTOR vtx;
@@ -80,7 +70,7 @@ void ProcessRoomVertices(ROOM_INFO* r)
 	float zv, fR, fG, fB, val, val2, num;
 	long cR, cG, cB, sA, sR, sG, sB, rndoff, col;
 	short clipFlag;
-	uchar rnd, abs;
+	unsigned char rnd, abs;
 	char shimmer;
 
 	clip = clipflags;
@@ -180,26 +170,24 @@ void ProcessRoomVertices(ROOM_INFO* r)
 		fG = 0;
 		fB = 0;
 
-		for (int j = 0; j < nRoomDynamics; j++)
+		for (auto& dyn : RoomDynamics)
 		{
-			l = &RoomDynamics[j];
-
-			lPos.x = vtx.x - r->posx - l->x;
-			lPos.y = vtx.y - r->posy - l->y;
-			lPos.z = vtx.z - r->posz - l->z;
+			lPos.x = vtx.x - r->posx - dyn.x;
+			lPos.y = vtx.y - r->posy - dyn.y;
+			lPos.z = vtx.z - r->posz - dyn.z;
 			val = SQUARE(lPos.x) + SQUARE(lPos.y) + SQUARE(lPos.z);
 
-			if (val < l->sqr_falloff)
+			if (val < dyn.sqr_falloff)
 			{
 				val = sqrt(val);
-				val2 = l->inv_falloff * (l->falloff - val);
+				val2 = dyn.inv_falloff * (dyn.falloff - val);
 				lPos.x = (n.x * D3DMView._11 + n.y * D3DMView._21 + n.z * D3DMView._31) * (1.0F / val * lPos.x);
 				lPos.y = (n.x * D3DMView._12 + n.y * D3DMView._22 + n.z * D3DMView._32) * (1.0F / val * lPos.y);
 				lPos.z = (n.x * D3DMView._13 + n.y * D3DMView._23 + n.z * D3DMView._33) * (1.0F / val * lPos.z);
 				val = val2 * (1.0F - (lPos.x + lPos.y + lPos.z));
-				fR += l->r * val;
-				fG += l->g * val;
-				fB += l->b * val;
+				fR += dyn.r * val;
+				fG += dyn.g * val;
+				fB += dyn.b * val;
 			}
 		}
 
@@ -287,7 +275,7 @@ void ProcessRoomData(ROOM_INFO* r)
 	short* prelight;
 	float intensity;
 	long nWaterVerts, nShoreVerts, nRestOfVerts, nLights, nBulbs;
-	ushort cR, cG, cB;
+	unsigned short cR, cG, cB;
 
 	data_ptr = r->data;
 	r->nVerts = *data_ptr++;
@@ -415,9 +403,9 @@ void ProcessRoomData(ROOM_INFO* r)
 		cG = ((prelight[i] & 0x3E0) >> 5) << 3;
 		cB = (prelight[i] & 0x1F) << 3;
 		r->prelight[i] = RGBA(cR, cG, cB, 0xFF);
-		cR = ushort((cR * water_color_R) >> 8);
-		cG = ushort((cG * water_color_G) >> 8);
-		cB = ushort((cB * water_color_B) >> 8);
+		cR = unsigned short((cR * water_color_R) >> 8);
+		cG = unsigned short((cG * water_color_G) >> 8);
+		cB = unsigned short((cB * water_color_B) >> 8);
 		r->prelightwater[i] = RGBA(cR, cG, cB, 0xFF);
 		vptr++;
 		data_ptr += 6;

@@ -18,60 +18,60 @@ static BITE_INFO AGOffsets = { 0, 0, 0, 8 };
 
 void TriggerAutogunFlamethrower(ITEM_INFO* item)
 {
-	SPARKS* sptr;
-	PHD_VECTOR pos;
-	PHD_VECTOR vel;
-	long v;
 
 	for (int i = 0; i < 3; i++)
 	{
-		sptr = &spark[GetFreeSpark()];
-		sptr->On = 1;
-		sptr->sR = (GetRandomControl() & 0x1F) + 48;
-		sptr->sG = 48;
-		sptr->sB = 255;
-		sptr->dR = (GetRandomControl() & 0x3F) + 192;
-		sptr->dG = (GetRandomControl() & 0x3F) + 128;
-		sptr->dB = 32;
-		sptr->ColFadeSpeed = 12;
-		sptr->FadeToBlack = 8;
-		sptr->TransType = 2;
-		sptr->Life = (GetRandomControl() & 0x1F) + 16;
-		sptr->sLife = sptr->Life;
+		SPARKS sptr;
+		sptr.On = 1;
+		sptr.sR = (GetRandomControl() & 0x1F) + 48;
+		sptr.sG = 48;
+		sptr.sB = 255;
+		sptr.dR = (GetRandomControl() & 0x3F) + 192;
+		sptr.dG = (GetRandomControl() & 0x3F) + 128;
+		sptr.dB = 32;
+		sptr.ColFadeSpeed = 12;
+		sptr.FadeToBlack = 8;
+		sptr.TransType = 2;
+		sptr.Life = (GetRandomControl() & 0x1F) + 16;
+		sptr.sLife = sptr.Life;
 
+		PHD_VECTOR pos;
 		pos.x = -140;
 		pos.y = -30;
 		pos.z = -4;
 		GetJointAbsPosition(item, &pos, 7);
-		sptr->x = (GetRandomControl() & 0x1F) + pos.x - 16;
-		sptr->y = (GetRandomControl() & 0x1F) + pos.y - 16;
-		sptr->z = (GetRandomControl() & 0x1F) + pos.z - 16;
+		sptr.x = (GetRandomControl() & 0x1F) + pos.x - 16;
+		sptr.y = (GetRandomControl() & 0x1F) + pos.y - 16;
+		sptr.z = (GetRandomControl() & 0x1F) + pos.z - 16;
 
+		PHD_VECTOR vel;
 		vel.x = -280;
 		vel.y = -30;
 		vel.z = -4;
 		GetJointAbsPosition(item, &vel, 7);
-		v = (GetRandomControl() & 0x3F) + 192;
-		sptr->Xvel = short(v * (vel.x - pos.x) / 10);
-		sptr->Yvel = short(v * (vel.y - pos.y) / 10);
-		sptr->Zvel = short(v * (vel.z - pos.z) / 10);
+		long v = (GetRandomControl() & 0x3F) + 192;
+		sptr.Xvel = short(v * (vel.x - pos.x) / 10);
+		sptr.Yvel = short(v * (vel.y - pos.y) / 10);
+		sptr.Zvel = short(v * (vel.z - pos.z) / 10);
 
-		sptr->Friction = 85;
-		sptr->MaxYvel = 0;
-		sptr->Gravity = -16 - (GetRandomControl() & 0x1F);
-		sptr->Flags = 538;
+		sptr.Friction = 85;
+		sptr.MaxYvel = 0;
+		sptr.Gravity = -16 - (GetRandomControl() & 0x1F);
+		sptr.Flags = 538;
 
 		if (GlobalCounter & 1)
 		{
 			v = 255;
-			sptr->Flags = 539;
+			sptr.Flags = 539;
 		}
 
-		sptr->Scalar = 3;
+		sptr.Scalar = 3;
 		v *= (GetRandomControl() & 7) + 60;
-		sptr->dSize = uchar(v >> 8);
-		sptr->Size = uchar(v >> 12);
-		sptr->sSize = sptr->Size;
+		sptr.dSize = unsigned char(v >> 8);
+		sptr.Size = unsigned char(v >> 12);
+		sptr.sSize = sptr.Size;
+
+		Sparks.push_back(sptr);
 	}
 }
 
@@ -119,8 +119,8 @@ void AutogunControl(short item_number)
 		for (int i = 0; i < 2; i++)
 			TriggerExplosionSparks(item->pos.x_pos, item->pos.y_pos - 768, item->pos.z_pos, 3, -1, 0, item->room_number);
 
-		SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, SFX_SETPITCH, 0x1800000);
-		SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos);
+		Sound.PlayEffect(SFX_EXPLOSION1, &item->pos);
+		Sound.PlayEffect(SFX_EXPLOSION2, &item->pos);
 	}
 	else
 	{
@@ -159,7 +159,7 @@ void AutogunControl(short item_number)
 					{
 						item->item_flags[0] = 2;
 						ShotLara(item, &info, &AGOffsets, autogun->joint_rotation[0], 5);
-						SOUND_PlayEffect(SFX_AUTOGUNS, &item->pos, SFX_LAND);
+						Sound.PlayEffect(SFX_AUTOGUNS, &item->pos);
 						item->item_flags[2] += 256;
 
 						if (item->item_flags[2] > 6144)

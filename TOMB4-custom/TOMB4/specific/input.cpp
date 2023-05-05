@@ -391,7 +391,7 @@ long S_UpdateInput()
 			if (state == AS_ALL4S || state == AS_CRAWL || state == AS_ALL4TURNL ||
 				state == AS_ALL4TURNR || state == AS_CRAWLBACK || state == AS_CRAWL2HANG)
 			{
-				SOUND_PlayEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
+				Sound.SayNo();
 				flare_no_db = 1;
 			}
 			else
@@ -430,7 +430,7 @@ long S_UpdateInput()
 
 	if (lara.gun_status == LG_READY)
 	{
-		savegame.AutoTarget = (uchar)App.AutoTarget;
+		savegame.AutoTarget = (unsigned char)App.AutoTarget;
 
 		if (linput & IN_LOOK)
 		{
@@ -466,7 +466,7 @@ long S_UpdateInput()
 
 					lara.dpoisoned = 0;
 					lara_item->hit_points += 500;
-					SOUND_PlayEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
+					Sound.PlayEffect(SFX_MENU_MEDI, NULL, SFXO_ALWAYS);
 					savegame.Game.HealthUsed++;
 
 					if (lara_item->hit_points > 1000)
@@ -500,7 +500,7 @@ long S_UpdateInput()
 
 					lara.dpoisoned = 0;
 					lara_item->hit_points = 1000;
-					SOUND_PlayEffect(SFX_MENU_MEDI, 0, SFX_ALWAYS);
+					Sound.PlayEffect(SFX_MENU_MEDI, NULL, SFXO_ALWAYS);
 					savegame.Game.HealthUsed++;
 					med_hotkey_timer = 15;
 

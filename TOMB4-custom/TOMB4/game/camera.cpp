@@ -25,7 +25,7 @@ long bLaraTorch;
 long LaraTorchIntensity;
 long LaraTorchYRot;
 
-camera_type BinocularOldCamera = CHASE_CAMERA;
+CAMERA_TYPES BinocularOldCamera = CHASE_CAMERA;
 long BinocularOn = 0;
 long BinocularRange = 0;
 long ExittingBinos = 0;
@@ -1282,14 +1282,12 @@ void CalculateCamera()
 
 	if (rooms[camera.pos.room_number].flags & ROOM_UNDERWATER)
 	{
-		SOUND_PlayEffect(SFX_UNDERWATER, NULL, SFX_ALWAYS);
+		Sound.PlayEffect(SFX_UNDERWATER, NULL, SFXO_ALWAYS);
 
 		if (!camera.underwater)
-			//empty func call here
 			camera.underwater = 1;
 	}
 	else if (camera.underwater)
-		//if unused var -> empty func call here
 		camera.underwater = 0;
 
 	if (camera.type == CINEMATIC_CAMERA)

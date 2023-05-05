@@ -17,7 +17,6 @@
 #include "lara_states.h"
 #include "../specific/function_stubs.h"
 #include "../specific/3dmath.h"
-#include "../specific/dxsound.h"
 #include "camera.h"
 #include "lara.h"
 #include "savegame.h"
@@ -163,19 +162,16 @@ void floor_shake_effect(ITEM_INFO* item)
 
 void SoundFlipEffect(ITEM_INFO* item)
 {
-	SOUND_PlayEffect(TriggerTimer, 0, SFX_LAND);
+	Sound.PlayEffect(TriggerTimer);
 	flipeffect = -1;
 }
 
 void RubbleFX(ITEM_INFO* item)
 {
-	ITEM_INFO* eq;
-
-	eq = find_a_fucking_item(EARTHQUAKE);
-
+	ITEM_INFO* eq = find_a_fucking_item(EARTHQUAKE);
 	if (eq)
 	{
-		AddActiveItem(eq - items);
+		AddActiveItem(eq->index);
 		eq->status = ITEM_ACTIVE;
 		eq->flags |= IFL_CODEBITS;
 	}
@@ -187,7 +183,7 @@ void RubbleFX(ITEM_INFO* item)
 
 void PoseidonSFX(ITEM_INFO* item)
 {
-	SOUND_PlayEffect(SFX_WATER_FLUSHES, 0, SFX_LAND);
+	Sound.PlayEffect(SFX_WATER_FLUSHES);
 	flipeffect = -1;
 }
 
@@ -215,7 +211,7 @@ void SwapCrowbar(ITEM_INFO* item)
 
 void ExplosionFX(ITEM_INFO* item)
 {
-	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_LAND);
+	Sound.PlayEffect(SFX_EXPLOSION1);
 	camera.bounce = -75;
 	flipeffect = -1;
 }
@@ -434,7 +430,7 @@ void WaterFall(short item_number)
 			TriggerWaterfallMist(item->pos.x_pos + dx, item->pos.y_pos, item->pos.z_pos + dz, item->pos.y_rot >> 4);
 		}
 
-		SOUND_PlayEffect(SFX_WATERFALL_LOOP, &item->pos);
+		Sound.PlayEffect(SFX_WATERFALL_LOOP, &item->pos);
 	}
 }
 
@@ -535,31 +531,7 @@ void DoLotsOfBlood(long x, long y, long z, short speed, short ang, short room_nu
 void Richochet(GAME_VECTOR* pos)
 {
 	TriggerRicochetSpark(pos, mGetAngle(pos->z, pos->x, lara_item->pos.z_pos, lara_item->pos.x_pos) >> 4, 3, 0);
-	SOUND_PlayEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos, SFX_LAND);
-}
-
-void SoundSources()
-{
-	if (!sound_active)
-		return;
-
-	OBJECT_VECTOR* sfx;
-	SOUND_SLOT* slot;
-
-	for (int i = 0; i < number_sound_effects; i++)
-	{
-		sfx = &sound_effects[i];
-		if (!flip_status && sfx->flags & 0x40)
-			continue;
-		else if (flip_status && sfx->flags & 0x80) // not flipped
-			continue;
-		SOUND_PlayEffect(sfx->data, (PHD_3DPOS*)sfx);
-	}
-
-	if (flipeffect != -1)
-		effect_routines[flipeffect](NULL);
-
-	SOUND_EndScene();
+	Sound.PlayEffect(SFX_LARA_RICOCHET, (PHD_3DPOS*)pos);
 }
 
 long ItemNearLara(PHD_3DPOS* pos, long rad)

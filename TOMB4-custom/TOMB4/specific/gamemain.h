@@ -3,7 +3,7 @@
 
 void GameClose();
 unsigned int __stdcall GameMain(void* ptr);
-ushort GetRandom(WATERTAB* wt, long lp);
+unsigned short GetRandom(WATERTAB* wt, long lp);
 void init_water_table();
 bool GameInitialise();
 long S_SaveGame(long slot_num);

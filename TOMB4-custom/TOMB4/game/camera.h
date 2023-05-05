@@ -24,7 +24,7 @@ extern long bLaraTorch;
 extern long LaraTorchIntensity;
 extern long LaraTorchYRot;
 
-extern camera_type BinocularOldCamera;
+extern CAMERA_TYPES BinocularOldCamera;
 extern long BinocularOn;
 extern long BinocularRange;
 extern long ExittingBinos;

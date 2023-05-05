@@ -3,7 +3,7 @@
 
 void DrawTrainStrips();
 void S_PrintShadow(short size, short* box, ITEM_INFO* item);
-void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr);
+void S_DrawDrawSparks(SPARKS& sptr, long smallest_size, long* xyptr, long* zptr);
 void DrawBikeSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long size, long unk);
 void Draw2DSprite(long x, long y, long slot, long unused, long unused2);
 void DrawJeepSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long size, long spriteSlot);
@@ -13,7 +13,7 @@ void DrawPsxTile(long x_y, long height_width, long color, long u0, long u1);
 void DrawFlash();
 void S_DrawDarts(ITEM_INFO* item);
 void ClipCheckPoint(D3DTLVERTEX* v, float x, float y, float z, short* clip);
-void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype);
+void DrawFlatSky(unsigned long color, long zpos, long ypos, long drawtype);
 void OutputSky();
 void ProjectTriPoints(PHD_VECTOR* pos, long& x, long& y, long& z);
 void setXY4(D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3, long x4, long y4, long z, short* clip);

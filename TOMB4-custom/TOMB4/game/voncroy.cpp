@@ -21,7 +21,7 @@
 
 static BITE_INFO voncroy_hit = { 0, 35, 130, 18 };
 
-static uchar VonCroyCutIndices[68] =	//indices in VonCroyCutscenes depending on lara.locationPad
+static unsigned char VonCroyCutIndices[68] =	//indices in VonCroyCutscenes depending on lara.locationPad
 {
 	1, 2, 255, 0, 3, 255, 0, 4, 0, 0, 0, 0, 5, 6, 0, 0, 0, 255, 0, 0, 7, 0, 255, 255, 0, 8, 0, 255, 255, 255, 255, 255, 255, 255,
 	9, 0, 10, 255, 255, 255, 255, 255, 255, 0, 255, 255, 0, 0, 11, 12, 255, 255, 255, 0, 255, 255, 0, 0, 13, 14, 255, 0, 0, 0, 0, 0, 0, 0
@@ -52,7 +52,7 @@ static short VonCroyCutTracks[64] =
 	-1, -1, 68, 26, 43, -1, -1, -1, -1, -1, -1, 37, -1, -1, 36, 21, 25, 23, -1, -1, -1, 38, -1, -1, 36, 21, 25, 23, -1, -1, -1, -1
 };
 
-uchar VonCroyCutFlags[64];	//flags cut played
+unsigned char VonCroyCutFlags[64];	//flags cut played
 char bVoncroyCutScene;
 
 static PHD_VECTOR actualCameraPos;
@@ -153,7 +153,7 @@ void GetAIEnemy(CREATURE_INFO* info, long tfl)
 
 	for (int i = 0; i < nAIObjects; i++)
 	{
-		ai = &AIObjects[i];
+		ai = &ai_objects[i];
 
 		if (ai->trigger_flags == tfl && ai->room_number != 255)
 		{

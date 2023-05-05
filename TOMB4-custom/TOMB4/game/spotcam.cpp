@@ -48,8 +48,8 @@ static short InitialCameraRoom;
 static short LastFov;
 static short spotcam_timer;
 static short spotcam_loopcnt;
-static uchar SpotRemap[8];
-static uchar CameraCnt[8];
+static unsigned char SpotRemap[8];
+static unsigned char CameraCnt[8];
 
 void SetSplineData(long num, long cam)
 {
@@ -222,7 +222,7 @@ void InitialiseSpotCam(short Sequence)
 
 void InitSpotCamSequences()
 {
-	uchar s, cc, ce;
+	unsigned char s, cc, ce;
 
 	bTrackCamInit = 0;
 
@@ -274,7 +274,7 @@ void CalculateSpotCams()
 	SPOTCAM* CurrentCam;
 	ITEM_INFO* item;
 	CAMERA_INFO backup;
-	camera_type ctype;
+	CAMERA_TYPES ctype;
 	long cpx, cpy, cpz, ctx, cty, ctz, cspeed, cfov, croll, next_spline_camera, cunt;
 	long cs, cp, clen, tlen, cx, cy, cz, lx, ly, lz, sp;
 	static long bFirstLook = 0;

@@ -322,9 +322,6 @@
     <ClInclude Include="TOMB4\specific\cmdline.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\specific\dxsound.h">
-      <Filter>TOMB4\specific</Filter>
-    </ClInclude>
     <ClInclude Include="TOMB4\specific\file.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
@@ -362,9 +359,6 @@
     <ClInclude Include="TOMB4\specific\fmv.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\tomb4\libs\zlib\zlib.h">
-      <Filter>TOMB4\tomb4\libs\zlib</Filter>
-    </ClInclude>
     <ClInclude Include="TOMB4\specific\drawbars.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
@@ -372,6 +366,8 @@
     <ClInclude Include="TOMB4\game\weapons\rocket_gun.h" />
     <ClInclude Include="TOMB4\tomb4\pl_mpeg.h" />
     <ClInclude Include="TOMB4\game\snowmobile.h" />
+    <ClInclude Include="TOMB4\tomb4\bassmix.h" />
+    <ClInclude Include="TOMB4\tomb4\bass_fx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TOMB4\game\lara.cpp">
@@ -659,9 +655,6 @@
     <ClCompile Include="TOMB4\specific\cmdline.cpp">
       <Filter>TOMB4\specific</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\specific\dxsound.cpp">
-      <Filter>TOMB4\specific</Filter>
-    </ClCompile>
     <ClCompile Include="TOMB4\specific\file.cpp">
       <Filter>TOMB4\specific</Filter>
     </ClCompile>
@@ -691,24 +684,6 @@
     </ClCompile>
     <ClCompile Include="TOMB4\specific\fmv.cpp">
       <Filter>TOMB4\specific</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\tomb4\libs\zlib\inflate.c">
-      <Filter>TOMB4\tomb4\libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\tomb4\libs\zlib\adler32.c">
-      <Filter>TOMB4\tomb4\libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\tomb4\libs\zlib\crc32.c">
-      <Filter>TOMB4\tomb4\libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\tomb4\libs\zlib\zutil.c">
-      <Filter>TOMB4\tomb4\libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\tomb4\libs\zlib\inffast.c">
-      <Filter>TOMB4\tomb4\libs\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\tomb4\libs\zlib\inftrees.c">
-      <Filter>TOMB4\tomb4\libs\zlib</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\specific\drawbars.cpp">
       <Filter>TOMB4\specific</Filter>

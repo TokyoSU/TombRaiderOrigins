@@ -133,8 +133,8 @@ static char source_wav_format[50] =
 };
 #pragma warning(pop)
 
-uchar* wav_file_buffer = 0;
-uchar* ADPCMBuffer = 0;
+unsigned char* wav_file_buffer = 0;
+unsigned char* ADPCMBuffer = 0;
 bool acm_ready = 0;
 
 long XATrack = -1;
@@ -145,9 +145,9 @@ static HANDLE NotifyEventHandles[2];
 static HANDLE NotificationThreadHandle = 0;
 static FILE* audio_stream_fp;
 static CRITICAL_SECTION audio_cs;
-static uchar* audio_fp_write_ptr = 0;
-static uchar* pAudioWrite = 0;
-static ulong AudioBytes = 0;
+static unsigned char* audio_fp_write_ptr = 0;
+static unsigned char* pAudioWrite = 0;
+static unsigned long AudioBytes = 0;
 static long audio_buffer_size = 0;
 static long CurrentNotify = 0;
 static long NotifySize = 0;

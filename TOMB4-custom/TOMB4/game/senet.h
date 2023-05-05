@@ -9,7 +9,7 @@ void InitialiseGameStix(short item_number);
 void ThrowSticks(ITEM_INFO* item);
 void GameStixControl(short item_number);
 void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
-void ShockwaveExplosion(ITEM_INFO* item, ulong col, long speed);
+void ShockwaveExplosion(ITEM_INFO* item, unsigned long col, long speed);
 void ControlGodHead(short item_number);
 void DrawGodHead(ITEM_INFO* item);
 

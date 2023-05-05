@@ -22,7 +22,6 @@
 #include "gameflow.h"
 #include "../specific/file.h"
 #include "../tomb4/tomb4.h"
-#include "../specific/dxsound.h"
 
 COLL_INFO mycoll;
 
@@ -213,7 +212,7 @@ void AnimateLara(ITEM_INFO* item)
 	ANIM_STRUCT* anim;
 	short* cmd;
 	long speed;
-	ushort type;
+	unsigned short type;
 
 	item->frame_number++;
 	anim = &anims[item->anim_number];
@@ -295,16 +294,13 @@ void AnimateLara(ITEM_INFO* item)
 				break;
 
 			case ACMD_PLAYSFX:
-
 				if (item->frame_number == cmd[0])
 				{
 					type = cmd[1] & 0xC000;
-
 					if (type == SFX_LANDANDWATER || (type == SFX_LANDONLY && (lara.water_surface_dist >= 0 || lara.water_surface_dist == NO_HEIGHT)) ||
 						(type == SFX_WATERONLY && lara.water_surface_dist < 0 && lara.water_surface_dist != NO_HEIGHT))
-						SOUND_PlayEffect(cmd[1] & 0x3FFF, &item->pos, SFX_ALWAYS);
+						Sound.PlayEffect((SOUND_EFFECT_NAMES)(cmd[1] & 0x3FFF), &item->pos, SFXO_ALWAYS);
 				}
-
 				cmd += 2;
 				break;
 
@@ -419,7 +415,7 @@ void LaraControl(short item_number)
 					l->gravity_status = 0;
 					l->pos.y_pos += 100;
 					UpdateLaraRoom(l, 0);
-					SOUND_Stop(SFX_LARA_FALL);
+					Sound.StopEffect(SFX_LARA_FALL);
 
 					if (l->current_anim_state == AS_SWANDIVE)
 					{
@@ -536,7 +532,6 @@ void LaraControl(short item_number)
 					lara.head_x_rot = 0;
 					lara.head_y_rot = 0;
 					UpdateLaraRoom(l, -381);
-					SOUND_PlayEffect(SFX_LARA_BREATH, &l->pos, SFX_ALWAYS);
 				}
 				else
 				{
@@ -597,9 +592,9 @@ void LaraControl(short item_number)
 	}
 
 	if (tomb4.reverb == 2)
-		S_SetReverbType(rooms[l->room_number].ReverbType);
+		Sound.SetReverbType((REVERB_TYPES)rooms[l->room_number].ReverbType);
 	else
-		S_SetReverbType(rooms[camera.pos.room_number].ReverbType);
+		Sound.SetReverbType((REVERB_TYPES)rooms[camera.pos.room_number].ReverbType);
 
 	if (l->hit_points <= 0)
 	{

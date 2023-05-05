@@ -122,7 +122,7 @@ void draw_pistols(long weapon_type)
 	else if (ani == p->Draw2Anim)
 	{
 		draw_pistol_meshes(weapon_type);
-		SOUND_PlayEffect(SFX_LARA_DRAW, &lara_item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_LARA_DRAW, &lara_item->pos);
 	}
 	else if (ani == p->RecoilAnim - 1)
 	{
@@ -164,7 +164,7 @@ void undraw_pistols(long weapon_type)
 		if (anil == p->Draw2Anim - 1)
 		{
 			undraw_pistol_mesh_left(weapon_type);
-			SOUND_PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos);
 		}
 	}
 
@@ -193,7 +193,7 @@ void undraw_pistols(long weapon_type)
 		if (anir == p->Draw2Anim - 1)
 		{
 			undraw_pistol_mesh_right(weapon_type);
-			SOUND_PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_LARA_HOLSTER, &lara_item->pos);
 		}
 	}
 
@@ -314,8 +314,8 @@ void AnimatePistols(long weapon_type)
 						SmokeWeapon = weapon_type;
 						TriggerGunShell(1, GUNSHELL, weapon_type);
 						lara.right_arm.flash_gun = winfo->flash_time;
-						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
-						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_LAND);
+						Sound.PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+						Sound.PlayEffect(winfo->sample_num, &lara_item->pos);
 						sound_already = 1;
 						savegame.Game.AmmoUsed++;
 					}
@@ -377,8 +377,8 @@ void AnimatePistols(long weapon_type)
 
 					if (!sound_already)
 					{
-						SOUND_PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
-						SOUND_PlayEffect(winfo->sample_num, &lara_item->pos, SFX_LAND);
+						Sound.PlayEffect(SFX_EXPLOSION1, &lara_item->pos);
+						Sound.PlayEffect(winfo->sample_num, &lara_item->pos, SFXO_LAND);
 					}
 
 					savegame.Game.AmmoUsed++;

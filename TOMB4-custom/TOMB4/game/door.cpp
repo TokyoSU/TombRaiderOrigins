@@ -187,7 +187,7 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 							OldPickupPos.x = l->pos.x_pos;
 							OldPickupPos.y = l->pos.y_pos;
 							OldPickupPos.z = l->pos.z_pos;
-							SOUND_SayNo();
+							Sound.SayNo();
 						}
 					}
 

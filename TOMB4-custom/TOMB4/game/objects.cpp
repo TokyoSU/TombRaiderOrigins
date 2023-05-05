@@ -35,7 +35,6 @@ void ControlMapper(short item_number)
 {
 	ITEM_INFO* item;
 	FLOOR_INFO* floor;
-	SPARKS* sptr;
 	PHD_VECTOR pos;
 	long rg, h;
 	short room_number;
@@ -47,7 +46,7 @@ void ControlMapper(short item_number)
 
 	if (item->frame_number - anims[item->anim_number].frame_base >= 200)
 	{
-		SOUND_PlayEffect(SFX_MAPPER_LAZER, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_MAPPER_LAZER, &item->pos);
 		item->mesh_bits |= 2;
 		pos.x = 0;
 		pos.y = 0;
@@ -61,33 +60,34 @@ void ControlMapper(short item_number)
 
 		for (int i = 0; i < 2; i++)
 		{
-			sptr = &spark[GetFreeSpark()];
-			sptr->On = 1;
-			sptr->sR = (GetRandomControl() & 0x7F) + 64;
-			sptr->sG = sptr->sR;
-			sptr->sB = 0;
-			sptr->dR = (GetRandomControl() & 0x7F) + 64;
-			sptr->dG = sptr->dR - (GetRandomControl() & 0x1F);
-			sptr->dB = 0;
-			sptr->ColFadeSpeed = 4;
-			sptr->FadeToBlack = 4;
-			sptr->TransType = 2;
-			sptr->Life = 12;
-			sptr->sLife = 12;
-			sptr->x = pos.x;
-			sptr->y = h;
-			sptr->z = pos.z;
-			sptr->Xvel = (GetRandomControl() & 0x3FF) - 512;
-			sptr->Yvel = -256 - (GetRandomControl() & 0x7F);
-			sptr->Zvel = (GetRandomControl() & 0x3FF) - 512;
-			sptr->Friction = 4;
-			sptr->Scalar = 2;
-			sptr->sSize = (GetRandomControl() & 0xF) + 16;;
-			sptr->Size = sptr->sSize;
-			sptr->dSize = (GetRandomControl() & 1) + 3;
-			sptr->MaxYvel = 0;
-			sptr->Gravity = (GetRandomControl() & 0x1F) + 32;
-			sptr->Flags = 10;
+			SPARKS sptr;
+			sptr.On = 1;
+			sptr.sR = (GetRandomControl() & 0x7F) + 64;
+			sptr.sG = sptr.sR;
+			sptr.sB = 0;
+			sptr.dR = (GetRandomControl() & 0x7F) + 64;
+			sptr.dG = sptr.dR - (GetRandomControl() & 0x1F);
+			sptr.dB = 0;
+			sptr.ColFadeSpeed = 4;
+			sptr.FadeToBlack = 4;
+			sptr.TransType = 2;
+			sptr.Life = 12;
+			sptr.sLife = 12;
+			sptr.x = pos.x;
+			sptr.y = h;
+			sptr.z = pos.z;
+			sptr.Xvel = (GetRandomControl() & 0x3FF) - 512;
+			sptr.Yvel = -256 - (GetRandomControl() & 0x7F);
+			sptr.Zvel = (GetRandomControl() & 0x3FF) - 512;
+			sptr.Friction = 4;
+			sptr.Scalar = 2;
+			sptr.sSize = (GetRandomControl() & 0xF) + 16;;
+			sptr.Size = sptr.sSize;
+			sptr.dSize = (GetRandomControl() & 1) + 3;
+			sptr.MaxYvel = 0;
+			sptr.Gravity = (GetRandomControl() & 0x1F) + 32;
+			sptr.Flags = 10;
+			Sparks.push_back(sptr);
 		}
 	}
 
@@ -132,7 +132,7 @@ void ControlLightningConductor(short item_number)
 
 	if (item->item_flags[0])
 	{
-		SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_ELEC_ARCING_LOOP, &item->pos);
 		item->item_flags[0]--;
 		b = (GetRandomControl() & 0x3F) + 192;
 		g = b - (GetRandomControl() & 0x1F);
@@ -186,7 +186,7 @@ void ControlLightningConductor(short item_number)
 	}
 	else if (!(GetRandomControl() & 0x3F))
 	{
-		SOUND_PlayEffect(SFX_THUNDER_CRACK, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_THUNDER_CRACK, &item->pos);
 		item->item_flags[0] = (GetRandomControl() & 3) + 4;
 		item->item_flags[1] = (GetRandomControl() & 0x3FF) - 512;
 	}
@@ -345,56 +345,55 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void TriggerRopeFlame(PHD_VECTOR* pos)
 {
-	SPARKS* sptr;
-
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->sR = 255;
-	sptr->sG = (GetRandomControl() & 0x1F) + 48;
-	sptr->sB = 48;
-	sptr->dR = (GetRandomControl() & 0x3F) - 64;
-	sptr->dG = (GetRandomControl() & 0x3F) + 0x80;
-	sptr->dB = 32;
-	sptr->FadeToBlack = 4;
-	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
-	sptr->TransType = 2;
-	sptr->Life = (GetRandomControl() & 3) + 24;
-	sptr->sLife = sptr->Life;
-	sptr->x = (GetRandomControl() & 0xF) + pos->x - 8;
-	sptr->y = pos->y;
-	sptr->z = (GetRandomControl() & 0xF) + pos->z - 8;
-	sptr->Xvel = (GetRandomControl() & 0xFF) - 128;
-	sptr->Zvel = (GetRandomControl() & 0xFF) - 128;
-	sptr->Friction = 5;
-	sptr->Flags = 538;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.sR = 255;
+	sptr.sG = (GetRandomControl() & 0x1F) + 48;
+	sptr.sB = 48;
+	sptr.dR = (GetRandomControl() & 0x3F) - 64;
+	sptr.dG = (GetRandomControl() & 0x3F) + 0x80;
+	sptr.dB = 32;
+	sptr.FadeToBlack = 4;
+	sptr.ColFadeSpeed = (GetRandomControl() & 3) + 4;
+	sptr.TransType = 2;
+	sptr.Life = (GetRandomControl() & 3) + 24;
+	sptr.sLife = sptr.Life;
+	sptr.x = (GetRandomControl() & 0xF) + pos->x - 8;
+	sptr.y = pos->y;
+	sptr.z = (GetRandomControl() & 0xF) + pos->z - 8;
+	sptr.Xvel = (GetRandomControl() & 0xFF) - 128;
+	sptr.Zvel = (GetRandomControl() & 0xFF) - 128;
+	sptr.Friction = 5;
+	sptr.Flags = 538;
 
 	if (!(GetRandomControl() & 3))
-		sptr->Flags |= 0x20;
+		sptr.Flags |= 0x20;
 
-	sptr->RotAng = GetRandomControl() & 0xFFF;
+	sptr.RotAng = GetRandomControl() & 0xFFF;
 
 	if (GetRandomControl() & 1)
-		sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
+		sptr.RotAdd = -16 - (GetRandomControl() & 0xF);
 	else
-		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
+		sptr.RotAdd = (GetRandomControl() & 0xF) + 16;
 
 	if (GetRandomControl() & 0xF)
 	{
-		sptr->Yvel = -24 - (GetRandomControl() & 0xF);
-		sptr->Gravity = -24 - (GetRandomControl() & 0x1F);
-		sptr->MaxYvel = -16 - (GetRandomControl() & 7);
+		sptr.Yvel = -24 - (GetRandomControl() & 0xF);
+		sptr.Gravity = -24 - (GetRandomControl() & 0x1F);
+		sptr.MaxYvel = -16 - (GetRandomControl() & 7);
 	}
 	else
 	{
-		sptr->Yvel = (GetRandomControl() & 0xF) + 24;
-		sptr->MaxYvel = 0;
-		sptr->Gravity = (GetRandomControl() & 0x1F) + 24;
+		sptr.Yvel = (GetRandomControl() & 0xF) + 24;
+		sptr.MaxYvel = 0;
+		sptr.Gravity = (GetRandomControl() & 0x1F) + 24;
 	}
 
-	sptr->Scalar = 2;
-	sptr->Size = (GetRandomControl() & 0xF) + 96;
-	sptr->sSize = sptr->Size;
-	sptr->dSize = sptr->Size >> 3;
+	sptr.Scalar = 2;
+	sptr.Size = (GetRandomControl() & 0xF) + 96;
+	sptr.sSize = sptr.Size;
+	sptr.dSize = sptr.Size >> 3;
+	Sparks.push_back(sptr);
 }
 
 void ControlBurningRope(short item_number)
@@ -530,12 +529,6 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 		if (dx < sphere->r && dy < sphere->r && dz < sphere->r)
 		{
-			if (gfCurrentLevel == 27)
-			{
-				SOUND_PlayEffect(SFX_BOULDER_FALL, 0, SFX_LAND);
-				TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
-			}
-
 			item->trigger_flags = 1;
 			item->item_flags[0] = i << 1;
 			item->item_flags[1] = i << 1;
@@ -559,9 +552,9 @@ void ControlWaterfall(short item_number)
 		item->status = ITEM_ACTIVE;
 
 		if (item->trigger_flags == 668)
-			SOUND_PlayEffect(SFX_SAND_LOOP, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_SAND_LOOP, &item->pos);
 		else if (item->trigger_flags == 777)
-			SOUND_PlayEffect(SFX_WATERFALL_LOOP, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_WATERFALL_LOOP, &item->pos);
 	}
 	else
 	{
@@ -738,7 +731,7 @@ void ControlAnimatingSlots(short item_number)
 			pos.y = 0;
 			pos.z = 0;
 			GetJointAbsPosition(item, &pos, 0);
-			SOUND_PlayEffect(SFX_HELICOPTER_LOOP, (PHD_3DPOS*)&pos, SFX_LAND);
+			Sound.PlayEffect(SFX_HELICOPTER_LOOP, (PHD_3DPOS*)&pos);
 
 			if (item->frame_number == anims[item->anim_number].frame_end)
 				item->flags &= ~IFL_CODEBITS;
@@ -785,8 +778,8 @@ void SmashObject(short item_number)
 	if (box->overlap_index & 0x8000)
 		box->overlap_index &= ~0x4000;
 
-	SOUND_PlayEffect(SFX_EXPLOSION1, &item->pos, SFX_LAND);
-	SOUND_PlayEffect(SFX_EXPLOSION2, &item->pos, SFX_LAND);
+	Sound.PlayEffect(SFX_EXPLOSION1, &item->pos);
+	Sound.PlayEffect(SFX_EXPLOSION2, &item->pos);
 	item->collidable = 0;
 	item->mesh_bits = 0xFFFE;
 	ExplodingDeath2(item_number, -1, 256);
@@ -812,12 +805,12 @@ void EarthQuake(short item_number)
 	if (item->trigger_flags == 888)
 	{
 		camera.bounce = -64 - (GetRandomControl() & 0x1F);
-		SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_LAND);
+		Sound.PlayEffect(SFX_EARTHQUAKE_LOOP);
 		item->item_flags[3]++;
 
 		if (item->item_flags[3] > 150)
 		{
-			SOUND_PlayEffect(SFX_DOOR_GEN_THUD, 0, SFX_LAND);
+			Sound.PlayEffect(SFX_DOOR_GEN_THUD);
 			KillItem(item_number);
 		}
 	}
@@ -828,7 +821,7 @@ void EarthQuake(short item_number)
 		else
 		{
 			item->item_flags[0]++;
-			SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, 0, SFX_LAND);
+			Sound.PlayEffect(SFX_EARTHQUAKE_LOOP);
 		}
 	}
 	else
@@ -862,7 +855,7 @@ void EarthQuake(short item_number)
 			item->item_flags[0] -= (GetRandomControl() & 7) + 2;
 
 		pitch = (item->item_flags[0] << 16) + 0x1000000;
-		SOUND_PlayEffect(SFX_EARTHQUAKE_LOOP, NULL);
+		Sound.PlayEffect(SFX_EARTHQUAKE_LOOP);
 		camera.bounce = -item->item_flags[0];
 
 		if (GetRandomControl() < 1024)

@@ -123,7 +123,7 @@ void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels,
 
 	if (DebrisFlags & 1)
 	{
-		dptr->YRot = uchar(GetRandomControl() << 1);
+		dptr->YRot = unsigned char(GetRandomControl() << 1);
 		dptr->XRot = dptr->YRot;
 	}
 	else
@@ -205,12 +205,12 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	GAME_VECTOR vec;
 	float* vtx;
 	long* Vels;
-	ushort* face_data;
+	unsigned short* face_data;
 	short* meshp;
 	short* offsets;
 	short* RotVerts;
 	long lp, nVtx, nTris, nQuads, x, y, z;
-	ushort v1, v2, v3, c;
+	unsigned short v1, v2, v3, c;
 	short rnd, RotY, rgb;
 
 	rnd = 0;
@@ -288,7 +288,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 	vec.room_number = RoomNumber;
 	DebrisMeshAmbient = rooms[RoomNumber].ambient;
 
-	face_data = (ushort*)mesh->gt3;
+	face_data = (unsigned short*)mesh->gt3;
 
 	while (nTris && Num)
 	{
@@ -365,7 +365,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		nTris--;
 	}
 
-	face_data = (ushort*)mesh->gt4;
+	face_data = (unsigned short*)mesh->gt4;
 
 	while (nQuads && Num)
 	{

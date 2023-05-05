@@ -5,7 +5,7 @@
 #include "gameflow.h"
 #include "control.h"
 
-static uchar SkinJoints[14][4] =
+static unsigned char SkinJoints[14][4] =
 {
 	{ 0, 1, 1, 3 },
 	{ 1, 2, 4, 5 },
@@ -45,7 +45,7 @@ static PHD_VECTOR BelowMeshXYZ;
 static PHD_VECTOR JointMeshXYZ;
 static PHD_VECTOR AboveMeshXYZ;
 static PHD_VECTOR XYZList[32];
-static uchar PointsToCalc[26][12];
+static unsigned char PointsToCalc[26][12];
 
 void PushXYZ()
 {
@@ -75,7 +75,7 @@ void CreateSkinningData()
 	short* LaraMesh;
 	long vertCount, aboveVerts, belowVerts, jointVerts, laraVerts, laraX, laraY, laraZ, jointX, jointY, jointZ, calcPointsCounter;
 	short aboveMeshNum, belowMeshNum, jointMeshNum;
-	uchar vertBuf[128];
+	unsigned char vertBuf[128];
 
 	for (int i = 0; i < 14; i++)
 	{
@@ -349,7 +349,7 @@ void OptomiseSkinningData()
 	short VertTable[128];
 	short NormalTable[128];
 	long c, lp, lp1, numvertsj, numvertstocalc, padval, numtris, numquads;
-	uchar RemapTable[32];
+	unsigned char RemapTable[32];
 
 
 	object = &objects[LARA_SKIN_JOINTS];
@@ -363,7 +363,7 @@ void OptomiseSkinningData()
 		numvertstocalc = JointMesh[5] & 0xFF;
 
 		if (!numvertstocalc)
-			numvertstocalc = (ushort)JointMesh[5] >> 8;
+			numvertstocalc = (unsigned short)JointMesh[5] >> 8;
 
 		lp = 0;
 
@@ -373,20 +373,20 @@ void OptomiseSkinningData()
 		if (numvertsj)
 		{
 			for (lp1 = 0; lp1 < lp; lp1++)
-				RemapTable[PointsToCalc[c][lp1]] = (uchar)lp1;
+				RemapTable[PointsToCalc[c][lp1]] = (unsigned char)lp1;
 
 			padval = lp;
 
 			for (lp1 = 0; ScratchVertNums[SkinJoints[c][2]][lp1] != -1; lp1++)
 			{
-				RemapTable[ScratchVertNums[SkinJoints[c][2]][lp1]] = (uchar)padval;
+				RemapTable[ScratchVertNums[SkinJoints[c][2]][lp1]] = (unsigned char)padval;
 				ScratchVertNums[SkinJoints[c][2]][lp1] = (char)padval;
 				padval++;
 			}
 
 			for (lp1 = 0; ScratchVertNums[SkinJoints[c][3]][lp1] != -1; lp1++)
 			{
-				RemapTable[ScratchVertNums[SkinJoints[c][3]][lp1]] = (uchar)padval;
+				RemapTable[ScratchVertNums[SkinJoints[c][3]][lp1]] = (unsigned char)padval;
 				ScratchVertNums[SkinJoints[c][3]][lp1] = (char)padval;
 				padval++;
 			}

@@ -9,7 +9,6 @@
 #include "3dmath.h"
 #include "../game/text.h"
 #include "d3dmatrix.h"
-#include "dxsound.h"
 #include "../game/control.h"
 #include "cmdline.h"
 #include "gamemain.h"

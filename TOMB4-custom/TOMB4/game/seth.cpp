@@ -19,55 +19,52 @@ static BITE_INFO right_hand = { 0, 220, 50, 13 };
 
 void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
 {
-	SPARKS* sptr;
-	long dx, dz;
-
-	dx = lara_item->pos.x_pos - effects[fx_number].pos.x_pos;
-	dz = lara_item->pos.z_pos - effects[fx_number].pos.z_pos;
-
+	long dx = lara_item->pos.x_pos - effects[fx_number].pos.x_pos;
+	long dz = lara_item->pos.z_pos - effects[fx_number].pos.z_pos;
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->sR = 0;
-	sptr->sG = (GetRandomControl() & 0x7F) + 32;
-	sptr->sB = sptr->dG + 64;	//uhm
-	sptr->dR = 0;
-	sptr->dB = (GetRandomControl() & 0x7F) + 32;
-	sptr->dG = sptr->dB + 64;
-	sptr->FadeToBlack = 8;
-	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
-	sptr->TransType = 2;
-	sptr->Life = (GetRandomControl() & 3) + 16;
-	sptr->sLife = sptr->Life;
-	sptr->x = (GetRandomControl() & 0xF) - 8;
-	sptr->y = 0;
-	sptr->z = (GetRandomControl() & 0xF) - 8;
-	sptr->Xvel = (short)xv;
-	sptr->Yvel = (short)yv;
-	sptr->Zvel = (short)zv;
-	sptr->Friction = 68;
-	sptr->Flags = 602;
-	sptr->RotAng = GetRandomControl() & 0xFFF;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.sR = 0;
+	sptr.sG = (GetRandomControl() & 0x7F) + 32;
+	sptr.sB = 64;
+	sptr.dR = 0;
+	sptr.dG = 64;
+	sptr.dB = (GetRandomControl() & 0x7F) + 32;
+	sptr.FadeToBlack = 8;
+	sptr.ColFadeSpeed = (GetRandomControl() & 3) + 4;
+	sptr.TransType = 2;
+	sptr.Life = (GetRandomControl() & 3) + 16;
+	sptr.sLife = sptr.Life;
+	sptr.x = (GetRandomControl() & 0xF) - 8;
+	sptr.y = 0;
+	sptr.z = (GetRandomControl() & 0xF) - 8;
+	sptr.Xvel = (short)xv;
+	sptr.Yvel = (short)yv;
+	sptr.Zvel = (short)zv;
+	sptr.Friction = 68;
+	sptr.Flags = 602;
+	sptr.RotAng = GetRandomControl() & 0xFFF;
 
 	if (GetRandomControl() & 1)
-		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
+		sptr.RotAdd = -32 - (GetRandomControl() & 0x1F);
 	else
-		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+		sptr.RotAdd = (GetRandomControl() & 0x1F) + 32;
 
-	sptr->Gravity = 0;
-	sptr->MaxYvel = 0;
-	sptr->FxObj = (uchar)fx_number;
+	sptr.Gravity = 0;
+	sptr.MaxYvel = 0;
+	sptr.FxObj = (unsigned char)fx_number;
 
 	if (effects[fx_number].flag1 == 1)
-		sptr->Scalar = 3;
+		sptr.Scalar = 3;
 	else
-		sptr->Scalar = 2;
+		sptr.Scalar = 2;
 
-	sptr->Size = (GetRandomControl() & 7) + 64;
-	sptr->sSize = sptr->Size;
-	sptr->dSize = sptr->Size >> 5;
+	sptr.Size = (GetRandomControl() & 7) + 64;
+	sptr.sSize = sptr.Size;
+	sptr.dSize = sptr.Size >> 5;
+	Sparks.push_back(sptr);
 }
 
 void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type)
@@ -97,47 +94,43 @@ void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type)
 
 void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv)
 {
-	SPARKS* sptr;
-	long dx, dz;
-
-	dx = lara_item->pos.x_pos - x;
-	dz = lara_item->pos.x_pos - z;
-
+	long dx = lara_item->pos.x_pos - x;
+	long dz = lara_item->pos.x_pos - z;
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->sR = 0;
-	sptr->sG = 0;
-	sptr->sB = 0;
-	sptr->dR = 64;
-	sptr->dG = (GetRandomControl() & 0x7F) + 64;
-	sptr->dB = sptr->dG + 32;
-	sptr->Life = 16;
-	sptr->sLife = 16;
-	sptr->ColFadeSpeed = 4;
-	sptr->TransType = 2;
-	sptr->FadeToBlack = 4;
-	sptr->x = x;
-	sptr->y = y;
-	sptr->z = z;
-	sptr->Xvel = xv;
-	sptr->Yvel = yv;
-	sptr->Zvel = zv;
-	sptr->Friction = 34;
-	sptr->Scalar = 1;
-	sptr->Size = (GetRandomControl() & 3) + 4;
-	sptr->sSize = sptr->Size;
-	sptr->dSize = (GetRandomControl() & 1) + 1;
-	sptr->MaxYvel = 0;
-	sptr->Gravity = 0;
-	sptr->Flags = 0;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.sR = 0;
+	sptr.sG = 0;
+	sptr.sB = 0;
+	sptr.dR = 64;
+	sptr.dG = (GetRandomControl() & 0x7F) + 64;
+	sptr.dB = sptr.dG + 32;
+	sptr.Life = 16;
+	sptr.sLife = 16;
+	sptr.ColFadeSpeed = 4;
+	sptr.TransType = 2;
+	sptr.FadeToBlack = 4;
+	sptr.x = x;
+	sptr.y = y;
+	sptr.z = z;
+	sptr.Xvel = xv;
+	sptr.Yvel = yv;
+	sptr.Zvel = zv;
+	sptr.Friction = 34;
+	sptr.Scalar = 1;
+	sptr.Size = (GetRandomControl() & 3) + 4;
+	sptr.sSize = sptr.Size;
+	sptr.dSize = (GetRandomControl() & 1) + 1;
+	sptr.MaxYvel = 0;
+	sptr.Gravity = 0;
+	sptr.Flags = 0;
+	Sparks.push_back(sptr);
 }
 
-void TriggerSethFlame(short item_number, uchar NodeNumber, short size)
+void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size)
 {
-	SPARKS* sptr;
 	long dx, dz;
 
 	dx = lara_item->pos.x_pos - items[item_number].pos.x_pos;
@@ -146,42 +139,43 @@ void TriggerSethFlame(short item_number, uchar NodeNumber, short size)
 	if (dx < -0x4000 || dx > 0x4000 || dz < -0x4000 || dz > 0x4000)
 		return;
 
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->sR = 0;
-	sptr->sG = 0;
-	sptr->sB = 0;
-	sptr->dR = 0;
-	sptr->dG = (GetRandomControl() & 0x7F) + 32;
-	sptr->dB = sptr->dG + 64;
-	sptr->FadeToBlack = 8;
-	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
-	sptr->TransType = 2;
-	sptr->Life = (GetRandomControl() & 7) + 20;
-	sptr->sLife = sptr->Life;
-	sptr->x = (GetRandomControl() & 0xF) - 8;
-	sptr->y = 0;
-	sptr->z = (GetRandomControl() & 0xF) - 8;
-	sptr->Xvel = (GetRandomControl() & 0xFF) - 128;
-	sptr->Yvel = 0;
-	sptr->Zvel = (GetRandomControl() & 0xFF) - 128;
-	sptr->Friction = 5;
-	sptr->Flags = 4762;
-	sptr->RotAng = GetRandomControl() & 0xFFF;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.sR = 0;
+	sptr.sG = 0;
+	sptr.sB = 0;
+	sptr.dR = 0;
+	sptr.dG = (GetRandomControl() & 0x7F) + 32;
+	sptr.dB = sptr.dG + 64;
+	sptr.FadeToBlack = 8;
+	sptr.ColFadeSpeed = (GetRandomControl() & 3) + 4;
+	sptr.TransType = 2;
+	sptr.Life = (GetRandomControl() & 7) + 20;
+	sptr.sLife = sptr.Life;
+	sptr.x = (GetRandomControl() & 0xF) - 8;
+	sptr.y = 0;
+	sptr.z = (GetRandomControl() & 0xF) - 8;
+	sptr.Xvel = (GetRandomControl() & 0xFF) - 128;
+	sptr.Yvel = 0;
+	sptr.Zvel = (GetRandomControl() & 0xFF) - 128;
+	sptr.Friction = 5;
+	sptr.Flags = 4762;
+	sptr.RotAng = GetRandomControl() & 0xFFF;
 
 	if (GetRandomControl() & 1)
-		sptr->RotAdd = -32 - (GetRandomControl() & 0x1F);
+		sptr.RotAdd = -32 - (GetRandomControl() & 0x1F);
 	else
-		sptr->RotAdd = (GetRandomControl() & 0x1F) + 32;
+		sptr.RotAdd = (GetRandomControl() & 0x1F) + 32;
 
-	sptr->MaxYvel = 0;
-	sptr->Gravity = (GetRandomControl() & 0x1F) + 16;
-	sptr->FxObj = (uchar)item_number;
-	sptr->NodeNumber = NodeNumber;
-	sptr->Scalar = 2;
-	sptr->Size = uchar((GetRandomControl() & 0xF) + size);
-	sptr->sSize = sptr->Size;
-	sptr->dSize = sptr->Size >> 4;
+	sptr.MaxYvel = 0;
+	sptr.Gravity = (GetRandomControl() & 0x1F) + 16;
+	sptr.FxObj = (unsigned char)item_number;
+	sptr.NodeNumber = NodeNumber;
+	sptr.Scalar = 2;
+	sptr.Size = unsigned char((GetRandomControl() & 0xF) + size);
+	sptr.sSize = sptr.Size;
+	sptr.dSize = sptr.Size >> 4;
+	Sparks.push_back(sptr);
 }
 
 void DoSethEffects(short item_number)

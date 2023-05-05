@@ -70,12 +70,12 @@ extern long InItemControlLoop;
 extern short ItemNewRooms[256][2];
 extern short ItemNewRoomNo;
 
-extern uchar CurrentAtmosphere;
-extern uchar IsAtmospherePlaying;
+extern unsigned char CurrentAtmosphere;
+extern unsigned char IsAtmospherePlaying;
 extern char cd_flags[128];
 
-extern ulong FmvSceneTriggered;
-extern ulong CutSceneTriggered;
+extern unsigned long FmvSceneTriggered;
+extern unsigned long CutSceneTriggered;
 extern long SetDebounce;
 extern long framecount;
 extern long reset_flag;
@@ -83,7 +83,7 @@ extern long WeaponDelay;
 extern long LaserSightX;
 extern long LaserSightY;
 extern long LaserSightZ;
-extern ushort GlobalCounter;
+extern unsigned short GlobalCounter;
 extern short XSoff1;
 extern short XSoff2;
 extern short YSoff1;

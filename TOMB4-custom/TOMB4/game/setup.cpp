@@ -1679,9 +1679,9 @@ void BaddyObjects()
 void BuildOutsideTable()
 {
 	ROOM_INFO* r;
-	uchar* pTable;
-	uchar* oTable;
-	uchar* cTable;
+	unsigned char* pTable;
+	unsigned char* oTable;
+	unsigned char* cTable;
 	long max_slots, roomx, roomy, cont, offset, z, z2;
 	char flipped[256];
 
@@ -1731,7 +1731,7 @@ void BuildOutsideTable()
 
 				if (cont)
 				{
-					pTable = (uchar*)&OutsideRoomTable[1728 * (y >> 2) + 64 * (x >> 2)];
+					pTable = (unsigned char*)&OutsideRoomTable[1728 * (y >> 2) + 64 * (x >> 2)];
 
 					for (int j = 0; j < 64; j++)
 					{
@@ -1750,7 +1750,7 @@ void BuildOutsideTable()
 		}
 	}
 
-	oTable = (uchar*)OutsideRoomTable;
+	oTable = (unsigned char*)OutsideRoomTable;
 
 	for (int y = 0; y < 27; y++)
 	{
@@ -1758,7 +1758,7 @@ void BuildOutsideTable()
 		{
 			z = 0;
 			offset = x + 27 * y;
-			pTable = (uchar*)&OutsideRoomTable[1728 * y + 64 * x];
+			pTable = (unsigned char*)&OutsideRoomTable[1728 * y + 64 * x];
 
 			while (pTable[z] != 255) z++;
 
@@ -1768,7 +1768,7 @@ void BuildOutsideTable()
 				OutsideRoomOffsets[offset] = *pTable | 0x8000;
 			else
 			{
-				cTable = (uchar*)OutsideRoomTable;
+				cTable = (unsigned char*)OutsideRoomTable;
 
 				while (cTable < oTable)
 				{
@@ -1796,7 +1796,7 @@ void BuildOutsideTable()
 		}
 	}
 
-	printf("Ouside room table = %d bytes, max_slots = %d\n", oTable - (uchar*)OutsideRoomTable, max_slots);
+	printf("Ouside room table = %d bytes, max_slots = %d\n", oTable - (unsigned char*)OutsideRoomTable, max_slots);
 }
 
 void reset_cutseq_vars()
@@ -1953,7 +1953,7 @@ void GetAIPickups()
 
 			for (aiObjNum = 0; aiObjNum < nAIObjects; aiObjNum++)
 			{
-				aiObj = &AIObjects[aiObjNum];
+				aiObj = &ai_objects[aiObjNum];
 
 				if (aiObj->x == item->pos.x_pos && aiObj->z == item->pos.z_pos &&
 					aiObj->room_number == item->room_number && aiObj->object_number < AI_PATROL2)

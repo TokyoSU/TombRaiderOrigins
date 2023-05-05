@@ -17,8 +17,8 @@ LPDIRECTDRAWSURFACEX CreateTexturePage(long w, long h, long MipMapCount, long* p
 	short* sS;
 	short* sD;
 	char* cD;
-	ulong c, o, ro, go, bo, ao;
-	uchar r, g, b, a;
+	unsigned long c, o, ro, go, bo, ao;
+	unsigned char r, g, b, a;
 
 	memset(&desc, 0, sizeof(DDSURFACEDESCX));
 	desc.dwSize = sizeof(DDSURFACEDESCX);
@@ -52,9 +52,9 @@ LPDIRECTDRAWSURFACEX CreateTexturePage(long w, long h, long MipMapCount, long* p
 		lS = pSrc;
 		cD = (char*)desc.lpSurface;
 
-		for (ulong y = 0; y < desc.dwHeight; y++)
+		for (unsigned long y = 0; y < desc.dwHeight; y++)
 		{
-			for (ulong x = 0; x < desc.dwWidth; x++)
+			for (unsigned long x = 0; x < desc.dwWidth; x++)
 			{
 				c = *(lS + x * 256 / w + y * 0x10000 / h);
 				r = CLRR(c);
@@ -85,9 +85,9 @@ LPDIRECTDRAWSURFACEX CreateTexturePage(long w, long h, long MipMapCount, long* p
 		sS = (short*)pSrc;
 		sD = (short*)desc.lpSurface;
 
-		for (ulong y = 0; y < desc.dwHeight; y++)
+		for (unsigned long y = 0; y < desc.dwHeight; y++)
 		{
-			for (ulong x = 0; x < desc.dwWidth; x++)
+			for (unsigned long x = 0; x < desc.dwWidth; x++)
 				*sD++ = *(sS + x * 256 / w + y * 0x10000 / h);
 		}
 	}
@@ -96,9 +96,9 @@ LPDIRECTDRAWSURFACEX CreateTexturePage(long w, long h, long MipMapCount, long* p
 		lS = pSrc;
 		lD = (long*)desc.lpSurface;
 
-		for (ulong y = 0; y < desc.dwHeight; y++)
+		for (unsigned long y = 0; y < desc.dwHeight; y++)
 		{
-			for (ulong x = 0; x < desc.dwWidth; x++)
+			for (unsigned long x = 0; x < desc.dwWidth; x++)
 				*lD++ = *(lS + x * 256 / w + y * 0x10000 / h);
 		}
 	}

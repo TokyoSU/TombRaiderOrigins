@@ -21,13 +21,13 @@ static char footsounds[14] = { 0, 5, 3, 2, 1, 9, 9, 4, 6, 5, 3, 9, 4, 6 };
 FOOTPRINT FootPrint[32];
 long FootPrintNum;
 
+// TODO: Refactor the footprint ! (We only need 1 sound instead of many, almost like TR3 without base sound (SOUND 0)).
 void AddFootPrint(ITEM_INFO* item)
 {
 	FOOTPRINT* print;
 	FLOOR_INFO* floor;
 	PHD_VECTOR pos;
 	short room_num;
-
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
@@ -41,7 +41,7 @@ void AddFootPrint(ITEM_INFO* item)
 	floor = GetFloor(pos.x, pos.y, pos.z, &room_num);
 
 	if (floor->fx != 6 && floor->fx != 5 && floor->fx != 11)
-		SOUND_PlayEffect(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD, &lara_item->pos, SFX_LAND);
+		Sound.PlayEffect((SOUND_EFFECT_NAMES)(footsounds[floor->fx] + SFX_FOOTSTEPS_MUD), &lara_item->pos);
 
 	if (floor->fx < 3 && !OnObject)
 	{

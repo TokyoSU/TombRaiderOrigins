@@ -16,7 +16,6 @@
 #include "camera.h"
 #include "control.h"
 #include "tomb4fx.h"
-#include "../specific/dxsound.h"
 #include "text.h"
 #include "deltapak.h"
 #include "draw.h"
@@ -106,58 +105,58 @@ const char* CreditsTable[]
 GAMEFLOW* Gameflow;
 PHD_VECTOR gfLoadCam;
 PHD_VECTOR gfLoadTarget;
-uchar gfLoadRoom = 255;
+unsigned char gfLoadRoom = 255;
 PHD_VECTOR gfLensFlare;
 CVECTOR gfLensFlareColour;
 CVECTOR gfFog = { 0, 0, 0, 0 };
 CVECTOR gfLayer1Col;
 CVECTOR gfLayer2Col;
-ushort* gfStringOffset;
-ushort* gfFilenameOffset;
-uchar* gfScriptFile;
-uchar* gfLanguageFile;
+unsigned short* gfStringOffset;
+unsigned short* gfFilenameOffset;
+unsigned char* gfScriptFile;
+unsigned char* gfLanguageFile;
 char* gfStringWad;
 char* gfFilenameWad;
 long gfMirrorZPlane;
 long gfStatus = 0;
-ushort gfLevelFlags;
-uchar gfCurrentLevel;
-uchar gfLevelComplete;
-uchar gfGameMode = 1;
-uchar gfMirrorRoom;
-uchar gfNumMips = 0;
-uchar gfRequiredStartPos;
-uchar gfMips[8];
-uchar gfLevelNames[40];
+unsigned short gfLevelFlags;
+unsigned char gfCurrentLevel;
+unsigned char gfLevelComplete;
+unsigned char gfGameMode = 1;
+unsigned char gfMirrorRoom;
+unsigned char gfNumMips = 0;
+unsigned char gfRequiredStartPos;
+unsigned char gfMips[8];
+unsigned char gfLevelNames[40];
 char gfUVRotate;
 char gfLayer1Vel;
 char gfLayer2Vel;
 
-ulong GameTimer;
-uchar bDoCredits = 0;
+unsigned long GameTimer;
+unsigned char bDoCredits = 0;
 char DEL_playingamefmv = 0;
 char skipped_level = 0;
 char Chris_Menu = 0;
 char title_controls_locked_out;
 
-static ushort* gfScriptOffset;
-static uchar* gfScriptWad = 0;
+static unsigned short* gfScriptOffset;
+static unsigned char* gfScriptWad = 0;
 static char* gfExtensions = 0;
 static long nFrames = 1;
-static uchar gfLegend;
-static uchar gfLegendTime = 0;
-static uchar gfInitialiseGame = 1;
-static uchar gfResetHubDest;
-static uchar gfCutNumber = 0;
-static uchar gfResidentCut[4];
+static unsigned char gfLegend;
+static unsigned char gfLegendTime = 0;
+static unsigned char gfInitialiseGame = 1;
+static unsigned char gfResetHubDest;
+static unsigned char gfCutNumber = 0;
+static unsigned char gfResidentCut[4];
 
 static char fmv_to_play[2] = { 0, 0 };
 static char num_fmvs = 0;
 
 void DoGameflow()
 {
-	uchar* gf;
-	uchar n;
+	unsigned char* gf;
+	unsigned char n;
 
 	PlayFmvNow(0);
 	do_boot_screen(Gameflow->Language);
@@ -429,7 +428,7 @@ void DoGameflow()
 	}
 }
 
-void DoLevel(uchar Name, uchar Audio)
+void DoLevel(unsigned char Name, unsigned char Audio)
 {
 	long gamestatus = 0;
 	SetFade(255, 0);
@@ -452,7 +451,8 @@ void DoLevel(uchar Name, uchar Audio)
 	ClearFXFogBulbs();
 	InitSpotCamSequences();
 	InitialisePickUpDisplay();
-	SOUND_StopAll();
+	Sound.StopAllEffects();
+	Sound.SetReverbType(RT_Outside);
 	bDisableLaraControl = 0;
 
 	if (gfGameMode == 4)
@@ -528,7 +528,7 @@ void DoLevel(uchar Name, uchar Audio)
 		}
 
 		nFrames = DrawPhaseGame();
-		SOUND_UpdateScene();
+		Sound.UpdateScene();
 		handle_cutseq_triggering(Name);
 
 		if (DEL_playingamefmv)
@@ -568,7 +568,7 @@ void DoLevel(uchar Name, uchar Audio)
 		}
 	}
 
-	SOUND_StopAll();
+	Sound.StopAllEffects();
 	S_CDStop();
 
 	if (gfStatus == 3)
@@ -634,7 +634,7 @@ long TitleOptions()
 		if (DoFade == 2)
 		{
 			ret = load_or_new;
-			gfLevelComplete = (uchar)goto_level;
+			gfLevelComplete = (unsigned char)goto_level;
 			goto_level = 0;
 			load_or_new = 0;
 			return ret;
@@ -703,21 +703,18 @@ long TitleOptions()
 		break;
 
 	case 2:
-
 		if (Gameflow->LoadSaveEnabled)
 		{
 			load = DoLoadSave(IN_LOAD);
-
 			if (load >= 0)
 			{
 				S_LoadGame(load);
 				ret = 2;
 			}
-
 			break;
 		}
 
-		SOUND_PlayEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
+		Sound.SayNo();
 		menu = 0;
 
 	case 0:
@@ -742,7 +739,7 @@ long TitleOptions()
 			if (selection > 1)
 				selection >>= 1;
 
-			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 		}
 
 		if (dbinput & IN_BACK)
@@ -750,7 +747,7 @@ long TitleOptions()
 			if (selection < flag)
 				selection <<= 1;
 
-			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 		}
 	}
 
@@ -758,13 +755,13 @@ long TitleOptions()
 	{
 		menu = 0;
 		selection = selection_bak;
-		SOUND_StopAll();
-		SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		Sound.StopAllEffects();
+		Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 	}
 
 	if (dbinput & IN_SELECT && !keymap[DIK_LALT] && menu < 2)
 	{
-		SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+		Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 
 		if (!menu)
 		{
@@ -840,7 +837,7 @@ long TitleOptions()
 	return ret;
 }
 
-void DoTitle(uchar Name, uchar Audio)
+void DoTitle(unsigned char Name, unsigned char Audio)
 {
 	SetFade(255, 0);
 	num_fmvs = 0;
@@ -871,10 +868,10 @@ void DoTitle(uchar Name, uchar Audio)
 	SetFogColor(gfFog.r, gfFog.g, gfFog.b);
 	ClearFXFogBulbs();
 	InitialisePickUpDisplay();
-	SOUND_StopAll();
+	Sound.StopAllEffects();
+	Sound.SetReverbType(RT_Outside);
 	S_CDPlay(Audio, 1);
 	IsAtmospherePlaying = 0;
-	S_SetReverbType(1);
 	InitialiseCamera();
 
 	if (bDoCredits)
@@ -912,10 +909,11 @@ void DoTitle(uchar Name, uchar Audio)
 			break;
 		handle_cutseq_triggering(Name);
 		nFrames = DrawPhaseGame();
+		Sound.UpdateScene();
 		gfStatus = ControlPhase(nFrames, 0);
 	}
 
-	SOUND_StopAll();
+	Sound.StopAllEffects();
 	S_CDStop();
 	bUseSpotCam = 0;
 	bDisableLaraControl = 0;
@@ -933,7 +931,7 @@ void DoTitle(uchar Name, uchar Audio)
 void LoadGameflow()
 {
 	STRINGHEADER sh;
-	uchar* n;
+	unsigned char* n;
 	char* s;
 	char* d;
 	long l, end;
@@ -941,7 +939,7 @@ void LoadGameflow()
 	s = 0;
 	LoadFile("SCRIPT.DAT", &s);
 
-	gfScriptFile = (uchar*)s;
+	gfScriptFile = (unsigned char*)s;
 
 	Gameflow = (GAMEFLOW*)s;
 	s += sizeof(GAMEFLOW);
@@ -949,16 +947,16 @@ void LoadGameflow()
 	gfExtensions = s;	//"[PCExtensions]"
 	s += 40;
 
-	gfFilenameOffset = (ushort*)s;
-	s += sizeof(ushort) * Gameflow->nFileNames;
+	gfFilenameOffset = (unsigned short*)s;
+	s += sizeof(unsigned short) * Gameflow->nFileNames;
 
 	gfFilenameWad = s;
 	s += Gameflow->FileNameLen;
 
-	gfScriptOffset = (ushort*)s;
-	s += sizeof(ushort) * Gameflow->nLevels;
+	gfScriptOffset = (unsigned short*)s;
+	s += sizeof(unsigned short) * Gameflow->nLevels;
 
-	gfScriptWad = (uchar*)s;
+	gfScriptWad = (unsigned char*)s;
 	s += Gameflow->ScriptLen;
 
 	for (l = 0;; l++)
@@ -971,15 +969,15 @@ void LoadGameflow()
 		s += strlen(s) + 1;
 	}
 
-	gfStringOffset = (ushort*)d;
-	gfLanguageFile = (uchar*)d;
+	gfStringOffset = (unsigned short*)d;
+	gfLanguageFile = (unsigned char*)d;
 	Gameflow->Language = l;
 
 	memcpy(&sh, gfStringOffset, sizeof(STRINGHEADER));
-	memcpy(gfStringOffset, gfStringOffset + (sizeof(STRINGHEADER) / sizeof(ushort)), TXT_NUM_STRINGS * sizeof(ushort));
+	memcpy(gfStringOffset, gfStringOffset + (sizeof(STRINGHEADER) / sizeof(unsigned short)), TXT_NUM_STRINGS * sizeof(unsigned short));
 	gfStringWad = (char*)(gfStringOffset + TXT_NUM_STRINGS);
 	memcpy(gfStringOffset + TXT_NUM_STRINGS,
-		gfStringOffset + TXT_NUM_STRINGS + (sizeof(STRINGHEADER) / sizeof(ushort)),
+		gfStringOffset + TXT_NUM_STRINGS + (sizeof(STRINGHEADER) / sizeof(unsigned short)),
 		sh.StringWadLen + sh.PCStringWadLen + sh.PSXStringWadLen);
 
 	for (int i = 0; i < TXT_NUM_STRINGS - 1; i++)
@@ -1056,7 +1054,7 @@ void LoadGameflow()
 long DoCredits()
 {
 	const char* s;
-	static ulong StartPos = 0;
+	static unsigned long StartPos = 0;
 	static long init = 0;
 	long y, num_drawn;
 

@@ -164,8 +164,8 @@ void HorsemanControl(short item_number)
 							else
 								item->hit_points--;
 
-							SOUND_PlayEffect(SFX_HORSEMAN_TAKEHIT, &item->pos, SFX_LAND);
-							SOUND_PlayEffect(SFX_HORSE_RICOCHETS, &item->pos, SFX_LAND);
+							Sound.PlayEffect(SFX_HORSEMAN_TAKEHIT, &item->pos, SFXO_LAND);
+							Sound.PlayEffect(SFX_HORSE_RICOCHETS, &item->pos, SFXO_LAND);
 							v.x = 0;
 							v.y = -128;
 							v.z = 80;
@@ -521,76 +521,74 @@ void HorsemanControl(short item_number)
 
 void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num)
 {
-	SPARKS* sptr;
-	long random, rot;
-
 	for (int i = 0; i < num; i++)
 	{
-		sptr = &spark[GetFreeSpark()];
-		random = GetRandomControl();
-		sptr->On = 1;
-		sptr->sR = 0;
-		sptr->sG = 128;
-		sptr->sB = (random & 0xF) + 16;
-		sptr->dR = 0;
-		sptr->dG = 96;
-		sptr->dB = (random >> 4 & 0x1F) + 48;
-		sptr->ColFadeSpeed = 2;
-		sptr->FadeToBlack = 4;
-		sptr->Life = 9;
-		sptr->sLife = 9;
-		sptr->TransType = 2;
-		sptr->x = pos->x;
-		sptr->y = pos->y;
-		sptr->z = pos->z;
-		sptr->Gravity = random >> 7 & 0x1F;
-		rot = 2 * ((random >> 3 & 0x7FF) + yrot - 1024 & 0xFFF);
-		sptr->Xvel = -rcossin_tbl[rot] >> 2;
-		sptr->Yvel = (random & 0xFFF) - 2048;
-		sptr->Zvel = rcossin_tbl[rot + 1] >> 2;
-		sptr->Friction = 34;
-		sptr->Flags = 0;
-		sptr->MaxYvel = 0;
+		SPARKS sptr;
+		sptr.On = 1;
+		sptr.sR = 0;
+		sptr.sG = 128;
+		sptr.sB = (GetRandomControl() & 0xF) + 16;
+		sptr.dR = 0;
+		sptr.dG = 96;
+		sptr.dB = (GetRandomControl() >> 4 & 0x1F) + 48;
+		sptr.ColFadeSpeed = 2;
+		sptr.FadeToBlack = 4;
+		sptr.Life = 9;
+		sptr.sLife = 9;
+		sptr.TransType = 2;
+		sptr.x = pos->x;
+		sptr.y = pos->y;
+		sptr.z = pos->z;
+		sptr.Gravity = GetRandomControl() >> 7 & 0x1F;
+		long rot = 2 * ((GetRandomControl() >> 3 & 0x7FF) + yrot - 1024 & 0xFFF);
+		sptr.Xvel = -rcossin_tbl[rot] >> 2;
+		sptr.Yvel = (GetRandomControl() & 0xFFF) - 2048;
+		sptr.Zvel = rcossin_tbl[rot + 1] >> 2;
+		sptr.Friction = 34;
+		sptr.Flags = 0;
+		sptr.MaxYvel = 0;
+		Sparks.push_back(sptr);
 	}
 
 	for (int i = 0; i < num; i++)
 	{
-		sptr = &spark[GetFreeSpark()];
-		random = GetRandomControl();
-		sptr->On = 1;
-		sptr->sR = 0;
-		sptr->sG = 128;
-		sptr->sB = (random & 0xF) + 16;
-		sptr->dR = 0;
-		sptr->dG = 96;
-		sptr->dB = (random >> 4 & 0x1F) + 48;
-		sptr->ColFadeSpeed = 2;
-		sptr->FadeToBlack = 4;
-		sptr->Life = 9;
-		sptr->sLife = 9;
-		sptr->TransType = 2;
-		sptr->x = pos->x;
-		sptr->y = pos->y;
-		sptr->z = pos->z;
-		rot = 2 * ((random >> 3 & 0x7FF) + yrot - 1024 & 0xFFF);
-		sptr->Xvel = -rcossin_tbl[rot] >> 2;
-		sptr->Yvel = (random & 0xFFF) - 2048;
-		sptr->Zvel = rcossin_tbl[rot + 1] >> 2;
-		sptr->Gravity = random >> 7 & 0x1F;
-		sptr->RotAng = short(random >> 3);
+		SPARKS sptr;
+		sptr.On = 1;
+		sptr.sR = 0;
+		sptr.sG = 128;
+		sptr.sB = (GetRandomControl() & 0xF) + 16;
+		sptr.dR = 0;
+		sptr.dG = 96;
+		sptr.dB = (GetRandomControl() >> 4 & 0x1F) + 48;
+		sptr.ColFadeSpeed = 2;
+		sptr.FadeToBlack = 4;
+		sptr.Life = 9;
+		sptr.sLife = 9;
+		sptr.TransType = 2;
+		sptr.x = pos->x;
+		sptr.y = pos->y;
+		sptr.z = pos->z;
+		long rot = 2 * ((GetRandomControl() >> 3 & 0x7FF) + yrot - 1024 & 0xFFF);
+		sptr.Xvel = -rcossin_tbl[rot] >> 2;
+		sptr.Yvel = (GetRandomControl() & 0xFFF) - 2048;
+		sptr.Zvel = rcossin_tbl[rot + 1] >> 2;
+		sptr.Gravity = GetRandomControl() >> 7 & 0x1F;
+		sptr.RotAng = short(GetRandomControl() >> 3);
 
-		if (random & 1)
-			sptr->RotAdd = 240 - (random & 0xF);
+		if (GetRandomControl() & 1)
+			sptr.RotAdd = 240 - (GetRandomControl() & 0xF);
 		else
-			sptr->RotAdd = (random & 0xF) + 16;
+			sptr.RotAdd = (GetRandomControl() & 0xF) + 16;
 
-		sptr->Scalar = 3;
-		sptr->sSize = (random >> 5 & 0x7) + 4;
-		sptr->Size = sptr->sSize;
-		sptr->dSize = sptr->sSize >> 1;
-		sptr->Friction = 34;
-		sptr->Flags = 26;
-		sptr->MaxYvel = 0;
+		sptr.Scalar = 3;
+		sptr.sSize = (GetRandomControl() >> 5 & 0x7) + 4;
+		sptr.Size = sptr.sSize;
+		sptr.dSize = sptr.sSize >> 1;
+		sptr.Friction = 34;
+		sptr.Flags = 26;
+		sptr.MaxYvel = 0;
+
+		Sparks.push_back(sptr);
 	}
 }
 

@@ -252,7 +252,6 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh)
 
 void ProcessStaticMeshVertices(MESH_DATA* mesh)
 {
-	DYNAMIC* l;
 	FVECTOR d;
 	FVECTOR lPos;
 	FVECTOR vPos;
@@ -303,27 +302,26 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 
 		if (tomb4.static_lighting)
 		{
-			for (int j = 0; j < MAX_DYNAMICS; j++)
+			for (auto it = Dynamics.begin(); it != Dynamics.end(); it++)
 			{
-				l = &dynamics[j];
-
-				if (!l->on)
+				auto& l = *it;
+				if (!l.on)
 					continue;
 
-				d.x = l->x - lGlobalMeshPos.x;
-				d.y = l->y - lGlobalMeshPos.y;
-				d.z = l->z - lGlobalMeshPos.z;
+				d.x = l.x - lGlobalMeshPos.x;
+				d.y = l.y - lGlobalMeshPos.y;
+				d.z = l.z - lGlobalMeshPos.z;
 				lPos.x = D3DLightMatrix._11 * d.x + D3DLightMatrix._12 * d.y + D3DLightMatrix._13 * d.z;
 				lPos.y = D3DLightMatrix._21 * d.x + D3DLightMatrix._22 * d.y + D3DLightMatrix._23 * d.z;
 				lPos.z = D3DLightMatrix._31 * d.x + D3DLightMatrix._32 * d.y + D3DLightMatrix._33 * d.z;
 				val = sqrt(SQUARE(lPos.x - vtx.x) + SQUARE(lPos.y - vtx.y) + SQUARE(lPos.z - vtx.z)) * 1.7F;
 
-				if (val <= l->falloff)
+				if (val <= l.falloff)
 				{
-					val2 = (l->falloff - val) / l->falloff;
-					cR += long(val2 * l->r);
-					cG += long(val2 * l->g);
-					cB += long(val2 * l->b);
+					val2 = (l.falloff - val) / l.falloff;
+					cR += long(val2 * l.r);
+					cG += long(val2 * l.g);
+					cB += long(val2 * l.b);
 				}
 			}
 		}
@@ -664,7 +662,7 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh)
 	mesh->SourceVB->Unlock();
 }
 
-static void RGB_M(ulong& c, long m)	//Original was a macro.
+static void RGB_M(unsigned long& c, long m)	//Original was a macro.
 {
 	long r, g, b, a;
 
@@ -687,7 +685,7 @@ void phd_PutPolygons(short* objptr, long clip)
 	long clrbak[4];
 	long spcbak[4];
 	long num;
-	ushort drawbak;
+	unsigned short drawbak;
 	bool envmap;
 
 	SetD3DViewMatrix();
@@ -906,7 +904,7 @@ void phd_PutPolygons_train(short* objptr, long x)
 	TEXTURESTRUCT* pTex;
 	short* quad;
 	short* tri;
-	ushort drawbak;
+	unsigned short drawbak;
 
 	if (!objptr)
 		return;
@@ -1075,7 +1073,7 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color)
 	long clrbak[4];
 	long spcbak[4];
 	long num;
-	ushort drawbak;
+	unsigned short drawbak;
 	bool envmap;
 
 	bWaterEffect = 0;
@@ -1262,7 +1260,7 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus)
 	MESH_DATA* mesh;
 	short* quad;
 	short* tri;
-	ushort drawbak;
+	unsigned short drawbak;
 
 	mesh = (MESH_DATA*)objptr;
 	SetD3DViewMatrix();
@@ -1455,8 +1453,8 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, lon
 {
 	HDC hdc;
 	HDC hdc2;
-	BITMAP bitmap;
-	DDSURFACEDESCX desc;
+	BITMAP bitmap{};
+	DDSURFACEDESCX desc{};
 	HRESULT result;
 	long l, t;
 
@@ -1464,10 +1462,13 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, lon
 		return E_FAIL;
 
 	surf->Restore();
-	hdc = CreateCompatibleDC(0);
 
+	hdc = CreateCompatibleDC(0);
 	if (!hdc)
-		OutputDebugString("createcompatible dc failed\n");
+	{
+		Log(2, "createcompatible dc failed");
+		return NULL;
+	}
 
 	SelectObject(hdc, hbm);
 	GetObject(hbm, sizeof(BITMAP), &bitmap);
@@ -1496,14 +1497,17 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, lon
 	}
 
 	result = surf->GetDC(&hdc2);
-
-	if (!result)
+	if SUCCEEDED(result)
 	{
 		StretchBlt(hdc2, l, t, desc.dwWidth, desc.dwHeight, hdc, x, y, dx, dy, SRCCOPY);
 		surf->ReleaseDC(hdc2);
 	}
 
-	DeleteDC(hdc);
+	if (hdc != NULL)
+	{
+		DeleteDC(hdc);
+		hdc = NULL;
+	}
 	return result;
 }
 
@@ -1688,6 +1692,9 @@ void S_OutputPolyList()
 		if (resChangeCounter < 0)
 			resChangeCounter = 0;
 	}
+
+	WinDisplayString(40, 50, "Sparks: %d", Sparks.size());
+	WinDisplayString(40, 120, "SmokeSparks: %d", SmokeSparks.size());
 
 	if (App.dx.lpZBuffer)
 		DrawBuckets();

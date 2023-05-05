@@ -3,7 +3,6 @@
 #include "../game/text.h"
 #include "../game/sound.h"
 #include "audio.h"
-#include "dxsound.h"
 #include "input.h"
 #include "function_table.h"
 #include "drawroom.h"
@@ -41,14 +40,14 @@ void DoOptions()
 	char** keyboard_buttons;
 	char* txt;
 	static long menu;
-	static ulong sel = 1;	//selection
-	static ulong sel2;		//selection for when mapping keys
+	static unsigned long sel = 1;	//selection
+	static unsigned long sel2;		//selection for when mapping keys
 	static long mSliderCol = 0xFF3F3F3F;
 	static long sSliderCol = 0xFF3F3F3F;
 	static long sfx_bak;
 	static long sfx_quality_bak;
 	static long sfx_breath_db = -1;
-	ulong nMask;
+	unsigned long nMask;
 	long f, y, i, jread, jx, jy, lp;
 	static char sfx_backup_flag;	//have we backed sfx stuff up?
 	static bool waiting_for_key = 0;
@@ -120,13 +119,13 @@ void DoOptions()
 		{
 			if (dbinput & IN_FORWARD)
 			{
-				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 				sel >>= 1;
 			}
 
 			if (dbinput & IN_BACK)
 			{
-				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 				sel <<= 1;
 			}
 		}
@@ -137,7 +136,7 @@ void DoOptions()
 
 			if (keymap[DIK_ESCAPE])
 			{
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 				sel2 = 0;
 				dbinput = 0;
 				waiting_for_key = 0;
@@ -201,7 +200,7 @@ void DoOptions()
 
 		if (dbinput & IN_SELECT && sel > 1 && ControlMethod < 2)
 		{
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			sel2 = sel;
 			waiting_for_key = 1;
 			memset(keymap, 0, sizeof(keymap));
@@ -209,7 +208,7 @@ void DoOptions()
 
 		if (dbinput & IN_SELECT && ControlMethod == 2)
 		{
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			ControlMethod = 0;
 			memcpy(layout[1], layout, 72);
 		}
@@ -218,13 +217,13 @@ void DoOptions()
 		{
 			if (dbinput & IN_LEFT)
 			{
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 				ControlMethod--;
 			}
 
 			if (dbinput & IN_RIGHT)
 			{
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 				ControlMethod++;
 			}
 
@@ -252,12 +251,12 @@ void DoOptions()
 		if (!sel)
 			sel = 1;
 
-		if (sel > ulong(1 << (nMask - 1)))
+		if (sel > unsigned long(1 << (nMask - 1)))
 			sel = 1 << (nMask - 1);
 
 		if (dbinput & IN_DESELECT)
 		{
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 
 			if (ControlMethod < 2)
 				menu = 0;
@@ -288,25 +287,25 @@ void DoOptions()
 
 		if (dbinput & IN_FORWARD)
 		{
-			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 			sel >>= 1;
 		}
 
 		if (dbinput & IN_BACK)
 		{
-			SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 			sel <<= 1;
 		}
 
 		if (dbinput & IN_SELECT && sel & 1)
 		{
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			menu = 1;
 		}
 
 		if (dbinput & IN_SELECT && sel & 0x20)
 		{
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			sel = 1;
 			menu = 200;
 		}
@@ -314,7 +313,7 @@ void DoOptions()
 		if (!sel)
 			sel = 1;
 
-		if (sel > ulong(1 << (nMask - 1)))
+		if (sel > unsigned long(1 << (nMask - 1)))
 			sel = 1 << (nMask - 1);
 
 		mSliderCol = 0xFF3F3F3F;
@@ -343,8 +342,7 @@ void DoOptions()
 		{
 			if (linput & IN_LEFT)
 				SFXVolume--;
-
-			if (linput & IN_RIGHT)
+			else if (linput & IN_RIGHT)
 				SFXVolume++;
 
 			if (SFXVolume > 100)
@@ -354,14 +352,14 @@ void DoOptions()
 
 			if (SFXVolume != sfx_bak)
 			{
-				if (sfx_breath_db == -1 || !SOUND_EffectIsPlaying(0))
+				// TODO: fix the sound here !
+				if (sfx_breath_db == -1/* || !SOUND_EffectIsPlaying(0)*/)
 				{
-					SOUND_StopAll();
+					Sound.StopAllEffects();
 					sfx_bak = SFXVolume;
-					sfx_breath_db = SOUND_PlayEffect(SFX_LARA_BREATH, 0, SFX_ALWAYS);
-					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
+					sfx_breath_db = Sound.PlayEffect(SFX_LARA_BREATH, NULL, SFXO_ALWAYS);
 				}
-				//else if (sfx_breath_db != -1 && DSIsChannelPlaying(0))
+				//else if (sfx_breath_db != -1 && SOUND_EffectIsPlaying(0))
 					//DSChangeVolume(0, -100 * ((100 - SFXVolume) >> 1));
 			}
 
@@ -375,7 +373,7 @@ void DoOptions()
 				if (App.AutoTarget)
 					App.AutoTarget = 0;
 
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			}
 
 			if (dbinput & IN_RIGHT)
@@ -383,7 +381,7 @@ void DoOptions()
 				if (!App.AutoTarget)
 					App.AutoTarget = 1;
 
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 			}
 
 			savegame.AutoTarget = App.AutoTarget;
@@ -452,7 +450,7 @@ long S_DisplayPauseMenu(long reset)
 				if (selection > 1)
 					selection >>= 1;
 
-				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 			}
 
 			if (dbinput & IN_BACK)
@@ -460,18 +458,18 @@ long S_DisplayPauseMenu(long reset)
 				if (selection < 4)
 					selection <<= 1;
 
-				SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 			}
 
 			if (dbinput & IN_DESELECT)
 			{
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 				return 1;
 			}
 
 			if (dbinput & IN_SELECT && !keymap[DIK_LALT])
 			{
-				SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 
 				if (selection & 1)
 					menu = 2;
@@ -489,7 +487,7 @@ long S_DisplayPauseMenu(long reset)
 		if (dbinput & IN_DESELECT)
 		{
 			menu = 0;
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 		}
 	}
 	else if (menu == 2)
@@ -499,7 +497,7 @@ long S_DisplayPauseMenu(long reset)
 		if (dbinput & IN_DESELECT)
 		{
 			menu = 0;
-			SOUND_PlayEffect(SFX_MENU_SELECT, 0, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_MENU_SELECT, NULL, SFXO_ALWAYS);
 		}
 	}
 
@@ -511,7 +509,7 @@ long DoLoadSave(long LoadSave)
 	SAVEFILE_INFO* pSave;
 	static long selection;
 	long txt, l;
-	uchar color;
+	unsigned char color;
 	char string[80];
 	char name[41];
 
@@ -560,13 +558,13 @@ long DoLoadSave(long LoadSave)
 	if (dbinput & IN_FORWARD)
 	{
 		selection--;
-		SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 	}
 
 	if (dbinput & IN_BACK)
 	{
 		selection++;
-		SOUND_PlayEffect(SFX_MENU_CHOOSE, 0, SFX_ALWAYS);
+		Sound.PlayEffect(SFX_MENU_CHOOSE, NULL, SFXO_ALWAYS);
 	}
 
 	if (selection < 0)
@@ -578,8 +576,7 @@ long DoLoadSave(long LoadSave)
 	{
 		if (SaveGames[selection].valid || LoadSave == IN_SAVE)
 			return selection;
-
-		SOUND_PlayEffect(SFX_LARA_NO, 0, SFX_ALWAYS);
+		Sound.SayNo();
 	}
 
 	return -1;
@@ -730,7 +727,7 @@ void S_DisplayMonoScreen()
 {
 	long x[4];
 	long y[4];
-	ulong col;
+	unsigned long col;
 
 	x[0] = phd_winxmin;
 	y[0] = phd_winymin;
@@ -772,9 +769,9 @@ void FreeMonoScreen()
 	MonoScreenOn = 0;
 }
 
-void RGBM_Mono(uchar * r, uchar * g, uchar * b)
+void RGBM_Mono(unsigned char * r, unsigned char * g, unsigned char * b)
 {
-	uchar c;
+	unsigned char c;
 
 	if (tomb4.inv_bg_mode != 3)
 	{
@@ -785,7 +782,7 @@ void RGBM_Mono(uchar * r, uchar * g, uchar * b)
 	}
 }
 
-static void BitMaskGetNumberOfBits(ulong bitMask, ulong& bitDepth, ulong& bitOffset)
+static void BitMaskGetNumberOfBits(unsigned long bitMask, unsigned long& bitDepth, unsigned long& bitOffset)
 {
 	long i;
 
@@ -820,14 +817,14 @@ static void WinVidGetColorBitMasks(COLOR_BIT_MASKS* bm, LPDDPIXELFORMAT pixelFor
 	BitMaskGetNumberOfBits(bm->dwRGBAlphaBitMask, bm->dwRGBAlphaBitDepth, bm->dwRGBAlphaBitOffset);
 }
 
-static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACEDESCX src, LPRECT srcRect)
+static void CustomBlt(LPDDSURFACEDESCX dst, unsigned long dstX, unsigned long dstY, LPDDSURFACEDESCX src, LPRECT srcRect)
 {
 	COLOR_BIT_MASKS srcMask, dstMask;
-	uchar* srcLine;
-	uchar* dstLine;
-	uchar* srcPtr;
-	uchar* dstPtr;
-	ulong srcX, srcY, width, height, srcBpp, dstBpp, color, high, low, r, g, b;
+	unsigned char* srcLine;
+	unsigned char* dstLine;
+	unsigned char* srcPtr;
+	unsigned char* dstPtr;
+	unsigned long srcX, srcY, width, height, srcBpp, dstBpp, color, high, low, r, g, b;
 
 	srcX = srcRect->left;
 	srcY = srcRect->top;
@@ -837,15 +834,15 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 	dstBpp = dst->ddpfPixelFormat.dwRGBBitCount / 8;
 	WinVidGetColorBitMasks(&srcMask, &src->ddpfPixelFormat);
 	WinVidGetColorBitMasks(&dstMask, &dst->ddpfPixelFormat);
-	srcLine = (uchar*)src->lpSurface + srcY * src->lPitch + srcX * srcBpp;
-	dstLine = (uchar*)dst->lpSurface + dstY * dst->lPitch + dstX * dstBpp;
+	srcLine = (unsigned char*)src->lpSurface + srcY * src->lPitch + srcX * srcBpp;
+	dstLine = (unsigned char*)dst->lpSurface + dstY * dst->lPitch + dstX * dstBpp;
 
-	for (ulong j = 0; j < height; j++) 
+	for (unsigned long j = 0; j < height; j++) 
 	{
 		srcPtr = srcLine;
 		dstPtr = dstLine;
 
-		for (ulong i = 0; i < width; i++)
+		for (unsigned long i = 0; i < width; i++)
 		{
 			color = 0;
 			memcpy(&color, srcPtr, srcBpp);
@@ -880,7 +877,7 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 			else if (srcMask.dwBBitDepth > dstMask.dwBBitDepth)
 				b >>= srcMask.dwBBitDepth - dstMask.dwBBitDepth;
 
-			RGBM_Mono((uchar*)&r, (uchar*)&g, (uchar*)&b);
+			RGBM_Mono((unsigned char*)&r, (unsigned char*)&g, (unsigned char*)&b);
 			color = dst->ddpfPixelFormat.dwRGBAlphaBitMask; // destination is opaque
 			color |= r << dstMask.dwRBitOffset;
 			color |= g << dstMask.dwGBitOffset;
@@ -900,19 +897,19 @@ void ConvertSurfaceToTextures(LPDIRECTDRAWSURFACEX surface)
 	DDSURFACEDESCX tSurf;
 	DDSURFACEDESCX uSurf;
 	RECT r;
-	ushort* pTexture;
-	ushort* pSrc;
+	unsigned short* pTexture;
+	unsigned short* pSrc;
 
 	memset(&tSurf, 0, sizeof(tSurf));
 	tSurf.dwSize = sizeof(DDSURFACEDESCX);
 	surface->Lock(0, &tSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
-	pSrc = (ushort*)tSurf.lpSurface;
+	pSrc = (unsigned short*)tSurf.lpSurface;
 	MonoScreen[0].surface = CreateTexturePage(tSurf.dwWidth, tSurf.dwHeight, 0, NULL, RGBM_Mono, -1);
 
 	memset(&uSurf, 0, sizeof(uSurf));
 	uSurf.dwSize = sizeof(DDSURFACEDESCX);
 	MonoScreen[0].surface->Lock(0, &uSurf, DDLOCK_WAIT | DDLOCK_NOSYSLOCK, 0);
-	pTexture = (ushort*)uSurf.lpSurface;
+	pTexture = (unsigned short*)uSurf.lpSurface;
 
 	r.left = 0;
 	r.top = 0;
@@ -947,13 +944,12 @@ void CheckKeyConflicts()
 
 long S_PauseMenu()
 {
-	long fade, ret;
+	long fade = 0, ret;
 
-	fade = 0;
 	CreateMonoScreen();
 	S_DisplayPauseMenu(1);
 	InventoryActive = 1;
-	S_SetReverbType(1);
+	Sound.SetReverbType(RT_Outside);
 
 	do
 	{

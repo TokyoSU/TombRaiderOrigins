@@ -21,7 +21,7 @@ void CogSwitchControl(short item_number);
 void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 
 extern PHD_VECTOR OldPickupPos;
-extern uchar CurrentSequence;
-extern uchar Sequences[3];
-extern uchar SequenceUsed[6];
-extern uchar SequenceResults[3][3][3];
+extern unsigned char CurrentSequence;
+extern unsigned char Sequences[3];
+extern unsigned char SequenceUsed[6];
+extern unsigned char SequenceResults[3][3][3];

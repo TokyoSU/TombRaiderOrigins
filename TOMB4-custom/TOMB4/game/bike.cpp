@@ -243,64 +243,63 @@ void DrawBikeBeam(ITEM_INFO* item)
 
 static void TriggerExhaustSmoke(long x, long y, long z, short angle, long velocity, long thing)
 {
-	SPARKS* sptr;
-
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->dR = 96;
-	sptr->dG = 96;
-	sptr->dB = 128;
-	sptr->sR = 0;
-	sptr->sG = 0;
-	sptr->sB = 0;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.dR = 96;
+	sptr.dG = 96;
+	sptr.dB = 128;
+	sptr.sR = 0;
+	sptr.sG = 0;
+	sptr.sB = 0;
 
 	if (thing)
 	{
-		sptr->dR = uchar((96 * velocity) >> 5);
-		sptr->dG = uchar((96 * velocity) >> 5);
-		sptr->dB = uchar((128 * velocity) >> 5);
+		sptr.dR = unsigned char((96 * velocity) >> 5);
+		sptr.dG = unsigned char((96 * velocity) >> 5);
+		sptr.dB = unsigned char((128 * velocity) >> 5);
 	}
 
-	sptr->ColFadeSpeed = 4;
-	sptr->FadeToBlack = 4;
-	sptr->Life = uchar((GetRandomControl() & 3) - (velocity >> 12) + 20);
-	sptr->sLife = sptr->Life;
+	sptr.ColFadeSpeed = 4;
+	sptr.FadeToBlack = 4;
+	sptr.Life = unsigned char((GetRandomControl() & 3) - (velocity >> 12) + 20);
+	sptr.sLife = sptr.Life;
 
-	if (sptr->Life < 9)
+	if (sptr.Life < 9)
 	{
-		sptr->Life = 9;
-		sptr->sLife = 9;
+		sptr.Life = 9;
+		sptr.sLife = 9;
 	}
 
-	sptr->TransType = 2;
-	sptr->x = (GetRandomControl() & 0xF) + x - 8;
-	sptr->y = (GetRandomControl() & 0xF) + y - 8;
-	sptr->z = (GetRandomControl() & 0xF) + z - 8;
-	sptr->Xvel = velocity * phd_sin(angle) >> 16;
-	sptr->Yvel = -8 - (GetRandomControl() & 7);
-	sptr->Zvel = velocity * phd_cos(angle) >> 16;
-	sptr->Friction = 4;
+	sptr.TransType = 2;
+	sptr.x = (GetRandomControl() & 0xF) + x - 8;
+	sptr.y = (GetRandomControl() & 0xF) + y - 8;
+	sptr.z = (GetRandomControl() & 0xF) + z - 8;
+	sptr.Xvel = velocity * phd_sin(angle) >> 16;
+	sptr.Yvel = -8 - (GetRandomControl() & 7);
+	sptr.Zvel = velocity * phd_cos(angle) >> 16;
+	sptr.Friction = 4;
 
 	if (GetRandomControl() & 1)
 	{
-		sptr->Flags = 538;
-		sptr->RotAng = GetRandomControl() & 0xFFF;
+		sptr.Flags = 538;
+		sptr.RotAng = GetRandomControl() & 0xFFF;
 
 		if (GetRandomControl() & 1)
-			sptr->RotAdd = -24 - (GetRandomControl() & 7);
+			sptr.RotAdd = -24 - (GetRandomControl() & 7);
 		else
-			sptr->RotAdd = (GetRandomControl() & 7) + 24;
+			sptr.RotAdd = (GetRandomControl() & 7) + 24;
 	}
 	else
-		sptr->Flags = 522;
+		sptr.Flags = 522;
 
-	sptr->Scalar = 1;
-	sptr->Def = (uchar)objects[DEFAULT_SPRITES].mesh_index;
-	sptr->Gravity = -4 - (GetRandomControl() & 3);
-	sptr->MaxYvel = -8 - (GetRandomControl() & 7);
-	sptr->dSize = uchar((GetRandomControl() & 7) + (velocity >> 7) + 32);
-	sptr->sSize = sptr->dSize >> 1;
-	sptr->Size = sptr->dSize >> 1;
+	sptr.Scalar = 1;
+	sptr.Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+	sptr.Gravity = -4 - (GetRandomControl() & 3);
+	sptr.MaxYvel = -8 - (GetRandomControl() & 7);
+	sptr.dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);
+	sptr.sSize = sptr.dSize >> 1;
+	sptr.Size = sptr.dSize >> 1;
+	Sparks.push_back(sptr);
 }
 
 static long CanGetOff(short num)	//always called with num = 1
@@ -365,8 +364,8 @@ void BikeExplode(ITEM_INFO* item)
 	ExplodingDeath2(lara.vehicle, -2, 256);
 	KillItem(lara.vehicle);
 	item->status = ITEM_DEACTIVATED;
-	SOUND_PlayEffect(SFX_EXPLOSION1, 0, SFX_LAND);
-	SOUND_PlayEffect(SFX_EXPLOSION2, 0, SFX_LAND);
+	Sound.PlayEffect(SFX_EXPLOSION1);
+	Sound.PlayEffect(SFX_EXPLOSION2);
 	lara.vehicle = NO_ITEM;
 }
 
@@ -834,7 +833,7 @@ long BikeBaddieCollision(ITEM_INFO* bike)
 								return 1;
 
 							if (item->hit_points)
-								SOUND_PlayEffect(SFX_BIKE_HIT_ENEMIES, &item->pos, SFX_LAND);
+								Sound.PlayEffect(SFX_BIKE_HIT_ENEMIES, &item->pos);
 
 							DoLotsOfBlood(item->pos.x_pos, bike->pos.y_pos - 256, item->pos.z_pos, (GetRandomControl() & 3) + 8, bike->pos.y_rot, item->room_number, 3);
 							item->hit_points = 0;
@@ -942,7 +941,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 						BikeBounds[5] < CollidedStaticBounds[4])
 					{
 						ShatterObject(0, mesh, -128, rn, 0);
-						SOUND_PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos, SFX_LAND);
+						Sound.PlayEffect(SFX_HIT_ROCK, (PHD_3DPOS*)&pos);
 						SmashedMeshRoom[SmashedMeshCount] = rn;
 						SmashedMesh[SmashedMeshCount] = mesh;
 						SmashedMeshCount++;
@@ -1380,7 +1379,7 @@ void BikeControl(short item_number)
 	long front_left, front_right, front_mid;
 	long hitWall, h, driving, killed, pitch, oldY, hdiff, smokeVel;
 	short room_number, wheelRot, xRot, zRot;
-	static uchar ExhaustSmokeVel;
+	static unsigned char ExhaustSmokeVel;
 
 	driving = -1;
 	killed = 0;
@@ -1441,14 +1440,14 @@ void BikeControl(short item_number)
 		else if (bike->pitch2 > 0xA000)
 			bike->pitch2 = 0xA000;
 
-		SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, SFX_SETPITCH, (bike->pitch2 << 8) + 0x1000000);
+		Sound.PlayEffect(SFX_BIKE_MOVING, &item->pos);
 	}
 	else
 	{
 		if (driving != -1)
 		{
-			SOUND_PlayEffect(SFX_BIKE_IDLE, &item->pos, SFX_LAND);
-			SOUND_PlayEffect(SFX_BIKE_MOVING, &item->pos, SFX_SETPITCH, (bike->pitch2 << 8) + 0x1000000);
+			Sound.PlayEffect(SFX_BIKE_IDLE, &item->pos);
+			Sound.PlayEffect(SFX_BIKE_MOVING, &item->pos);
 		}
 
 		bike->pitch2 = 0;

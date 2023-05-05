@@ -12,10 +12,8 @@ void InitialiseLaraDouble(short item_number)
 
 void LaraDoubleControl(short item_number)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
-	SOUND_PlayEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos, SFX_LAND);
+	ITEM_INFO* item = &items[item_number];
+	Sound.PlayEffect(SFX_METAL_SCRAPE_LOOP1, &item->pos);
 
 	if (!CreatureActive(item_number))
 		return;

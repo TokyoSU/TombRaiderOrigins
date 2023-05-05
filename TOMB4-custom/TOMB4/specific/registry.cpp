@@ -35,23 +35,23 @@ void CloseRegistry()
 	REG_CloseKey();
 }
 
-void REG_WriteLong(char* SubKeyName, ulong value)
+void REG_WriteLong(char* SubKeyName, unsigned long value)
 {
-	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*) & value, sizeof(ulong));
+	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*) & value, sizeof(unsigned long));
 }
 
 void REG_WriteBool(char* SubKeyName, bool value)
 {
-	ulong Lvalue;
+	unsigned long Lvalue;
 
-	Lvalue = (ulong)value;
-	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*) & Lvalue, sizeof(ulong));
+	Lvalue = (unsigned long)value;
+	RegSetValueEx(phkResult, SubKeyName, 0, REG_DWORD, (CONST BYTE*) & Lvalue, sizeof(unsigned long));
 }
 
-bool REG_ReadLong(char* SubKeyName, ulong& value, ulong defaultValue)
+bool REG_ReadLong(char* SubKeyName, unsigned long& value, unsigned long defaultValue)
 {
-	ulong type;
-	ulong cbData;
+	unsigned long type;
+	unsigned long cbData;
 
 	cbData = 4;
 
@@ -65,9 +65,9 @@ bool REG_ReadLong(char* SubKeyName, ulong& value, ulong defaultValue)
 
 bool REG_ReadBool(char* SubKeyName, bool& value, bool defaultValue)
 {
-	ulong type;
-	ulong cbData;
-	ulong data;
+	unsigned long type;
+	unsigned long cbData;
+	unsigned long data;
 
 	cbData = 4;
 
@@ -84,7 +84,7 @@ bool REG_ReadBool(char* SubKeyName, bool& value, bool defaultValue)
 
 bool LoadSettings()
 {
-	ulong key;
+	unsigned long key;
 	bool val;
 
 	if (!OpenRegistry("System"))
@@ -98,11 +98,11 @@ bool LoadSettings()
 		App.BumpMapSize = 256;
 		App.StartFlags = 32;
 
-		REG_ReadLong((char*)"DD", (ulong&)App.DXInfo.nDD, 0);
-		REG_ReadLong((char*)"D3D", (ulong&)App.DXInfo.nD3D, 0);
-		REG_ReadLong((char*)"VMode", (ulong&)App.DXInfo.nDisplayMode, 0);
-		REG_ReadLong((char*)"TFormat", (ulong&)App.DXInfo.nTexture, 0);
-		REG_ReadLong((char*)"DS", (ulong&)App.DXInfo.nDS, 0);
+		REG_ReadLong((char*)"DD", (unsigned long&)App.DXInfo.nDD, 0);
+		REG_ReadLong((char*)"D3D", (unsigned long&)App.DXInfo.nD3D, 0);
+		REG_ReadLong((char*)"VMode", (unsigned long&)App.DXInfo.nDisplayMode, 0);
+		REG_ReadLong((char*)"TFormat", (unsigned long&)App.DXInfo.nTexture, 0);
+		REG_ReadLong((char*)"DS", (unsigned long&)App.DXInfo.nDS, 0);
 		REG_ReadBool((char*)"BumpMap", App.BumpMapping, 1);
 		REG_ReadBool((char*)"Filter", App.Filtering, 1);
 		REG_ReadBool((char*)"DisableSound", App.SoundDisabled, 0);
@@ -190,12 +190,12 @@ bool LoadSettings()
 	REG_ReadLong((char*)"Key17", key, layout[0][17]);
 	layout[1][17] = (short)key;
 
-	REG_ReadLong((char*)"MusicVolume", (ulong&)MusicVolume, 80);
-	REG_ReadLong((char*)"SFXVolume", (ulong&)SFXVolume, 90);
-	REG_ReadLong((char*)"ControlMethod", (ulong&)ControlMethod, 0);
-	REG_ReadLong((char*)"AutoTarget", (ulong&)App.AutoTarget, 1);
-	REG_ReadLong((char*)"WindowX", (ulong&)App.dx.rScreen, 0);
-	REG_ReadLong((char*)"WindowY", (ulong&)App.dx.rScreen.top, 0);
+	REG_ReadLong((char*)"MusicVolume", (unsigned long&)MusicVolume, 80);
+	REG_ReadLong((char*)"SFXVolume", (unsigned long&)SFXVolume, 90);
+	REG_ReadLong((char*)"ControlMethod", (unsigned long&)ControlMethod, 0);
+	REG_ReadLong((char*)"AutoTarget", (unsigned long&)App.AutoTarget, 1);
+	REG_ReadLong((char*)"WindowX", (unsigned long&)App.dx.rScreen, 0);
+	REG_ReadLong((char*)"WindowY", (unsigned long&)App.dx.rScreen.top, 0);
 
 	CloseRegistry();
 	CheckKeyConflicts();

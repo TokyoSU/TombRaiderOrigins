@@ -39,7 +39,7 @@ extern long IM_rate;
 extern long IM_frac;
 
 extern float* mIMptr;
-extern float mIMstack[indices_count * 64];
+extern float mIMstack[MATRIX_COUNT * 64];
 
 extern long current_room;
 extern short no_rotation[12];
@@ -49,7 +49,7 @@ extern long outside;
 extern short SkyPos;
 extern short SkyPos2;
 
-extern ushort LightningRGB[3];
-extern ushort LightningRGBs[3];
+extern unsigned short LightningRGB[3];
+extern unsigned short LightningRGBs[3];
 extern short LightningCount;
 extern short dLightningRand;

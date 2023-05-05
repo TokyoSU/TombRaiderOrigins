@@ -10,7 +10,7 @@ void S_DrawTile(long x, long y, long w, long h, LPDIRECT3DTEXTUREX t, long tU, l
 void S_DisplayMonoScreen();
 void CreateMonoScreen();
 void FreeMonoScreen();
-void RGBM_Mono(uchar* r, uchar* g, uchar* b);
+void RGBM_Mono(unsigned char* r, unsigned char* g, unsigned char* b);
 void ConvertSurfaceToTextures(LPDIRECTDRAWSURFACEX surface);
 void CheckKeyConflicts();
 long S_PauseMenu();

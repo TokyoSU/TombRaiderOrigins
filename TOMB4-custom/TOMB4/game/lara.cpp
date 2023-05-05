@@ -530,7 +530,7 @@ long CanLaraHangSideways(ITEM_INFO* item, COLL_INFO* coll, short angle)
 	z = item->pos.z_pos;
 	lara.move_angle = angle + item->pos.y_rot;
 
-	switch (ushort(lara.move_angle + 0x2000) / 0x4000)
+	switch (unsigned short(lara.move_angle + 0x2000) / 0x4000)
 	{
 	case NORTH:
 		z += 16;
@@ -1064,7 +1064,7 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll)
 
 							if (!collided)
 							{
-								switch (ushort(item->pos.y_rot + 0x2000) / 0x4000)
+								switch (unsigned short(item->pos.y_rot + 0x2000) / 0x4000)
 								{
 								case NORTH:
 									item->pos.y_rot = 0;
@@ -3352,7 +3352,7 @@ void lara_as_death(ITEM_INFO* item, COLL_INFO* coll)
 
 void lara_col_death(ITEM_INFO* item, COLL_INFO* coll)
 {
-	SOUND_Stop(SFX_LARA_FALL);
+	Sound.StopEffect(SFX_LARA_FALL);
 	lara.move_angle = item->pos.y_rot;
 	coll->bad_pos = 384;
 	coll->bad_neg = -384;
@@ -3372,7 +3372,7 @@ void lara_as_fastfall(ITEM_INFO* item, COLL_INFO* coll)
 	item->speed = 95 * item->speed / 100;
 
 	if (item->fallspeed == 154)
-		SOUND_PlayEffect(SFX_LARA_FALL, &item->pos, SFX_LAND);
+		Sound.PlayEffect(SFX_LARA_FALL, &item->pos);
 
 	if (item->frame_number == anims[330].frame_end - 1)		//fall off pole
 		lara.gun_status = LG_NO_ARMS;
@@ -3399,7 +3399,7 @@ void lara_col_fastfall(ITEM_INFO* item, COLL_INFO* coll)
 			item->frame_number = anims[ANIM_LANDFAR].frame_base;
 		}
 
-		SOUND_Stop(SFX_LARA_FALL);
+		Sound.StopEffect(SFX_LARA_FALL);
 		item->fallspeed = 0;
 		item->gravity_status = 0;
 
@@ -3422,7 +3422,7 @@ void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll)
 	}
 
 	if (item->anim_number != 226 && item->anim_number != 228)
-		SOUND_Stop(SFX_LARA_SLIPPING);
+		Sound.StopEffect(SFX_LARA_SLIPPING);
 
 	if (UseInventoryItems(item))
 		return;
@@ -3887,7 +3887,7 @@ void lara_col_reach(ITEM_INFO* item, COLL_INFO* coll)
 					{
 						item->pos.y_pos += coll->front_floor - bounds[2];
 
-						switch (ushort(item->pos.y_rot + 0x2000) / 0x4000)
+						switch (unsigned short(item->pos.y_rot + 0x2000) / 0x4000)
 						{
 						case NORTH:
 							item->pos.z_pos = (item->pos.z_pos | 0x3FF) - 100;
@@ -4092,7 +4092,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll)
 	else
 		item->item_flags[2] += 256;
 
-	SOUND_PlayEffect(SFX_LARA_POLE_LOOP, &item->pos, SFX_LAND);
+	Sound.PlayEffect(SFX_LARA_POLE_LOOP, &item->pos);
 
 	if (item->item_flags[2] <= 16384)
 	{
@@ -4185,7 +4185,7 @@ void lara_col_ropefwd(ITEM_INFO* item, COLL_INFO* coll)
 			else
 				Vel = 0;
 
-			ApplyVelocityToRope(lara.RopeSegment - 2, item->pos.y_rot + (!lara.RopeDirection ? 32760 : 0), (ushort)(Vel >> 5));
+			ApplyVelocityToRope(lara.RopeSegment - 2, item->pos.y_rot + (!lara.RopeDirection ? 32760 : 0), (unsigned short)(Vel >> 5));
 		}
 
 		if (lara.RopeFrame < lara.RopeDFrame)
@@ -4262,7 +4262,7 @@ void lara_as_climbroped(ITEM_INFO* item, COLL_INFO* coll)
 		else if (!lara.RopeFlag)
 		{
 			lara.RopeOffset = 0;
-			lara.RopeDownVel = (ulong)(RopeList[lara.RopePtr].MeshSegment[lara.RopeSegment + 1].y - RopeList[lara.RopePtr].MeshSegment[lara.RopeSegment].y) >> 17;
+			lara.RopeDownVel = (unsigned long)(RopeList[lara.RopePtr].MeshSegment[lara.RopeSegment + 1].y - RopeList[lara.RopePtr].MeshSegment[lara.RopeSegment].y) >> 17;
 			lara.RopeCount = 0;
 			lara.RopeOffset += lara.RopeDownVel;
 			lara.RopeFlag = 1;
@@ -4326,7 +4326,7 @@ void lara_slide_slope(ITEM_INFO* item, COLL_INFO* coll)
 			if (abs(coll->tilt_x) <= 2 && abs(coll->tilt_z) <= 2)
 			{
 				item->goal_anim_state = AS_STOP;
-				SOUND_Stop(SFX_LARA_SLIPPING);
+				Sound.StopEffect(SFX_LARA_SLIPPING);
 			}
 		}
 		else
@@ -4346,7 +4346,7 @@ void lara_slide_slope(ITEM_INFO* item, COLL_INFO* coll)
 				item->goal_anim_state = AS_FALLBACK;
 			}
 
-			SOUND_Stop(SFX_LARA_SLIPPING);
+			Sound.StopEffect(SFX_LARA_SLIPPING);
 			item->gravity_status = 1;
 			item->fallspeed = 0;
 		}
@@ -4601,7 +4601,7 @@ void LaraDeflectEdgeJump(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void ApplyVelocityToRope(long node, ushort angle, ushort n)
+void ApplyVelocityToRope(long node, unsigned short angle, unsigned short n)
 {
 	long xvel, zvel;
 
@@ -4616,7 +4616,7 @@ static long IsValidHangPos(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (LaraFloorFront(item, lara.move_angle, 100) >= 200)
 	{
-		angle = ushort(item->pos.y_rot + 0x2000) / 0x4000;
+		angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
 
 		switch (angle)
 		{
@@ -4659,7 +4659,7 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll)
 	if (!lara.climb_status || item->fallspeed < 0)
 		return 0;
 
-	angle = ushort(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (angle)
 	{
@@ -4712,14 +4712,14 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	oldy = item->pos.y_rot;
 	oldz = item->pos.z_pos;
 	front = coll->front_floor;
-	angle = ushort(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (angle)
 	{
 	case NORTH:
 	case SOUTH:
-		x = oldx ^ ((ushort)oldx ^ (ushort)oldz) & 1023;
-		z = oldz ^ ((ushort)oldx ^ (ushort)oldz) & 1023;
+		x = oldx ^ ((unsigned short)oldx ^ (unsigned short)oldz) & 1023;
+		z = oldz ^ ((unsigned short)oldx ^ (unsigned short)oldz) & 1023;
 		break;
 
 	default:
@@ -4769,13 +4769,13 @@ long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 			break;
 
 		case WEST:
-			x = (item->pos.x_pos ^ ((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023) - 1024;
-			z = ((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023 ^ (item->pos.z_pos + 1024);
+			x = (item->pos.x_pos ^ ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) - 1024;
+			z = ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023 ^ (item->pos.z_pos + 1024);
 			break;
 
 		default:
-			x = (((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023) ^ (item->pos.x_pos + 1024);
-			z = (item->pos.z_pos ^ (((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023)) - 1024;
+			x = (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) ^ (item->pos.x_pos + 1024);
+			z = (item->pos.z_pos ^ (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023)) - 1024;
 			break;
 		}
 
@@ -4865,7 +4865,7 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	oldy = item->pos.y_rot;
 	oldz = item->pos.z_pos;
 	front = coll->front_floor;
-	angle = ushort(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (angle)
 	{
@@ -4876,8 +4876,8 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 		break;
 
 	default:
-		x = oldx ^ ((ushort)oldx ^ (ushort)oldz) & 1023;
-		z = oldz ^ ((ushort)oldx ^ (ushort)oldz) & 1023;
+		x = oldx ^ ((unsigned short)oldx ^ (unsigned short)oldz) & 1023;
+		z = oldz ^ ((unsigned short)oldx ^ (unsigned short)oldz) & 1023;
 		break;
 	}
 
@@ -4912,13 +4912,13 @@ long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 		switch (angle)
 		{
 		case NORTH:
-			x = (item->pos.x_pos ^ ((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023) - 1024;
-			z = ((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023 ^ (item->pos.z_pos + 1024);
+			x = (item->pos.x_pos ^ ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) - 1024;
+			z = ((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023 ^ (item->pos.z_pos + 1024);
 			break;
 
 		case SOUTH:
-			x = (((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023) ^ (item->pos.x_pos + 1024);
-			z = (((ushort)item->pos.x_pos ^ (ushort)item->pos.z_pos) & 1023) ^ (item->pos.z_pos - 1024);
+			x = (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) ^ (item->pos.x_pos + 1024);
+			z = (((unsigned short)item->pos.x_pos ^ (unsigned short)item->pos.z_pos) & 1023) ^ (item->pos.z_pos - 1024);
 			break;
 
 		case WEST:
@@ -5077,7 +5077,7 @@ void JumpOffRope(ITEM_INFO* item)
 void UpdateRopeSwing(ITEM_INFO* item)
 {
 	long temp;
-	static uchar LegsSwinging;
+	static unsigned char LegsSwinging;
 
 	if (lara.RopeMaxXForward > 9000)
 		lara.RopeMaxXForward = 9000;
@@ -5102,7 +5102,7 @@ void UpdateRopeSwing(ITEM_INFO* item)
 			else
 				LegsSwinging = 0;
 
-			SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos);
+			Sound.PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos);
 		}
 		else if (lara.RopeLastX < 0 && lara.RopeFrame == lara.RopeDFrame)
 		{
@@ -5128,7 +5128,7 @@ void UpdateRopeSwing(ITEM_INFO* item)
 		else
 			LegsSwinging = 0;
 
-		SOUND_PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos);
+		Sound.PlayEffect(SFX_LARA_ROPE_CREAK, &item->pos);
 	}
 	else if (lara.RopeLastX > 0 && lara.RopeFrame == lara.RopeDFrame)
 	{
@@ -5424,7 +5424,7 @@ long TestLaraVault(ITEM_INFO* item, COLL_INFO* coll)
 
 	item->pos.y_rot = angle;
 	ShiftItem(item, coll);
-	angle = ushort(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (angle)
 	{
@@ -5489,7 +5489,7 @@ long TestWall(ITEM_INFO* item, long front, long right, long down)
 	x = item->pos.x_pos;
 	y = down + item->pos.y_pos;
 	z = item->pos.z_pos;
-	angle = (ushort)(item->pos.y_rot + 0x2000) / 0x4000;
+	angle = (unsigned short)(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (angle)
 	{
@@ -5640,7 +5640,7 @@ long LaraHangTest(ITEM_INFO* item, COLL_INFO* coll)
 		flag = 1;
 
 	ceiling = LaraCeilingFront(item, angle, 100, 0);
-	dir = ushort(item->pos.y_rot + 0x2000) / 0x4000;
+	dir = unsigned short(item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (dir)
 	{

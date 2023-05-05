@@ -45,10 +45,10 @@ static short CrowbarBounds2[12] = { -256, 256, 0, 0, 256, 512, -1820, 1820, -546
 static short CogSwitchBounds[12] = { -512, 512, 0, 0, -1536, -512, -1820, 1820, -5460, 5460, -1820, 1820 };
 
 PHD_VECTOR OldPickupPos;
-uchar CurrentSequence;
-uchar Sequences[3];
-uchar SequenceUsed[6];
-uchar SequenceResults[3][3][3];
+unsigned char CurrentSequence;
+unsigned char Sequences[3];
+unsigned char SequenceUsed[6];
+unsigned char SequenceResults[3][3][3];
 
 void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
@@ -405,7 +405,7 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					OldPickupPos.x = l->pos.x_pos;
 					OldPickupPos.y = l->pos.y_pos;
 					OldPickupPos.z = l->pos.z_pos;
-					SOUND_SayNo();
+					Sound.SayNo();
 				}
 			}
 			else
@@ -470,7 +470,7 @@ void TurnSwitchControl(short item_number)
 
 		if (l->frame_number >= anims[ANIM_TURNSWITCHCB].frame_base && l->frame_number <= anims[ANIM_TURNSWITCHCB].frame_base + 43 ||
 			l->frame_number >= anims[ANIM_TURNSWITCHCB].frame_base + 58 && l->frame_number <= anims[ANIM_TURNSWITCHCB].frame_base + 115)
-			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFXO_ALWAYS);
 	}
 	else
 	{
@@ -492,7 +492,7 @@ void TurnSwitchControl(short item_number)
 
 		if (l->frame_number >= anims[ANIM_TURNSWITCHAB].frame_base && l->frame_number <= anims[ANIM_TURNSWITCHAB].frame_base + 43 ||
 			l->frame_number >= anims[ANIM_TURNSWITCHAB].frame_base + 58 && l->frame_number <= anims[ANIM_TURNSWITCHAB].frame_base + 115)
-			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFXO_ALWAYS);
 	}
 
 	AnimateItem(item);
@@ -813,7 +813,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				OldPickupPos.x = l->pos.x_pos;
 				OldPickupPos.y = l->pos.y_pos;
 				OldPickupPos.z = l->pos.z_pos;
-				SOUND_SayNo();
+				Sound.SayNo();
 			}
 		}
 	}
@@ -841,7 +841,7 @@ void FullBlockSwitchControl(short item_number)
 	else
 	{
 		item->item_flags[0] = 1;
-		Sequences[CurrentSequence] = (uchar)item->trigger_flags;
+		Sequences[CurrentSequence] = (unsigned char)item->trigger_flags;
 		CurrentSequence++;
 
 		if (CurrentSequence == 3 && SequenceUsed[SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]]])

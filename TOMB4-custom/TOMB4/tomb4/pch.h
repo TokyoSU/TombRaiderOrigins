@@ -13,11 +13,13 @@
 #define D3D_OVERLOADS
 #include <windows.h>
 #include <windowsx.h>
+#include <algorithm>
 #include <d3d.h>
 #include <d3dtypes.h>
 #include <directxtk/SimpleMath.h>
 #include <vector>
 #include <cmath>
+#include <string>
 #include <stdio.h>
 #include <process.h>
 #include <dinput.h>
@@ -28,5 +30,7 @@
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
+
+extern void WinDisplayString(long x, long y, const char* string, ...);
 
 #endif //PCH_H

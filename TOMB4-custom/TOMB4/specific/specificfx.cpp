@@ -76,7 +76,7 @@ static char flare_table[121] =
 	-1
 };
 
-static uchar TargetGraphColTab[48] =
+static unsigned char TargetGraphColTab[48] =
 {
 	0, 0, 255,
 	0, 0, 255,
@@ -96,7 +96,7 @@ static uchar TargetGraphColTab[48] =
 	255, 255, 0
 };
 
-static uchar SplashLinks[347]
+static unsigned char SplashLinks[347]
 {
 	16, 18, 0, 2,
 	18, 20, 2, 4,
@@ -630,7 +630,7 @@ void DrawTrainStrips()
 	DrawTrainFloorStrip(-20480, 0, &textinfo[aranges[2]], 0);
 }
 
-void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
+void S_DrawDrawSparks(SPARKS& sptr, long smallest_size, long* xyptr, long* zptr)
 {
 	SPRITESTRUCT* sprite;
 	D3DTLVERTEX* v;
@@ -641,7 +641,7 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 
 	v = MyVertexBuffer;
 
-	if (sptr->Flags & 8)
+	if (sptr.Flags & 8)
 	{
 		z1 = zptr[0];
 		
@@ -650,15 +650,15 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 
 		if (z1 >= 0x5000)
 		{
-			sptr->On = 0;
+			sptr.On = 0;
 			return;
 		}
 
-		if (sptr->Flags & 2)
+		if (sptr.Flags & 2)
 		{
-			scale = sptr->Size << sptr->Scalar;
-			s1 = ((phd_persp * sptr->Size) << sptr->Scalar) / z1;
-			s2 = ((phd_persp * sptr->Size) << sptr->Scalar) / z1;
+			scale = sptr.Size << sptr.Scalar;
+			s1 = ((phd_persp * sptr.Size) << sptr.Scalar) / z1;
+			s2 = ((phd_persp * sptr.Size) << sptr.Scalar) / z1;
 
 			if (s1 > scale)
 				s1 = scale;
@@ -672,8 +672,8 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 		}
 		else
 		{
-			s1 = sptr->Size;
-			s2 = sptr->Size;
+			s1 = sptr.Size;
+			s2 = sptr.Size;
 		}
 
 		x1 = xyptr[0];
@@ -683,10 +683,10 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 
 		if (x1 + s1h >= phd_winxmin && x1 - s1h < phd_winxmax && y1 + s2h >= phd_winymin && y1 - s2h < phd_winymax)
 		{
-			if (sptr->Flags & 0x10)
+			if (sptr.Flags & 0x10)
 			{
-				sin = rcossin_tbl[sptr->RotAng << 1];
-				cos = rcossin_tbl[(sptr->RotAng << 1) + 1];
+				sin = rcossin_tbl[sptr.RotAng << 1];
+				cos = rcossin_tbl[(sptr.RotAng << 1) + 1];
 				sx1 = (-s1h * sin) >> (W2V_SHIFT - 2);
 				sx2 = (s1h * sin) >> (W2V_SHIFT - 2);
 				sy1 = (-s2h * sin) >> (W2V_SHIFT - 2);
@@ -714,19 +714,19 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 				setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, z1, clipflags);
 			}
 
-			sprite = &spriteinfo[sptr->Def];
+			sprite = &spriteinfo[sptr.Def];
 
 			if (z1 <= 0x3000)
 			{
-				cR = sptr->R;
-				cG = sptr->G;
-				cB = sptr->B;
+				cR = sptr.R;
+				cG = sptr.G;
+				cB = sptr.B;
 			}
 			else
 			{
-				cR = ((0x5000 - z1) * sptr->R) >> 13;
-				cG = ((0x5000 - z1) * sptr->G) >> 13;
-				cB = ((0x5000 - z1) * sptr->B) >> 13;
+				cR = ((0x5000 - z1) * sptr.R) >> 13;
+				cG = ((0x5000 - z1) * sptr.G) >> 13;
+				cB = ((0x5000 - z1) * sptr.B) >> 13;
 			}
 
 			c1 = RGBA(cR, cG, cB, 0xFF);
@@ -739,10 +739,10 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 			v[2].specular = 0xFF000000;
 			v[3].specular = 0xFF000000;
 
-			if (sptr->TransType == 3)
+			if (sptr.TransType == 3)
 				tex.drawtype = 5;
 			else
-			if (sptr->TransType)
+			if (sptr.TransType)
 				tex.drawtype = 2;
 			else
 				tex.drawtype = 1;
@@ -770,15 +770,15 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 
 		if (z1 <= 0x3000)
 		{
-			cR = sptr->R;
-			cG = sptr->G;
-			cB = sptr->B;
+			cR = sptr.R;
+			cG = sptr.G;
+			cB = sptr.B;
 		}
 		else
 		{
-			cR = ((0x5000 - z1) * sptr->R) >> 13;
-			cG = ((0x5000 - z1) * sptr->G) >> 13;
-			cB = ((0x5000 - z1) * sptr->B) >> 13;
+			cR = ((0x5000 - z1) * sptr.R) >> 13;
+			cG = ((0x5000 - z1) * sptr.G) >> 13;
+			cB = ((0x5000 - z1) * sptr.B) >> 13;
 		}
 
 		c1 = RGBA(cR, cG, cB, 0xFF);
@@ -1030,7 +1030,7 @@ void DrawDebris()
 	long* Z;
 	long* offsets;
 	long r, g, b, c;
-	ushort drawbak;
+	unsigned short drawbak;
 
 	v = MyVertexBuffer;
 	XY = (long*)&tsv_buffer[0];
@@ -1207,7 +1207,7 @@ void DrawPsxTile(long x_y, long height_width, long color, long u0, long u1)
 	TEXTURESTRUCT tex;
 	float x, y, z, rhw, w, h;
 	long col;
-	ushort drawtype;
+	unsigned short drawtype;
 
 	v = MyVertexBuffer;
 	nPolyType = 6;
@@ -1376,7 +1376,7 @@ void ClipCheckPoint(D3DTLVERTEX* v, float x, float y, float z, short* clip)
 	clip[0] = clipdistance;
 }
 
-void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype)
+void DrawFlatSky(unsigned long color, long zpos, long ypos, long drawtype)
 {
 	D3DTLVERTEX* v;
 	FVECTOR vec[4];
@@ -1423,9 +1423,9 @@ void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype)
 	ClipCheckPoint(&v[2], vec[2].x, vec[2].y, vec[2].z, clip);	//originally inlined
 	clip++;
 	ClipCheckPoint(&v[3], vec[3].x, vec[3].y, vec[3].z, clip);	//the only one that survived
-	Tex.drawtype = (ushort)drawtype;
+	Tex.drawtype = (unsigned short)drawtype;
 	Tex.flag = 0;
-	Tex.tpage = ushort(nTextures - 1);
+	Tex.tpage = unsigned short(nTextures - 1);
 	Tex.u1 = 0;
 	Tex.v1 = 0;
 	Tex.u2 = 1;
@@ -2039,7 +2039,7 @@ void ShowTitle()
 
 	tex.drawtype = 1;
 	tex.flag = 0;
-	tex.tpage = ushort(nTextures - 4);
+	tex.tpage = unsigned short(nTextures - 4);
 	tex.u1 = float(1.0F / 256.0F);
 	tex.v1 = float(1.0F / 256.0F);
 	tex.u2 = 1.0F - float(1.0F / 256.0F);
@@ -2080,7 +2080,7 @@ void ShowTitle()
 
 	tex.drawtype = 1;
 	tex.flag = 0;
-	tex.tpage = ushort(nTextures - 3);
+	tex.tpage = unsigned short(nTextures - 3);
 	tex.u1 = float(1.0F / 256.0F);
 	tex.v1 = float(1.0F / 256.0F);
 	tex.u2 = 1.0F - float(1.0F / 256.0F);
@@ -2129,9 +2129,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 		if (rooms[camera.pos.room_number].flags & ROOM_NO_LENSFLARE)
 			return;
 
-		r = (uchar)gfLensFlareColour.r;
-		g = (uchar)gfLensFlareColour.g;
-		b = (uchar)gfLensFlareColour.b;
+		r = (unsigned char)gfLensFlareColour.r;
+		g = (unsigned char)gfLensFlareColour.g;
+		b = (unsigned char)gfLensFlareColour.b;
 		pos.x = x;
 		pos.y = y;
 		pos.z = z;
@@ -2357,7 +2357,7 @@ void DrawBinoculars()
 	short* clip;
 	short* quad;
 	short* tri;
-	ushort drawbak;
+	unsigned short drawbak;
 	short clipdistance;
 
 	vtx = MyVertexBuffer;
@@ -2484,7 +2484,7 @@ void DrawWraithTrail(ITEM_INFO* item)
 	long* Z;
 	long* offsets;
 	float perspz;
-	ulong r, g, b;
+	unsigned long r, g, b;
 	long c0, c1, x0, y0, z0, x1, y1, z1;
 
 	v = MyVertexBuffer;
@@ -2586,8 +2586,7 @@ void DrawWraithTrail(ITEM_INFO* item)
 
 void DrawDrips()
 {
-	D3DTLVERTEX* v;
-	DRIP_STRUCT* drip;
+	D3DTLVERTEX* v = MyVertexBuffer;
 	FVECTOR vec;
 	long* XY;
 	long* Z;
@@ -2595,24 +2594,21 @@ void DrawDrips()
 	float perspz;
 	long x0, y0, z0, x1, y1, z1, r, g, b;
 
-	v = MyVertexBuffer;
-
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
 
-	for (int i = 0; i < 32; i++)
+	for (auto it = Drips.begin(); it != Drips.end(); it++)
 	{
-		drip = &Drips[i];
-
-		if (!drip->On)
+		auto& drip = *it;
+		if (!drip.On)
 			continue;
 
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 		pos = (long*)&tsv_buffer[1024];
-		pos[0] = drip->x - lara_item->pos.x_pos;
-		pos[1] = drip->y - lara_item->pos.y_pos;
-		pos[2] = drip->z - lara_item->pos.z_pos;
+		pos[0] = drip.x - lara_item->pos.x_pos;
+		pos[1] = drip.y - lara_item->pos.y_pos;
+		pos[2] = drip.z - lara_item->pos.z_pos;
 
 		if (pos[0] < -20480 || pos[0] > 20480 || pos[1] < -20480 || pos[1] > 20480 || pos[2] < -20480 || pos[2] > 20480)
 			continue;
@@ -2626,9 +2622,9 @@ void DrawDrips()
 		XY[1] = long(vec.y * perspz + f_centery);
 		Z[0] = (long)vec.z;
 
-		pos[1] -= drip->Yvel >> 6;
+		pos[1] -= drip.Yvel >> 6;
 
-		if (rooms[drip->RoomNumber].flags & ROOM_NOT_INSIDE)
+		if (rooms[drip.RoomNumber].flags & ROOM_NOT_INSIDE)
 		{
 			pos[0] -= SmokeWindX >> 1;
 			pos[1] -= SmokeWindZ >> 1;
@@ -2648,7 +2644,7 @@ void DrawDrips()
 
 		if (Z[0] > 20480)
 		{
-			drip->On = 0;
+			drip.On = 0;
 			continue;
 		}
 
@@ -2661,9 +2657,9 @@ void DrawDrips()
 
 		if (ClipLine(x0, y0, z0, x1, y1, z1, phd_winxmin, phd_winymin, phd_winxmax, phd_winymax))
 		{
-			r = drip->R << 2;
-			g = drip->G << 2;
-			b = drip->B << 2;
+			r = drip.R << 2;
+			g = drip.G << 2;
+			b = drip.B << 2;
 
 			v[0].sx = (float)x0;
 			v[0].sy = (float)y0;
@@ -2692,10 +2688,8 @@ void DrawDrips()
 
 void DrawBubbles()
 {
-	BUBBLE_STRUCT* bubble;
 	SPRITESTRUCT* sprite;
 	D3DTLVERTEX* v;
-	TEXTURESTRUCT tex;
 	FVECTOR pos;
 	long* XY;
 	long* Z;
@@ -2707,28 +2701,24 @@ void DrawBubbles()
 
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
-	bubble = Bubbles;
 
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for (int i = 0; i < 40; i++)
+	for (auto it = Bubbles.begin(); it != Bubbles.end(); it++)
 	{
-		if (!bubble->size)
-		{
-			bubble++;
+		auto& bubble = *it;
+		if (!bubble.size)
 			continue;
-		}
 
-		dx = bubble->pos.x - lara_item->pos.x_pos;
-		dy = bubble->pos.y - lara_item->pos.y_pos;
-		dz = bubble->pos.z - lara_item->pos.z_pos;
+		dx = bubble.pos.x - lara_item->pos.x_pos;
+		dy = bubble.pos.y - lara_item->pos.y_pos;
+		dz = bubble.pos.z - lara_item->pos.z_pos;
 
 		if (dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
 		{
-			bubble->size = 0;
-			bubble++;
+			bubble.size = 0;
 			continue;
 		}
 
@@ -2744,23 +2734,18 @@ void DrawBubbles()
 		Z[0] = (long)pos.z;
 
 		if (Z[0] < 32)
-		{
-			bubble++;
 			continue;
-		}
 
 		if (Z[0] > 0x5000)
 		{
-			bubble->size = 0;
-			bubble++;
+			bubble.size = 0;
 			continue;
 		}
 
-		size = phd_persp * (bubble->size >> 1) / Z[0];
-
+		size = phd_persp * (bubble.size >> 1) / Z[0];
 		if (size > 128)
 		{
-			bubble->size = 0;
+			bubble.size = 0;
 			continue;
 		}
 
@@ -2773,23 +2758,21 @@ void DrawBubbles()
 		y1 = XY[1] - size;
 		x2 = XY[0] + size;
 		y2 = XY[1] + size;
-
 		if (x2 < phd_winxmin || x1 >= phd_winxmax || y2 < phd_winymin || y1 >= phd_winymax)
-		{
-			bubble++;
 			continue;
-		}
 
 		sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 13];
 		setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, Z[0], clipflags);
-		v[0].color = RGBA(bubble->shade, bubble->shade, bubble->shade, 0xFF);
-		v[1].color = RGBA(bubble->shade, bubble->shade, bubble->shade, 0xFF);
-		v[2].color = RGBA(bubble->shade, bubble->shade, bubble->shade, 0xFF);
-		v[3].color = RGBA(bubble->shade, bubble->shade, bubble->shade, 0xFF);
+		v[0].color = RGBA(bubble.shade, bubble.shade, bubble.shade, 0xFF);
+		v[1].color = RGBA(bubble.shade, bubble.shade, bubble.shade, 0xFF);
+		v[2].color = RGBA(bubble.shade, bubble.shade, bubble.shade, 0xFF);
+		v[3].color = RGBA(bubble.shade, bubble.shade, bubble.shade, 0xFF);
 		v[0].specular = 0xFF000000;
 		v[1].specular = 0xFF000000;
 		v[2].specular = 0xFF000000;
 		v[3].specular = 0xFF000000;
+
+		TEXTURESTRUCT tex;
 		tex.drawtype = 2;
 		tex.flag = 0;
 		tex.tpage = sprite->tpage;
@@ -2801,8 +2784,8 @@ void DrawBubbles()
 		tex.u3 = sprite->x2;
 		tex.u4 = sprite->x1;
 		tex.v4 = sprite->y2;
+
 		AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
-		bubble++;
 	}
 
 	phd_PopMatrix();
@@ -2810,7 +2793,6 @@ void DrawBubbles()
 
 void DrawShockwaves()
 {
-	SHOCKWAVE_STRUCT* wave;
 	SPRITESTRUCT* sprite;
 	D3DTLVERTEX* vtx;
 	TEXTURESTRUCT tex;
@@ -2826,22 +2808,20 @@ void DrawShockwaves()
 	sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 8];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for (int i = 0; i < 16; i++)
+	for (auto& wave : ShockWaves)
 	{
-		wave = &ShockWaves[i];
-
-		if (!wave->life)
+		if (!wave.life)
 			continue;
 
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 		phd_PushMatrix();
-		phd_TranslateAbs(wave->x, wave->y, wave->z);
-		phd_RotX(wave->XRot);
+		phd_TranslateAbs(wave.x, wave.y, wave.z);
+		phd_RotX(wave.XRot);
 		offsets[1] = 0;
 		offsets[5] = 0;
 		offsets[9] = 0;
-		rad = wave->OuterRad;
+		rad = wave.OuterRad;
 
 		for (int j = 0; j < 2; j++)
 		{
@@ -2891,7 +2871,7 @@ void DrawShockwaves()
 				Z += 3;
 			}
 
-			rad = wave->InnerRad;
+			rad = wave.InnerRad;
 		}
 
 		phd_PopMatrix();
@@ -2910,15 +2890,15 @@ void DrawShockwaves()
 			y4 = XY[39];
 			setXYZ4(vtx, x1, y1, Z[0], x2, y2, Z[1], x4, y4, Z[19], x3, y3, Z[18], clipflags);
 
-			r = wave->r;
-			g = wave->g;
-			b = wave->b;
+			r = wave.r;
+			g = wave.g;
+			b = wave.b;
 
-			if (wave->life < 8)
+			if (wave.life < 8)
 			{
-				r = (r * wave->life) >> 3;
-				g = (g * wave->life) >> 3;
-				b = (b * wave->life) >> 3;
+				r = (r * wave.life) >> 3;
+				g = (g * wave.life) >> 3;
+				b = (b * wave.life) >> 3;
 			}
 
 			c = RGBA(b, g, r, 0xFF);
@@ -3081,8 +3061,8 @@ void S_DrawSplashes()	//	(also draws ripples and underwater blood (which is a ri
 	long* XY;
 	long* Z;
 	long* offsets;
-	uchar* links;
-	ulong c0, c1;
+	unsigned char* links;
+	unsigned long c0, c1;
 	long x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, linkNum, r, g, b;
 	short rads[6];
 	short yVals[6];
@@ -3456,7 +3436,6 @@ bool ClipLine(long& x1, long& y1, long z1, long& x2, long& y2, long z2, long xMi
 
 void S_DrawFireSparks(long size, long life)
 {
-	FIRE_SPARKS* sptr;
 	SPRITESTRUCT* sprite;
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
@@ -3465,7 +3444,7 @@ void S_DrawFireSparks(long size, long life)
 	long* Z;
 	long* offsets;
 	float perspz;
-	ulong r, g, b, col;
+	unsigned long r, g, b, col;
 	long newSize, s, c, sx1, cx1, sx2, cx2;
 	long dx, dy, dz, x1, y1, x2, y2, x3, y3, x4, y4;
 	short ang;
@@ -3475,16 +3454,14 @@ void S_DrawFireSparks(long size, long life)
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for (int i = 0; i < 20; i++)
+	for (auto& sptr : FireSparks)
 	{
-		sptr = &fire_spark[i];
-
-		if (!sptr->On)
+		if (!sptr.On)
 			continue;
 
-		dx = sptr->x >> (2 - size);
-		dy = sptr->y >> (2 - size);
-		dz = sptr->z >> (2 - size);
+		dx = sptr.x >> (2 - size);
+		dy = sptr.y >> (2 - size);
+		dz = sptr.z >> (2 - size);
 
 		if (dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
 			continue;
@@ -3504,10 +3481,10 @@ void S_DrawFireSparks(long size, long life)
 		if (Z[0] <= 0 || Z[0] >= 0x5000)
 			continue;
 
-		newSize = (((phd_persp * sptr->Size) << 2) / Z[0]) >> (2 - size);
+		newSize = (((phd_persp * sptr.Size) << 2) / Z[0]) >> (2 - size);
 
-		if (newSize > (sptr->Size << 2))
-			newSize = (sptr->Size << 2);
+		if (newSize > (sptr.Size << 2))
+			newSize = (sptr.Size << 2);
 		else if (newSize < 4)
 			newSize = 4;
 
@@ -3516,9 +3493,9 @@ void S_DrawFireSparks(long size, long life)
 		if (XY[0] + newSize < phd_winxmin || XY[0] - newSize >= phd_winxmax || XY[1] + newSize < phd_winymin || XY[1] - newSize >= phd_winymax)
 			continue;
 
-		if (sptr->Flags & 0x10)
+		if (sptr.Flags & 0x10)
 		{
-			ang = sptr->RotAng << 1;
+			ang = sptr.RotAng << 1;
 			s = rcossin_tbl[ang];
 			c = rcossin_tbl[ang + 1];
 			sx1 = (-newSize * s) >> (W2V_SHIFT - 2);
@@ -3544,19 +3521,19 @@ void S_DrawFireSparks(long size, long life)
 			setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, Z[0], clipflags);
 		}
 
-		sprite = &spriteinfo[sptr->Def];
+		sprite = &spriteinfo[sptr.Def];
 
 		if (Z[0] <= 0x3000)
 		{
-			r = sptr->R;
-			g = sptr->G;
-			b = sptr->B;
+			r = sptr.R;
+			g = sptr.G;
+			b = sptr.B;
 		}
 		else
 		{
-			r = ((0x5000 - Z[0]) * sptr->R) >> 13;
-			g = ((0x5000 - Z[0]) * sptr->G) >> 13;
-			b = ((0x5000 - Z[0]) * sptr->B) >> 13;
+			r = ((0x5000 - Z[0]) * sptr.R) >> 13;
+			g = ((0x5000 - Z[0]) * sptr.G) >> 13;
+			b = ((0x5000 - Z[0]) * sptr.B) >> 13;
 		}
 
 		r = (r * life) >> 8;
@@ -3715,7 +3692,6 @@ void DrawRope(ROPE_STRUCT* rope)
 
 void DrawBlood()
 {
-	BLOOD_STRUCT* bptr;
 	SPRITESTRUCT* sprite;
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
@@ -3724,7 +3700,7 @@ void DrawBlood()
 	long* Z;
 	long* offsets;
 	float perspz;
-	ulong r, col;
+	unsigned long r, col;
 	long size, s, c;
 	long dx, dy, dz, x1, y1, x2, y2, x3, y3, x4, y4;
 	short ang;
@@ -3738,16 +3714,14 @@ void DrawBlood()
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
 
-	for (int i = 0; i < 32; i++)
+	for (auto& bptr : Bloods)
 	{
-		bptr = &blood[i];
-
-		if (!bptr->On)
+		if (!bptr.On)
 			continue;
 
-		dx = bptr->x - lara_item->pos.x_pos;
-		dy = bptr->y - lara_item->pos.y_pos;
-		dz = bptr->z - lara_item->pos.z_pos;
+		dx = bptr.x - lara_item->pos.x_pos;
+		dy = bptr.y - lara_item->pos.y_pos;
+		dz = bptr.z - lara_item->pos.z_pos;
 
 		if (dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
 			continue;
@@ -3766,15 +3740,15 @@ void DrawBlood()
 		if (Z[0] <= 0 || Z[0] >= 0x5000)
 			continue;
 
-		size = ((phd_persp * bptr->Size) << 1) / Z[0];
+		size = ((phd_persp * bptr.Size) << 1) / Z[0];
 
-		if (size > (bptr->Size << 1))
-			size = (bptr->Size << 1);
+		if (size > (bptr.Size << 1))
+			size = (bptr.Size << 1);
 		else if (size < 4)
 			size = 4;
 
 		size <<= 1;
-		ang = bptr->RotAng << 1;
+		ang = bptr.RotAng << 1;
 		s = (size * rcossin_tbl[ang]) >> (W2V_SHIFT - 2);
 		c = (size * rcossin_tbl[ang + 1]) >> (W2V_SHIFT - 2);
 		x1 = c + XY[0] - s;
@@ -3788,10 +3762,10 @@ void DrawBlood()
 		setXY4(v, x1, y1, x2, y2, x3, y3, x4, y4, Z[0], clipflags);
 
 		if (Z[0] <= 0x3000)
-			col = RGBA(bptr->Shade, 0, 0, 0xFF);
+			col = RGBA(bptr.Shade, 0, 0, 0xFF);
 		else
 		{
-			r = ((0x5000 - Z[0]) * bptr->Shade) >> 13;
+			r = ((0x5000 - Z[0]) * bptr.Shade) >> 13;
 			col = RGBA(r, 0, 0, 0xFF);
 		}
 
@@ -3822,7 +3796,6 @@ void DrawBlood()
 
 void S_DrawSmokeSparks()
 {
-	SMOKE_SPARKS* sptr;
 	SPRITESTRUCT* sprite;
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
@@ -3831,7 +3804,7 @@ void S_DrawSmokeSparks()
 	long* Z;
 	long* offsets;
 	float perspz;
-	long is_mirror, size, col, s, c, ss, cs, sm, cm;
+	long size, col, s, c, ss, cs, sm, cm;
 	long dx, dy, dz, x1, y1, x2, y2, x3, y3, x4, y4;
 	short ang;
 
@@ -3842,36 +3815,20 @@ void S_DrawSmokeSparks()
 	XY = (long*)&tsv_buffer[0];
 	Z = (long*)&tsv_buffer[512];
 	offsets = (long*)&tsv_buffer[1024];
-	is_mirror = 0;
-	sptr = &smoke_spark[0];
 
-	for (int i = 0; i < 32; i++)
+	for (auto& sptr : SmokeSparks)
 	{
-		if (!sptr->On)
-		{
-			sptr++;
+		if (!sptr.On)
 			continue;
-		}
 
-		if (sptr->mirror && !is_mirror)
-			is_mirror = 1;
-		else
-			is_mirror = 0;
-
-		dx = sptr->x - lara_item->pos.x_pos;
-		dy = sptr->y - lara_item->pos.y_pos;
-		dz = sptr->z - lara_item->pos.z_pos;
-
-		if (is_mirror)
-			dz = 2 * gfMirrorZPlane - lara_item->pos.z_pos - sptr->z;
+		dx = sptr.x - lara_item->pos.x_pos;
+		dy = sptr.y - lara_item->pos.y_pos;
+		dz = sptr.z - lara_item->pos.z_pos;
+		if (sptr.mirror)
+			dz = 2 * gfMirrorZPlane - lara_item->pos.z_pos - sptr.z;
 
 		if (dx < -0x5000 || dx > 0x5000 || dy < -0x5000 || dy > 0x5000 || dz < -0x5000 || dz > 0x5000)
-		{
-			if (!is_mirror)
-				sptr++;
-
 			continue;
-		}
 
 		offsets[0] = dx;
 		offsets[1] = dy;
@@ -3885,33 +3842,23 @@ void S_DrawSmokeSparks()
 		Z[0] = (long)pos.z;
 
 		if (Z[0] <= 0 || Z[0] >= 0x5000)
-		{
-			if (!is_mirror)
-				sptr++;
-
 			continue;
-		}
 
-		size = ((phd_persp * sptr->Size) << 2) / Z[0];
+		size = ((phd_persp * sptr.Size) << 2) / Z[0];
 
-		if (size > (sptr->Size << 2))
-			size = (sptr->Size << 2);
+		if (size > (sptr.Size << 2))
+			size = (sptr.Size << 2);
 		else if (size < 4)
 			size = 4;
 
 		size >>= 1;
 
 		if (XY[0] + size < phd_winxmin || XY[0] - size >= phd_winxmax || XY[1] + size < phd_winymin || XY[1] - size >= phd_winymax)
-		{
-			if (!is_mirror)
-				sptr++;
-
 			continue;
-		}
 
-		if (sptr->Flags & 0x10)
+		if (sptr.Flags & 0x10)
 		{
-			ang = sptr->RotAng << 1;
+			ang = sptr.RotAng << 1;
 			s = rcossin_tbl[ang];
 			c = rcossin_tbl[ang + 1];
 			ss = (s * size) >> (W2V_SHIFT - 2);
@@ -3939,12 +3886,12 @@ void S_DrawSmokeSparks()
 			setXY4(v, x1, y1, x2, y1, x2, y2, x1, y2, Z[0], clipflags);
 		}
 
-		sprite = &spriteinfo[sptr->Def];
+		sprite = &spriteinfo[sptr.Def];
 
 		if (Z[0] <= 0x3000)
-			col = sptr->Shade;
+			col = sptr.Shade;
 		else
-			col = ((0x5000 - Z[0]) * sptr->Shade) >> 13;
+			col = ((0x5000 - Z[0]) * sptr.Shade) >> 13;
 
 		v[0].color = RGBA(col, col, col, 0xFF);
 		v[1].color = RGBA(col, col, col, 0xFF);
@@ -3966,9 +3913,6 @@ void S_DrawSmokeSparks()
 		tex.u4 = sprite->x1;
 		tex.v4 = sprite->y2;
 		AddQuadSorted(v, 0, 1, 2, 3, &tex, 0);
-
-		if (!is_mirror)
-			sptr++;
 	}
 
 	phd_PopMatrix();
@@ -4129,7 +4073,6 @@ void DoUwEffect()
 
 void DrawLightning()
 {
-	LIGHTNING_STRUCT* pL;
 	SPRITESTRUCT* sprite;
 	PHD_VECTOR* vec;
 	SVECTOR* offsets;
@@ -4148,17 +4091,15 @@ void DrawLightning()
 	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
 	sprite = &spriteinfo[objects[DEFAULT_SPRITES].mesh_index + 28];
 
-	for (int i = 0; i < 16; i++)
+	for (auto& pL : Lightning)
 	{
-		pL = &Lightning[i];
-
-		if (!pL->Life)
+		if (!pL.Life)
 			continue;
 
 		vec = (PHD_VECTOR*)&tsv_buffer[512];
-		memcpy(&vec[0], &pL->Point[0], sizeof(PHD_VECTOR));
-		memcpy(&vec[1], &pL->Point[0], 4 * sizeof(PHD_VECTOR));
-		memcpy(&vec[5], &pL->Point[3], sizeof(PHD_VECTOR));
+		memcpy(&vec[0], &pL.Point[0], sizeof(PHD_VECTOR));
+		memcpy(&vec[1], &pL.Point[0], 4 * sizeof(PHD_VECTOR));
+		memcpy(&vec[5], &pL.Point[3], sizeof(PHD_VECTOR));
 
 		for (int j = 0; j < 6; j++)
 		{
@@ -4170,12 +4111,12 @@ void DrawLightning()
 		offsets = (SVECTOR*)&tsv_buffer[0];
 		XY = (long*)&tsv_buffer[1024];
 		Z = (long*)&tsv_buffer[2048];
-		CalcLightningSpline(vec, offsets, pL);
+		CalcLightningSpline(vec, offsets, &pL);
 
 		if (vec[0].x > 0x6000 || vec[0].y > 0x6000 || vec[0].z > 0x6000)
 			continue;
 
-		for (int j = 0; j < pL->Segments; j++)
+		for (int j = 0; j < pL.Segments; j++)
 		{
 			p1.x = offsets[0].x * mMXPtr[M00] + offsets[0].y * mMXPtr[M01] + offsets[0].z * mMXPtr[M02] + mMXPtr[M03];
 			p1.y = offsets[0].x * mMXPtr[M10] + offsets[0].y * mMXPtr[M11] + offsets[0].z * mMXPtr[M12] + mMXPtr[M13];
@@ -4209,10 +4150,10 @@ void DrawLightning()
 		XY = (long*)&tsv_buffer[1024];
 		Z = (long*)&tsv_buffer[2048];
 
-		for (int j = 0; j < 3 * pL->Segments - 1; j++)
+		for (int j = 0; j < 3 * pL.Segments - 1; j++)
 		{
-			if (pL->Life < 16)
-				c = pL->Life << 2;
+			if (pL.Life < 16)
+				c = pL.Life << 2;
 			else
 				c = 64;
 
@@ -4258,22 +4199,22 @@ void DrawLightning()
 				if (Z[0] > 0x4000)
 					xsize = 1;
 				else
-					xsize = ((0x4000 - Z[0]) * pL->Size) >> 16;
+					xsize = ((0x4000 - Z[0]) * pL.Size) >> 16;
 
 				if (xsize < 4)
 					xsize = 4;
 
-				if (pL->Life < 16)
+				if (pL.Life < 16)
 				{
-					r = (pL->Life * pL->r) >> 4;
-					g = (pL->Life * pL->g) >> 4;
-					b = (pL->Life * pL->b) >> 4;
+					r = (pL.Life * pL.r) >> 4;
+					g = (pL.Life * pL.g) >> 4;
+					b = (pL.Life * pL.b) >> 4;
 				}
 				else
 				{
-					r = pL->r;
-					g = pL->g;
-					b = pL->b;
+					r = pL.r;
+					g = pL.g;
+					b = pL.b;
 				}
 
 				if (Z[0] > 0x3000)

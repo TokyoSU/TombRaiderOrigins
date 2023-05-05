@@ -458,7 +458,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node)
 {
 	HAIR_STRUCT* hair;
-	ushort num, rot1, rot2;
+	unsigned short num, rot1, rot2;
 
 	num = 0;
 	hair = &hairs[pigtail][hair_node - 1];
@@ -466,7 +466,7 @@ void GetCorrectStashPoints(long pigtail, long hair_node, long skin_node)
 	if (hair_node)
 		rot1 = hair->pos.y_rot;
 	else
-		rot1 = ushort(0x8000 - (CamRot.y << 4));
+		rot1 = unsigned short(0x8000 - (CamRot.y << 4));
 
 	rot2 = hair[2].pos.y_rot;
 

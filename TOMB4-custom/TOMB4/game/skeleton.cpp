@@ -21,20 +21,13 @@ static BITE_INFO skelly_hit = { 180, 0, 0, 16 };
 
 void TriggerRiseEffect(ITEM_INFO* item)
 {
-	FX_INFO* fx;
-	FLOOR_INFO* floor;
-	SPARKS* sptr;
-	short fx_number, room_number;
-
-	fx_number = CreateEffect(item->room_number);
-
+	short fx_number = CreateEffect(item->room_number);
 	if (fx_number == NO_ITEM)
 		return;
 
-	fx = &effects[fx_number];
-
-	room_number = item->room_number;
-	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	FX_INFO* fx = &effects[fx_number];
+	short room_number = item->room_number;
+	FLOOR_INFO* floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 
 	fx->pos.x_pos = (GetRandomControl() & 0xFF) + item->pos.x_pos - 128;
 	fx->pos.y_pos = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos) - 48;
@@ -48,40 +41,42 @@ void TriggerRiseEffect(ITEM_INFO* item)
 	fx->shade = 0x4210;
 	fx->flag2 = 1537;
 
-	sptr = &spark[GetFreeSpark()];
-	sptr->On = 1;
-	sptr->sR = 0;
-	sptr->sG = 0;
-	sptr->sB = 0;
-	sptr->dR = 100;
-	sptr->dG = 60;
-	sptr->dB = 30;
-	sptr->FadeToBlack = 8;
-	sptr->ColFadeSpeed = (GetRandomControl() & 3) + 4;
-	sptr->Life = (GetRandomControl() & 7) + 16;
-	sptr->sLife = sptr->Life;
-	sptr->x = fx->pos.x_pos;
-	sptr->y = fx->pos.y_pos;
-	sptr->z = fx->pos.z_pos;
-	sptr->Xvel = phd_sin(fx->pos.y_rot) >> 2;
-	sptr->Yvel = 0;
-	sptr->Zvel = phd_cos(fx->pos.y_rot) >> 2;
-	sptr->TransType = 2;
-	sptr->Friction = 68;
-	sptr->Flags = 26;
-	sptr->RotAng = GetRandomControl() & 0xFFF;
+	SPARKS sptr;
+	sptr.On = 1;
+	sptr.sR = 0;
+	sptr.sG = 0;
+	sptr.sB = 0;
+	sptr.dR = 100;
+	sptr.dG = 60;
+	sptr.dB = 30;
+	sptr.FadeToBlack = 8;
+	sptr.ColFadeSpeed = (GetRandomControl() & 3) + 4;
+	sptr.Life = (GetRandomControl() & 7) + 16;
+	sptr.sLife = sptr.Life;
+	sptr.x = fx->pos.x_pos;
+	sptr.y = fx->pos.y_pos;
+	sptr.z = fx->pos.z_pos;
+	sptr.Xvel = phd_sin(fx->pos.y_rot) >> 2;
+	sptr.Yvel = 0;
+	sptr.Zvel = phd_cos(fx->pos.y_rot) >> 2;
+	sptr.TransType = 2;
+	sptr.Friction = 68;
+	sptr.Flags = 26;
+	sptr.RotAng = GetRandomControl() & 0xFFF;
 
 	if (GetRandomControl() & 1)
-		sptr->RotAdd = -16 - (GetRandomControl() & 0xF);
+		sptr.RotAdd = -16 - (GetRandomControl() & 0xF);
 	else
-		sptr->RotAdd = (GetRandomControl() & 0xF) + 16;
+		sptr.RotAdd = (GetRandomControl() & 0xF) + 16;
 
-	sptr->Gravity = -4 - (GetRandomControl() & 3);
-	sptr->Scalar = 3;
-	sptr->MaxYvel = -4 - (GetRandomControl() & 3);
-	sptr->Size = (GetRandomControl() & 0xF) + 8;
-	sptr->sSize = sptr->Size;
-	sptr->dSize = sptr->Size << 2;
+	sptr.Gravity = -4 - (GetRandomControl() & 3);
+	sptr.Scalar = 3;
+	sptr.MaxYvel = -4 - (GetRandomControl() & 3);
+	sptr.Size = (GetRandomControl() & 0xF) + 8;
+	sptr.sSize = sptr.Size;
+	sptr.dSize = sptr.Size << 2;
+
+	Sparks.push_back(sptr);
 }
 
 void InitialiseSkeleton(short item_number)
@@ -416,7 +411,7 @@ void SkeletonControl(short item_number)
 					if (mesh->z >> 10 == pos.z >> 10 && mesh->x >> 10 == pos.x >> 10 && mesh->static_number >= SHATTER0)
 					{
 						ShatterObject(0, mesh, -64, lara_item->room_number, 0);
-						SOUND_PlayEffect(SFX_HIT_ROCK, &item->pos, SFX_LAND);
+						Sound.PlayEffect(SFX_HIT_ROCK, &item->pos);
 						mesh->Flags &= ~1;
 						floor->stopper = 0;
 						GetHeight(floor, pos.x, pos.y, pos.z);
@@ -430,7 +425,7 @@ void SkeletonControl(short item_number)
 				lara_item->hit_points -= 80;
 				lara_item->hit_status = 1;
 				CreatureEffectT(item, &skelly_hit, 10, item->pos.y_rot, DoBloodSplat);
-				SOUND_PlayEffect(SFX_LARA_THUD, &item->pos, SFX_LAND);
+				Sound.PlayEffect(SFX_LARA_THUD, &item->pos);
 				skelly->flags = 1;
 			}
 		}
@@ -452,7 +447,7 @@ void SkeletonControl(short item_number)
 			lara_item->hit_points -= 80;
 			lara_item->hit_status = 1;
 			CreatureEffectT(item, &skelly_hit, 15, -1, DoBloodSplat);
-			SOUND_PlayEffect(SFX_LARA_THUD, &item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_LARA_THUD, &item->pos);
 			skelly->flags = 1;
 		}
 

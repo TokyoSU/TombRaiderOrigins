@@ -15,7 +15,7 @@ long font_height;
 long GnFrameCounter;
 
 static CVECTOR FontShades[10][32];
-static uchar ScaleFlag;
+static unsigned char ScaleFlag;
 
 char AccentTable[46][2] =
 {
@@ -200,9 +200,9 @@ void InitFont()
 	D3DTLVERTEX v;
 	static CHARDEF copy[106];
 	static long init = 1;
-	ushort r, g, b;
+	unsigned short r, g, b;
 	short h, w, yoff;
-	uchar fr, fg, fb, tr, tg, tb;
+	unsigned char fr, fg, fb, tr, tg, tb;
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -233,18 +233,18 @@ void InitFont()
 			r = CLRR(v.color);
 			g = CLRG(v.color);
 			b = CLRB(v.color);
-			FontShades[i][j << 1].r = (uchar)r;
-			FontShades[i][j << 1].g = (uchar)g;
-			FontShades[i][j << 1].b = (uchar)b;
-			FontShades[i][j << 1].a = (uchar)0xFF;
+			FontShades[i][j << 1].r = (unsigned char)r;
+			FontShades[i][j << 1].g = (unsigned char)g;
+			FontShades[i][j << 1].b = (unsigned char)b;
+			FontShades[i][j << 1].a = (unsigned char)0xFF;
 
 			r = CLRR(v.specular);
 			g = CLRG(v.specular);
 			b = CLRB(v.specular);
-			FontShades[i][(j << 1) + 1].r = (uchar)r;
-			FontShades[i][(j << 1) + 1].g = (uchar)g;
-			FontShades[i][(j << 1) + 1].b = (uchar)b;
-			FontShades[i][(j << 1) + 1].a = (uchar)0xFF;
+			FontShades[i][(j << 1) + 1].r = (unsigned char)r;
+			FontShades[i][(j << 1) + 1].g = (unsigned char)g;
+			FontShades[i][(j << 1) + 1].b = (unsigned char)b;
+			FontShades[i][(j << 1) + 1].a = (unsigned char)0xFF;
 		}
 	}
 
@@ -278,8 +278,8 @@ void InitFont()
 void UpdatePulseColour()
 {
 	D3DTLVERTEX v;
-	static uchar PulseCnt = 0;
-	uchar c, r, g, b;
+	static unsigned char PulseCnt = 0;
+	unsigned char c, r, g, b;
 
 	PulseCnt = (PulseCnt + 1) & 0x1F;
 
@@ -395,7 +395,7 @@ long GetStringLength(const char* string, long* top, long* bottom)
 	return length;
 }
 
-void DrawChar(long x, long y, ushort col, CHARDEF* def)
+void DrawChar(long x, long y, unsigned short col, CHARDEF* def)
 {
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT tex;
@@ -445,18 +445,18 @@ void DrawChar(long x, long y, ushort col, CHARDEF* def)
 	tex.v4 = v2;
 
 	tex.drawtype = 1;
-	tex.tpage = ushort(nTextures - 2);
+	tex.tpage = unsigned short(nTextures - 2);
 	tex.flag = 0;
 	nPolyType = 4;
 	AddQuadClippedSorted(v, 0, 1, 2, 3, &tex, 0);
 }
 
-void PrintString(long x, long y, uchar col, const char* string, ushort flags)
+void PrintString(long x, long y, unsigned char col, const char* string, unsigned short flags)
 {
 	CHARDEF* def;
 	CHARDEF* accent;
 	long x2, bottom, l, top, bottom2;
-	uchar s;
+	unsigned char s;
 
 	if (flags & FF_BLINK && GnFrameCounter & 0x10)
 		return;

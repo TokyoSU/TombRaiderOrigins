@@ -40,14 +40,10 @@ void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r
 
 void InitItemDynamicLighting(ITEM_INFO* item)
 {
-	DYNAMIC* dptr;
-
-	for (int i = 0; i < MAX_DYNAMICS; i++)
+	for (auto& dptr : Dynamics)
 	{
-		dptr = &dynamics[i];
-
-		if (dptr->on)
-			SetupDynamicLight(dptr, item);
+		if (dptr.on)
+			SetupDynamicLight(&dptr, item);
 	}
 
 	ambientR = CLRR(item->il.ambient);

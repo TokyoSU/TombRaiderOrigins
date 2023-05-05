@@ -44,9 +44,9 @@ char keymap[256];
 
 static char keymap2[256];
 
-void DXBitMask2ShiftCnt(ulong mask, uchar* shift, uchar* count)
+void DXBitMask2ShiftCnt(unsigned long mask, unsigned char* shift, unsigned char* count)
 {
-	uchar i;
+	unsigned char i;
 
 	for (i = 0; !(mask & 1); i++)
 		mask >>= 1;
@@ -589,7 +589,7 @@ void DXSaveScreen(LPDIRECTDRAWSURFACEX surf, const char* name)
 	short* pSurf;
 	short* pDest;
 	char* pM;
-	ulong val;
+	unsigned long val;
 	static long num = 0;
 	long r, g, b;
 	char buf[16];
@@ -612,9 +612,9 @@ void DXSaveScreen(LPDIRECTDRAWSURFACEX surf, const char* name)
 		pDest = (short*)pM;
 		pSurf += desc.dwHeight * (desc.lPitch / 2);
 
-		for (ulong h = 0; h < desc.dwHeight; h++)
+		for (unsigned long h = 0; h < desc.dwHeight; h++)
 		{
-			for (ulong w = 0; w < desc.dwWidth; w++)
+			for (unsigned long w = 0; w < desc.dwWidth; w++)
 			{
 				val = pSurf[w];
 

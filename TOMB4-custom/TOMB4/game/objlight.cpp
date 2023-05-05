@@ -31,12 +31,12 @@ void ControlPulseLight(short item_number)
 		FlashFadeB = 255;
 		FlashFader = 32;
 		camera.bounce = -128;
-		SOUND_PlayEffect(SFX_BOULDER_FALL, NULL);
-		SOUND_PlayEffect(SFX_EXPLOSION2, NULL);
+		Sound.PlayEffect(SFX_BOULDER_FALL);
+		Sound.PlayEffect(SFX_EXPLOSION2);
 	}
 	else if (item->trigger_flags == 2)
 	{
-		SOUND_PlayEffect(SFX_MAPPER_PYRAMID_OPEN, &item->pos);
+		Sound.PlayEffect(SFX_MAPPER_PYRAMID_OPEN, &item->pos);
 
 		if (rooms[camera.pos.room_number].flags & ROOM_NOT_INSIDE)
 		{

@@ -11,10 +11,10 @@
 #include "d3dmatrix.h"
 #include "3dmath.h"
 #include "audio.h"
+#include "../game/sound.h"
 #include "output.h"
 #include "file.h"
 #include "../game/gameflow.h"
-#include "dxsound.h"
 #include "gamemain.h"
 #include "fmv.h"
 #define SOKOL_IMPL
@@ -61,7 +61,7 @@ void WinProcessCommandLine(LPSTR cmd)
 	char* pCommand;
 	char* p;
 	char* last;
-	ulong l;
+	unsigned long l;
 	long num;
 	char parameter[20];
 
@@ -75,7 +75,7 @@ void WinProcessCommandLine(LPSTR cmd)
 		command->code((char*)"_INIT");
 	}
 
-	for (int i = 0; (ulong)i < strlen(cmd); i++)
+	for (int i = 0; (unsigned long)i < strlen(cmd); i++)
 	{
 		if (toupper(cmd[i]))
 			cmd[i] = toupper(cmd[i]);
@@ -94,7 +94,7 @@ void WinProcessCommandLine(LPSTR cmd)
 				p = 0;
 				l = strlen(pCommand);
 
-				for (int j = 0; (ulong)j < l; j++, pCommand++)
+				for (int j = 0; (unsigned long)j < l; j++, pCommand++)
 				{
 					if (*pCommand != '=')
 						continue;
@@ -102,7 +102,7 @@ void WinProcessCommandLine(LPSTR cmd)
 					p = pCommand + 1;
 					l = strlen(p);
 
-					for (j = 0; (ulong)j < l; j++, p++)
+					for (j = 0; (unsigned long)j < l; j++, p++)
 					{
 						if (*p != ' ')
 							break;
@@ -111,7 +111,7 @@ void WinProcessCommandLine(LPSTR cmd)
 					last = p;
 					l = strlen(last);
 
-					for (j = 0; (ulong)j < l; j++, last++)
+					for (j = 0; (unsigned long)j < l; j++, last++)
 					{
 						if (*last == ' ')
 							break;
@@ -159,7 +159,7 @@ void WinClose()
 	else
 		Log(1, "%s Attempt To Release NULL Ptr", "DirectInput");
 
-	DXDSClose();
+	Sound.Release();
 }
 
 float WinFrameRate()
@@ -190,14 +190,15 @@ float WinFrameRate()
 	return fps;
 }
 
-void WinDisplayString(long x, long y, char* string, ...)
+void WinDisplayString(long x, long y, const char* string, ...)
 {
 	va_list list;
 	char buf[4096];
 
 	va_start(list, string);
 	vsprintf(buf, string, list);
-	PrintString(x, y, 6, buf, 0);
+	va_end(list);
+	PrintString(x, y, 3, buf, 0);
 }
 
 void WinProcMsg()
@@ -468,9 +469,9 @@ bool WinCreateWindow()
 	return 1;
 }
 
-void WinSetStyle(bool fullscreen, ulong& set)
+void WinSetStyle(bool fullscreen, unsigned long& set)
 {
-	ulong style;
+	unsigned long style;
 
 	style = GetWindowLong(App.hWnd, GWL_STYLE);
 
@@ -569,7 +570,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 	if (!App.SoundDisabled)
 	{
-		DXDSCreate();
+		Sound.Init();
 		ACMInit();
 	}
 

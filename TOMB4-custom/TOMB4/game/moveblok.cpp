@@ -75,7 +75,7 @@ void InitialiseMovingBlock(short item_number)
 	ClearMovableBlockSplitters(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 }
 
-static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
+static long TestBlockPush(ITEM_INFO* item, long height, unsigned short quadrant)
 {
 	ITEM_INFO** itemlist;
 	ITEM_INFO* collided;
@@ -155,7 +155,7 @@ static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
 	return 1;
 }
 
-static long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
+static long TestBlockPull(ITEM_INFO* item, long height, unsigned short quadrant)
 {
 	ITEM_INFO** itemlist;
 	ITEM_INFO* collided;
@@ -288,7 +288,7 @@ void MovableBlock(short item_number)
 	ITEM_INFO* item;
 	PHD_VECTOR pos;
 	long offset;
-	ushort quadrant;
+	unsigned short quadrant;
 	short frame, base, room_number;
 	static char sfx = 0;
 
@@ -296,7 +296,7 @@ void MovableBlock(short item_number)
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
-	quadrant = ushort(lara_item->pos.y_rot + 0x2000) / 0x4000;
+	quadrant = unsigned short(lara_item->pos.y_rot + 0x2000) / 0x4000;
 
 	switch (lara_item->anim_number)
 	{
@@ -308,13 +308,13 @@ void MovableBlock(short item_number)
 		{
 			if (sfx)
 			{
-				SOUND_PlayEffect(SFX_PUSH_BLOCK_END, &item->pos, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_PUSH_BLOCK_END, &item->pos, SFXO_ALWAYS);
 				sfx = 0;
 			}
 		}
 		else
 		{
-			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFXO_ALWAYS);
 			sfx = 1;
 		}
 
@@ -377,13 +377,13 @@ void MovableBlock(short item_number)
 		{
 			if (sfx)
 			{
-				SOUND_PlayEffect(SFX_PUSH_BLOCK_END, &item->pos, SFX_ALWAYS);
+				Sound.PlayEffect(SFX_PUSH_BLOCK_END, &item->pos, SFXO_ALWAYS);
 				sfx = 0;
 			}
 		}
 		else
 		{
-			SOUND_PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFX_ALWAYS);
+			Sound.PlayEffect(SFX_PUSHABLE_SOUND, &item->pos, SFXO_ALWAYS);
 			sfx = 1;
 		}
 
@@ -494,7 +494,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 
 			if (TestLaraPosition(MovingBlockBounds, item, laraitem))
 			{
-				if ((ushort(yrot + 0x2000) / 0x4000) + ((ushort)item->pos.y_rot / 0x4000) & 1)
+				if ((unsigned short(yrot + 0x2000) / 0x4000) + ((unsigned short)item->pos.y_rot / 0x4000) & 1)
 					MovingBlockPos.z = bounds[0] - 35;
 				else
 					MovingBlockPos.z = bounds[4] - 35;
@@ -526,7 +526,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
-		quadrant = (ushort)(laraitem->pos.y_rot + 8192) >> 14;
+		quadrant = (unsigned short)(laraitem->pos.y_rot + 8192) >> 14;
 
 		if (input & IN_FORWARD)
 		{
@@ -566,7 +566,7 @@ void InitialisePlanetEffect(short item_number)
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	char* pifl;
-	uchar others[4];
+	unsigned char others[4];
 
 	item = &items[item_number];
 	item->mesh_bits = 0;
@@ -672,7 +672,7 @@ void ControlPlanetEffect(short item_number)
 					TriggerLightning(&pos2, &pos, (GetRandomControl() & 0x1F) + 32, RGBA(0, g, b, 24), 1, 32, 5);
 
 				TriggerLightningGlow(pos.x, pos.y, pos.z, RGBA(0, g, b, (GetRandomControl() & 0x1F) + 48));
-				SOUND_PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&pos, SFX_LAND);
+				Sound.PlayEffect(SFX_ELEC_ARCING_LOOP, (PHD_3DPOS*)&pos, SFXO_LAND);
 				pos = pos2;
 			}
 

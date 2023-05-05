@@ -13,6 +13,6 @@ void RegeneratePickups();
 void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll);
 
-extern uchar NumRPickups;
-extern uchar RPickups[16];
+extern unsigned char NumRPickups;
+extern unsigned char RPickups[16];
 extern char KeyTriggerActive;

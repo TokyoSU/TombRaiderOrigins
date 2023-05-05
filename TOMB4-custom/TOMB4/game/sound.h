@@ -1,56 +1,72 @@
 #pragma once
 #include "../global/types.h"
 
-constexpr auto SOUND_MAX_CHANNELS = 64;
-constexpr auto NO_SAMPLES = -1;
+constexpr auto SOUND_BASS_UNITS = 1.0f / 1024.0f;	// TR->BASS distance unit coefficient
+constexpr auto SOUND_MAXVOL_RADIUS = 1024.0f;		// Max. volume hearing distance
+constexpr auto SOUND_OMNIPRESENT_ORIGIN = Vector3(1.17549e-038f, 1.17549e-038f, 1.17549e-038f);
+constexpr auto SOUND_MAX_CHANNELS = 32;
+constexpr auto SOUND_LEGACY_SOUNDMAP_SIZE = 450;
+constexpr auto SOUND_NEW_SOUNDMAP_MAX_SIZE = 4096;
+constexpr auto SOUND_LEGACY_TRACKTABLE_SIZE = 136;
+constexpr auto SOUND_FLAG_NO_PAN = (1 << 12);	// Unused flag
+constexpr auto SOUND_FLAG_RND_PITCH = (1 << 13);
+constexpr auto SOUND_FLAG_RND_GAIN = (1 << 14);
+constexpr auto SOUND_MAX_PITCH_CHANGE = 0.09f;
+constexpr auto SOUND_MAX_GAIN_CHANGE = 0.0625f;
+constexpr auto SOUND_32BIT_SILENCE_LEVEL = 4.9e-04f;
+constexpr auto SOUND_SAMPLE_FLAGS = (BASS_SAMPLE_MONO | BASS_SAMPLE_FLOAT);
 constexpr auto SOUND_XFADETIME_BGM = 5000;
 constexpr auto SOUND_XFADETIME_BGM_START = 1500;
 constexpr auto SOUND_XFADETIME_ONESHOT = 200;
 constexpr auto SOUND_XFADETIME_CUTSOUND = 100;
 constexpr auto SOUND_XFADETIME_HIJACKSOUND = 50;
+constexpr auto SOUND_BGM_DAMP_COEFFICIENT = 0.5f;
+constexpr auto SOUND_MIN_PARAM_MULTIPLIER = 0.05f;
+constexpr auto SOUND_MAX_PARAM_MULTIPLIER = 5.0f;
 
-enum SFX_FLAGS
+enum SOUND_TRACK_TYPE : int
 {
-	SFX_NORMAL = 0,
-	SFX_WAIT = 1,
-	SFX_RESTART = 2,
-	SFX_LOOPED = 3,
+	STT_ONESHOT = 0,
+	STT_BGM = 1,
+	STT_Count
 };
 
-enum SFX_OPTIONS
+enum SOUND_FILTER_TYPES : int
 {
-	SFX_LAND = 0,
-	SFX_WATER = 1,
-	SFX_ALWAYS = 2,
-	SFX_SETPITCH = 4
+	SF_Reverb,
+	SF_Compressor,
+	SF_Lowpass,
+	SF_Count
 };
 
-extern float SOUND_DistanceToListener(PHD_3DPOS* pos);
-extern float SOUND_DistanceToListener(PHD_VECTOR* pos);
-extern float SOUND_Attenuate(float gain, float distance, float radius);
-extern void SOUND_FreeSlot(int index, unsigned int fadeout = 0);
-extern void SOUND_FreeSample(int index);
-extern int SOUND_GetFreeSlot();
-extern int SOUND_EffectIsPlaying(int index, PHD_3DPOS* pos);
-extern bool SOUND_EffectIsPlaying(int index);
-extern void SOUND_PauseAll();
-extern void SOUND_ResumeAll();
-extern void SOUND_Stop(int index);
-extern void SOUND_Init();
-extern void SOUND_UpdateScene();
-extern void SOUND_StopAll();
-extern bool SOUND_UpdateEffectPosition(int index, PHD_3DPOS* pos, bool force = false);
-extern bool SOUND_UpdateEffectAttributes(int index, float pitch, float gain);
-extern int SOUND_PlayEffect(int index, PHD_3DPOS* pos, int flags = SFX_ALWAYS, float pitchMultiplier = 1.0f, float gainMultiplier = 1.0f);
-extern void SOUND_SayNo();
-extern void SOUND_EndScene();
+enum REVERB_TYPES : int
+{
+	RT_Outside,   // 0x00   no reverberation
+	RT_Small,	  // 0x01   little reverberation
+	RT_Medium,    // 0x02
+	RT_Large,	  // 0x03
+	RT_Pipe,	  // 0x04   highest reverberation, almost never used
+	RT_Count
+};
 
-extern SAMPLE_INFO* sample_infos;
-extern SOUND_SLOT LaSlot[SOUND_MAX_CHANNELS];
-extern short* samples_maps;
-extern long sound_active;
+enum SFX_FLAGS : int
+{
+	SFXF_NORMAL = 0,
+	SFXF_WAIT = 1,
+	SFXF_RESTART = 2,
+	SFXF_LOOPED = 3,
+	SFXF_Count
+};
 
-enum SOUND_EFFECT_NAMES
+enum SFX_OPTIONS : int
+{
+	SFXO_LAND = 0,
+	SFXO_WATER = 1,
+	SFXO_ALWAYS = 2,
+	SFXO_Count
+};
+
+enum SOUND_EFFECT_NAMES : int
 {
 	SFX_LARA_FEET,
 	SFX_LARA_CLIMB2,
@@ -432,3 +448,53 @@ enum SOUND_EFFECT_NAMES
 	SFX_SNOWMOBILE_SHOOT,
 	SFX_SAMPLES_COUNT
 };
+
+class SoundSystem
+{
+public:
+	SoundSystem();
+	~SoundSystem();
+
+	void Init();
+	void Release();
+
+	bool LoadSample(CHAR* buffer, int comp_size, int uncomp_size, int current_index);
+	void FreeSamples();
+
+	void SayNo();
+
+	int PlayEffect(int soundFX, PHD_3DPOS* pos = NULL, SFX_OPTIONS option = SFXO_LAND, float pitchMult = 1.0f, float gainMult = 1.0f);
+	void StopEffect(int soundFX);
+	bool IsSoundEffectPlaying(int soundFX);
+	void StopAllEffects();
+	void PauseAllSounds();
+	void ResumeAllSounds();
+
+	void SetReverbType(REVERB_TYPES reverb);
+	void PlaySoundSources();
+
+	void UpdateScene();
+
+	bool UpdateEffectPosition(int slot, PHD_3DPOS* position, bool force = false);
+	bool UpdateEffectAttributes(int slot, float pitch, float gain);
+
+private:
+	HSTREAM BASS_3D_Mixdown = NULL;
+	HFX BASS_FXHandler[SF_Count]{};
+	//SoundTrackSlot BASS_Soundtrack[STT_Count]{};
+	HSAMPLE SamplePointer[SFX_SAMPLES_COUNT]{};
+	SOUND_SLOT SoundSlot[SOUND_MAX_CHANNELS]{};
+
+	bool CheckBASSError(const char* message, bool verbose, ...);
+
+	int GetFreeSlot();
+	int EffectIsPlaying(int soundFX, PHD_3DPOS* position);
+	void FreeSlot(int slot, unsigned int time = 0);
+	void FreeSample(int index);
+
+	float DistanceToListener(PHD_3DPOS* position);
+	float DistanceToListener(Vector3 position);
+	float Attenuate(float gain, float distance, float radius);
+};
+
+extern SoundSystem Sound;

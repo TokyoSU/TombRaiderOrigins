@@ -9,5 +9,5 @@ void InitialiseVoncroy(short item_number);
 void VoncroyRaceControl(short item_number);
 void VoncroyControl(short item_number);
 
-extern uchar VonCroyCutFlags[64];
+extern unsigned char VonCroyCutFlags[64];
 extern char bVoncroyCutScene;

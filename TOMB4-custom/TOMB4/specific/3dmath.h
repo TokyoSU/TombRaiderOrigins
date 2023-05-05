@@ -12,10 +12,10 @@ void phd_RotYXZpack(long angles);
 void phd_RotYXZ(short y, short x, short z);
 void phd_TranslateAbs(long x, long y, long z);
 void phd_GetVectorAngles(long x, long y, long z, short* angles);
-ulong mGetAngle(long x, long z, long x1, long z1);
+unsigned long mGetAngle(long x, long z, long x1, long z1);
 void AlterFOV(short fov);
 long phd_atan(long x, long y);
-ulong phd_sqrt(ulong num);
+unsigned long phd_sqrt(unsigned long num);
 void ScaleCurrentMatrix(PHD_VECTOR* vec);
 void SetupZRange(long znear, long zfar);
 void InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov, long a, long b);
@@ -28,13 +28,13 @@ extern float FogStart;
 extern float FogEnd;
 
 extern float* mMXPtr;
-extern float mW2V[indices_count];
-extern float fMXStack[20 * indices_count];
+extern float mW2V[MATRIX_COUNT];
+extern float fMXStack[20 * MATRIX_COUNT];
 extern float fcossin_tbl[65536];
 
 extern long* phd_mxptr;
-extern long w2v_matrix[indices_count];
-extern long matrix_stack[20 * indices_count];
+extern long w2v_matrix[MATRIX_COUNT];
+extern long matrix_stack[20 * MATRIX_COUNT];
 
 extern float f_centerx;
 extern float f_centery;
@@ -87,22 +87,22 @@ __inline short phd_cos(long angle)
 
 __inline float fSin(long angle)
 {
-	return fcossin_tbl[(ushort)angle];
+	return fcossin_tbl[(unsigned short)angle];
 }
 
 __inline float fCos(long angle)
 {
-	return fcossin_tbl[ushort(angle + 0x4000)];
+	return fcossin_tbl[unsigned short(angle + 0x4000)];
 }
 
 __inline void mPopMatrix()
 {
-	mMXPtr -= indices_count;
+	mMXPtr -= MATRIX_COUNT;
 }
 
 __inline void phd_PopMatrix()
 {
-	phd_mxptr -= indices_count;
+	phd_mxptr -= MATRIX_COUNT;
 	mPopMatrix();
 }
 

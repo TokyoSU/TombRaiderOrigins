@@ -150,7 +150,7 @@ void LookUpDown();
 void LookLeftRight();
 long UseInventoryItems(ITEM_INFO* item);
 void LaraDeflectEdgeJump(ITEM_INFO* item, COLL_INFO* coll);
-void ApplyVelocityToRope(long node, ushort angle, ushort n);
+void ApplyVelocityToRope(long node, unsigned short angle, unsigned short n);
 long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll);
 long LaraHangRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
 long LaraHangLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);

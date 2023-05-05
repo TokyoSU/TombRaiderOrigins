@@ -91,7 +91,7 @@ void InitialiseSkidoo(short item_number)
 	skinfo->extra_rotation = 0;
 	skinfo->track_mesh = 0;
 	skinfo->pitch = 0;
-	skinfo->armed = true;
+	skinfo->armed = skidoo->trigger_flags & 1;
 }
 
 int SkidooCheckGetOn(short item_number, COLL_INFO* coll)
@@ -138,7 +138,9 @@ void SkidooCollision(short item_number, ITEM_INFO* litem, COLL_INFO* coll)
 		CreateFlare(FLARE_ITEM, 0);
 		undraw_flare_meshes();
 		lara.flare_control_left = 0;
-		lara.request_gun_type = lara.gun_type = LG_NO_ARMS;
+		lara.gun_type = LG_NO_ARMS;
+		lara.request_gun_type = WEAPON_NONE;
+		lara.flare_age = 0;
 	}
 
 	if (geton == 1)
@@ -293,10 +295,10 @@ int SkidooDoDynamics(long height, int fallspeed, long* y)
 	}
 	else
 	{
-		kick = height - *y << 2;
+		kick = (height - *y) << 2;
 		if (kick < SKIDOO_MAX_KICK)
 			kick = SKIDOO_MAX_KICK;
-		fallspeed += (kick - fallspeed >> 3);
+		fallspeed += ((kick - fallspeed) >> 3);
 		if (*y > height)
 			*y = height;
 	}
@@ -453,7 +455,7 @@ int SkidooDynamics(ITEM_INFO* skidoo)
 	collide = SkidooGetCollisionAnim(skidoo, &moved);
 	if (collide)
 	{
-		newspeed = (skidoo->pos.z_pos - old.z) * phd_cos(skinfo->momentum_angle) + (skidoo->pos.x_pos - old.x) * phd_sin(skinfo->momentum_angle) >> W2V_SHIFT;
+		newspeed = ((skidoo->pos.z_pos - old.z) * phd_cos(skinfo->momentum_angle) + (skidoo->pos.x_pos - old.x) * phd_sin(skinfo->momentum_angle)) >> W2V_SHIFT;
 		auto* check_skidoo_item = &items[lara.vehicle];
 		if (check_skidoo_item == skidoo && skidoo->speed > SKIDOO_MAX_SPEED + SKIDOO_ACCELERATION && newspeed < skidoo->speed - 10)
 		{
@@ -591,9 +593,9 @@ void SkidooAnimation(ITEM_INFO* skidoo, int collide, int dead)
 		if (lara_item->current_anim_state != SKID_HIT)
 		{
 			if (collide == SKIDOO_HIT_FRONT)
-				SOUND_PlayEffect(SFX_BIKE_FRONT_IMPACT, &skidoo->pos);
+				Sound.PlayEffect(SFX_BIKE_FRONT_IMPACT, &skidoo->pos);
 			else
-				SOUND_PlayEffect(SFX_BIKE_SIDE_IMPACT, &skidoo->pos);
+				Sound.PlayEffect(SFX_BIKE_SIDE_IMPACT, &skidoo->pos);
 			lara_item->anim_number = objects[SNOWMOBILE_ANIM].anim_index + collide;
 			lara_item->frame_number = anims[lara_item->anim_number].frame_base;
 			lara_item->current_anim_state = lara_item->goal_anim_state = SKID_HIT;
@@ -657,7 +659,7 @@ void SkidooAnimation(ITEM_INFO* skidoo, int collide, int dead)
 		case SKID_FALL:
 			if (skidoo->fallspeed <= 0 || skinfo->left_fallspeed <= 0 || skinfo->right_fallspeed <= 0)
 			{
-				SOUND_PlayEffect(203, &skidoo->pos);
+				Sound.PlayEffect(SFX_SNOWMOBILE_MOVING, &skidoo->pos);
 				lara_item->goal_anim_state = SKID_SIT;
 			}
 			else if (skidoo->fallspeed > DAMAGE_START + DAMAGE_LENGTH)
@@ -669,8 +671,21 @@ void SkidooAnimation(ITEM_INFO* skidoo, int collide, int dead)
 
 void SkidooExplode(ITEM_INFO* skidoo)
 {
-	ExplodingDeath2(skidoo->index, -1, 256);
-	SOUND_PlayEffect(SFX_EXPLOSION2, NULL, SFX_LAND);
+	auto* skinfo = GetSkidooData(skidoo);
+
+	TriggerExplosionSparks(skidoo->pos.x_pos, skidoo->pos.y_pos - 768, skidoo->pos.z_pos, 3, -2, 0, skidoo->room_number);
+	for (int i = 0; i < 2; i++)
+		TriggerExplosionSparks(skidoo->pos.x_pos, skidoo->pos.y_pos - 768, skidoo->pos.z_pos, 3, -1, 0, skidoo->room_number);
+
+	Sound.PlayEffect(SFX_EXPLOSION1, &skidoo->pos);
+	Sound.PlayEffect(SFX_EXPLOSION2, &skidoo->pos);
+
+	if (skinfo != NULL)
+		ExplodingDeath2(skidoo->index, -1, 256, skinfo->armed ? SNOWMOBILE_GUN_SKIN : SNOWMOBILE);
+	else
+		ExplodingDeath2(skidoo->index, -1, 256);
+
+	KillItem(lara.vehicle);
 	lara.vehicle = NO_ITEM;
 }
 
@@ -714,7 +729,7 @@ int SkidooCheckGetOff()
 			lara_item->pos.y_pos -= 200;
 			lara_item->fallspeed = skidoo->fallspeed;
 			lara_item->speed = skidoo->speed;
-			SOUND_PlayEffect(SFX_LARA_FALL, &lara_item->pos, SFX_LAND);
+			Sound.PlayEffect(SFX_LARA_FALL, &lara_item->pos);
 		}
 
 		lara_item->pos.x_rot = lara_item->pos.z_rot = 0;
@@ -746,7 +761,7 @@ void SkidooGuns()
 
 		if (FireWeapon(WEAPON_SNOWMOBILEGUN, lara.target, lara_item, angles))
 		{
-			SOUND_PlayEffect(winfo->sample_num, &lara_item->pos);
+			Sound.PlayEffect(winfo->sample_num, &lara_item->pos);
 			TriggerDynamic(
 				lara_item->pos.x_pos + (phd_sin(lara_item->pos.y_rot) >> (W2V_SHIFT - 10)),
 				lara_item->pos.y_pos - 512,
@@ -821,14 +836,14 @@ int SkidooControl(short item_number)
 	{
 		skinfo->track_mesh = skinfo->track_mesh == 1 ? 2 : 1;
 		skinfo->pitch += (pitch - skinfo->pitch) / 4;
-		auto pitch = std::clamp(0.5f + (float)abs(skinfo->pitch) / (float)SKIDOO_MAX_SPEED, 0.6f, 1.4f);
-		SOUND_PlayEffect(skinfo->pitch ? SFX_SNOWMOBILE_MOVING : SFX_SNOWMOBILE_ACCEL, &skidoo->pos, SFX_ALWAYS, pitch);
+		auto pitch = std::clamp(0.5f + (float)abs(skinfo->pitch) / (float)SKIDOO_MAX_SPEED, 0.6f, 1.2f);
+		Sound.PlayEffect(SFX_SNOWMOBILE_MOVING, &skidoo->pos, SFXO_ALWAYS, pitch);
 	}
 	else
 	{
 		skinfo->track_mesh = 0;
 		if (!drive)
-			SOUND_PlayEffect(SFX_SNOWMOBILE_IDLE, &skidoo->pos);
+			Sound.PlayEffect(SFX_SNOWMOBILE_IDLE, &skidoo->pos);
 		skinfo->pitch = 0;
 	}
 
@@ -837,9 +852,9 @@ int SkidooControl(short item_number)
 	skinfo->right_fallspeed = SkidooDoDynamics(hfr, skinfo->right_fallspeed, &fr.y);
 	skidoo->fallspeed = SkidooDoDynamics(height, skidoo->fallspeed, &skidoo->pos.y_pos);
 
-	height = fl.y + fr.y >> 1;
-	x_rot = phd_atan(SKIDOO_FRONT, skidoo->pos.y_pos - height);
-	z_rot = phd_atan(SKIDOO_SIDE, height - fl.y);
+	height = (fl.y + fr.y) >> 1;
+	x_rot = (short)phd_atan(SKIDOO_FRONT, skidoo->pos.y_pos - height);
+	z_rot = (short)phd_atan(SKIDOO_SIDE, height - fl.y);
 
 	skidoo->pos.x_rot += (x_rot - skidoo->pos.x_rot) >> 1;
 	skidoo->pos.z_rot += (z_rot - skidoo->pos.z_rot) >> 1;

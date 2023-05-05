@@ -501,7 +501,7 @@ void InitialisePickUp(short item_number)
 
 	if (item->trigger_flags & 128)
 	{
-		RPickups[NumRPickups] = (uchar)item_number;
+		RPickups[NumRPickups] = (unsigned char)item_number;
 		NumRPickups++;
 	}
 
@@ -566,29 +566,21 @@ void init_all_ropes()
 
 void InitialiseEffects()
 {
-	memset(spark, 0, sizeof(spark));
-	memset(fire_spark, 0, sizeof(fire_spark));
-	memset(smoke_spark, 0, sizeof(smoke_spark));
-	memset(Gunshells, 0, sizeof(Gunshells));
-	memset(Gunflashes, 0, sizeof(Gunflashes));
+	Dynamics.clear();
+	Sparks.clear();
+	FireSparks.clear();
+	SmokeSparks.clear();
+	Gunshells.clear();
+	Gunflashes.clear();
+	Bloods.clear();
+	Bubbles.clear();
+	Drips.clear();
+	ShockWaves.clear();
+
 	memset(debris, 0, sizeof(debris));
-	memset(blood, 0, sizeof(blood));
 	memset(splashes, 0, sizeof(splashes));
 	memset(ripples, 0, sizeof(ripples));
-	memset(Bubbles, 0, sizeof(Bubbles));
-	memset(Drips, 0, sizeof(Drips));
-	memset(ShockWaves, 0, sizeof(ShockWaves));
 
-	for (int i = 0; i < 256; i++)
-		spark[i].Dynamic = -1;
-
-	next_fire_spark = 1;
-	next_smoke_spark = 0;
-	next_gunshell = 0;
-	next_bubble = 0;
-	next_drip = 0;
-	next_debris = 0;
-	next_blood = 0;
 	ClearScarabs();
 
 	for (int i = 0; i < 64; i++)

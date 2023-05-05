@@ -74,7 +74,7 @@ void* game_malloc(long size)
 	}
 }
 
-void Log(ulong type, const char* s, ...)
+void Log(unsigned long type, const char* s, ...)
 {
 #ifdef DO_LOG
 	va_list list;
