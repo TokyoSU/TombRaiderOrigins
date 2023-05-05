@@ -517,27 +517,31 @@ long DXCreateViewport(LPDIRECT3DX d3d, LPDIRECT3DDEVICEX device, long w, long h,
 	return 1;
 }
 
-HRESULT DXShowFrame()
+HRESULT DXShowFrame(RECT& lpViewport)
 {
-	if (G_dxptr->lpPrimaryBuffer->IsLost())
+	if (G_dxptr->lpPrimaryBuffer->IsLost() != DD_OK)
 	{
-		Log(3, "Restored Primary Buffer");
+		Log(3, "Restoring Primary Buffer");
 		DXAttempt(G_dxptr->lpPrimaryBuffer->Restore());
 	}
 
-	if (G_dxptr->lpBackBuffer->IsLost())
+	if (G_dxptr->lpBackBuffer->IsLost() != DD_OK)
 	{
-		Log(3, "Restored Back Buffer");
+		Log(3, "Restoring Back Buffer");
 		DXAttempt(G_dxptr->lpBackBuffer->Restore());
 	}
 
 	if (!(App.dx.Flags & 0x82))
 		return 0;
 
-	if (G_dxptr->Flags & 2)
-		return DXAttempt(G_dxptr->lpPrimaryBuffer->Blt(&G_dxptr->rScreen, G_dxptr->lpBackBuffer, &G_dxptr->rViewport, DDBLT_WAIT, 0));
-	else
-		return DXAttempt(G_dxptr->lpPrimaryBuffer->Flip(0, DDFLIP_WAIT));
+	RECT* screen = NULL;
+	if (!(G_dxptr->Flags & 1))
+		screen = &G_dxptr->rScreen;
+
+	HRESULT hr = DXAttempt(G_dxptr->lpPrimaryBuffer->Blt(screen, G_dxptr->lpBackBuffer, &lpViewport, DDBLT_WAIT, 0));
+	if (!(G_dxptr->Flags & 1))
+		hr = DXAttempt(G_dxptr->lpPrimaryBuffer->Flip(G_dxptr->lpBackBuffer, DDFLIP_WAIT));
+	return hr;
 }
 
 void DXMove(long x, long y)
@@ -550,7 +554,7 @@ void DXMove(long x, long y)
 
 void DXInitKeyboard(HWND hwnd, HINSTANCE hinstance)
 {
-	IDirectInput* dinput;
+	IDirectInput* dinput = nullptr;
 	IDirectInputDevice* Keyboard;
 
 	DXAttempt(DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&dinput, 0));
@@ -773,7 +777,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 		hDC = GetDC(desktop);
 		ReleaseDC(desktop, hDC);
 		dev.dmBitsPerPel = G_dxinfo->DDInfo[G_dxinfo->nDD].D3DDevices[G_dxinfo->nD3D].DisplayModes[G_dxinfo->nDisplayMode].bpp;
-		dev.dmSize = 148;	//sizeof(DEVMODE) is 156????
+		dev.dmSize = sizeof(DEVMODE);
 		dev.dmFields = DM_BITSPERPEL;
 		ChangeDisplaySettings(&dev, 0);
 	}
@@ -783,6 +787,7 @@ long DXCreate(long w, long h, long bpp, long Flags, DXPTR* dxptr, HWND hWnd, lon
 
 	if (Flags & 1)
 	{
+		Log(5, "DXCreate: Fullscreen Mode");
 		desc.dwBackBufferCount = 1;
 		desc.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
 		desc.ddsCaps.dwCaps = DDSCAPS_COMPLEX | DDSCAPS_FLIP | DDSCAPS_PRIMARYSURFACE | DDSCAPS_3DDEVICE | DDSCAPS_VIDEOMEMORY;

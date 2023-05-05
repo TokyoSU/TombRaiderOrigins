@@ -301,12 +301,12 @@ int SoundSystem::EffectIsPlaying(int soundFX, PHD_3DPOS* position)
 
 void SoundSystem::SetReverbType(REVERB_TYPES reverb)
 {
-	static REVERB_TYPES currentReverb = RT_Outside;
-	if (currentReverb == RT_Outside || reverb != currentReverb)
+	static REVERB_TYPES CurrentReverb = RT_Outside;
+	if (reverb != CurrentReverb)
 	{
-		currentReverb = reverb;
-		if (currentReverb < RT_Count)
-			BASS_FXSetParameters(BASS_FXHandler[SF_Reverb], &BASS_ReverbTypes[(int)currentReverb]);
+		CurrentReverb = reverb;
+		if (CurrentReverb < RT_Count)
+			BASS_FXSetParameters(BASS_FXHandler[SF_Reverb], &BASS_ReverbTypes[(int)CurrentReverb]);
 	}
 
 }
@@ -539,6 +539,29 @@ bool SoundSystem::UpdateEffectAttributes(int slot, float pitch, float gain)
 	BASS_ChannelSetAttribute(SoundSlot[slot].channel, BASS_ATTRIB_VOL, gain);
 
 	return true;
+}
+
+void SoundSystem::CreateSoundForFMV(int sampleRate)
+{
+	BASS_FMV_Stream = BASS_StreamCreate(sampleRate, 2, BASS_SAMPLE_FLOAT, STREAMPROC_PUSH, NULL);
+	CheckBASSError("Creating sound stream for fmv.", true);
+}
+
+void SoundSystem::UpdateSoundForFMV(LPVOID data, int length)
+{
+	if (data == NULL || BASS_FMV_Stream == 0)
+		return;
+	BASS_StreamPutData(BASS_FMV_Stream, data, sizeof(float) * length * 2);
+	CheckBASSError("Updating and playing the sound for fmv.", true);
+}
+
+void SoundSystem::FreeSoundForFMV()
+{
+	if (BASS_FMV_Stream)
+	{
+		BASS_StreamFree(BASS_FMV_Stream);
+		BASS_FMV_Stream = 0;
+	}
 }
 
 bool SoundSystem::CheckBASSError(const char* message, bool verbose, ...)

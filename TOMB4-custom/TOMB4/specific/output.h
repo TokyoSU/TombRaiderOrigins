@@ -18,7 +18,7 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, lon
 HRESULT _LoadBitmap(LPDIRECTDRAWSURFACEX surf, LPCSTR name);
 void do_boot_screen(long language);
 void S_AnimateTextures(long n);
-long S_DumpScreen();
+long S_DumpScreen(RECT& viewport);
 void S_OutputPolyList();
 void StashSkinVertices(long node);
 void SkinVerticesToScratch(long node);

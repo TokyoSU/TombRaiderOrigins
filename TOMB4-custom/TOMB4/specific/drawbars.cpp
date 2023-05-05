@@ -13,6 +13,7 @@
 #include "polyinsert.h"
 #include "../tomb4/tomb4.h"
 #include "texture.h"
+#include "dxshell.h"
 
 static float loadbar_pos;
 static long loadbar_maxpos;
@@ -541,6 +542,6 @@ void S_LoadBar()
 
 		SortPolyList(SortCount, SortList);
 		DrawSortList();
-		S_DumpScreen();
+		S_DumpScreen(G_dxptr->rViewport);
 	}
 }

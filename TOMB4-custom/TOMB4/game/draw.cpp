@@ -26,6 +26,7 @@
 #include "footprnt.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "../specific/dxshell.h"
 
 static BITE_INFO EnemyBites[2] =
 {
@@ -963,7 +964,7 @@ long DrawPhaseGame()
 	DrawRooms(camera.pos.room_number);
 	DrawGameInfo(1);
 	S_OutputPolyList();
-	camera.number_frames = S_DumpScreen();
+	camera.number_frames = S_DumpScreen(G_dxptr->rViewport);
 	S_AnimateTextures(camera.number_frames);
 	return camera.number_frames;
 }

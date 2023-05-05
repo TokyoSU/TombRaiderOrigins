@@ -197,7 +197,7 @@ static long S_Death()
 		}
 
 		S_OutputPolyList();
-		camera.number_frames = S_DumpScreen();
+		camera.number_frames = S_DumpScreen(G_dxptr->rViewport);
 	}
 
 	DeathMenuActive = 0;

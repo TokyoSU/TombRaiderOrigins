@@ -3172,7 +3172,7 @@ long S_CallInventory2()
 			val = 1;
 
 		S_OutputPolyList();
-		camera.number_frames = S_DumpScreen();
+		camera.number_frames = S_DumpScreen(G_dxptr->rViewport);
 
 		if (loading_or_saving)
 		{

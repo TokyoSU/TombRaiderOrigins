@@ -20,7 +20,7 @@ long DXCreateSurface(LPDIRECTDRAWX dd, LPDDSURFACEDESCX desc, LPDIRECTDRAWSURFAC
 long DXSetVideoMode(LPDIRECTDRAWX dd, long dwWidth, long dwHeight, long dwBPP);
 long DXCreateD3DDevice(LPDIRECT3DX d3d, GUID guid, LPDIRECTDRAWSURFACEX surf, LPDIRECT3DDEVICEX* device);
 long DXCreateViewport(LPDIRECT3DX d3d, LPDIRECT3DDEVICEX device, long w, long h, LPDIRECT3DVIEWPORTX* viewport);
-HRESULT DXShowFrame();
+HRESULT DXShowFrame(RECT& lpViewport);
 void DXMove(long x, long y);
 void DXSaveScreen(LPDIRECTDRAWSURFACEX surf, const char* name);
 void DXClose();

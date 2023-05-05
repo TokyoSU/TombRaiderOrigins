@@ -16,12 +16,14 @@
 #include "function_stubs.h"
 #include "output.h"
 #include "time.h"
+
 #pragma warning(push)
 #pragma warning(disable: 4244)
 #define PL_MPEG_IMPLEMENTATION
 #include "../tomb4/pl_mpeg.h"
 #pragma warning(pop)
 #include <sokol_time.h>
+#include "../game/sound.h"
 
 static unsigned char* FmvData;
 static HSTREAM FmvStream = 0;
@@ -29,14 +31,49 @@ static uint64_t timer;
 
 static void FmvVideo(plm_t* self, plm_frame_t* frame, void* user)
 {
-	plm_frame_to_rgb(frame, FmvData, frame->width * 3);
+	plm_frame_to_rgba(frame, FmvData, frame->width * 4);
 
+	if (App.dx.lpBackBuffer != NULL)
+	{
+		RECT viewport{};
+		viewport.left = 0;
+		viewport.right = frame->width;
+		viewport.bottom = frame->height;
+		viewport.top = 0;
+		DDSURFACEDESC2 ddsd;
+		ZeroMemory(&ddsd, sizeof(ddsd));
+		ddsd.dwSize = sizeof(ddsd);
+		if SUCCEEDED(App.dx.lpBackBuffer->Lock(NULL, &ddsd, DDLOCK_WAIT, 0))
+		{
+			int width = frame->width;
+			int height = frame->height;
+			const BYTE* pPixelData = FmvData;
+			BYTE* pTop = (BYTE*)ddsd.lpSurface;
+			BYTE* pTopLeft = pTop;
+			for (int h = 0; h < height; h++)
+			{
+				BYTE* pDest = pTopLeft;
+				const BYTE* pSource = pPixelData + (4 * width * h);
+				for (int w = 0; w < width; w++)
+				{
+					pDest[0] = pSource[2];
+					pDest[1] = pSource[1];
+					pDest[2] = pSource[0];
+					pDest[3] = pSource[3];
+					pSource += 4;
+					pDest += 4;
+				}
+				pTopLeft += (4 * ddsd.dwWidth);
+			}
+			DXAttempt(App.dx.lpBackBuffer->Unlock(NULL));
+			S_DumpScreen(viewport);
+		}
+	}
 }
 
 static void FmvAudio(plm_t* self, plm_samples_t* samples, void* user)
 {
-	if (FmvStream != NULL)
-		BASS_StreamPutData(FmvStream, samples->interleaved, sizeof(float) * samples->count * 2);
+	Sound.UpdateSoundForFMV(samples->interleaved, samples->count);
 }
 
 long PlayFmvNow(long num)
@@ -61,6 +98,7 @@ long PlayFmvNow(long num)
 	if (file == NULL)
 		return 0;
 	int samplerate = plm_get_samplerate(file);
+	double framerate = plm_get_framerate(file);
 	plm_set_video_decode_callback(file, FmvVideo, NULL);
 	plm_set_audio_decode_callback(file, FmvAudio, NULL);
 	plm_set_loop(file, FALSE);
@@ -69,20 +107,12 @@ long PlayFmvNow(long num)
 
 	if (plm_get_num_audio_streams(file) > 0)
 	{
-		FmvStream = BASS_StreamCreate(44100, 2, BASS_SAMPLE_FLOAT, STREAMPROC_PUSH, NULL);
-		if (FmvStream != NULL)
-		{
-			BASS_ChannelPlay(FmvStream, FALSE);
-		}
-		else
-		{
-			Log(1, "PlayFmvNow, failed to setup a sound stream !");
-		}
+		Sound.CreateSoundForFMV(samplerate);
 		plm_set_audio_lead_time(file, 4096.0 / (double)samplerate);
 	}
 
 	int num_pixels = plm_get_width(file) * plm_get_height(file);
-	FmvData = (unsigned char*)malloc(num_pixels * 3);
+	FmvData = (unsigned char*)malloc(num_pixels * 4);
 
 	HWInitialise();
 	ClearSurfaces();
@@ -91,12 +121,13 @@ long PlayFmvNow(long num)
 	S_UpdateInput();
 	while (!plm_has_ended(file))
 	{
+		S_UpdateInput();
 		if (input & IN_OPTION || MainThread.ended)
 			break;
 		double frame = stm_sec(stm_laptime(&timer));
+		if (frame >= 1.0 / framerate)
+			frame = 1.0 / framerate;
 		plm_decode(file, frame);
-		S_UpdateInput();
-		S_DumpScreen();
 	}
 
 	if (file != NULL)
@@ -111,11 +142,7 @@ long PlayFmvNow(long num)
 		FmvData = NULL;
 	}
 
-	if (FmvStream != NULL)
-	{
-		BASS_StreamFree(FmvStream);
-		FmvStream = NULL;
-	}
+	Sound.FreeSoundForFMV();
 
 	HWInitialise();
 	ClearSurfaces();

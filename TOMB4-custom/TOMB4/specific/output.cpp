@@ -1013,7 +1013,7 @@ void RenderLoadPic(long unused)
 		}
 
 		S_OutputPolyList();
-		S_DumpScreen();
+		S_DumpScreen(G_dxptr->rViewport);
 
 	} while (DoFade != 2);
 
@@ -1032,7 +1032,7 @@ void RenderLoadPic(long unused)
 	}
 
 	S_OutputPolyList();
-	S_DumpScreen();
+	S_DumpScreen(G_dxptr->rViewport);
 	lara.poisoned = poisoned;
 	GlobalFogOff = 0;
 }
@@ -1545,44 +1545,44 @@ void do_boot_screen(long language)
 		case ENGLISH:
 		case DUTCH:
 			_LoadBitmap(App.dx.lpBackBuffer, "uk.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "uk.bmp");
+			S_DumpScreen(G_dxptr->rViewport);
+			//_LoadBitmap(App.dx.lpBackBuffer, "uk.bmp");
 			break;
 
 		case FRENCH:
 			_LoadBitmap(App.dx.lpBackBuffer, "france.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "france.bmp");
+			S_DumpScreen(G_dxptr->rViewport);
+			//_LoadBitmap(App.dx.lpBackBuffer, "france.bmp");
 			break;
 
 		case GERMAN:
 			_LoadBitmap(App.dx.lpBackBuffer, "germany.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "germany.bmp");
+			S_DumpScreen(G_dxptr->rViewport);
+			//_LoadBitmap(App.dx.lpBackBuffer, "germany.bmp");
 			break;
 
 		case ITALIAN:
 			_LoadBitmap(App.dx.lpBackBuffer, "italy.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "italy.bmp");
+			S_DumpScreen(G_dxptr->rViewport);
+			//_LoadBitmap(App.dx.lpBackBuffer, "italy.bmp");
 			break;
 
 		case SPANISH:
 			_LoadBitmap(App.dx.lpBackBuffer, "spain.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "spain.bmp");
+			S_DumpScreen(G_dxptr->rViewport);
+			//_LoadBitmap(App.dx.lpBackBuffer, "spain.bmp");
 			break;
 
 		case US:
 			_LoadBitmap(App.dx.lpBackBuffer, "usa.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "usa.bmp");
+			S_DumpScreen(G_dxptr->rViewport);
+			//_LoadBitmap(App.dx.lpBackBuffer, "usa.bmp");
 			break;
 
 		case JAPAN:
 			_LoadBitmap(App.dx.lpBackBuffer, "japan.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "japan.bmp");
+			S_DumpScreen(G_dxptr->rViewport);
+			//_LoadBitmap(App.dx.lpBackBuffer, "japan.bmp");
 			break;
 	}
 }
@@ -1652,7 +1652,7 @@ void S_AnimateTextures(long n)
 	}
 }
 
-long S_DumpScreen()
+long S_DumpScreen(RECT& viewport)
 {
 	long n;
 
@@ -1666,16 +1666,13 @@ long S_DumpScreen()
 
 	GnFrameCounter++;
 	_EndScene();
-	DXShowFrame();
+	DXShowFrame(viewport);
 	App.dx.DoneBlit = 1;
 	return n;
 }
 
 void S_OutputPolyList()
 {
-	D3DRECT r;
-	long h;
-
 	WinFrameRate();
 	nPolys = 0;
 	nClippedPolys = 0;
@@ -1693,8 +1690,27 @@ void S_OutputPolyList()
 			resChangeCounter = 0;
 	}
 
-	WinDisplayString(40, 50, "Sparks: %d", Sparks.size());
-	WinDisplayString(40, 120, "SmokeSparks: %d", SmokeSparks.size());
+	constexpr auto MAX_EFFECTS_LIMITS = 1024;
+	static bool keyMap_effect = false;
+	if (keymap[DIK_F3])
+		keyMap_effect = !keyMap_effect;
+
+	if (keyMap_effect)
+	{
+		WinDisplayString(40, 50, Sparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Sparks: %d", Sparks.size());
+		WinDisplayString(40, 100, SmokeSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Smokes: %d", SmokeSparks.size());
+		WinDisplayString(40, 150, FireSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Fires: %d", FireSparks.size());
+		WinDisplayString(40, 200, Lightning.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Lightnings: %d", Lightning.size());
+		WinDisplayString(40, 250, Gunshells.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Gunshells: %d", Gunshells.size());
+		WinDisplayString(40, 300, Gunflashes.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Gunflashes: %d", Gunflashes.size());
+		WinDisplayString(40, 350, Drips.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Drips: %d", Drips.size());
+		WinDisplayString(40, 400, Bubbles.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bubbles: %d", Bubbles.size());
+		WinDisplayString(40, 450, ShockWaves.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "ShockWaves: %d", ShockWaves.size());
+		WinDisplayString(40, 500, Bloods.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bloods: %d", Bloods.size());
+		WinDisplayString(40, 550, Fires.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "FireList: %d", Fires.size());
+		
+	}
+
 
 	if (App.dx.lpZBuffer)
 		DrawBuckets();
@@ -1712,6 +1728,7 @@ void S_OutputPolyList()
 
 	if (App.dx.lpZBuffer)
 	{
+		D3DRECT r{};
 		r.x1 = App.dx.rViewport.left;
 		r.y1 = App.dx.rViewport.top;
 		r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
@@ -1739,7 +1756,7 @@ void S_OutputPolyList()
 
 	if (FadeScreenHeight)
 	{
-		h = long((float)phd_winymax / 256.0F) * FadeScreenHeight;
+		long h = long((float)phd_winymax / 256.0F) * FadeScreenHeight;
 		DrawPsxTile(0, phd_winwidth | (h << 16), 0x62FFFFFF, 0, 0);
 		DrawPsxTile(phd_winheight - h, phd_winwidth | (h << 16), 0x62FFFFFF, 0, 0);
 	}

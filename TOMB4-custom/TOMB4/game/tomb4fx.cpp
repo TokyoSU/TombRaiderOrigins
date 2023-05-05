@@ -1218,6 +1218,8 @@ void DrawGunflashes()
 
 	GlobalAmbient = oldGlobalAmbient;
 	phd_PopMatrix();
+
+	Gunflashes.clear();
 }
 
 void UpdateBlood()

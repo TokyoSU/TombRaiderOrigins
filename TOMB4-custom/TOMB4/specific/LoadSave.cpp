@@ -610,7 +610,7 @@ long S_LoadSave(long load_or_save, long mono, long inv_active)
 		ret = DoLoadSave(load_or_save);
 		UpdatePulseColour();
 		S_OutputPolyList();
-		S_DumpScreen();
+		S_DumpScreen(G_dxptr->rViewport);
 
 		if (ret >= 0)
 		{
@@ -965,7 +965,7 @@ long S_PauseMenu()
 		ret = S_DisplayPauseMenu(0);
 		UpdatePulseColour();
 		S_OutputPolyList();
-		S_DumpScreen();
+		S_DumpScreen(G_dxptr->rViewport);
 
 		if (ret == 1)
 			break;

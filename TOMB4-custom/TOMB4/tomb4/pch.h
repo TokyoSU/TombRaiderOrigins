@@ -32,5 +32,6 @@ using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 extern void WinDisplayString(long x, long y, const char* string, ...);
+extern void WinDisplayString(long x, long y, unsigned char flags, const char* string, ...);
 
 #endif //PCH_H

@@ -198,7 +198,18 @@ void WinDisplayString(long x, long y, const char* string, ...)
 	va_start(list, string);
 	vsprintf(buf, string, list);
 	va_end(list);
-	PrintString(x, y, 3, buf, 0);
+	PrintString(x, y, 0, buf, 0);
+}
+
+void WinDisplayString(long x, long y, unsigned char flags, const char* string, ...)
+{
+	va_list list;
+	char buf[4096];
+
+	va_start(list, string);
+	vsprintf(buf, string, list);
+	va_end(list);
+	PrintString(x, y, flags, buf, 0);
 }
 
 void WinProcMsg()
@@ -427,14 +438,16 @@ void ClearSurfaces()
 	r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
 
 	if (App.dx.Flags & 0x80)
+	{
 		DXAttempt(App.dx.lpViewport->Clear2(1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
-
-	S_DumpScreen();
+		S_DumpScreen(G_dxptr->rViewport);
+	}
 
 	if (App.dx.Flags & 0x80)
+	{
 		DXAttempt(App.dx.lpViewport->Clear2(1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
-
-	S_DumpScreen();
+		S_DumpScreen(G_dxptr->rViewport);
+	}
 }
 
 bool WinRegisterWindow(HINSTANCE hinstance)

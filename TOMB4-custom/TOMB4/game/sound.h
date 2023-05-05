@@ -478,7 +478,12 @@ public:
 	bool UpdateEffectPosition(int slot, PHD_3DPOS* position, bool force = false);
 	bool UpdateEffectAttributes(int slot, float pitch, float gain);
 
+	void CreateSoundForFMV(int sampleRate);
+	void UpdateSoundForFMV(LPVOID data, int length);
+	void FreeSoundForFMV();
+
 private:
+	HSTREAM BASS_FMV_Stream = NULL;
 	HSTREAM BASS_3D_Mixdown = NULL;
 	HFX BASS_FXHandler[SF_Count]{};
 	//SoundTrackSlot BASS_Soundtrack[STT_Count]{};
