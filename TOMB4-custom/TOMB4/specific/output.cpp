@@ -31,6 +31,7 @@
 #include "game/spotcam.h"
 #include "game/effect2.h"
 #include "tomb4/tomb4.h"
+#include "input.h"
 
 D3DTLVERTEX SkinVerts[40][12];
 short SkinClip[40][12];
@@ -1671,6 +1672,30 @@ long S_DumpScreen(RECT& viewport)
 	return n;
 }
 
+static void S_ShowEffectCountOnScreen()
+{
+	constexpr auto MAX_EFFECTS_LIMITS = 1024;
+	static bool keyMap_effect = false;
+	if (keymap[DIK_F3])
+		keyMap_effect = !keyMap_effect;
+	if (keyMap_effect)
+	{
+		int i = 50;
+		WinDisplayString(40, i * 1, Sparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Sparks: %d", Sparks.size());
+		WinDisplayString(40, i * 2, SmokeSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Smokes: %d", SmokeSparks.size());
+		WinDisplayString(40, i * 3, FireSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Fires: %d", FireSparks.size());
+		WinDisplayString(40, i * 4, Lightning.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Lightnings: %d", Lightning.size());
+		WinDisplayString(40, i * 5, Gunshells.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Gunshells: %d", Gunshells.size());
+		WinDisplayString(40, i * 6, Gunflashes.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Gunflashes: %d", Gunflashes.size());
+		WinDisplayString(40, i * 7, Drips.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Drips: %d", Drips.size());
+		WinDisplayString(40, i * 8, Bubbles.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bubbles: %d", Bubbles.size());
+		WinDisplayString(40, i * 9, ShockWaves.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "ShockWaves: %d", ShockWaves.size());
+		WinDisplayString(40, i * 10, Bloods.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bloods: %d", Bloods.size());
+		WinDisplayString(40, i * 11, Fires.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Fires2: %d", Fires.size());
+		WinDisplayString(40, i * 12, Footprints.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Footprints: %d", Footprints.size());
+	}
+}
+
 void S_OutputPolyList()
 {
 	WinFrameRate();
@@ -1685,33 +1710,11 @@ void S_OutputPolyList()
 	{
 		WinDisplayString(8, App.dx.dwRenderHeight - 8, (char*)"%dx%d", App.dx.dwRenderWidth, App.dx.dwRenderHeight);
 		resChangeCounter -= long(30 / App.fps);
-
 		if (resChangeCounter < 0)
 			resChangeCounter = 0;
 	}
 
-	constexpr auto MAX_EFFECTS_LIMITS = 1024;
-	static bool keyMap_effect = false;
-	if (keymap[DIK_F3])
-		keyMap_effect = !keyMap_effect;
-
-	if (keyMap_effect)
-	{
-		WinDisplayString(40, 50, Sparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Sparks: %d", Sparks.size());
-		WinDisplayString(40, 100, SmokeSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Smokes: %d", SmokeSparks.size());
-		WinDisplayString(40, 150, FireSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Fires: %d", FireSparks.size());
-		WinDisplayString(40, 200, Lightning.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Lightnings: %d", Lightning.size());
-		WinDisplayString(40, 250, Gunshells.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Gunshells: %d", Gunshells.size());
-		WinDisplayString(40, 300, Gunflashes.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Gunflashes: %d", Gunflashes.size());
-		WinDisplayString(40, 350, Drips.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Drips: %d", Drips.size());
-		WinDisplayString(40, 400, Bubbles.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bubbles: %d", Bubbles.size());
-		WinDisplayString(40, 450, ShockWaves.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "ShockWaves: %d", ShockWaves.size());
-		WinDisplayString(40, 500, Bloods.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bloods: %d", Bloods.size());
-		WinDisplayString(40, 550, Fires.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Fires2: %d", Fires.size());
-		WinDisplayString(40, 600, Footprints.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Footprints: %d", Footprints.size());
-	}
-
-
+	S_ShowEffectCountOnScreen();
 	if (App.dx.lpZBuffer)
 		DrawBuckets();
 
