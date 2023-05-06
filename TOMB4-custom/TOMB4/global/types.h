@@ -1228,9 +1228,9 @@ struct SPARKS
 	long x = 0;
 	long y = 0;
 	long z = 0;
-	short Xvel = 0;
-	short Yvel = 0;
-	short Zvel = 0;
+	long Xvel = 0;
+	long Yvel = 0;
+	long Zvel = 0;
 	short Gravity = 0;
 	short RotAng = 0;
 	short Flags = 0;
@@ -1239,7 +1239,7 @@ struct SPARKS
 	unsigned char Size = 0;
 	unsigned char Friction = 0;
 	unsigned char Scalar = 0;
-	unsigned char Def = 0;
+	short Def = 0;
 	char RotAdd = 0;
 	char MaxYvel = 0;
 	unsigned char On = 0;
@@ -1258,10 +1258,10 @@ struct SPARKS
 	unsigned char Life = 0;
 	unsigned char TransType = 0;
 	unsigned char extras = 0;
-	char Dynamic = 0;
-	unsigned char FxObj = 0;
-	unsigned char RoomNumber = 255;
-	unsigned char NodeNumber = 0;
+	long Dynamic = 0;
+	long FxObj = 0;
+	short RoomNumber = 255;
+	short NodeNumber = 0;
 
 	SPARKS() {}
 };
@@ -2032,7 +2032,8 @@ struct SMOKE_SPARKS
 	unsigned char Size = 0;
 	unsigned char Friction = 0;
 	unsigned char Scalar = 0;
-	unsigned char Def = 0;
+	short Def = 0;
+	short OriginalDef = 0;
 	char RotAdd = 0;
 	char MaxYvel = 0;
 	unsigned char On = 0;

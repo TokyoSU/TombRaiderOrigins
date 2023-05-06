@@ -18,8 +18,7 @@
 #include "game/gameflow.h"
 #include "tomb4/tomb4.h"
 
-static std::vector<ROOM_DYNAMIC> RoomDynamics;
-
+std::vector<ROOM_DYNAMIC> RoomDynamics;
 MESH_DATA** mesh_vtxbuf;
 TEXTUREBUCKET Bucket[20];
 float clip_left;
@@ -35,8 +34,6 @@ long water_color_B = 255;
 
 void ProcessRoomDynamics(ROOM_INFO* r)
 {
-	RoomDynamics.clear();
-
 	// Collect dynamic lights for room lighting
 	for (auto& d : Dynamics)
 	{

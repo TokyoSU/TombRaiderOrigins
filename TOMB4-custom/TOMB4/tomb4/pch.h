@@ -27,7 +27,10 @@
 #include <directxtk/SimpleMath.h>
 
 #include "resource.h"
+
 #define ONE_DEGREE 182
+constexpr short ANGLE(short value) { return value * ONE_DEGREE; }
+constexpr short DISTANCE(int value) { return value * 1024; }
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

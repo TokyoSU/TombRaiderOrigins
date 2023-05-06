@@ -66,9 +66,6 @@ static long CheckForHoldingState(long state)
 	return 0;
 }
 
-constexpr short ANGLE(short value) { return value * 182; }
-constexpr short DISTANCE(int value) { return value * 1024; }
-
 void InitialiseWeaponArray()
 {
 	WEAPON_INFO none; // WEAPON_NONE
@@ -164,7 +161,7 @@ void InitialiseWeaponArray()
 	magnum.setRecoilFrame(9);
 	magnum.setFlashTime(3);
 	magnum.setDrawFrame(0);
-	magnum.setShotSample(SFX_LARA_FIRE);
+	magnum.setShotSample(SFX_MAGNUM_FIRE);
 	weapons.push_back(magnum);
 
 	WEAPON_INFO autopistols; // WEAPON_AUTOPISTOLS

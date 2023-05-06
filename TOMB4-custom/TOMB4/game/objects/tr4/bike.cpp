@@ -293,7 +293,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 		sptr.Flags = 522;
 
 	sptr.Scalar = 1;
-	sptr.Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+	sptr.Def = objects[DEFAULT_SPRITES].mesh_index;
 	sptr.Gravity = -4 - (GetRandomControl() & 3);
 	sptr.MaxYvel = -8 - (GetRandomControl() & 7);
 	sptr.dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);

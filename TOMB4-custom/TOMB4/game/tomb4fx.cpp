@@ -283,9 +283,9 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	SMOKE_SPARKS sptr;
 	sptr.On = 1;
 	sptr.sShade = 0;
-	sptr.dShade = shade << 2;
+	sptr.dShade = (unsigned char)(shade << 2);
 	sptr.ColFadeSpeed = 4;
-	sptr.FadeToBlack = 32 - (initial << 4);
+	sptr.FadeToBlack = (unsigned char)(32 - (initial << 4));
 	sptr.Life = (GetRandomControl() & 3) + 40;
 	sptr.sLife = sptr.Life;
 
@@ -340,7 +340,8 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 
 	sptr.Gravity = -2 - (GetRandomControl() & 1);
 	sptr.MaxYvel = -2 - (GetRandomControl() & 1);
-	sptr.Def = objects[DEFAULT_SPRITES].mesh_index;
+	sptr.OriginalDef = objects[DEFAULT_SPRITES].mesh_index;
+	sptr.Def = sptr.OriginalDef;
 	sptr.Scalar = 3;
 	unsigned char size = (GetRandomControl() & 15) + 48;
 
@@ -766,11 +767,11 @@ void UpdateSmokeSparks()
 			smoke.Shade = smoke.dShade;
 
 		if (smoke.Shade < 24)
-			smoke.Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 2);
+			smoke.Def = smoke.OriginalDef + 2;
 		else if (smoke.Shade < 80)
-			smoke.Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 1);
+			smoke.Def = smoke.OriginalDef + 1;
 		else
-			smoke.Def = (unsigned char)objects[DEFAULT_SPRITES].mesh_index;
+			smoke.Def = smoke.OriginalDef;
 
 		if (smoke.Flags & 0x10)
 			smoke.RotAng = (smoke.RotAng + smoke.RotAdd) & 0xFFF;
@@ -1519,7 +1520,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 		sptr.RotAdd = (GetRandomControl() & 0xF) + 16;
 
 	sptr.Scalar = 1;
-	sptr.Def = unsigned char(objects[DEFAULT_SPRITES].mesh_index + 14);
+	sptr.Def = objects[DEFAULT_SPRITES].mesh_index + 14;
 	sptr.MaxYvel = 0;
 	sptr.Gravity = (GetRandomControl() & 0x3F) + 64;
 	sptr.Size = (GetRandomControl() & 0x1F) + 32;

@@ -13,6 +13,7 @@ void FindBucket(long tpage, D3DTLBUMPVERTEX** Vpp, long** nVtxpp);
 void DrawBuckets();
 void CreateVertexNormals(ROOM_INFO* r);
 
+extern std::vector<ROOM_DYNAMIC> RoomDynamics;
 extern MESH_DATA** mesh_vtxbuf;
 extern TEXTUREBUCKET Bucket[20];
 extern float clip_left;

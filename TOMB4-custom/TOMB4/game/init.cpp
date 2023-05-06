@@ -566,7 +566,6 @@ void init_all_ropes()
 
 void InitialiseEffects()
 {
-	Dynamics.clear();
 	Sparks.clear();
 	FireSparks.clear();
 	SmokeSparks.clear();

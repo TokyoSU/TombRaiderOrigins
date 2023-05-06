@@ -37,16 +37,16 @@
     <ClInclude Include="TOMB4\global\types.h">
       <Filter>TOMB4\global</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\ahmet.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\ahmet.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\baboon.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\baboon.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\bat.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\bat.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\bike.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\bike.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\box.h">
@@ -55,7 +55,7 @@
     <ClInclude Include="TOMB4\game\camera.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\clockworkbeetle.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\clockworkbeetle.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\collide.h">
@@ -64,7 +64,7 @@
     <ClInclude Include="TOMB4\game\control.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\croc.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\croc.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\deathsld.h">
@@ -79,10 +79,10 @@
     <ClInclude Include="TOMB4\game\deltapak.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\demigod.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\demigod.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\dog.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\dog.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\door.h">
@@ -109,22 +109,22 @@
     <ClInclude Include="TOMB4\game\gameflow.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\guide.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\guide.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\hair.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\hammerhead.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\hammerhead.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\harpy.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\harpy.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\health.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\horse.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\horse.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\init.h">
@@ -133,10 +133,10 @@
     <ClInclude Include="TOMB4\game\items.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\jean.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\jean.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\jeep.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\jeep.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\lara1gun.h">
@@ -148,7 +148,7 @@
     <ClInclude Include="TOMB4\game\laraclmb.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\laradouble.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\laradouble.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\larafire.h">
@@ -178,7 +178,7 @@
     <ClInclude Include="TOMB4\game\moveblok.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\mummy.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\mummy.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\newinv.h">
@@ -196,37 +196,37 @@
     <ClInclude Include="TOMB4\game\pickup.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\raghead.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\raghead.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\rope.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\sas.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\sas.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\savegame.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\scarab.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\scarab.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\scorpion.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\scorpion.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\senet.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\senet.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\sentrygun.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\sentrygun.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\seth.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\seth.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\setup.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\skeleton.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\skeleton.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\sound.h">
@@ -235,7 +235,7 @@
     <ClInclude Include="TOMB4\game\sphere.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\sphinx.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\sphinx.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\spotcam.h">
@@ -244,7 +244,7 @@
     <ClInclude Include="TOMB4\game\switch.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\templar.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\templar.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\text.h">
@@ -259,16 +259,16 @@
     <ClInclude Include="TOMB4\game\traps.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\troops.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\troops.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\voncroy.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\voncroy.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\wildboar.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\wildboar.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\game\wraith.h">
+    <ClInclude Include="TOMB4\game\objects\tr4\wraith.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\specific\3dmath.h">
@@ -365,7 +365,7 @@
     <ClInclude Include="TOMB4\tomb4\bass.h" />
     <ClInclude Include="TOMB4\game\weapons\rocket_gun.h" />
     <ClInclude Include="TOMB4\tomb4\pl_mpeg.h" />
-    <ClInclude Include="TOMB4\game\snowmobile.h" />
+    <ClInclude Include="TOMB4\game\objects\tr2\snowmobile.h" />
     <ClInclude Include="TOMB4\tomb4\bassmix.h" />
     <ClInclude Include="TOMB4\tomb4\bass_fx.h" />
   </ItemGroup>
@@ -376,16 +376,16 @@
     <ClCompile Include="TOMB4\tomb4\pch.cpp">
       <Filter>TOMB4\tomb4</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\ahmet.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\ahmet.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\baboon.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\baboon.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\bat.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\bat.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\bike.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\bike.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\box.cpp">
@@ -394,7 +394,7 @@
     <ClCompile Include="TOMB4\game\camera.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\clockworkbeetle.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\clockworkbeetle.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\collide.cpp">
@@ -403,7 +403,7 @@
     <ClCompile Include="TOMB4\game\control.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\croc.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\croc.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\deathsld.cpp">
@@ -418,10 +418,10 @@
     <ClCompile Include="TOMB4\game\deltapak.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\demigod.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\demigod.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\dog.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\dog.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\door.cpp">
@@ -448,22 +448,22 @@
     <ClCompile Include="TOMB4\game\gameflow.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\guide.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\guide.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\hair.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\hammerhead.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\hammerhead.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\harpy.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\harpy.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\health.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\horse.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\horse.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\init.cpp">
@@ -472,10 +472,10 @@
     <ClCompile Include="TOMB4\game\items.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\jean.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\jean.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\jeep.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\jeep.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\lara1gun.cpp">
@@ -487,7 +487,7 @@
     <ClCompile Include="TOMB4\game\laraclmb.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\laradouble.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\laradouble.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\larafire.cpp">
@@ -517,7 +517,7 @@
     <ClCompile Include="TOMB4\game\moveblok.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\mummy.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\mummy.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\newinv.cpp">
@@ -535,37 +535,37 @@
     <ClCompile Include="TOMB4\game\pickup.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\raghead.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\raghead.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\rope.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\sas.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\sas.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\savegame.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\scarab.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\scarab.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\scorpion.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\scorpion.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\senet.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\senet.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\sentrygun.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\sentrygun.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\seth.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\seth.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\setup.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\skeleton.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\skeleton.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\sound.cpp">
@@ -574,7 +574,7 @@
     <ClCompile Include="TOMB4\game\sphere.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\sphinx.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\sphinx.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\spotcam.cpp">
@@ -583,7 +583,7 @@
     <ClCompile Include="TOMB4\game\switch.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\templar.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\templar.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\text.cpp">
@@ -598,16 +598,16 @@
     <ClCompile Include="TOMB4\game\traps.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\troops.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\troops.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\voncroy.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\voncroy.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\wildboar.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\wildboar.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\wraith.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr4\wraith.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\specific\3dmath.cpp">
@@ -691,7 +691,7 @@
     <ClCompile Include="TOMB4\game\weapons\rocket_gun.cpp">
       <Filter>TOMB4</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\snowmobile.cpp">
+    <ClCompile Include="TOMB4\game\objects\tr2\snowmobile.cpp">
       <Filter>TOMB4</Filter>
     </ClCompile>
   </ItemGroup>

@@ -302,9 +302,8 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 
 		if (tomb4.static_lighting)
 		{
-			for (auto it = Dynamics.begin(); it != Dynamics.end(); it++)
+			for (auto& l : Dynamics)
 			{
-				auto& l = *it;
 				if (!l.on)
 					continue;
 

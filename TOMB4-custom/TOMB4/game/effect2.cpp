@@ -17,6 +17,7 @@
 #include "sound.h"
 #include "lara.h"
 #include "gameflow.h"
+#include "drawroom.h"
 
 SPLASH_STRUCT splashes[4];
 RIPPLE_STRUCT ripples[16];
@@ -524,6 +525,7 @@ void TriggerDynamic_MIRROR(long x, long y, long z, long falloff, long r, long g,
 void ClearDynamics()
 {
 	Dynamics.clear();
+	RoomDynamics.clear();
 }
 
 void ControlEnemyMissile(short fx_number)
@@ -1151,6 +1153,7 @@ void UpdateSparks()
 	{
 		if (spark.On == 0 || spark.Dynamic == -1)
 			continue;
+
 		for (auto& dyn : Dynamics)
 		{
 			if (dyn.flags & 3)
@@ -1372,7 +1375,7 @@ void TriggerRocketFlameTR3(long x, long y, long z, long xv, long yv, long zv, lo
 	sptr.MaxYvel = 0;
 	sptr.Def = objects[DEFAULT_SPRITES].mesh_index;
 	sptr.Scalar = 2;
-	long size = (GetRandomControl() & 7) + 32;
+	unsigned char size = (GetRandomControl() & 7) + 32;
 	sptr.Size = sptr.sSize = size;
 	sptr.dSize = 2;
 	Sparks.push_back(sptr);
@@ -1385,9 +1388,9 @@ void TriggerRocketSmokeTR3(long x, long y, long z, long body_part)
 	sptr.sR = 0;
 	sptr.sG = 0;
 	sptr.sB = 0;
-	sptr.dR = 64 + body_part;
-	sptr.dG = 64 + body_part;
-	sptr.dB = 64 + body_part;
+	sptr.dR = unsigned char(64 + body_part);
+	sptr.dG = unsigned char(64 + body_part);
+	sptr.dB = unsigned char(64 + body_part);
 
 	sptr.ColFadeSpeed = 4 + (GetRandomControl() & 3);
 	sptr.FadeToBlack = 12;
@@ -1419,9 +1422,10 @@ void TriggerRocketSmokeTR3(long x, long y, long z, long body_part)
 	sptr.Scalar = 3;
 	sptr.Gravity = -(GetRandomControl() & 3) - 4;
 	sptr.MaxYvel = -(GetRandomControl() & 3) - 4;
-	long size = (GetRandomControl() & 7) + 32;
+	unsigned char size = (GetRandomControl() & 7) + 32;
 	sptr.Size = sptr.sSize = size >> 2;
 	sptr.dSize = size;
+
 	Sparks.push_back(sptr);
 }
 
@@ -1480,7 +1484,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 		}
 
 		sptr.extras = unsigned char(extras | ((explosion_extra_tables[extras] + (GetRandomControl() & 7) + 28) << 3));
-		sptr.Dynamic = (char)dynamic;
+		sptr.Dynamic = dynamic;
 
 		if (dynamic == -2)
 		{
@@ -1541,7 +1545,6 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 		sptr.sSize = sptr.Size << scalar;
 		sptr.dSize = sptr.Size << (scalar + 1);
 		sptr.Size <<= scalar;
-		GetRandomControl();
 		sptr.MaxYvel = 0;
 
 		if (uw == 2)

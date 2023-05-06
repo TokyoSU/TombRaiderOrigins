@@ -791,9 +791,8 @@ void DrawRooms(short CurrentRoom)
 
 	nPolyType = 0;
 
-	for (auto it = Dynamics.begin(); it != Dynamics.end(); it++)
+	for (auto& dyn : Dynamics)
 	{
-		auto& dyn = *it;
 		if (dyn.on)
 		{
 			if (dyn.x < 0)
