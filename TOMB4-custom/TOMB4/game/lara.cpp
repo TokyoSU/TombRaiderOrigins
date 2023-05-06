@@ -10,7 +10,6 @@
 #include "jeep.h"
 #include "snowmobile.h"
 #include "draw.h"
-#include "specific/audio.h"
 #include "specific/3dmath.h"
 #include "sound.h"
 #include "laraswim.h"
@@ -2782,7 +2781,7 @@ void lara_as_controlled(ITEM_INFO* item, COLL_INFO* coll)
 	coll->enable_spaz = 0;
 
 	if (item->anim_number == ANIM_PLAYHARP && item->frame_number == anims[ANIM_PLAYHARP].frame_base + 120)
-		S_CDPlay(6, 0);
+		Sound.PlaySoundTrack(6, 0);
 
 	if (item->anim_number == ANIM_MINEDETECT)
 	{
@@ -2795,7 +2794,7 @@ void lara_as_controlled(ITEM_INFO* item, COLL_INFO* coll)
 	if (item->frame_number == anims[item->anim_number].frame_end - 1)
 	{
 		if (item->anim_number == ANIM_PLAYHARP)
-			S_CDPlay(19, 0);
+			Sound.PlaySoundTrack(19, 0);
 
 		lara.gun_status = LG_NO_ARMS;
 

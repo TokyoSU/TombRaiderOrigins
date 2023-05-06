@@ -13,7 +13,6 @@
 #include "tomb4fx.h"
 #include "items.h"
 #include "sound.h"
-#include "specific/audio.h"
 #include "laraflar.h"
 #include "lot.h"
 #include "lara.h"
@@ -228,9 +227,6 @@ static long JeepCheckGetOut()
 		lara_item->pos.z_rot = 0;
 		lara.vehicle = NO_ITEM;
 		lara.gun_status = LG_NO_ARMS;
-		CurrentAtmosphere = 110;
-		IsAtmospherePlaying = 1;
-		S_CDPlay(110, 1);
 	}
 
 	return 1;
@@ -377,9 +373,6 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		jeep->unused1 = 0;
 		jeep->gear = 0;
 		item->flags |= IFL_TRIGGERED;
-		CurrentAtmosphere = 98;
-		IsAtmospherePlaying = 1;
-		S_CDPlay(98, 1);
 	}
 	else
 		ObjectCollision(item_number, l, coll);

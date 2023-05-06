@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "gamemain.h"
-#include "audio.h"
 #include "file.h"
 #include "function_stubs.h"
 #include "function_table.h"
@@ -29,7 +28,6 @@ static short water_choppy[4] = { 16, 53, 90, 127 };
 void GameClose()
 {
 	Log(2, "GameClose");
-	ACMClose();
 	FreeLevel();
 
 	if (DestVB)
@@ -41,13 +39,6 @@ void GameClose()
 		Log(1, "%s Attempt To Release NULL Ptr", "Dest VB");
 
 	free(clipflags);
-
-	if (wav_file_buffer)
-		free(wav_file_buffer);
-
-	if (ADPCMBuffer)
-		free(ADPCMBuffer);
-
 	if (logF)
 		fclose(logF);
 
@@ -68,14 +59,14 @@ unsigned int __stdcall GameMain(void* ptr)
 		InitFont();
 		TIME_Init();
 		App.SetupComplete = 1;
-		S_CDStop();
+		Sound.StopSoundTracks();
 		ClearSurfaces();
 
 		RPC_Init();
 		init_tomb4_stuff();
 		DoGameflow();
 		GameClose();
-		S_CDStop();
+		Sound.StopSoundTracks();
 
 		RPC_close();
 		PostMessage(App.hWnd, WM_CLOSE, 0, 0);

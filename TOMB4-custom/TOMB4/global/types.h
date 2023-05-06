@@ -1805,11 +1805,13 @@ struct WATERTAB
 
 struct FOOTPRINT
 {
-	long x;
-	long y;
-	long z;
-	short YRot;
-	short Active;
+	long x = 0;
+	long y = 0;
+	long z = 0;
+	short YRot = 0;
+	short Active = 0;
+
+	FOOTPRINT() {}
 };
 
 struct DISPLAYPU
@@ -2401,6 +2403,28 @@ struct SOUND_SLOT
 	float distance;
 	bool loop;
 	int sample_index;
+};
+
+struct SOUND_SLOT_TRACK
+{
+	HSTREAM channel = 0;
+	std::string track;
+
+	SOUND_SLOT_TRACK() {}
+};
+
+enum class SOUND_TRACK_TYPE : int
+{
+	ONESHOT = 0,
+	BGM = 1,
+	COUNT = 2,
+};
+
+struct SOUND_TRACK_INFO
+{
+	std::string name;
+	SOUND_TRACK_TYPE mode = SOUND_TRACK_TYPE::ONESHOT;
+	int mask = 0;
 };
 
 struct WEAPON_INFO

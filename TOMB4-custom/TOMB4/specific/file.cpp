@@ -12,7 +12,6 @@
 #include "game/items.h"
 #include "specificfx.h"
 #include "game/tomb4fx.h"
-#include "audio.h"
 #include "game/spotcam.h"
 #include "game/control.h"
 #include "game/camera.h"

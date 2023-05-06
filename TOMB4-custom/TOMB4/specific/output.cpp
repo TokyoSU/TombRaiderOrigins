@@ -9,6 +9,7 @@
 #include "3dmath.h"
 #include "polyinsert.h"
 #include "game/effects.h"
+#include "game/footprnt.h"
 #include "game/draw.h"
 #include "specificfx.h"
 #include "function_stubs.h"
@@ -1706,8 +1707,8 @@ void S_OutputPolyList()
 		WinDisplayString(40, 400, Bubbles.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bubbles: %d", Bubbles.size());
 		WinDisplayString(40, 450, ShockWaves.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "ShockWaves: %d", ShockWaves.size());
 		WinDisplayString(40, 500, Bloods.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Bloods: %d", Bloods.size());
-		WinDisplayString(40, 550, Fires.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "FireList: %d", Fires.size());
-		
+		WinDisplayString(40, 550, Fires.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Fires2: %d", Fires.size());
+		WinDisplayString(40, 600, Footprints.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Footprints: %d", Footprints.size());
 	}
 
 

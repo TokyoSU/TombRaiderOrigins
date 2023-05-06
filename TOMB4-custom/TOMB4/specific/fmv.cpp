@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "fmv.h"
 #include "dxshell.h"
-#include "audio.h"
 #include "lighting.h"
 #include "function_table.h"
 #include "winmain.h"
@@ -85,7 +84,7 @@ long PlayFmvNow(long num)
 	if ((1 << num) & FmvSceneTriggered)
 		return 1;
 	FmvSceneTriggered |= 1 << num;
-	S_CDStop();
+	Sound.StopSoundTracks();
 
 	char name[80];
 	char path[80];

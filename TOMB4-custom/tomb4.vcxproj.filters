@@ -313,9 +313,6 @@
     <ClInclude Include="TOMB4\specific\polyinsert.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\specific\audio.h">
-      <Filter>TOMB4\specific</Filter>
-    </ClInclude>
     <ClInclude Include="TOMB4\specific\clipping.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
@@ -644,9 +641,6 @@
       <Filter>TOMB4\specific</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\specific\polyinsert.cpp">
-      <Filter>TOMB4\specific</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\specific\audio.cpp">
       <Filter>TOMB4\specific</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\specific\clipping.cpp">

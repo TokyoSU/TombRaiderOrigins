@@ -10,7 +10,6 @@
 #include "function_table.h"
 #include "d3dmatrix.h"
 #include "3dmath.h"
-#include "audio.h"
 #include "game/sound.h"
 #include "output.h"
 #include "file.h"
@@ -418,10 +417,6 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		mouseY = GET_Y_LPARAM(lParam);
 		mouseB = wParam;
 		break;
-
-	case WM_APP:
-		FillADPCMBuffer((char*)lParam, wParam);
-		return 0;
 	}
 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -581,7 +576,6 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	App.hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
 
 	Sound.Init();
-	ACMInit();
 
 	cutseqpakPtr = 0;
 	buf = 0;

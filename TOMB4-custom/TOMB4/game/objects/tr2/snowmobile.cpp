@@ -680,7 +680,7 @@ void SkidooExplode(ITEM_INFO* skidoo)
 	Sound.PlayEffect(SFX_EXPLOSION2, &skidoo->pos);
 
 	if (skinfo != NULL)
-		ExplodingDeath2(skidoo->index, -1, 256, skinfo->armed ? SNOWMOBILE_GUN_SKIN : SNOWMOBILE);
+		ExplodingDeath2(skidoo->index, -1, 256, skinfo->armed ? SNOWMOBILE_GUN : SNOWMOBILE);
 	else
 		ExplodingDeath2(skidoo->index, -1, 256);
 
@@ -992,8 +992,8 @@ void DrawSkidoo(ITEM_INFO* item)
 	frac = GetFrames(item, frm, &rate);
 
 	// only change skin if the object is loaded !
-	if (skinfo != NULL && skinfo->armed && objects[SNOWMOBILE_GUN_SKIN].loaded)
-		obj = &objects[SNOWMOBILE_GUN_SKIN];
+	if (skinfo != NULL && skinfo->armed && objects[SNOWMOBILE_GUN].loaded)
+		obj = &objects[SNOWMOBILE_GUN];
 	else
 		obj = &objects[item->object_number];
 

@@ -3,7 +3,6 @@
 #include "tomb4fx.h"
 #include "lara_states.h"
 #include "items.h"
-#include "specific/audio.h"
 #include "specific/3dmath.h"
 #include "control.h"
 #include "hair.h"
@@ -21,6 +20,7 @@
 #include "camera.h"
 #include "specific/winmain.h"
 #include "lara.h"
+#include "sound.h"
 #include "gameflow.h"
 
 static short frig_shadow_bbox[6] = { -165, 150, -777, 1, -87, 78 };
@@ -178,8 +178,8 @@ void handle_cutseq_triggering(long name)
 					lara_item->gravity_status = 0;
 				}
 
-				if (gfCurrentLevel)
-					S_CDStop();
+				if (gfCurrentLevel != 0)
+					Sound.StopSoundTracks();
 
 				goin = cutseq_num;
 				numnailed = 0;
@@ -194,8 +194,8 @@ void handle_cutseq_triggering(long name)
 
 				AlterFOV(11488);
 
-				if (GLOBAL_cutme->audio_track != -1)
-					S_StartSyncedAudio(GLOBAL_cutme->audio_track);
+				//if (GLOBAL_cutme->audio_track != -1)
+				//	S_StartSyncedAudio(GLOBAL_cutme->audio_track);
 			}
 		}
 	}
@@ -212,8 +212,8 @@ void handle_cutseq_triggering(long name)
 	{
 		if (ScreenFadedOut)
 		{
-			if (gfCurrentLevel)
-				S_CDStop();
+			if (gfCurrentLevel != 0)
+				Sound.StopSoundTracks();
 
 			ScreenFadedOut = 0;
 			numnailed = 0;
@@ -261,8 +261,8 @@ void handle_cutseq_triggering(long name)
 				if (cutseq_control_routines[cutseq_num].init_func)
 					cutseq_control_routines[cutseq_num].init_func();
 
-				if (GLOBAL_cutme->audio_track != -1)
-					S_StartSyncedAudio(GLOBAL_cutme->audio_track);
+				//if (GLOBAL_cutme->audio_track != -1)
+				//	S_StartSyncedAudio(GLOBAL_cutme->audio_track);
 			}
 			else if (fuck == 9 || fuck == 11 || fuck == 15 || fuck == 23)
 			{
@@ -291,8 +291,8 @@ void handle_cutseq_triggering(long name)
 
 				AlterFOV(14560);
 
-				if (gfCurrentLevel)
-					S_CDPlay(CurrentAtmosphere, 1);
+				if (gfCurrentLevel != 0)
+					Sound.PlaySoundTrack(CurrentAtmosphere, 1);
 
 				IsAtmospherePlaying = 1;
 			}

@@ -24,13 +24,6 @@ constexpr auto SOUND_BGM_DAMP_COEFFICIENT = 0.5f;
 constexpr auto SOUND_MIN_PARAM_MULTIPLIER = 0.05f;
 constexpr auto SOUND_MAX_PARAM_MULTIPLIER = 5.0f;
 
-enum SOUND_TRACK_TYPE : int
-{
-	STT_ONESHOT = 0,
-	STT_BGM = 1,
-	STT_Count
-};
-
 enum SOUND_FILTER_TYPES : int
 {
 	SF_Reverb,
@@ -483,13 +476,25 @@ public:
 	void UpdateSoundForFMV(LPVOID data, int length);
 	void FreeSoundForFMV();
 
+	void EnumerateLegacyTracks();
+	void PlaySoundTrack(std::string track, SOUND_TRACK_TYPE mode, QWORD position = 0);
+	void PlaySoundTrack(std::string track, short mask = 0);
+	void PlaySoundTrack(int index, short mask = 0);
+	void StopSoundTracks();
+	void StopSoundTrack(SOUND_TRACK_TYPE mode, int fadeoutTime);
+	void ClearSoundTrackMasks();
+	void PlaySecretTrack();
+	std::pair<std::string, QWORD> GetSoundTrackNameAndPosition(SOUND_TRACK_TYPE type);
+
 private:
 	HSTREAM BASS_FMV_Stream = NULL;
 	HSTREAM BASS_3D_Mixdown = NULL;
 	HFX BASS_FXHandler[SF_Count]{};
-	//SoundTrackSlot BASS_Soundtrack[STT_Count]{};
+	SOUND_SLOT_TRACK BASS_Soundtrack[(int)SOUND_TRACK_TYPE::COUNT]{};
 	HSAMPLE SamplePointer[SFX_SAMPLES_COUNT]{};
 	SOUND_SLOT SoundSlot[SOUND_MAX_CHANNELS]{};
+	std::map<std::string, int> SoundTrackMap;
+	std::unordered_map<int, SOUND_TRACK_INFO> SoundTracks;
 
 	bool CheckBASSError(const char* message, bool verbose, ...);
 
@@ -503,4 +508,5 @@ private:
 	float Attenuate(float gain, float distance, float radius);
 };
 
+extern int XATrack;
 extern SoundSystem Sound;

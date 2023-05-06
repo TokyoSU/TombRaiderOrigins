@@ -1,8 +1,8 @@
 #pragma once
 #include "global/types.h"
 
-void AddFootPrint(ITEM_INFO* item);
+void AddFootPrintLeft(ITEM_INFO* item);
+void AddFootPrintRight(ITEM_INFO* item);
 void S_DrawFootPrints();
 
-extern FOOTPRINT FootPrint[];
-extern long FootPrintNum;
+extern std::vector<FOOTPRINT> Footprints;

@@ -24,7 +24,6 @@
 #include "traps.h"
 #include "switch.h"
 #include "lara_states.h"
-#include "specific/audio.h"
 #include "lot.h"
 #include "specific/output.h"
 #include "gameflow.h"
@@ -973,7 +972,7 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 
 			if (!(savegame.Level.Secrets & 1 << value))
 			{
-				S_CDPlay(5, 0);
+				Sound.PlaySecretTrack();
 				savegame.Level.Secrets |= 1 << value;
 				savegame.Game.Secrets++;
 			}
@@ -2020,9 +2019,8 @@ void TriggerNormalCDTrack(short value, short flags, short type)
 		if (CurrentAtmosphere != value)
 		{
 			CurrentAtmosphere = (unsigned char)value;
-
 			if (IsAtmospherePlaying)
-				S_CDPlay(value, 1);
+				Sound.PlaySoundTrack(value, 1);
 		}
 	}
 	else
@@ -2032,7 +2030,7 @@ void TriggerNormalCDTrack(short value, short flags, short type)
 		if ((cd_flags[value] & code) != code)
 		{
 			cd_flags[value] |= code;
-			S_CDPlay(value, 0);
+			Sound.PlaySoundTrack(value, 0);
 			IsAtmospherePlaying = 0;
 		}
 	}

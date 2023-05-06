@@ -12,7 +12,6 @@
 #include "spotcam.h"
 #include "health.h"
 #include "sound.h"
-#include "specific/audio.h"
 #include "camera.h"
 #include "control.h"
 #include "tomb4fx.h"
@@ -487,7 +486,7 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 		CurrentAtmosphere = Audio;
 	}
 
-	S_CDPlay(CurrentAtmosphere, 1);
+	Sound.PlaySoundTrack(CurrentAtmosphere, 1);
 	IsAtmospherePlaying = 1;
 	ScreenFadedOut = 0;
 	ScreenFading = 0;
@@ -534,7 +533,7 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 		if (DEL_playingamefmv)
 		{
 			DEL_playingamefmv = 0;
-			S_CDStop();
+			Sound.StopSoundTracks();
 			PlayFmvNow(7);
 			DelsHandyTeleportLara(54179, -8192, 50899, -32703);
 		}
@@ -569,7 +568,7 @@ void DoLevel(unsigned char Name, unsigned char Audio)
 	}
 
 	Sound.StopAllEffects();
-	S_CDStop();
+	Sound.StopSoundTracks();
 
 	if (gfStatus == 3)
 	{
@@ -870,7 +869,7 @@ void DoTitle(unsigned char Name, unsigned char Audio)
 	InitialisePickUpDisplay();
 	Sound.StopAllEffects();
 	Sound.SetReverbType(RT_Outside);
-	S_CDPlay(Audio, 1);
+	Sound.PlaySoundTrack(Audio, 1);
 	IsAtmospherePlaying = 0;
 	InitialiseCamera();
 
@@ -881,7 +880,7 @@ void DoTitle(unsigned char Name, unsigned char Audio)
 		ScreenFadedOut = 1;
 		ScreenFade = 255;
 		dScreenFade = 255;
-		S_CDPlay(98, 1);
+		Sound.PlaySoundTrack(98, 1);
 	}
 	else
 	{
@@ -914,7 +913,7 @@ void DoTitle(unsigned char Name, unsigned char Audio)
 	}
 
 	Sound.StopAllEffects();
-	S_CDStop();
+	Sound.StopSoundTracks();
 	bUseSpotCam = 0;
 	bDisableLaraControl = 0;
 

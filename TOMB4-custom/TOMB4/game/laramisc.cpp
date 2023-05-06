@@ -9,7 +9,6 @@
 #include "sound.h"
 #include "effects.h"
 #include "rope.h"
-#include "specific/audio.h"
 #include "lara.h"
 #include "larasurf.h"
 #include "specific/3dmath.h"
@@ -601,10 +600,9 @@ void LaraControl(short item_number)
 		l->hit_points = -1;
 
 		if (!lara.death_count)
-			S_CDStop();
+			Sound.StopSoundTracks();
 
 		lara.death_count++;
-
 		if (l->flags & IFL_INVISIBLE)
 		{
 			lara.death_count++;

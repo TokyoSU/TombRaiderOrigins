@@ -1811,10 +1811,7 @@ void reset_cutseq_vars()
 
 void ClearFootPrints()
 {
-	for (int i = 0; i < 32; i++)
-		FootPrint[i].Active = 0;
-
-	FootPrintNum = 0;
+	Footprints.clear();
 }
 
 void InitialiseGameFlags()

@@ -415,7 +415,6 @@ void UpdateDrips()
 		}
 
 		drip.Yvel += drip.Gravity;
-
 		if (rooms[drip.RoomNumber].flags & ROOM_NOT_INSIDE)
 		{
 			drip.x += SmokeWindX >> 1;
@@ -436,7 +435,8 @@ void UpdateDrips()
 			Drips.end(), [](DRIP_STRUCT& drip) {
 				return drip.On == 0;
 			}
-		)
+		),
+		Drips.end()
 	);
 }
 

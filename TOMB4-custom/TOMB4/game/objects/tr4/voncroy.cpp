@@ -4,7 +4,6 @@
 #include "specific/3dmath.h"
 #include "control.h"
 #include "lara_states.h"
-#include "specific/audio.h"
 #include "tomb4fx.h"
 #include "objects.h"
 #include "items.h"
@@ -18,6 +17,7 @@
 #include "lara.h"
 #include "savegame.h"
 #include "specific/file.h"
+#include "sound.h"
 
 static BITE_INFO voncroy_hit = { 0, 35, 130, 18 };
 
@@ -195,7 +195,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 	{
 		if (lara_item->current_anim_state == AS_HANG || lara_item->current_anim_state == AS_HANGLEFT || lara_item->current_anim_state == AS_HANGRIGHT)
 		{
-			S_CDPlay(VonCroyCutTracks[item->item_flags[3]], 0);
+			Sound.PlaySoundTrack(VonCroyCutTracks[item->item_flags[3]], 0);
 			VonCroyCutFlags[item->item_flags[3]] = 1;
 			item->item_flags[2] = 2;
 		}
@@ -287,7 +287,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 			ScreenFading = 0;
 			SetScreenFadeIn(16);
 			item->trigger_flags++;
-			S_StartSyncedAudio(VonCroyCutTracks[item->item_flags[3]]);
+			Sound.PlaySoundTrack(VonCroyCutTracks[item->item_flags[3]], 0);
 		}
 
 		break;
@@ -327,8 +327,8 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 
 	case 3:
 		ClearCutSceneCamera();
-		S_CDStop();
-		S_CDPlay(CurrentAtmosphere, 1);
+		Sound.StopSoundTracks();
+		Sound.PlaySoundTrack(CurrentAtmosphere, 1);
 		IsAtmospherePlaying = 1;
 		bDisableLaraControl = 0;
 		SetFadeClip(0, 1);
@@ -505,7 +505,7 @@ void VoncroyRaceControl(short item_number)
 			torso_y = info.angle >> 1;
 		}
 
-		if (lara.location < item->item_flags[3] || XATrack == 80 && (XAFlag == 6 || XAFlag == 5))
+		if (lara.location < item->item_flags[3] || XATrack == 80)
 		{
 			item->goal_anim_state = 1;
 			break;

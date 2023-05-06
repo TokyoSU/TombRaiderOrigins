@@ -2,7 +2,6 @@
 #include "LoadSave.h"
 #include "game/text.h"
 #include "game/sound.h"
-#include "audio.h"
 #include "input.h"
 #include "function_table.h"
 #include "drawroom.h"
@@ -336,7 +335,6 @@ void DoOptions()
 
 			sSliderCol = 0xFF3F3F3F;
 			mSliderCol = 0xFF7F7F7F;
-			ACMSetVolume();
 		}
 		else if (sel & 4)
 		{

@@ -2,6 +2,7 @@
 #include "sound.h"
 #include "camera.h"
 #include "control.h"
+#include "gameflow.h"
 #include "lara.h"
 #include "specific/file.h"
 #include "specific/function_stubs.h"
@@ -9,6 +10,7 @@
 #include "specific/winmain.h"
 #include "effects.h"
 
+constexpr auto AUDIO_PATH = "audio\\";
 const BASS_BFX_FREEVERB BASS_ReverbTypes[RT_Count] =    // Reverb presets
 { // Dry Mix | Wet Mix |  Size   |  Damp   |  Width  |  Mode  | Channel
   {  1.0f,     0.20f,     0.05f,    0.90f,    0.7f,     0,      -1     },	// 0 = Outside
@@ -17,6 +19,10 @@ const BASS_BFX_FREEVERB BASS_ReverbTypes[RT_Count] =    // Reverb presets
   {  1.0f,     0.25f,     0.80f,    0.50f,    1.0f,     0,      -1     },	// 3 = Large room
   {  1.0f,     0.25f,     0.90f,    1.00f,    1.0f,     0,      -1     }	// 4 = Pipe
 };
+constexpr int LegacyLoopingTrackMin = 98;
+constexpr int LegacyLoopingTrackMax = 111;
+int SecretSoundIndex = 5;
+int XATrack = -1;
 
 SoundSystem Sound;
 SoundSystem::SoundSystem()
@@ -62,7 +68,7 @@ void SoundSystem::Init()
 		return;
 
 	// Initialize channels and tracks array
-	//ZeroMemory(BASS_Soundtrack, (sizeof(HSTREAM) * (int)SoundTrackType::Count));
+	ZeroMemory(BASS_Soundtrack, (sizeof(HSTREAM) * (int)SOUND_TRACK_TYPE::COUNT));
 	ZeroMemory(SoundSlot, sizeof(SOUND_SLOT) * SOUND_MAX_CHANNELS);
 
 	// Attach reverb effect to 3D channel
@@ -78,6 +84,7 @@ void SoundSystem::Init()
 	BASS_FXSetParameters(BASS_FXHandler[SF_Compressor], &comp);
 
 	CheckBASSError("Attaching compressor", true);
+	EnumerateLegacyTracks();
 }
 
 void SoundSystem::Release()
@@ -551,6 +558,225 @@ void SoundSystem::FreeSoundForFMV()
 		BASS_StreamFree(BASS_FMV_Stream);
 		BASS_FMV_Stream = 0;
 	}
+}
+
+void SoundSystem::EnumerateLegacyTracks()
+{
+	auto dir = std::filesystem::path(AUDIO_PATH);
+	if (std::filesystem::exists(dir))
+	{
+		try {
+			// capture three-digit filenames, or those which start with three digits.
+			std::regex upToThreeDigits("\\\\((\\d{1,3})[^\\.]*)");
+			std::smatch result;
+			for (const auto& file : std::filesystem::directory_iterator{ dir })
+			{
+				std::string fileName = file.path().string();
+				auto bResult = std::regex_search(fileName, result, upToThreeDigits);
+				if (!result.empty())
+				{
+					// result[0] is the whole match including the leading backslash, so ignore it
+					// result[1] is the full file name, not including the extension
+
+					int index = std::stoi(result[2].str());
+					SOUND_TRACK_INFO s;
+
+					// TRLE default looping tracks
+					if (index >= LegacyLoopingTrackMin && index <= LegacyLoopingTrackMax)
+					{
+						s.mode = SOUND_TRACK_TYPE::BGM;
+					}
+
+					s.name = result[1];
+					SoundTracks.insert(std::make_pair(index, s));
+					SecretSoundIndex = std::max(SecretSoundIndex, index);
+				}
+			}
+		}
+		catch (std::filesystem::filesystem_error const& e)
+		{
+			Log(2, e.what());
+		}
+	}
+	else
+	{
+		Log(2, "Folder %s does not exist.", dir.string().c_str());
+	}
+}
+
+void CALLBACK FinishOneshotTrack(HSYNC handle, DWORD channel, DWORD data, void* userData)
+{
+	auto soundTrack = (SOUND_SLOT_TRACK*)userData;
+	if (BASS_ChannelIsActive(soundTrack[(int)SOUND_TRACK_TYPE::BGM].channel))
+		BASS_ChannelSlideAttribute(soundTrack[(int)SOUND_TRACK_TYPE::BGM].channel, BASS_ATTRIB_VOL, (float)MusicVolume / 100.0f, SOUND_XFADETIME_BGM_START);
+}
+
+void SoundSystem::PlaySoundTrack(std::string track, SOUND_TRACK_TYPE mode, QWORD position)
+{
+	if (track.empty())
+		return;
+
+	bool crossfade = false;
+	DWORD crossfadeTime = 0;
+	DWORD flags = BASS_STREAM_AUTOFREE | BASS_SAMPLE_FLOAT | BASS_ASYNCFILE;
+
+	bool channelActive = BASS_ChannelIsActive(BASS_Soundtrack[(int)mode].channel);
+	if (channelActive && BASS_Soundtrack[(int)mode].track.compare(track) == 0)
+		return;
+
+	switch (mode)
+	{
+	case SOUND_TRACK_TYPE::ONESHOT:
+		crossfadeTime = SOUND_XFADETIME_ONESHOT;
+		break;
+
+	case SOUND_TRACK_TYPE::BGM:
+		crossfade = true;
+		crossfadeTime = channelActive ? SOUND_XFADETIME_BGM : SOUND_XFADETIME_BGM_START;
+		flags |= BASS_SAMPLE_LOOP;
+		break;
+	}
+
+	auto fullTrackName = AUDIO_PATH + track + ".ogg";
+	if (!std::filesystem::exists(fullTrackName))
+	{
+		fullTrackName = AUDIO_PATH + track + ".mp3";
+		if (!std::filesystem::exists(fullTrackName))
+		{
+			fullTrackName = AUDIO_PATH + track + ".wav";
+			if (!std::filesystem::exists(fullTrackName))
+			{
+				Log(2, "No soundtrack files with path '%s' were found", fullTrackName.c_str());
+				return;
+			}
+		}
+	}
+
+	if (channelActive)
+		BASS_ChannelSlideAttribute(BASS_Soundtrack[(int)mode].channel, BASS_ATTRIB_VOL, -1.0f, crossfadeTime);
+
+	auto stream = BASS_StreamCreateFile(false, fullTrackName.c_str(), 0, 0, flags);
+	if (CheckBASSError("Opening soundtrack '%s'", false, fullTrackName.c_str()))
+		return;
+	float masterVolume = (float)MusicVolume / 100.0f;
+
+	// Damp BGM track in case one-shot track is about to play.
+	if (mode == SOUND_TRACK_TYPE::ONESHOT)
+	{
+		if (BASS_ChannelIsActive(BASS_Soundtrack[(int)SOUND_TRACK_TYPE::BGM].channel))
+			BASS_ChannelSlideAttribute(BASS_Soundtrack[(int)SOUND_TRACK_TYPE::BGM].channel, BASS_ATTRIB_VOL, masterVolume * SOUND_BGM_DAMP_COEFFICIENT, SOUND_XFADETIME_BGM_START);
+		BASS_ChannelSetSync(stream, BASS_SYNC_FREE | BASS_SYNC_ONETIME | BASS_SYNC_MIXTIME, 0, FinishOneshotTrack, BASS_Soundtrack);
+	}
+
+	// BGM tracks are crossfaded, and additionally shuffled a bit to make things more natural.
+	// Think everybody are fed up with same start-up sounds of Caves ambience...
+	if (crossfade && BASS_ChannelIsActive(BASS_Soundtrack[(int)SOUND_TRACK_TYPE::BGM].channel))
+	{
+		// Crossfade...
+		BASS_ChannelSetAttribute(stream, BASS_ATTRIB_VOL, 0.0f);
+		BASS_ChannelSlideAttribute(stream, BASS_ATTRIB_VOL, masterVolume, crossfadeTime);
+
+		// Shuffle...
+		// Only activates if no custom position is passed as argument.
+		if (!position)
+		{
+			QWORD newPos = BASS_ChannelGetLength(stream, BASS_POS_BYTE) * (static_cast<float>(GetRandomControl()) / static_cast<float>(RAND_MAX));
+			BASS_ChannelSetPosition(stream, newPos, BASS_POS_BYTE);
+		}
+	}
+	else
+		BASS_ChannelSetAttribute(stream, BASS_ATTRIB_VOL, masterVolume);
+
+	BASS_ChannelPlay(stream, false);
+
+	// Try to restore position, if specified.
+	if (position && (BASS_ChannelGetLength(stream, BASS_POS_BYTE) > position))
+		BASS_ChannelSetPosition(stream, position, BASS_POS_BYTE);
+	if (CheckBASSError("Playing soundtrack '%s'", true, fullTrackName.c_str()))
+		return;
+
+	BASS_Soundtrack[(int)mode].channel = stream;
+	BASS_Soundtrack[(int)mode].track = track;
+}
+
+void SoundSystem::PlaySoundTrack(std::string track, short mask)
+{
+	// If track name was included in script, play it as registered track and take mask into account.
+	// Otherwise, play it once without registering anywhere.
+	if (SoundTrackMap.count(track))
+		PlaySoundTrack(SoundTrackMap[track], mask);
+	else
+		PlaySoundTrack(track, SOUND_TRACK_TYPE::ONESHOT);
+}
+
+void SoundSystem::PlaySoundTrack(int index, short mask)
+{
+	if (SoundTracks.find(index) == SoundTracks.end())
+	{
+		static int lastAttemptedIndex = -1;
+		if (lastAttemptedIndex != index)
+		{
+			Log(2, "No track registered with index %d", index);
+			lastAttemptedIndex = index;
+		}
+		return;
+	}
+
+	auto* sound = &SoundTracks[index];
+
+	// Check and modify soundtrack map mask, if needed.
+	// If existing mask is unmodified (same activation mask setup), track won't play.
+	if (mask && sound->mode != SOUND_TRACK_TYPE::BGM)
+	{
+		int filteredMask = (mask >> 8) & 0x3F;
+		if ((sound->mask & filteredMask) == filteredMask)
+			return;	// Mask is the same, don't play it.
+		sound->mask |= filteredMask;
+	}
+
+	XATrack = index;
+	PlaySoundTrack(sound->name, sound->mode);
+}
+
+void SoundSystem::StopSoundTracks()
+{
+	StopSoundTrack(SOUND_TRACK_TYPE::ONESHOT, SOUND_XFADETIME_ONESHOT);
+	StopSoundTrack(SOUND_TRACK_TYPE::BGM, SOUND_XFADETIME_ONESHOT);
+}
+
+void SoundSystem::StopSoundTrack(SOUND_TRACK_TYPE mode, int fadeoutTime)
+{
+	auto* sound = &BASS_Soundtrack[(int)mode];
+	BASS_ChannelSlideAttribute(sound->channel, BASS_ATTRIB_VOL | BASS_SLIDE_LOG, -1.0f, fadeoutTime);
+	sound->track = {};
+	sound->channel = NULL;
+}
+
+void SoundSystem::ClearSoundTrackMasks()
+{
+	for (auto& track : SoundTracks)
+		track.second.mask = 0;
+}
+
+void SoundSystem::PlaySecretTrack()
+{
+	if (SoundTracks.find(SecretSoundIndex) == SoundTracks.end())
+	{
+		Log(2, "No secret soundtrack index was found !");
+		return;
+	}
+
+	// Secret soundtrack should be always last one on a list.	
+	PlaySoundTrack(SoundTracks.at(SecretSoundIndex).name, SOUND_TRACK_TYPE::ONESHOT);
+}
+
+std::pair<std::string, QWORD> SoundSystem::GetSoundTrackNameAndPosition(SOUND_TRACK_TYPE type)
+{
+	auto& track = BASS_Soundtrack[(int)type];
+	if (track.track.empty() || !BASS_ChannelIsActive(track.channel))
+		return std::pair<std::string, QWORD>();
+	std::filesystem::path path = track.track;
+	return std::pair<std::string, QWORD>(path.stem().string(), BASS_ChannelGetPosition(track.channel, BASS_POS_BYTE));
 }
 
 bool SoundSystem::CheckBASSError(const char* message, bool verbose, ...)

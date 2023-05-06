@@ -15,9 +15,12 @@
 #include <windowsx.h>
 #include <algorithm>
 #include <vector>
+#include <map>
 #include <cmath>
 #include <string>
 #include <stdio.h>
+#include <filesystem>
+#include <regex>
 #include <process.h>
 #include <dinput.h>
 #include <mmreg.h>
