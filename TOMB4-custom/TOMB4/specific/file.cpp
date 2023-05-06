@@ -504,7 +504,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 	pData = FileData;
 	TextureData = (unsigned char*)malloc(0x40000);
 
-	if (!gfCurrentLevel)	//main menu logo
+	if (gfCurrentLevel == 0) //main menu logo
 	{
 		pComp = 0;
 		CompressedData = 0;

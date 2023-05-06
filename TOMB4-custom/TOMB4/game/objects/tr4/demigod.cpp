@@ -251,11 +251,11 @@ void DemigodControl(short item_number)
 	ITEM_INFO* item;
 	ITEM_INFO* item2;
 	CREATURE_INFO* god;
-	ROOM_INFO* r;
+	//ROOM_INFO* r;
 	FLOOR_INFO* floor;
 	AI_INFO info;
 	PHD_VECTOR pos;
-	short* zone;
+	//short* zone;
 	long dx, dz, h;
 	short objnum, angle, torso_x, torso_y, torso_z, head, iAngle, iAhead, room_number;
 
@@ -284,7 +284,7 @@ void DemigodControl(short item_number)
 	torso_y = 0;
 	torso_z = 0;
 
-	if (gfCurrentLevel == 24)	//Chambers of Tulun
+	/*if (gfCurrentLevel == 24)	//Chambers of Tulun
 	{
 		r = &rooms[lara_item->room_number];
 		zone = ground_zone[god->LOT.zone][flip_status];
@@ -301,7 +301,7 @@ void DemigodControl(short item_number)
 			item->item_flags[3] = lara.location;
 			god->enemy = 0;
 		}
-	}
+	}*/
 
 	if (item->hit_points <= 0)
 	{

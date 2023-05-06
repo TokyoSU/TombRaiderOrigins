@@ -441,9 +441,7 @@ void SmlscorpControl(short item_number)
 
 					if (item->current_anim_state == 5)
 					{
-						if (gfCurrentLevel > 3)
-							lara.dpoisoned += 512;
-
+						lara.dpoisoned += 512;
 						CreatureEffectT(item, &s_stinger, 3, item->pos.y_rot + 0x8000, DoBloodSplat);
 					}
 					else

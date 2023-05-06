@@ -113,11 +113,9 @@ void LaraCheatyBits()
 	}
 
 #ifdef _DEBUG
-	if (keymap[DIK_F3])
+	if (keymap[DIK_F4])
 	{
-		if (gfCurrentLevel == 2 || gfCurrentLevel == 6 || gfCurrentLevel == 13 || gfCurrentLevel == 21 || gfCurrentLevel == 27)
-			skipped_level = 1;
-
+		skipped_level = 1;
 		gfRequiredStartPos = 0;
 		gfLevelComplete = gfCurrentLevel + 1;
 	}

@@ -485,9 +485,7 @@ void ControlBurningRope(short item_number)
 
 		if (passes == 2)
 		{
-			if (gfCurrentLevel != 27)
-				TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
-
+			TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, 0);
 			KillItem(item_number);
 		}
 	}

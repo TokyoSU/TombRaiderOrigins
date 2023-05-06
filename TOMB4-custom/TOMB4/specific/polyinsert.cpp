@@ -614,15 +614,13 @@ void OmniFog(D3DTLVERTEX* v)
 		return;
 
 	s = (v->specular & 0xFF000000) >> 24;
-
-	if (gfCurrentLevel != 5 && gfCurrentLevel != 6 && s != 255)
+	if (s != 255)
 	{
 		v->specular |= 0xFF000000;
 		r = (CLRR(v->color) * s) >> 8;
 		g = (CLRG(v->color) * s) >> 8;
 		b = (CLRB(v->color) * s) >> 8;
 		v->color = RGBA(r, g, b, 0xFF);
-
 		if (!(v->color & 0xFFFFFF))
 			return;
 	}
