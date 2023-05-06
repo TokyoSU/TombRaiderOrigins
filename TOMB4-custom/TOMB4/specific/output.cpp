@@ -37,7 +37,6 @@ D3DTLVERTEX SkinVerts[40][12];
 short SkinClip[40][12];
 long GlobalAlpha = 0xFF000000;
 long GlobalAmbient;
-
 float AnimatingTexturesV[16][8][3];
 static short AnimatingTexturesVOffset;
 
@@ -57,7 +56,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh)
 
 	clip = clipflags;
 
-	if (gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
+	if (gfLevelFlags & GF_TRAIN)
 		DistanceFogStart = 12.0F * 1024.0F;
 	else
 		DistanceFogStart = tomb4.distance_fog * 1024.0F;

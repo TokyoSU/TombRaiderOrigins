@@ -110,7 +110,7 @@ void ProcessRoomVertices(ROOM_INFO* r)
 		{
 			zv = f_mpersp / vPos.z;
 
-			if (gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
+			if (gfLevelFlags & GF_TRAIN)
 			{
 				if (vPos.z > FogEnd)
 				{
@@ -258,6 +258,7 @@ void ProcessRoomVertices(ROOM_INFO* r)
 		MyVertexBuffer[i].color = RGBA(cR, cG, cB, 0xFF);
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
 	}
+	RoomDynamics.clear();
 }
 
 void ProcessRoomData(ROOM_INFO* r)

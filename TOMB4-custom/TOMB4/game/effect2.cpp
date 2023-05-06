@@ -525,7 +525,6 @@ void TriggerDynamic_MIRROR(long x, long y, long z, long falloff, long r, long g,
 void ClearDynamics()
 {
 	Dynamics.clear();
-	RoomDynamics.clear();
 }
 
 void ControlEnemyMissile(short fx_number)
