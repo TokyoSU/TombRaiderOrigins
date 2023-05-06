@@ -244,7 +244,7 @@ bool SaveSetup(HWND hDlg)
 	REG_WriteLong((char*)"DD", SendMessage(GetDlgItem(hDlg, 1000), CB_GETCURSEL, 0, 0));
 	REG_WriteLong((char*)"D3D", SendMessage(GetDlgItem(hDlg, 1003), CB_GETCURSEL, 0, 0));
 	REG_WriteLong((char*)"VMode", SendMessage(GetDlgItem(hDlg, 1004), CB_GETITEMDATA, SendMessage(GetDlgItem(hDlg, 1004), CB_GETCURSEL, 0, 0), 0));
-	REG_WriteLong((char*)"DS", SendMessage(GetDlgItem(hDlg, 1005), CB_GETCURSEL, 0, 0));
+	REG_WriteLong((char*)"DS", SendMessage(GetDlgItem(hDlg, 1005), CB_GETCURSEL, 0, 0) + 1);
 	REG_WriteLong((char*)"TFormat", SendMessage(GetDlgItem(hDlg, 1006), CB_GETCURSEL, 0, 0));
 
 	REG_WriteBool((char*)"Filter", SendMessage(GetDlgItem(hDlg, 1012), BM_GETCHECK, 0, 0));

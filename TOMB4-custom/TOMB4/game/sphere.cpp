@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "sphere.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "draw.h"
 #include "lara.h"
 #include "objects.h"

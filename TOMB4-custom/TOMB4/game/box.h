@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void CreatureDie(short item_number, long explode);
 void InitialiseCreature(short item_number);

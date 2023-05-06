@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "bike.h"
-#include "../specific/function_stubs.h"
-#include "../specific/specificfx.h"
+#include "specific/function_stubs.h"
+#include "specific/specificfx.h"
 #include "sphere.h"
 #include "camera.h"
 #include "objects.h"
 #include "control.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "draw.h"
-#include "../specific/output.h"
+#include "specific/output.h"
 #include "effect2.h"
 #include "lara1gun.h"
 #include "tomb4fx.h"
@@ -22,7 +22,7 @@
 #include "debris.h"
 #include "lara.h"
 #include "jeep.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "newinv.h"
 #include "savegame.h"
 
@@ -563,9 +563,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed)
 
 void BikeStart(ITEM_INFO* item, ITEM_INFO* l)
 {
-	BIKEINFO* bike;
-
-	bike = (BIKEINFO*)item->data;
+	BIKEINFO* bike = (BIKEINFO*)item->data;
 	lara.gun_status = LG_HANDS_BUSY;
 	lara.hit_direction = -1;
 	l->goal_anim_state = 15;

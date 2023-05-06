@@ -3,15 +3,15 @@
 #include "draw.h"
 #include "objects.h"
 #include "control.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "effects.h"
 #include "sphere.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "items.h"
 #include "sound.h"
 #include "lara_states.h"
 #include "lara.h"
-#include "../specific/file.h"
+#include "specific/file.h"
 
 static short StarGateBounds[24] =
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 unsigned int __stdcall LoadLevel(void* name);
 long S_LoadLevelFile(long num);

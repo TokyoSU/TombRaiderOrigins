@@ -1,24 +1,23 @@
 #include "pch.h"
 #include "snowmobile.h"
 #include "control.h"
-#include "../specific/function_stubs.h"
-#include "../specific/input.h"
+#include "specific/function_stubs.h"
+#include "specific/input.h"
 #include "lara.h"
 #include "effect2.h"
 #include "effects.h"
 #include "collide.h"
 #include "lara_states.h"
 #include "sphere.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "objects.h"
 #include "sound.h"
 #include "tomb4fx.h"
 #include "items.h"
 #include "draw.h"
-#include "../specific/output.h"
+#include "specific/output.h"
 #include "laraflar.h"
 #include "larafire.h"
-#include <algorithm>
 
 enum skidoo_anims
 {
@@ -775,7 +774,22 @@ void SkidooGuns()
 	}
 }
 
-int SkidooControl(short item_number)
+void SnowmobileStart(ITEM_INFO* skidoo, ITEM_INFO* laraitem)
+{
+	auto* skinfo = GetSkidooData(skidoo);
+	lara.gun_status = LG_HANDS_BUSY;
+	lara.hit_direction = -1;
+	laraitem->current_anim_state = 0;
+	laraitem->goal_anim_state = 0;
+	laraitem->anim_number = objects[SNOWMOBILE_ANIM].anim_index;
+	laraitem->frame_number = anims[laraitem->anim_number].frame_base;
+	skidoo->anim_number = laraitem->anim_number + objects[SNOWMOBILE].anim_index - objects[SNOWMOBILE_ANIM].anim_index;
+	skidoo->frame_number = laraitem->frame_number + anims[skidoo->anim_number].frame_base - anims[laraitem->anim_number].frame_base;
+	skidoo->flags |= IFL_TRIGGERED;
+	skidoo->hit_points = 1;
+}
+
+void SkidooControl(short item_number)
 {
 	PHD_VECTOR fl, fr;
 	int drive;
@@ -837,7 +851,7 @@ int SkidooControl(short item_number)
 		skinfo->track_mesh = skinfo->track_mesh == 1 ? 2 : 1;
 		skinfo->pitch += (pitch - skinfo->pitch) / 4;
 		auto pitch = std::clamp(0.5f + (float)abs(skinfo->pitch) / (float)SKIDOO_MAX_SPEED, 0.6f, 1.2f);
-		Sound.PlayEffect(SFX_SNOWMOBILE_MOVING, &skidoo->pos, SFXO_ALWAYS, pitch);
+		Sound.PlayEffect(skinfo->pitch ? SFX_SNOWMOBILE_MOVING : SFX_SNOWMOBILE_ACCEL, &skidoo->pos, SFXO_ALWAYS, pitch);
 	}
 	else
 	{
@@ -868,7 +882,7 @@ int SkidooControl(short item_number)
 		}
 		if (skidoo->pos.y_pos == skidoo->floor)
 			SkidooExplode(skidoo);
-		return 0;
+		return;
 	}
 
 	SkidooAnimation(skidoo, collide, dead);
@@ -919,7 +933,7 @@ int SkidooControl(short item_number)
 			SkidooDoSnowEffect(skidoo);
 	}
 
-	return SkidooCheckGetOff();
+	SkidooCheckGetOff();
 }
 
 static void DrawMesh(ITEM_INFO* item, int clip, int mesh_bits, short** meshpp, bool isInterpolate)

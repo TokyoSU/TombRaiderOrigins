@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "lot.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "objects.h"
 #include "box.h"
 #include "camera.h"

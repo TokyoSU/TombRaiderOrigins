@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void UpdateDebris();
 void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels, short rgb);

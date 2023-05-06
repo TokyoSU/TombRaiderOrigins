@@ -6,17 +6,17 @@
 #include "function_table.h"
 #include "d3dmatrix.h"
 #include "lighting.h"
-#include "../game/camera.h"
-#include "../game/draw.h"
-#include "../game/effect2.h"
+#include "game/camera.h"
+#include "game/draw.h"
+#include "game/effect2.h"
 #include "gamemain.h"
 #include "texture.h"
 #include "3dmath.h"
 #include "winmain.h"
 #include "file.h"
-#include "../game/control.h"
-#include "../game/gameflow.h"
-#include "../tomb4/tomb4.h"
+#include "game/control.h"
+#include "game/gameflow.h"
+#include "tomb4/tomb4.h"
 
 static std::vector<ROOM_DYNAMIC> RoomDynamics;
 

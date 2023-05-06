@@ -4,14 +4,14 @@
 #include "control.h"
 #include "sound.h"
 #include "objects.h"
-#include "../specific/specificfx.h"
-#include "../specific/function_table.h"
-#include "../specific/3dmath.h"
-#include "../specific/function_stubs.h"
-#include "../specific/gamemain.h"
-#include "../specific/file.h"
+#include "specific/specificfx.h"
+#include "specific/function_table.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/gamemain.h"
+#include "specific/file.h"
 #include "lara.h"
-#include "../tomb4/tomb4.h"
+#include "tomb4/tomb4.h"
 
 #define PRINT_HEIGHT_CORRECTION 128 // The maximum difference between the footprint and the floor
 

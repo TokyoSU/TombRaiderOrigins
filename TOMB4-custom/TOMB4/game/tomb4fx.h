@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, unsigned char flags, unsigned char size, unsigned char segments);
 long ExplodingDeath2(short item_number, long mesh_bits, short flags, short alternate_object_number = -1);

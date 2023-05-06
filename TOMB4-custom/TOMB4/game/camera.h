@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseCamera();
 void MoveCamera(GAME_VECTOR* ideal, long speed);

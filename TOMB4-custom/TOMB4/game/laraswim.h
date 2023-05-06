@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll);
 void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll);

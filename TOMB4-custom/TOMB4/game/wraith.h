@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseWraith(short item_number);
 void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, long objnum);

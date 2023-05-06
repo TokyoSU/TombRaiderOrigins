@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace);
 long TestCollision(ITEM_INFO* item, ITEM_INFO* l);

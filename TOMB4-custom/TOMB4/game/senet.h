@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseSenet(short item_number);
 void MakeMove(long piece, long displacement);

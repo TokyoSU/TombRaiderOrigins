@@ -4,9 +4,9 @@
 #include "control.h"
 #include "items.h"
 #include "sound.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "effects.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "camera.h"
 
 long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num)

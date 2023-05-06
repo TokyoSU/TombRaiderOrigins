@@ -7,9 +7,9 @@
 #include "winmain.h"
 #include "input.h"
 #include "3dmath.h"
-#include "../game/text.h"
+#include "game/text.h"
 #include "d3dmatrix.h"
-#include "../game/control.h"
+#include "game/control.h"
 #include "cmdline.h"
 #include "gamemain.h"
 #include "LoadSave.h"
@@ -20,10 +20,10 @@
 #pragma warning(push)
 #pragma warning(disable: 4244)
 #define PL_MPEG_IMPLEMENTATION
-#include "../tomb4/pl_mpeg.h"
+#include "tomb4/pl_mpeg.h"
 #pragma warning(pop)
 #include <sokol_time.h>
-#include "../game/sound.h"
+#include "game/sound.h"
 
 static unsigned char* FmvData;
 static HSTREAM FmvStream = 0;

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void phd_PushMatrix();
 void phd_PushUnitMatrix();

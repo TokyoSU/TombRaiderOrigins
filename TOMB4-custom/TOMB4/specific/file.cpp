@@ -6,26 +6,26 @@
 #include "drawbars.h"
 #include "dxshell.h"
 #include "drawroom.h"
-#include "../game/setup.h"
-#include "../game/objects.h"
-#include "../game/laraskin.h"
-#include "../game/items.h"
+#include "game/setup.h"
+#include "game/objects.h"
+#include "game/laraskin.h"
+#include "game/items.h"
 #include "specificfx.h"
-#include "../game/tomb4fx.h"
+#include "game/tomb4fx.h"
 #include "audio.h"
-#include "../game/spotcam.h"
-#include "../game/control.h"
-#include "../game/camera.h"
+#include "game/spotcam.h"
+#include "game/control.h"
+#include "game/camera.h"
 #include "polyinsert.h"
-#include "../game/box.h"
-#include "../game/draw.h"
-#include "../game/effect2.h"
-#include "../game/effects.h"
-#include "../game/sound.h"
+#include "game/box.h"
+#include "game/draw.h"
+#include "game/effect2.h"
+#include "game/effects.h"
+#include "game/sound.h"
 #include "winmain.h"
-#include "../game/lara.h"
+#include "game/lara.h"
 #include "output.h"
-#include "../game/gameflow.h"
+#include "game/gameflow.h"
 #include <zlib.h>
 
 TEXTURESTRUCT* textinfo;
@@ -136,8 +136,7 @@ unsigned int __stdcall LoadLevel(void* name)
 		LoadCinematic();
 		S_LoadBar();
 
-		if (!App.SoundDisabled)
-			LoadSamples();
+		LoadSamples();
 
 		free(pData);
 		S_LoadBar();
@@ -341,7 +340,7 @@ bool LoadTextures(long RTPages, long OTPages, long BTPages)
 {
 	DXTEXTUREINFO* dxtex;
 	LPDIRECTDRAWSURFACEX tSurf;
-	LPDIRECT3DTEXTUREX pTex;
+	LPDIRECT3DTEXTUREX pTex = nullptr;
 	unsigned char* TextureData;
 	long* d;
 	char* pData;
@@ -1243,10 +1242,10 @@ bool LoadSamples()
 		fread(&uncomp_size, sizeof(int), 1, level_fp);
 		fread(&comp_size, sizeof(int), 1, level_fp);
 		char* samples_buffer = (char*)malloc(comp_size);
-		fread(samples_buffer, comp_size, 1, level_fp);
-		Sound.LoadSample(samples_buffer, comp_size, uncomp_size, i);
 		if (samples_buffer != NULL)
 		{
+			fread(samples_buffer, comp_size, 1, level_fp);
+			Sound.LoadSample(samples_buffer, comp_size, uncomp_size, i);
 			free(samples_buffer);
 			samples_buffer = NULL;
 		}

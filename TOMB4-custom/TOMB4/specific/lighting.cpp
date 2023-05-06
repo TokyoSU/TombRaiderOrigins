@@ -4,15 +4,15 @@
 #include "3dmath.h"
 #include "function_stubs.h"
 #include "d3dmatrix.h"
-#include "../game/objects.h"
-#include "../game/control.h"
-#include "../game/delstuff.h"
-#include "../game/effect2.h"
-#include "../game/camera.h"
+#include "game/objects.h"
+#include "game/control.h"
+#include "game/delstuff.h"
+#include "game/effect2.h"
+#include "game/camera.h"
 #include "function_table.h"
-#include "../game/draw.h"
+#include "game/draw.h"
 #include "winmain.h"
-#include "../game/lara.h"
+#include "game/lara.h"
 
 ITEM_INFO* current_item;
 long StaticMeshShade;

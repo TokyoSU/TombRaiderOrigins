@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "people.h"
 #include "sphere.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "effects.h"
 #include "sound.h"
 #include "draw.h"
 #include "control.h"
 #include "objects.h"
 #include "box.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "lara.h"
 
 short GunShot(long x, long y, long z, short speed, short yrot, short room_number)

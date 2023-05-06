@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void DrawFlareInAir(ITEM_INFO* item);
 void draw_flare_meshes();

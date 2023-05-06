@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 bool WinRunCheck(LPSTR WindowName, LPSTR ClassName, HANDLE* mutex);
 void WinProcessCommandLine(LPSTR cmd);

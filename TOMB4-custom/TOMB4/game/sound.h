@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 constexpr auto SOUND_BASS_UNITS = 1.0f / 1024.0f;	// TR->BASS distance unit coefficient
 constexpr auto SOUND_MAXVOL_RADIUS = 1024.0f;		// Max. volume hearing distance

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseBike(short item_number);
 void DrawBikeExtras(ITEM_INFO* item);

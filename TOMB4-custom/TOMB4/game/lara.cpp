@@ -10,8 +10,8 @@
 #include "jeep.h"
 #include "snowmobile.h"
 #include "draw.h"
-#include "../specific/audio.h"
-#include "../specific/3dmath.h"
+#include "specific/audio.h"
+#include "specific/3dmath.h"
 #include "sound.h"
 #include "laraswim.h"
 #include "larasurf.h"
@@ -21,10 +21,10 @@
 #include "rope.h"
 #include "delstuff.h"
 #include "camera.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "gameflow.h"
 #include "tomb4fx.h"
-#include "../tomb4/tomb4.h"
+#include "tomb4/tomb4.h"
 
 void(*lara_control_routines[118])(ITEM_INFO* item, COLL_INFO* coll) =
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void DoGameflow();
 void DoLevel(unsigned char Name, unsigned char Audio);

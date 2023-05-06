@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 long ReTriggerAhmet(short item_number);

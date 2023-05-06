@@ -1,19 +1,19 @@
 #include "pch.h"
 #include "rocket_gun.h"
-#include "../larafire.h"
-#include "../items.h"
-#include "../lara.h"
-#include "../control.h"
-#include "../objects.h"
-#include "../delstuff.h"
-#include "../sound.h"
-#include "../savegame.h"
-#include "../tomb4fx.h"
-#include "../../specific/3dmath.h"
-#include "../../specific/function_stubs.h"
-#include "../effect2.h"
+#include "larafire.h"
+#include "items.h"
+#include "lara.h"
+#include "control.h"
+#include "objects.h"
+#include "delstuff.h"
+#include "sound.h"
+#include "savegame.h"
+#include "tomb4fx.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "effect2.h"
 
-#define ROCKET_BLAST_RADIUS 512
+constexpr auto ROCKET_BLAST_RADIUS = 512;
 
 void FireRocket()
 {

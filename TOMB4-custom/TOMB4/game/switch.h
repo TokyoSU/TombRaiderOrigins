@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 long SwitchTrigger(short item_number, short timer);

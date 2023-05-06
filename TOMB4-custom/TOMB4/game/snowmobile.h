@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 struct SNOWMOBILEINFO
 {
@@ -27,6 +27,7 @@ extern void SkidooAnimation(ITEM_INFO* skidoo, int collide, int dead);
 extern void SkidooExplode(ITEM_INFO* skidoo);
 extern int SkidooCheckGetOff();
 extern void SkidooGuns();
-extern int SkidooControl(short item_number);
+extern void SnowmobileStart(ITEM_INFO* skidoo, ITEM_INFO* laraitem);
+extern void SkidooControl(short item_number);
 extern void DrawSkidoo(ITEM_INFO* item);
 extern void DrawSkidooExtras(ITEM_INFO* item);

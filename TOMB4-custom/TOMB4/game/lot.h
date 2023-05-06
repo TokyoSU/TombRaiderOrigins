@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseLOTarray(long allocmem);
 void DisableBaddieAI(short item_number);

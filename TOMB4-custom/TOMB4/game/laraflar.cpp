@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "laraflar.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "objects.h"
-#include "../specific/output.h"
-#include "../specific/function_stubs.h"
+#include "specific/output.h"
+#include "specific/function_stubs.h"
 #include "effect2.h"
 #include "delstuff.h"
 #include "items.h"
@@ -19,16 +19,12 @@
 
 void DrawFlareInAir(ITEM_INFO* item)
 {
-	short* bounds;
-
-	bounds = GetBoundsAccurate(item);
-
+	short* bounds = GetBoundsAccurate(item);
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos - bounds[3], item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	phd_PutPolygons_train(meshes[objects[FLARE_ITEM].mesh_index], 0);
 	phd_PopMatrix();
-
 	if (gfLevelFlags & GF_MIRROR)
 	{
 		if (item->room_number == gfMirrorRoom)
@@ -124,7 +120,6 @@ long DoFlareLight(PHD_VECTOR* pos, long flare_age)
 void DoFlareInHand(long flare_age)
 {
 	PHD_VECTOR pos;
-
 	pos.x = 11;
 	pos.y = 32;
 	pos.z = 41;
@@ -154,7 +149,6 @@ void CreateFlare(short object, long thrown)
 	short flare_item, room_number;
 
 	flare_item = CreateItem();
-
 	if (flare_item != NO_ITEM)
 	{
 		collided = 0;
@@ -229,9 +223,7 @@ void CreateFlare(short object, long thrown)
 
 void set_flare_arm(long frame)
 {
-	short anim_base;
-
-	anim_base = objects[FLARE_ANIM].anim_index;
+	short anim_base = objects[FLARE_ANIM].anim_index;
 
 	if (frame >= 1)
 	{
@@ -340,10 +332,10 @@ void undraw_flare()
 				lara.right_arm.lock = 0;
 				lara.left_arm.lock = 0;
 				lara_item->anim_number = ANIM_STOP;
-				lara_item->frame_number = anims[ANIM_STOP].frame_base;
+				lara_item->frame_number = anims[lara_item->anim_number].frame_base;
 				lara_item->current_anim_state = AS_STOP;
 				lara_item->goal_anim_state = AS_STOP;
-				lara.flare_frame = anims[ANIM_STOP].frame_base;
+				lara.flare_frame = anims[lara_item->anim_number].frame_base;
 				return;
 			}
 
@@ -354,7 +346,7 @@ void undraw_flare()
 	else if (lara_item->current_anim_state == AS_STOP && lara.vehicle == NO_ITEM)
 	{
 		lara_item->anim_number = ANIM_STOP;
-		lara_item->frame_number = anims[ANIM_STOP].frame_base;
+		lara_item->frame_number = anims[lara_item->anim_number].frame_base;
 	}
 
 	if (ani >= 33 && ani < 72)
@@ -410,11 +402,11 @@ void undraw_flare()
 
 void FlareControl(short item_number)
 {
-	ITEM_INFO* flare;
 	long x, y, z, xv, yv, zv, flare_age;
 
-	flare = &items[item_number];
+	Log(1, "FlareControl...");
 
+	ITEM_INFO* flare = &items[item_number];
 	if (flare->fallspeed)
 	{
 		flare->pos.x_rot += 546;

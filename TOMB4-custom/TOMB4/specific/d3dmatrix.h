@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 D3DMATRIX* D3DIdentityMatrix(D3DMATRIX* mx);
 void SetD3DMatrix(D3DMATRIX* mx, float* imx);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseBaboon(short item_number);
 void BaboonControl(short item_number);

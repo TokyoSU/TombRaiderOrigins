@@ -10,12 +10,12 @@
 #include "draw.h"
 #include "sphere.h"
 #include "deltapak.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "tomb4fx.h"
-#include "../specific/3dmath.h"
-#include "../specific/output.h"
+#include "specific/3dmath.h"
+#include "specific/output.h"
 #include "box.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "lara.h"
 
 static short MovingBlockBounds[12] = { 0, 0, -256, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };

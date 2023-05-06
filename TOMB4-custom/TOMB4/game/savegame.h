@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 long CheckSumValid(char* buffer);
 void sgInitialiseHub(long dont_save_lara);

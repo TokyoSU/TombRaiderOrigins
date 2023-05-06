@@ -2,7 +2,7 @@
 #include "items.h"
 #include "effect2.h"
 #include "objects.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "control.h"
 #include "effects.h"
 #include "lara.h"

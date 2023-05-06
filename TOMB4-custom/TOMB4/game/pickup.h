@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void KeyHoleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);

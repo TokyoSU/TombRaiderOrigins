@@ -5,14 +5,14 @@
 #include "function_stubs.h"
 #include "function_table.h"
 #include "3dmath.h"
-#include "../game/text.h"
-#include "time.h"
+#include "game/text.h"
+#include "timer.h"
 #include "winmain.h"
-#include "../game/sound.h"
-#include "../game/gameflow.h"
+#include "game/sound.h"
+#include "game/gameflow.h"
 #include "dxshell.h"
-#include "../game/savegame.h"
-#include "../tomb4/tomb4.h"
+#include "game/savegame.h"
+#include "tomb4/tomb4.h"
 
 LPDIRECT3DVERTEXBUFFER DestVB;
 WATERTAB WaterTable[22][64];

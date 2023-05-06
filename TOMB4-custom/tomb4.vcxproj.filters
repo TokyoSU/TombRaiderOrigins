@@ -334,7 +334,7 @@
     <ClInclude Include="TOMB4\specific\texture.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
-    <ClInclude Include="TOMB4\specific\time.h">
+    <ClInclude Include="TOMB4\specific\timer.h">
       <Filter>TOMB4\specific</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\specific\winmain.h">
@@ -667,7 +667,7 @@
     <ClCompile Include="TOMB4\specific\texture.cpp">
       <Filter>TOMB4\specific</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\specific\time.cpp">
+    <ClCompile Include="TOMB4\specific\timer.cpp">
       <Filter>TOMB4\specific</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\specific\winmain.cpp">

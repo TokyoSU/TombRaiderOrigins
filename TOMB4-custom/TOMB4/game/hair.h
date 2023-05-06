@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseHair();
 void HairControl(long in_cutscene, long pigtail, short* cutscenething);

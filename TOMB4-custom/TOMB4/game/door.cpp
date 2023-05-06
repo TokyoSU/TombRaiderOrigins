@@ -10,7 +10,7 @@
 #include "items.h"
 #include "sphere.h"
 #include "box.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "lara.h"
 #include "switch.h"
 #include "lot.h"

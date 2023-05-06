@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void HWR_DrawSortList(D3DTLBUMPVERTEX* info, short num_verts, short texture, short type);
 void DrawSortList();

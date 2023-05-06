@@ -97,7 +97,7 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)TOMB4\;$(SolutionDir)TOMB4\game;$(SolutionDir)TOMB4\game\weapons;$(SolutionDir)TOMB4\specific;$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -123,7 +123,7 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)TOMB4\;$(SolutionDir)TOMB4\game;$(SolutionDir)TOMB4\game\weapons;$(SolutionDir)TOMB4\specific;$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -282,7 +282,7 @@
     <ClInclude Include="TOMB4\specific\registry.h" />
     <ClInclude Include="TOMB4\specific\specificfx.h" />
     <ClInclude Include="TOMB4\specific\texture.h" />
-    <ClInclude Include="TOMB4\specific\time.h" />
+    <ClInclude Include="TOMB4\specific\timer.h" />
     <ClInclude Include="TOMB4\specific\winmain.h" />
     <ClInclude Include="TOMB4\tomb4\bass.h" />
     <ClInclude Include="TOMB4\tomb4\bassmix.h" />
@@ -398,7 +398,7 @@
     <ClCompile Include="TOMB4\specific\registry.cpp" />
     <ClCompile Include="TOMB4\specific\specificfx.cpp" />
     <ClCompile Include="TOMB4\specific\texture.cpp" />
-    <ClCompile Include="TOMB4\specific\time.cpp" />
+    <ClCompile Include="TOMB4\specific\timer.cpp" />
     <ClCompile Include="TOMB4\specific\winmain.cpp" />
     <ClCompile Include="TOMB4\tomb4\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

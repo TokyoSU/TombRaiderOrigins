@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "sas.h"
 #include "objects.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "control.h"
 #include "lara_states.h"
 #include "switch.h"
@@ -11,9 +11,9 @@
 #include "tomb4fx.h"
 #include "box.h"
 #include "effect2.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "people.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "lara.h"
 
 static short DragSASBounds[12] = { -256, 256, -100, 100, -512, -460, -1820, 1820, -5460, 5460, 0, 0 };

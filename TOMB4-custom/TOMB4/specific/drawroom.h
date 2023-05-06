@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void ProcessRoomDynamics(ROOM_INFO* r);
 void ProcessRoomVertices(ROOM_INFO* r);

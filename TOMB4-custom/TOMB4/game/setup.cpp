@@ -12,7 +12,7 @@
 #include "traps.h"
 #include "deathsld.h"
 #include "weapons/rocket_gun.h"
-#include "../specific/specificfx.h"
+#include "specific/specificfx.h"
 #include "door.h"
 #include "bike.h"
 #include "jeep.h"
@@ -43,7 +43,7 @@
 #include "draw.h"
 #include "hair.h"
 #include "items.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "flmtorch.h"
 #include "scarab.h"
 #include "sentrygun.h"
@@ -61,11 +61,11 @@
 #include "control.h"
 #include "camera.h"
 #include "horse.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "lara.h"
 #include "deltapak.h"
 #include "gameflow.h"
-#include "../specific/file.h"
+#include "specific/file.h"
 
 void ObjectObjects()
 {
@@ -821,7 +821,7 @@ void BaddyObjects()
 
 	obj = &objects[MOTORBIKE];
 	obj->initialise = InitialiseBike;
-	//obj->control = BikeControl;
+	obj->control = BikeControl;
 	obj->collision = BikeCollision;
 	obj->draw_routine_extra = DrawBikeExtras;
 	obj->save_hitpoints = 1;
@@ -848,10 +848,11 @@ void BaddyObjects()
 
 	obj = &objects[SNOWMOBILE];
 	obj->initialise = InitialiseSkidoo;
-	//obj->control = SkidooControl;
+	obj->control = SkidooControl;
 	obj->collision = SkidooCollision;
 	obj->draw_routine = DrawSkidoo;
 	obj->draw_routine_extra = DrawSkidooExtras;
+	obj->save_hitpoints = 1;
 	obj->save_position = 1;
 	obj->save_flags = 1;
 	obj->save_anim = 1;

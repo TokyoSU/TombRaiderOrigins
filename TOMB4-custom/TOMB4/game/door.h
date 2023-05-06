@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void ShutThatDoor(DOORPOS_DATA* d);
 void OpenThatDoor(DOORPOS_DATA* d);

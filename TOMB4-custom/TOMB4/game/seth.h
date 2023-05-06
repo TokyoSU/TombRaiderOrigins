@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv);
 void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type);

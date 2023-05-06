@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void S_DrawHealthBar(long pos);
 void S_DrawAirBar(long pos);

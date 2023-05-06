@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 extern short SPxzoffs[8];
 extern short SPyoffs[8];

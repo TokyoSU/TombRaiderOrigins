@@ -6,9 +6,9 @@
 #include "control.h"
 #include "items.h"
 #include "lot.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "switch.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "effects.h"
 #include "lara.h"
 

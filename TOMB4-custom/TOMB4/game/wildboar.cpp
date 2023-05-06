@@ -3,7 +3,7 @@
 #include "box.h"
 #include "objects.h"
 #include "effects.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "lara.h"
 #include "control.h"
 #include "lot.h"

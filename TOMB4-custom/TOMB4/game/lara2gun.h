@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void undraw_pistol_mesh_left(long weapon_type);
 void undraw_pistol_mesh_right(long weapon_type);

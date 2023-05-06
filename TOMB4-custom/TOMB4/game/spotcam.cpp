@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "spotcam.h"
 #include "tomb4fx.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "control.h"
 #include "camera.h"
 #include "switch.h"
-#include "../specific/dxshell.h"
-#include "../specific/input.h"
+#include "specific/dxshell.h"
+#include "specific/input.h"
 #include "lara.h"
 #include "gameflow.h"
-#include "../tomb4/tomb4.h"
+#include "tomb4/tomb4.h"
 
 SPOTCAM SpotCam[128];
 long bTrackCamInit = 0;

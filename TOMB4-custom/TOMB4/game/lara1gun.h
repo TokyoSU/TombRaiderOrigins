@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item);
 void FireCrossbow(PHD_3DPOS* pos);

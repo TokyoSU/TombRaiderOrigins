@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void handle_cutseq_triggering(long name);
 void do_new_cutscene_camera();

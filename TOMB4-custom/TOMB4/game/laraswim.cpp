@@ -6,9 +6,9 @@
 #include "collide.h"
 #include "larafire.h"
 #include "control.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "camera.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "effect2.h"
 
 static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll)

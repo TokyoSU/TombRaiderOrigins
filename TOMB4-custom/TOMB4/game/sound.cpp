@@ -3,10 +3,10 @@
 #include "camera.h"
 #include "control.h"
 #include "lara.h"
-#include "../specific/file.h"
-#include "../specific/function_stubs.h"
-#include "../specific/LoadSave.h"
-#include "../specific/winmain.h"
+#include "specific/file.h"
+#include "specific/function_stubs.h"
+#include "specific/LoadSave.h"
+#include "specific/winmain.h"
 #include "effects.h"
 
 const BASS_BFX_FREEVERB BASS_ReverbTypes[RT_Count] =    // Reverb presets
@@ -30,12 +30,9 @@ SoundSystem::~SoundSystem()
 void SoundSystem::Init()
 {
 	// Initialise BASS (Will take DirectSound in priority since App.hWnd is used, except if its null)
-	BASS_Init(-1, 44100, BASS_DEVICE_3D, App.hWnd, NULL);
+	BASS_Init(App.DXInfo.nDS, 44100, BASS_DEVICE_3D, App.hWnd, NULL);
 	if (CheckBASSError("Initializing BASS sound device", true))
-	{
-		App.SoundDisabled = true;
 		return;
-	}
 
 	// Initialize BASS_FX plugin
 	BASS_FX_GetVersion();
@@ -81,27 +78,21 @@ void SoundSystem::Init()
 	BASS_FXSetParameters(BASS_FXHandler[SF_Compressor], &comp);
 
 	CheckBASSError("Attaching compressor", true);
-
-	App.SoundDisabled = false;
 }
 
 void SoundSystem::Release()
 {
-	if (!App.SoundDisabled)
+	Log(1, "Shutting down BASS...");
+	if (BASS_3D_Mixdown != NULL)
 	{
-		Log(1, "Shutting down BASS...");
-		if (BASS_3D_Mixdown != NULL)
-		{
-			BASS_StreamFree(BASS_3D_Mixdown);
-			BASS_3D_Mixdown = NULL;
-		}
-		BASS_Free();
+		BASS_StreamFree(BASS_3D_Mixdown);
+		BASS_3D_Mixdown = NULL;
 	}
+	BASS_Free();
 }
 
 int SoundSystem::PlayEffect(int soundFX, PHD_3DPOS* pos, SFX_OPTIONS option, float pitchMult, float gainMult)
 {
-	if (App.SoundDisabled) return false;
 	if (BASS_GetDevice() == -1) return false;
 
 	// TODO: check for sound environment !
@@ -205,11 +196,12 @@ int SoundSystem::PlayEffect(int soundFX, PHD_3DPOS* pos, SFX_OPTIONS option, flo
 		return false;
 
 	// Finally ready to play sound, assign it to sound slot.
-	SoundSlot[freeSlot].state = Idle;
-	SoundSlot[freeSlot].sample_index = soundFX;
-	SoundSlot[freeSlot].channel = channel;
-	SoundSlot[freeSlot].volume = gain;
-	SoundSlot[freeSlot].origin = pos ? Vector3((float)pos->x_pos, (float)pos->y_pos, (float)pos->z_pos) : SOUND_OMNIPRESENT_ORIGIN;
+	auto* sndslot = &SoundSlot[freeSlot];
+	sndslot->state = Idle;
+	sndslot->sample_index = soundFX;
+	sndslot->channel = channel;
+	sndslot->volume = gain;
+	sndslot->origin = pos ? Vector3((float)pos->x_pos, (float)pos->y_pos, (float)pos->z_pos) : SOUND_OMNIPRESENT_ORIGIN;
 
 	if (CheckBASSError("Applying pitch/gain attribs on channel %x, sample %d", false, channel, sampleToPlay))
 		return false;
@@ -239,7 +231,8 @@ void SoundSystem::StopEffect(int soundFX)
 {
 	for (int slot = 0; slot < SOUND_MAX_CHANNELS; slot++)
 	{
-		if (SoundSlot[slot].channel != NULL && SoundSlot[slot].sample_index == soundFX && BASS_ChannelIsActive(SoundSlot[slot].channel) == BASS_ACTIVE_PLAYING)
+		auto* sndslot = &SoundSlot[slot];
+		if (sndslot->channel != NULL && sndslot->sample_index == soundFX && BASS_ChannelIsActive(sndslot->channel))
 			FreeSlot(slot, SOUND_XFADETIME_CUTSOUND);
 	}
 }
@@ -271,29 +264,30 @@ void SoundSystem::ResumeAllSounds()
 
 int SoundSystem::EffectIsPlaying(int soundFX, PHD_3DPOS* position)
 {
-	for (int i = 0; i < SOUND_MAX_CHANNELS; i++)
+	for (int slot = 0; slot < SOUND_MAX_CHANNELS; slot++)
 	{
-		if (SoundSlot[i].sample_index == soundFX)
+		auto* sndslot = &SoundSlot[slot];
+		if (sndslot->sample_index == soundFX)
 		{
-			if (SoundSlot[i].channel == NULL)	// Free channel
+			if (sndslot->channel == NULL)	// Free channel
 				continue;
 
-			if (BASS_ChannelIsActive(SoundSlot[i].channel))
+			if (BASS_ChannelIsActive(sndslot->channel))
 			{
 				// Only check position on 3D samples. 2D samples stop immediately.
 
 				BASS_CHANNELINFO info;
-				BASS_ChannelGetInfo(SoundSlot[i].channel, &info);
+				BASS_ChannelGetInfo(sndslot->channel, &info);
 				if (!(info.flags & BASS_SAMPLE_3D) || position == NULL)
-					return i;
+					return slot;
 
 				// Check if effect origin is equal OR in nearest possible hearing range.
-				Vector3 origin = Vector3(position->x_pos, position->y_pos, position->z_pos);
-				if (Vector3::Distance(origin, SoundSlot[i].origin) < SOUND_MAXVOL_RADIUS)
-					return i;
+				Vector3 origin = Vector3((float)position->x_pos, (float)position->y_pos, (float)position->z_pos);
+				if (Vector3::Distance(origin, sndslot->origin) < SOUND_MAXVOL_RADIUS)
+					return slot;
 			}
 			else
-				SoundSlot[i].channel = NULL; // WTF, let's clean this up
+				sndslot->channel = NULL;
 		}
 	}
 	return -1;
@@ -313,8 +307,6 @@ void SoundSystem::SetReverbType(REVERB_TYPES reverb)
 
 void SoundSystem::PlaySoundSources()
 {
-	if (App.SoundDisabled) return;
-
 	constexpr int PLAY_BASE_ROOM = 0x80;
 	constexpr int PLAY_FLIP_ROOM = 0x40;
 
@@ -328,29 +320,30 @@ void SoundSystem::PlaySoundSources()
 		PlayEffect(sound.data, (PHD_3DPOS*)&sound);
 	}
 
-	for (int i = 0; i < SOUND_MAX_CHANNELS; i++)
+	for (int slot = 0; slot < SOUND_MAX_CHANNELS; slot++)
 	{
-		if (SoundSlot[i].sample_index < 0)
+		auto* sndslot = &SoundSlot[slot];
+		if (sndslot->sample_index < 0)
 			continue;
 
-		if ((sample_infos[SoundSlot[i].sample_index].flags & 3) != SFXF_LOOPED)
+		if ((sample_infos[sndslot->sample_index].flags & 3) != SFXF_LOOPED)
 		{
-			if (!EffectIsPlaying(i, NULL))
-				SoundSlot[i].sample_index = -1;
-			else
-				UpdateEffectAttributes(i, SoundSlot[i].pitch, SoundSlot[i].volume);
+			if (!EffectIsPlaying(slot, NULL))
+				sndslot->sample_index = -1;
+			//else
+			//	UpdateEffectAttributes(slot, sndslot->pitch, sndslot->volume);
 		}
 		else
 		{
-			if (SoundSlot[i].volume)
+			if (sndslot->volume)
 			{
-				UpdateEffectAttributes(i, SoundSlot[i].pitch, SoundSlot[i].volume);
-				SoundSlot[i].volume = 0;
+				UpdateEffectAttributes(slot, sndslot->pitch, sndslot->volume);
+				sndslot->volume = 0;
 			}
 			else
 			{
-				FreeSlot(i);
-				SoundSlot[i].sample_index = -1;
+				FreeSlot(slot);
+				sndslot->sample_index = -1;
 			}
 		}
 	}
@@ -382,6 +375,7 @@ bool SoundSystem::LoadSample(CHAR* buffer, int comp_size, int uncomp_size, int c
 	FreeSample(current_index);
 
 	BASS_SAMPLE info;
+	ZeroMemory(&info, sizeof(BASS_SAMPLE));
 	BASS_SampleGetInfo(sample, &info);
 	int finalLength = info.length + 44;	// uncompSize is invalid after 16->32 bit conversion
 
@@ -400,7 +394,7 @@ bool SoundSystem::LoadSample(CHAR* buffer, int comp_size, int uncomp_size, int c
 
 	WAVEFORMATEX* wf = (WAVEFORMATEX*)(uncompBuffer + 20);
 	wf->wFormatTag = 3;
-	wf->nChannels = info.chans;
+	wf->nChannels = (WORD)info.chans;
 	wf->wBitsPerSample = 32;
 	wf->nSamplesPerSec = info.freq;
 	wf->nBlockAlign = wf->nChannels * wf->wBitsPerSample / 8;
@@ -449,58 +443,49 @@ void SoundSystem::SayNo()
 
 void SoundSystem::UpdateScene()
 {
-	if (App.SoundDisabled) return;
 	for (int slot = 0; slot < SOUND_MAX_CHANNELS; slot++)
 	{
-		if ((SoundSlot[slot].channel != NULL) && (BASS_ChannelIsActive(SoundSlot[slot].channel) == BASS_ACTIVE_PLAYING))
+		auto* sndslot = &SoundSlot[slot];
+		if ((sndslot->channel != NULL) && (BASS_ChannelIsActive(sndslot->channel) == BASS_ACTIVE_PLAYING))
 		{
-			SAMPLE_INFO* sampleInfo = &sample_infos[samples_maps[SoundSlot[slot].sample_index]];
+			SAMPLE_INFO* sampleInfo = &sample_infos[samples_maps[sndslot->sample_index]];
 			// Stop and clean up sounds which were in ending state in previous frame.
 			// In case sound is looping, make it ending unless they are re-fired in next frame.
 
-			if (SoundSlot[slot].state == Ending)
+			if (sndslot->state == Ending)
 			{
-				SoundSlot[slot].state = Ended;
+				sndslot->state = Ended;
 				FreeSlot(slot, SOUND_XFADETIME_CUTSOUND);
 				continue;
 			}
 			else if ((SFX_FLAGS)(sampleInfo->flags & 3) == SFXF_LOOPED)
-				SoundSlot[slot].state = Ending;
+				sndslot->state = Ending;
 
 			// Calculate attenuation and clean up sounds which are out of listener range (only for 3D sounds).
 
-			if (SoundSlot[slot].origin != SOUND_OMNIPRESENT_ORIGIN)
+			if (sndslot->origin != SOUND_OMNIPRESENT_ORIGIN)
 			{
 				float radius = (float)(sampleInfo->radius) * 1024.0f;
-				float distance = DistanceToListener(SoundSlot[slot].origin);
+				float distance = DistanceToListener(sndslot->origin);
 				if (distance > radius)
 				{
 					FreeSlot(slot);
 					continue;
 				}
 				else
-					BASS_ChannelSetAttribute(SoundSlot[slot].channel, BASS_ATTRIB_VOL, Attenuate(SoundSlot[slot].volume, distance, radius));
+					BASS_ChannelSetAttribute(sndslot->channel, BASS_ATTRIB_VOL, Attenuate(sndslot->volume, distance, radius));
 			}
 		}
 	}
 
-	Vector3 at = Vector3(camera.target.x, camera.target.y, camera.target.z) -
-		         Vector3(camera.mike_pos.x, camera.mike_pos.y, camera.mike_pos.z);
+	Vector3 at = Vector3((float)camera.target.x, (float)camera.target.y, (float)camera.target.z) -
+		         Vector3((float)camera.mike_pos.x, (float)camera.mike_pos.y, (float)camera.mike_pos.z);
 	at.Normalize();
-	auto mikePos = BASS_3DVECTOR(					// Pos
-		camera.mike_pos.x,
-		camera.mike_pos.y,
-		camera.mike_pos.z);
-	auto laraVel = BASS_3DVECTOR(					// Vel
-		lara.current_xvel,
-		lara.current_yvel,
-		lara.current_zvel);
-	auto atVec = BASS_3DVECTOR(at.x, at.y, at.z);	// At
-	auto upVec = BASS_3DVECTOR(0.0f, 1.0f, 0.0f);	// Up
-	BASS_Set3DPosition(&mikePos,
-		&laraVel,
-		&atVec,
-		&upVec);
+	auto mikePos = BASS_3DVECTOR((float)camera.mike_pos.x, (float)camera.mike_pos.y, (float)camera.mike_pos.z);
+	auto laraVel = BASS_3DVECTOR((float)lara.current_xvel, (float)lara.current_yvel, (float)lara.current_zvel);
+	auto atVec = BASS_3DVECTOR(at.x, at.y, at.z);
+	auto upVec = BASS_3DVECTOR(0.0f, 1.0f, 0.0f);
+	BASS_Set3DPosition(&mikePos, &laraVel, &atVec, &upVec);
 	BASS_Apply3D();
 }
 
@@ -509,23 +494,25 @@ bool SoundSystem::UpdateEffectPosition(int slot, PHD_3DPOS* position, bool force
 	if (slot > SOUND_MAX_CHANNELS || slot < 0)
 		return false;
 
-	if (position)
+	auto* sndslot = &SoundSlot[slot];
+
+	if (position != NULL)
 	{
 		BASS_CHANNELINFO info;
-		BASS_ChannelGetInfo(SoundSlot[slot].channel, &info);
+		BASS_ChannelGetInfo(sndslot->channel, &info);
 		if (info.flags & BASS_SAMPLE_3D)
 		{
-			SoundSlot[slot].origin = Vector3(position->x_pos, position->y_pos, position->z_pos);
-			auto pos = BASS_3DVECTOR(position->x_pos, position->y_pos, position->z_pos);
-			auto rot = BASS_3DVECTOR(position->x_rot, position->y_rot, position->z_rot);
-			BASS_ChannelSet3DPosition(SoundSlot[slot].channel, &pos, &rot, NULL);
+			sndslot->origin = Vector3((float)position->x_pos, (float)position->y_pos, (float)position->z_pos);
+			auto pos = BASS_3DVECTOR((float)position->x_pos, (float)position->y_pos, (float)position->z_pos);
+			auto rot = BASS_3DVECTOR((float)position->x_rot, (float)position->y_rot, (float)position->z_rot);
+			BASS_ChannelSet3DPosition(sndslot->channel, &pos, &rot, NULL);
 			BASS_Apply3D();
 		}
 	}
 
 	// Reset activity flag, important for looped samples
-	if (BASS_ChannelIsActive(SoundSlot[slot].channel))
-		SoundSlot[slot].state = Idle;
+	if (BASS_ChannelIsActive(sndslot->channel))
+		sndslot->state = Idle;
 
 	return true;
 }
@@ -535,8 +522,9 @@ bool SoundSystem::UpdateEffectAttributes(int slot, float pitch, float gain)
 	if (slot > SOUND_MAX_CHANNELS || slot < 0)
 		return false;
 
-	BASS_ChannelSetAttribute(SoundSlot[slot].channel, BASS_ATTRIB_FREQ, 22050.0f * pitch);
-	BASS_ChannelSetAttribute(SoundSlot[slot].channel, BASS_ATTRIB_VOL, gain);
+	auto* sndslot = &SoundSlot[slot];
+	BASS_ChannelSetAttribute(sndslot->channel, BASS_ATTRIB_FREQ, 22050.0f * pitch);
+	BASS_ChannelSetAttribute(sndslot->channel, BASS_ATTRIB_VOL, gain);
 
 	return true;
 }
@@ -544,7 +532,8 @@ bool SoundSystem::UpdateEffectAttributes(int slot, float pitch, float gain)
 void SoundSystem::CreateSoundForFMV(int sampleRate)
 {
 	BASS_FMV_Stream = BASS_StreamCreate(sampleRate, 2, BASS_SAMPLE_FLOAT, STREAMPROC_PUSH, NULL);
-	CheckBASSError("Creating sound stream for fmv.", true);
+	if (BASS_FMV_Stream != 0)
+		BASS_ChannelPlay(BASS_FMV_Stream, FALSE);
 }
 
 void SoundSystem::UpdateSoundForFMV(LPVOID data, int length)
@@ -552,13 +541,13 @@ void SoundSystem::UpdateSoundForFMV(LPVOID data, int length)
 	if (data == NULL || BASS_FMV_Stream == 0)
 		return;
 	BASS_StreamPutData(BASS_FMV_Stream, data, sizeof(float) * length * 2);
-	CheckBASSError("Updating and playing the sound for fmv.", true);
 }
 
 void SoundSystem::FreeSoundForFMV()
 {
-	if (BASS_FMV_Stream)
+	if (BASS_FMV_Stream != 0)
 	{
+		BASS_ChannelStop(BASS_FMV_Stream);
 		BASS_StreamFree(BASS_FMV_Stream);
 		BASS_FMV_Stream = 0;
 	}
@@ -583,22 +572,22 @@ bool SoundSystem::CheckBASSError(const char* message, bool verbose, ...)
 
 int SoundSystem::GetFreeSlot()
 {
-	for (int i = 0; i < SOUND_MAX_CHANNELS; i++)
+	for (int slot = 0; slot < SOUND_MAX_CHANNELS; slot++)
 	{
-		if (SoundSlot[i].channel == NULL || !BASS_ChannelIsActive(SoundSlot[i].channel))
-			return i;
+		if (SoundSlot[slot].channel == NULL || !BASS_ChannelIsActive(SoundSlot[slot].channel))
+			return slot;
 	}
 
 	// No free slots, hijack now.
 	float minDistance = 0;
 	int farSlot = -1;
-	for (int i = 0; i < SOUND_MAX_CHANNELS; i++)
+	for (int slot = 0; slot < SOUND_MAX_CHANNELS; slot++)
 	{
-		float distance = Vector3(SoundSlot[i].origin - Vector3(camera.mike_pos.x, camera.mike_pos.y, camera.mike_pos.z)).Length();
+		float distance = Vector3(SoundSlot[slot].origin - Vector3((float)camera.mike_pos.x, (float)camera.mike_pos.y, (float)camera.mike_pos.z)).Length();
 		if (distance > minDistance)
 		{
 			minDistance = distance;
-			farSlot = i;
+			farSlot = slot;
 		}
 	}
 
@@ -612,17 +601,18 @@ void SoundSystem::FreeSlot(int slot, unsigned int fade)
 	if (slot > SOUND_MAX_CHANNELS || slot < 0)
 		return;
 
-	if (SoundSlot[slot].channel != NULL && BASS_ChannelIsActive(SoundSlot[slot].channel))
+	auto* sndslot = &SoundSlot[slot];
+	if (sndslot->channel != NULL && BASS_ChannelIsActive(sndslot->channel))
 	{
 		if (fade > 0)
-			BASS_ChannelSlideAttribute(SoundSlot[slot].channel, BASS_ATTRIB_VOL, -1.0f, fade);
+			BASS_ChannelSlideAttribute(sndslot->channel, BASS_ATTRIB_VOL, -1.0f, fade);
 		else
-			BASS_ChannelStop(SoundSlot[slot].channel);
+			BASS_ChannelStop(sndslot->channel);
 	}
 
-	SoundSlot[slot].channel = NULL;
-	SoundSlot[slot].state = Idle;
-	SoundSlot[slot].sample_index = -1;
+	sndslot->channel = NULL;
+	sndslot->state = Idle;
+	sndslot->sample_index = -1;
 }
 
 void SoundSystem::FreeSample(int index)
@@ -638,12 +628,12 @@ float SoundSystem::DistanceToListener(PHD_3DPOS* position)
 {
 	if (position == NULL)
 		return 0.0f;
-	return DistanceToListener(Vector3(position->x_pos, position->y_pos, position->z_pos));
+	return DistanceToListener(Vector3((float)position->x_pos, (float)position->y_pos, (float)position->z_pos));
 }
 
 float SoundSystem::DistanceToListener(Vector3 position)
 {
-	return Vector3(Vector3(camera.mike_pos.x, camera.mike_pos.y, camera.mike_pos.z) - position).Length();
+	return Vector3(Vector3((float)camera.mike_pos.x, (float)camera.mike_pos.y, (float)camera.mike_pos.z) - position).Length();
 }
 
 float SoundSystem::Attenuate(float gain, float distance, float radius)

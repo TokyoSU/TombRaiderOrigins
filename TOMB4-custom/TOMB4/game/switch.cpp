@@ -8,9 +8,9 @@
 #include "draw.h"
 #include "laramisc.h"
 #include "sound.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "camera.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "lara.h"
 #include "newinv.h"
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void SetFog(ITEM_INFO* item);
 void finish_level_effect(ITEM_INFO* item);

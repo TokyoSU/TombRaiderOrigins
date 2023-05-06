@@ -1,18 +1,18 @@
 #include "pch.h"
 #include "camera.h"
-#include "../specific/3dmath.h"
-#include "../specific/function_stubs.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
 #include "control.h"
 #include "delstuff.h"
 #include "larafire.h"
 #include "sound.h"
 #include "deltapak.h"
 #include "draw.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "effect2.h"
 #include "lara.h"
 #include "savegame.h"
-#include "../tomb4/tomb4.h"
+#include "tomb4/tomb4.h"
 
 CAMERA_INFO camera;
 

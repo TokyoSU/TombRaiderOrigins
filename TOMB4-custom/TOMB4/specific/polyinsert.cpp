@@ -5,17 +5,17 @@
 #include "output.h"
 #include "d3dmatrix.h"
 #include "function_stubs.h"
-#include "../game/tomb4fx.h"
+#include "game/tomb4fx.h"
 #include "function_table.h"
 #include "clipping.h"
-#include "../game/newinv.h"
-#include "../game/camera.h"
-#include "../game/effects.h"
+#include "game/newinv.h"
+#include "game/camera.h"
+#include "game/effects.h"
 #include "texture.h"
 #include "3dmath.h"
 #include "winmain.h"
 #include "gamemain.h"
-#include "../game/gameflow.h"
+#include "game/gameflow.h"
 
 D3DTLBUMPVERTEX XYUVClipperBuffer[20];
 D3DTLBUMPVERTEX zClipperBuffer[20];

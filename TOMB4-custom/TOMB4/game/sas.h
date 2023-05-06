@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseInjuredSas(short item_number);
 void InjuredSasControl(short item_number);

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "jean.h"
 #include "objects.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "control.h"
 #include "lara.h"
 

@@ -1,14 +1,13 @@
 #include "pch.h"
-#include "../specific/time.h"	//there's some other time.h
+#include "timer.h"
 #include "function_stubs.h"
 
 static __int64 counter, frequency;
 
 long Sync()
 {
-	__int64 PerformanceCount, f;
+	__int64 PerformanceCount = 0, f;
 	long n;
-
 	QueryPerformanceCounter((LARGE_INTEGER*)&PerformanceCount);
 	f = (PerformanceCount - counter) / frequency;
 	counter += frequency * f;
@@ -23,13 +22,10 @@ void TIME_Reset()
 
 bool TIME_Init()
 {
-	__int64 pfq;
-
 	Log(2, "TIME_Init");
-
+	__int64 pfq = 0;
 	if (!QueryPerformanceFrequency((LARGE_INTEGER*)&pfq))
 		return 0;
-
 	frequency = pfq / 60;
 	TIME_Reset();
 	return 1;

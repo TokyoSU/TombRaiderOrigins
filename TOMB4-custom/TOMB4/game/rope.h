@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void DrawRopeList();
 void ProjectRopePoints(ROPE_STRUCT* Rope);

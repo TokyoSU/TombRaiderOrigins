@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 long FlashIt();
 void DrawGameInfo(long timed);

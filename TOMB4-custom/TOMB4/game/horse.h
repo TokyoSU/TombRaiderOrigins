@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseHorseman(short item_number);
 void HorsemanControl(short item_number);

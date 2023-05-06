@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void DrawTrainStrips();
 void S_PrintShadow(short size, short* box, ITEM_INFO* item);

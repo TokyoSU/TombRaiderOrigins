@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "rope.h"
-#include "../specific/specificfx.h"
-#include "../specific/3dmath.h"
+#include "specific/specificfx.h"
+#include "specific/3dmath.h"
 #include "draw.h"
 #include "control.h"
 #include "lara_states.h"
 #include "lara.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 
 static PENDULUM NullPendulum = { {0, 0, 0}, {0, 0, 0}, 0, 0 };
 

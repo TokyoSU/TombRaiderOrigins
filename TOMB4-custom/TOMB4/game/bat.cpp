@@ -2,7 +2,7 @@
 #include "bat.h"
 #include "box.h"
 #include "objects.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "effects.h"
 #include "lara.h"
 #include "control.h"

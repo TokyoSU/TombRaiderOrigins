@@ -4,22 +4,21 @@
 #include "cmdline.h"
 #include "registry.h"
 #include "dxshell.h"
-#include "../game/larafire.h"
-#include "../game/text.h"
+#include "game/larafire.h"
+#include "game/text.h"
 #include "lighting.h"
 #include "function_table.h"
 #include "d3dmatrix.h"
 #include "3dmath.h"
 #include "audio.h"
-#include "../game/sound.h"
+#include "game/sound.h"
 #include "output.h"
 #include "file.h"
-#include "../game/gameflow.h"
+#include "game/gameflow.h"
 #include "gamemain.h"
 #include "fmv.h"
 #define SOKOL_IMPL
 #include <sokol_time.h>
-#include <time.h>
 
 static COMMANDLINES commandlines[] =
 {
@@ -581,11 +580,8 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	DXInitKeyboard(App.hWnd, App.hInstance);
 	App.hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
 
-	if (!App.SoundDisabled)
-	{
-		Sound.Init();
-		ACMInit();
-	}
+	Sound.Init();
+	ACMInit();
 
 	cutseqpakPtr = 0;
 	buf = 0;

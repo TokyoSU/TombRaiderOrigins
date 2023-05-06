@@ -6,14 +6,14 @@
 #include "objects.h"
 #include "control.h"
 #include "draw.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "lara_states.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "sphere.h"
 #include "camera.h"
 #include "effect2.h"
 #include "lara.h"
-#include "../specific/file.h"
+#include "specific/file.h"
 
 BOX_INFO* boxes;
 unsigned short* overlap;

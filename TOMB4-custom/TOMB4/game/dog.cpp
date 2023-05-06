@@ -2,9 +2,9 @@
 #include "dog.h"
 #include "box.h"
 #include "objects.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "effects.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "lara.h"
 #include "control.h"
 

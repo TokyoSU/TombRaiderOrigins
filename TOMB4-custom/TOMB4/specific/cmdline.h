@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void CLSetup(char* cmd);
 void CLNoFMV(char* cmd);

@@ -11,7 +11,7 @@
 #include "pickup.h"
 #include "clockworkbeetle.h"
 #include "spotcam.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "camera.h"
 #include "voncroy.h"
 #include "lara.h"
@@ -21,7 +21,7 @@
 #include "switch.h"
 #include "rope.h"
 #include "gameflow.h"
-#include "../specific/file.h"
+#include "specific/file.h"
 #include "snowmobile.h"
 
 SAVEGAME_INFO savegame;
@@ -220,7 +220,9 @@ void sgRestoreLevel()
 		{
 			item = &items[i];
 
-			if (item->object_number == MOTORBIKE || item->object_number == JEEP || item->object_number == SNOWMOBILE)
+			if (item->object_number == MOTORBIKE ||
+				item->object_number == JEEP ||
+				item->object_number == SNOWMOBILE)
 			{
 				item->pos.x_pos = lara_item->pos.x_pos;
 				item->pos.y_pos = lara_item->pos.y_pos;
@@ -243,7 +245,7 @@ void sgRestoreLevel()
 					JeepStart(item, lara_item);
 					break;
 				case SNOWMOBILE:
-					// TODO: start with snowmobile here !
+					SnowmobileStart(item, lara_item);
 					break;
 				}
 
@@ -633,10 +635,8 @@ void SaveLevelData(long FullSave)
 
 				if (item->object_number == MOTORBIKE)
 					WriteSG(item->data, sizeof(BIKEINFO));
-
 				if (item->object_number == JEEP)
 					WriteSG(item->data, sizeof(JEEPINFO));
-
 				if (item->object_number == SNOWMOBILE)
 					WriteSG(item->data, sizeof(SNOWMOBILEINFO));
 			}
@@ -1045,10 +1045,8 @@ void RestoreLevelData(long FullSave)
 
 			if (item->object_number == MOTORBIKE)
 				ReadSG(item->data, sizeof(BIKEINFO));
-
 			if (item->object_number == JEEP)
 				ReadSG(item->data, sizeof(JEEPINFO));
-
 			if (item->object_number == SNOWMOBILE)
 				ReadSG(item->data, sizeof(SNOWMOBILEINFO));
 

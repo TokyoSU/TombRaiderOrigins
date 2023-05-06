@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void ProcessObjectMeshVertices(MESH_DATA* mesh);
 void ProcessStaticMeshVertices(MESH_DATA* mesh);

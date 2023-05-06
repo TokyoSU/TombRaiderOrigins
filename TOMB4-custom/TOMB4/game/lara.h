@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 #define DAMAGE_START  140
 #define DAMAGE_LENGTH 14

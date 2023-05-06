@@ -9,7 +9,7 @@
 #include "control.h"
 #include "draw.h"
 #include "camera.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "larafire.h"
 #include "laraflar.h"
 #include "flmtorch.h"

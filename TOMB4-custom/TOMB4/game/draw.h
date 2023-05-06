@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitInterpolate(long frac, long rate);
 void phd_PopMatrix_I();

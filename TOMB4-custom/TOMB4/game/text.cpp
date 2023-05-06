@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "text.h"
-#include "../specific/polyinsert.h"
-#include "../specific/specificfx.h"
-#include "../specific/texture.h"
-#include "../specific/3dmath.h"
-#include "../specific/function_stubs.h"
-#include "../specific/gamemain.h"
-#include "../specific/function_table.h"
+#include "specific/polyinsert.h"
+#include "specific/specificfx.h"
+#include "specific/texture.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
+#include "specific/gamemain.h"
+#include "specific/function_table.h"
 
 long stash_font_height;
 long smol_font_height;

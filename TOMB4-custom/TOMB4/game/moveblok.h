@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseMovingBlock(short item_number);
 void MovableBlock(short item_number);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 long ControlPhase(long nframes, long demo_mode);
 void FlipMap(long FlipNumber);

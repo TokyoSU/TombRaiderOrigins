@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void ControlMapper(short item_number);
 void ControlLightningConductor(short item_number);

@@ -7,9 +7,9 @@
 #include "collide.h"
 #include "larafire.h"
 #include "control.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "camera.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 
 void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll)
 {

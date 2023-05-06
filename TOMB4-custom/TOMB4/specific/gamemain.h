@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void GameClose();
 unsigned int __stdcall GameMain(void* ptr);

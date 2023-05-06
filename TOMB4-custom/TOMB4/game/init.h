@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void InitialiseMapper(short item_number);
 void InitialiseLightningConductor(short item_number);

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "sentrygun.h"
 #include "effect2.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "sphere.h"
 #include "box.h"
 #include "tomb4fx.h"

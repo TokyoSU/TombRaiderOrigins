@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 #define	ROCKET_YOFF	180
 #define	ROCKET_ZOFF	72

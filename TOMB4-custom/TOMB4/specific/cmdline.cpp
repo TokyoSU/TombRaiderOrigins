@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "cmdline.h"
 #include "function_stubs.h"
-#include "../game/gameflow.h"
+#include "game/gameflow.h"
 #include "registry.h"
 #include "winmain.h"
 
@@ -50,15 +50,12 @@ void InitDSDevice(HWND dlg, HWND hwnd)
 {
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0);
 
-	for (int i = 0; i < App.DXInfo.nDSInfo; i++)
-		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)App.DXInfo.DSInfo[i].About);
-
-	if (!App.DXInfo.nDSInfo)
+	BASS_DEVICEINFO info;
+	int i = 1;
+	while (BASS_GetDeviceInfo(i, &info))
 	{
-		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)SCRIPT_TEXT(TXT_No_Sound_Card_Installed));
-		EnableWindow(GetDlgItem(dlg, 1018), 0);
-		SendMessage(GetDlgItem(dlg, 1018), BM_SETCHECK, 1, 0);
-		EnableWindow(hwnd, 0);
+		SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)info.name);
+		i++;
 	}
 
 	SendMessage(hwnd, CB_SETCURSEL, 0, 0);

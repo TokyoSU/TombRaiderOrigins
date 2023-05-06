@@ -539,7 +539,7 @@ HRESULT DXShowFrame(RECT& lpViewport)
 		screen = &G_dxptr->rScreen;
 
 	HRESULT hr = DXAttempt(G_dxptr->lpPrimaryBuffer->Blt(screen, G_dxptr->lpBackBuffer, &lpViewport, DDBLT_WAIT, 0));
-	if (!(G_dxptr->Flags & 1))
+	if (!(G_dxptr->Flags & 2))
 		hr = DXAttempt(G_dxptr->lpPrimaryBuffer->Flip(G_dxptr->lpBackBuffer, DDFLIP_WAIT));
 	return hr;
 }

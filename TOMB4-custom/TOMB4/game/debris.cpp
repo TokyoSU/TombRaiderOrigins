@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "debris.h"
 #include "control.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "tomb4fx.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "draw.h"
 
 DEBRIS_STRUCT debris[256];

@@ -1,19 +1,19 @@
 #include "pch.h"
 #include "jeep.h"
-#include "../specific/function_stubs.h"
+#include "specific/function_stubs.h"
 #include "objects.h"
 #include "lara_states.h"
 #include "collide.h"
 #include "control.h"
-#include "../specific/3dmath.h"
+#include "specific/3dmath.h"
 #include "newinv.h"
-#include "../specific/specificfx.h"
+#include "specific/specificfx.h"
 #include "effect2.h"
 #include "lara1gun.h"
 #include "tomb4fx.h"
 #include "items.h"
 #include "sound.h"
-#include "../specific/audio.h"
+#include "specific/audio.h"
 #include "laraflar.h"
 #include "lot.h"
 #include "lara.h"
@@ -26,9 +26,9 @@
 #include "switch.h"
 #include "camera.h"
 #include "draw.h"
-#include "../specific/input.h"
+#include "specific/input.h"
 #include "laramisc.h"
-#include "../specific/file.h"
+#include "specific/file.h"
 
 #define VEHICLE_EXTRA JEEP_ANIM
 static short jroomies[22];
@@ -1659,19 +1659,17 @@ void JeepControl(short item_number)
 	JeepCheckGetOut();
 }
 
-void JeepStart(ITEM_INFO* item, ITEM_INFO* l)
+void JeepStart(ITEM_INFO* item, ITEM_INFO* laraitem)
 {
-	JEEPINFO* jeep;
-
-	jeep = (JEEPINFO*)item->data;
+	JEEPINFO* jeep = (JEEPINFO*)item->data;
 	lara.gun_status = LG_HANDS_BUSY;
 	lara.hit_direction = -1;
-	l->current_anim_state = 0;
-	l->goal_anim_state = 0;
-	l->anim_number = objects[VEHICLE_EXTRA].anim_index + 14;
-	l->frame_number = anims[l->anim_number].frame_base;
-	item->anim_number = l->anim_number + objects[JEEP].anim_index - objects[VEHICLE_EXTRA].anim_index;
-	item->frame_number = l->frame_number + anims[item->anim_number].frame_base - anims[l->anim_number].frame_base;
+	laraitem->current_anim_state = 0;
+	laraitem->goal_anim_state = 0;
+	laraitem->anim_number = objects[VEHICLE_EXTRA].anim_index + 14;
+	laraitem->frame_number = anims[laraitem->anim_number].frame_base;
+	item->anim_number = laraitem->anim_number + objects[JEEP].anim_index - objects[VEHICLE_EXTRA].anim_index;
+	item->frame_number = laraitem->frame_number + anims[item->anim_number].frame_base - anims[laraitem->anim_number].frame_base;
 	item->flags |= IFL_TRIGGERED;
 	item->hit_points = 1;
 	jeep->unused1 = 0;

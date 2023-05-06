@@ -1,5 +1,5 @@
 #pragma once
-#include "../global/types.h"
+#include "global/types.h"
 
 void DXBitMask2ShiftCnt(unsigned long mask, unsigned char* shift, unsigned char* count);
 void DXReadKeyboard(char* KeyMap);

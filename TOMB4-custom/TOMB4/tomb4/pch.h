@@ -14,9 +14,6 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <algorithm>
-#include <d3d.h>
-#include <d3dtypes.h>
-#include <directxtk/SimpleMath.h>
 #include <vector>
 #include <cmath>
 #include <string>
@@ -24,8 +21,12 @@
 #include <process.h>
 #include <dinput.h>
 #include <mmreg.h>
+#include <time.h>
+#include <d3d.h>
+#include <d3dtypes.h>
+#include <directxtk/SimpleMath.h>
 
-#include "../../resource.h"
+#include "resource.h"
 #define ONE_DEGREE 182
 
 using namespace DirectX;
