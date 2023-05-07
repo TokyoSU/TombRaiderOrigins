@@ -225,7 +225,7 @@ void InitialiseFish(short item_number)
 	item->hit_points = nCurrentLeader++;
 
 	// Get a fish range (define the range x/y/z limits)
-	item->item_flags[0] = GetRandomControl() & GetFishRangeCount(item);
+	item->item_flags[0] = short(GetRandomControl() & GetFishRangeCount(item));
 
 	SetupFish(item);
 }

@@ -9,7 +9,7 @@ struct FISH_INFO
 	short y = 0;
 	short z = 0;
 	unsigned short angle = 0;
-	short type = 0; // 0 to 3
+	short type = 0;
 	short desty = 0;
 	char angadd = 0;
 	unsigned char speed = 0;

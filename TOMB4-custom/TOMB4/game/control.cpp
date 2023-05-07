@@ -42,7 +42,6 @@
 #include "savegame.h"
 #include "specific/file.h"
 #include "specific/drawroom.h"
-#include <fish_emitter.h>
 
 ITEM_INFO* items;
 ANIM_STRUCT* anims;
