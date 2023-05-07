@@ -42,6 +42,7 @@
 #include "savegame.h"
 #include "specific/file.h"
 #include "specific/drawroom.h"
+#include <fish_emitter.h>
 
 ITEM_INFO* items;
 ANIM_STRUCT* anims;
@@ -796,7 +797,6 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 				break;
 
 			item->timer = timer;
-
 			if (timer != 1)
 				item->timer *= 30;
 
@@ -969,14 +969,12 @@ void TestTriggers(short* data, long heavy, long HeavyFlags)
 			break;
 
 		case TO_SECRET:
-
 			if (!(savegame.Level.Secrets & 1 << value))
 			{
 				Sound.PlaySecretTrack();
 				savegame.Level.Secrets |= 1 << value;
 				savegame.Game.Secrets++;
 			}
-
 			break;
 
 		case TO_FLYBY:

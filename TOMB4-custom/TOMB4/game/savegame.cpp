@@ -23,6 +23,7 @@
 #include "gameflow.h"
 #include "specific/file.h"
 #include "snowmobile.h"
+#include <fish_emitter.h>
 
 SAVEGAME_INFO savegame;
 
@@ -1042,6 +1043,9 @@ void RestoreLevelData(long FullSave)
 				ReadSG(&item->mesh_bits, sizeof(unsigned long));
 				ReadSG(&item->meshswap_meshbits, sizeof(unsigned long));
 			}
+
+			if (item->object_number == FISH_EMITTER && item->hit_points != NO_ITEM)
+				SetupFish(item);
 
 			if (item->object_number == MOTORBIKE)
 				ReadSG(item->data, sizeof(BIKEINFO));

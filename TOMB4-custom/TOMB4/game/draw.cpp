@@ -403,9 +403,6 @@ void DrawAnimatingItem(ITEM_INFO* item)
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
-	if (obj->object_mip && (obj + 1)->loaded && mMXPtr[M23] / 4 > obj->object_mip)
-		obj++;
-
 	if (item->object_number < ENEMY_JEEP || item->object_number > SETHA)
 		calc_animating_item_clip_window(item, frm[0]);
 	else

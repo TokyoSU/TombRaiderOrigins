@@ -1865,3 +1865,35 @@ long GetFixedScale(long unit)
 	y = (phd_winheight > h) ? MulDiv(phd_winheight, unit, h) : unit;
 	return x < y ? x : y;
 }
+
+void mCalcPoint(long x, long y, long z, long* result)
+{
+	x -= w2v_matrix[M03];
+	y -= w2v_matrix[M13];
+	z -= w2v_matrix[M23];
+	result[0] = (w2v_matrix[M00] * x + w2v_matrix[M01] * y + w2v_matrix[M02] * z) >> W2V_SHIFT;
+	result[1] = (w2v_matrix[M10] * x + w2v_matrix[M11] * y + w2v_matrix[M12] * z) >> W2V_SHIFT;
+	result[2] = (w2v_matrix[M20] * x + w2v_matrix[M21] * y + w2v_matrix[M22] * z) >> W2V_SHIFT;
+}
+
+void ProjectPCoord(long x, long y, long z, long* result, long cx, long cy, long fov)
+{
+	if (z > 0)
+	{
+		result[0] = cx + x * fov / z;
+		result[1] = cy + y * fov / z;
+		result[2] = z;
+	}
+	else if (z < 0)
+	{
+		result[0] = cx - x * fov / z;
+		result[1] = cy - y * fov / z;
+		result[2] = z;
+	}
+	else
+	{
+		result[0] = cx + x * fov;
+		result[1] = cy + y * fov;
+		result[2] = z;
+	}
+}

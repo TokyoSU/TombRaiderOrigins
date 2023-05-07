@@ -680,7 +680,7 @@ void SoundSystem::PlaySoundTrack(std::string track, SOUND_TRACK_TYPE mode, QWORD
 		// Only activates if no custom position is passed as argument.
 		if (!position)
 		{
-			QWORD newPos = BASS_ChannelGetLength(stream, BASS_POS_BYTE) * (static_cast<float>(GetRandomControl()) / static_cast<float>(RAND_MAX));
+			QWORD newPos = BASS_ChannelGetLength(stream, BASS_POS_BYTE) * QWORD(static_cast<float>(GetRandomControl()) / static_cast<float>(RAND_MAX));
 			BASS_ChannelSetPosition(stream, newPos, BASS_POS_BYTE);
 		}
 	}

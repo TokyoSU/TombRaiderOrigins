@@ -24,6 +24,8 @@ void StashSkinVertices(long node);
 void SkinVerticesToScratch(long node);
 long GetRenderScale(long unit);
 long GetFixedScale(long unit);
+extern void mCalcPoint(long x, long y, long z, long* result);
+extern void ProjectPCoord(long x, long y, long z, long* result, long cx, long cy, long fov);
 
 extern long GlobalAlpha;
 extern long GlobalAmbient;

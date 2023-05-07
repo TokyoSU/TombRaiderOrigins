@@ -1282,8 +1282,7 @@ void CalculateCamera()
 
 	if (rooms[camera.pos.room_number].flags & ROOM_UNDERWATER)
 	{
-		Sound.PlayEffect(SFX_UNDERWATER, NULL, SFXO_ALWAYS);
-
+		//Sound.PlayEffect(SFX_UNDERWATER, NULL, SFXO_ALWAYS);
 		if (!camera.underwater)
 			camera.underwater = 1;
 	}

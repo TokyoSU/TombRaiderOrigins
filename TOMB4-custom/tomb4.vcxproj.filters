@@ -365,6 +365,11 @@
     <ClInclude Include="TOMB4\game\objects\tr2\snowmobile.h" />
     <ClInclude Include="TOMB4\tomb4\bassmix.h" />
     <ClInclude Include="TOMB4\tomb4\bass_fx.h" />
+    <ClInclude Include="TOMB4\game\objects\tr1_objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr2_objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr3_objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr5_objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr3\fish_emitter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TOMB4\game\lara.cpp">
@@ -686,6 +691,21 @@
       <Filter>TOMB4</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\objects\tr2\snowmobile.cpp">
+      <Filter>TOMB4</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr1_objects.cpp">
+      <Filter>TOMB4</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr2_objects.cpp">
+      <Filter>TOMB4</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr3_objects.cpp">
+      <Filter>TOMB4</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr5_objects.cpp">
+      <Filter>TOMB4</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr3\fish_emitter.cpp">
       <Filter>TOMB4</Filter>
     </ClCompile>
   </ItemGroup>

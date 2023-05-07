@@ -67,7 +67,12 @@
 #include "gameflow.h"
 #include "specific/file.h"
 
-void ObjectObjects()
+#include "tr1_objects.h"
+#include "tr2_objects.h"
+#include "tr3_objects.h"
+#include "tr5_objects.h"
+
+static void ObjectObjects()
 {
 	OBJECT_INFO* obj;
 
@@ -552,7 +557,7 @@ void ObjectObjects()
 	obj->loaded = 1;
 }
 
-void TrapObjects()
+static void TrapObjects()
 {
 	OBJECT_INFO* obj;
 
@@ -804,7 +809,7 @@ void TrapObjects()
 	obj->save_mesh = 1;
 }
 
-void BaddyObjects()
+static void BaddyObjects()
 {
 	OBJECT_INFO* obj;
 
@@ -868,7 +873,6 @@ void BaddyObjects()
 		obj->hit_points = 15;
 		obj->pivot_length = 50;
 		obj->radius = 128;
-		obj->object_mip = 5120;
 		obj->explodable_meshbits = 0xA00;
 		obj->intelligent = 1;
 		obj->save_mesh = 1;
@@ -893,7 +897,6 @@ void BaddyObjects()
 		obj->shadow_size = 128;
 		obj->hit_points = 15;
 		obj->radius = 128;
-		obj->object_mip = 5120;
 		obj->explodable_meshbits = 0x200000;
 		obj->intelligent = 1;
 		obj->save_mesh = 1;
@@ -922,7 +925,6 @@ void BaddyObjects()
 		obj->hit_points = -16384;
 		obj->pivot_length = 0;
 		obj->radius = 128;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->HitEffect = 0;
 		obj->save_flags = 1;
@@ -951,7 +953,6 @@ void BaddyObjects()
 		obj->pivot_length = 50;
 		obj->radius = 102;
 		obj->bite_offset = 1;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->save_mesh = 1;
 		obj->save_flags = 1;
@@ -984,7 +985,6 @@ void BaddyObjects()
 		obj->pivot_length = 50;
 		obj->radius = 102;
 		obj->bite_offset = 1;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->HitEffect = 1;
 		obj->save_flags = 1;
@@ -1013,7 +1013,6 @@ void BaddyObjects()
 		obj->hit_points = 80;
 		obj->pivot_length = 50;
 		obj->radius = 512;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->HitEffect = 1;
 		obj->save_flags = 1;
@@ -1050,7 +1049,6 @@ void BaddyObjects()
 		obj->shadow_size = 128;
 		obj->hit_points = 15;
 		obj->radius = 170;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
@@ -1073,7 +1071,6 @@ void BaddyObjects()
 		obj->shadow_size = 128;
 		obj->hit_points = 15;
 		obj->radius = 128;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
@@ -1096,7 +1093,6 @@ void BaddyObjects()
 		obj->hit_points = 1000;
 		obj->pivot_length = 500;
 		obj->radius = 512;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
@@ -1116,7 +1112,6 @@ void BaddyObjects()
 		obj->hit_points = 500;
 		obj->pivot_length = 50;
 		obj->radius = 341;
-		obj->object_mip = 5120;
 		obj->intelligent = 1;
 		obj->undead = 1;
 		obj->save_flags = 1;
@@ -1126,7 +1121,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[LARA_DOUBLE];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseLaraDouble;
@@ -1145,7 +1139,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[HORSEMAN];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseHorseman;
@@ -1167,7 +1160,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[HAMMERHEAD];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseHammerhead;
@@ -1192,7 +1184,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[CROCODILE];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseCroc;
@@ -1217,7 +1208,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[DEMIGOD1];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseDemigod;
@@ -1242,7 +1232,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[DEMIGOD2];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseDemigod;
@@ -1265,7 +1254,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[DEMIGOD3];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseDemigod;
@@ -1288,7 +1276,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[MUTANT];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseCrocgod;
@@ -1312,7 +1299,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[TROOPS];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseTroop;
@@ -1337,7 +1323,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[SAS];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseSas;
@@ -1362,7 +1347,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[HARPY];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseHarpy;
@@ -1382,7 +1366,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[WILD_BOAR];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseWildboar;
@@ -1405,7 +1388,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[DOG];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseDog;
@@ -1428,7 +1410,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[AHMET];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseAhmet;
@@ -1451,7 +1432,6 @@ void BaddyObjects()
 	for (int i = 0; i < 3; i++)
 	{
 		obj = &objects[BABOON_NORMAL + 2 * i];
-
 		if (obj->loaded)
 		{
 			obj->initialise = InitialiseBaboon;
@@ -1467,14 +1447,12 @@ void BaddyObjects()
 			obj->save_anim = 1;
 			obj->save_hitpoints = 1;
 			obj->save_position = 1;
-
 			if (i)
 				obj->anim_index = objects[BABOON_NORMAL].anim_index;
 		}
 	}
 
 	obj = &objects[ENEMY_JEEP];
-
 	if (obj->loaded)
 	{
 		if (gfLevelFlags & GF_TRAIN)
@@ -1511,7 +1489,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[BAT];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseBat;
@@ -1530,7 +1507,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[BIG_BEETLE];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseScarab;
@@ -1550,7 +1526,6 @@ void BaddyObjects()
 	}
 
 	obj = &objects[SENTRY_GUN];
-
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseAutogun;
@@ -1878,11 +1853,9 @@ void InitialiseLara()
 
 void InitialiseObjects()
 {
-	OBJECT_INFO* obj;
-
 	for (int i = 0; i < NUMBER_OBJECTS; i++)
 	{
-		obj = &objects[i];
+		OBJECT_INFO* obj = &objects[i];
 		obj->initialise = 0;
 		obj->collision = 0;
 		obj->control = 0;
@@ -1910,6 +1883,10 @@ void InitialiseObjects()
 	BaddyObjects();
 	ObjectObjects();
 	TrapObjects();
+	InitialiseObjects_TR1();
+	InitialiseObjects_TR2();
+	InitialiseObjects_TR3();
+	InitialiseObjects_TR5();
 	InitialiseHair();
 	InitialiseEffects();
 
@@ -1927,12 +1904,6 @@ void InitialiseObjects()
 	SequenceResults[1][2][0] = 3;
 	SequenceResults[2][0][1] = 4;
 	SequenceResults[2][1][0] = 5;
-
-	for (int i = 0; i < gfNumMips; i++)
-	{
-		obj = &objects[((gfMips[i] & 0xF) << 1) + ANIMATING1];
-		obj->object_mip = (gfMips[i] & 0xF0) << 6;
-	}
 }
 
 void GetAIPickups()

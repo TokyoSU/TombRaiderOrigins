@@ -509,6 +509,7 @@ enum object_types
 	WHITE_LIGHT,
 	BLINKING_LIGHT,
 	LENS_FLARE,
+	FISH_EMITTER, // TR3 fish
 	
 	AI_GUARD = AI_INDEX,
 	AI_AMBUSH,

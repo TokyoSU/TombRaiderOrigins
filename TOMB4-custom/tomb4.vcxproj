@@ -177,6 +177,10 @@
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="TOMB4\game\lara_states.h" />
+    <ClInclude Include="TOMB4\game\objects\tr1_objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr2_objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr3\fish_emitter.h" />
+    <ClInclude Include="TOMB4\game\objects\tr3_objects.h" />
     <ClInclude Include="TOMB4\game\objects\tr4\ahmet.h" />
     <ClInclude Include="TOMB4\game\objects\tr4\baboon.h" />
     <ClInclude Include="TOMB4\game\objects\tr4\bat.h" />
@@ -229,6 +233,7 @@
     <ClInclude Include="TOMB4\game\objects\tr4\mummy.h" />
     <ClInclude Include="TOMB4\game\newinv.h" />
     <ClInclude Include="TOMB4\game\objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr5_objects.h" />
     <ClInclude Include="TOMB4\game\objlight.h" />
     <ClInclude Include="TOMB4\game\people.h" />
     <ClInclude Include="TOMB4\game\pickup.h" />
@@ -294,6 +299,10 @@
     <ClInclude Include="TOMB4\tomb4\troyestuff.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TOMB4\game\objects\tr1_objects.cpp" />
+    <ClCompile Include="TOMB4\game\objects\tr2_objects.cpp" />
+    <ClCompile Include="TOMB4\game\objects\tr3\fish_emitter.cpp" />
+    <ClCompile Include="TOMB4\game\objects\tr3_objects.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr4\ahmet.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr4\baboon.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr4\bat.cpp" />
@@ -346,6 +355,7 @@
     <ClCompile Include="TOMB4\game\objects\tr4\mummy.cpp" />
     <ClCompile Include="TOMB4\game\newinv.cpp" />
     <ClCompile Include="TOMB4\game\objects.cpp" />
+    <ClCompile Include="TOMB4\game\objects\tr5_objects.cpp" />
     <ClCompile Include="TOMB4\game\objlight.cpp" />
     <ClCompile Include="TOMB4\game\people.cpp" />
     <ClCompile Include="TOMB4\game\pickup.cpp" />
