@@ -622,7 +622,7 @@ void GuideControl(short item_number)
 				item->ai_bits = FOLLOW;
 				item->item_flags[3]++;
 			}
-			else if (item->trigger_flags <= 999)
+			else if (item->ocb <= 999)
 				item->goal_anim_state = 1;
 			else
 			{

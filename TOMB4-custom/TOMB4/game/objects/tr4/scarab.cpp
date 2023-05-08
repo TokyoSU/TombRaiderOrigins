@@ -220,9 +220,9 @@ void TriggerScarab(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags && (!item->item_flags[2] || !(GetRandomControl() & 0xF)))
+	if (item->ocb && (!item->item_flags[2] || !(GetRandomControl() & 0xF)))
 	{
-		item->trigger_flags--;
+		item->ocb--;
 
 		if (item->item_flags[2] && GetRandomControl() & 1)
 			item->item_flags[2]--;
@@ -369,12 +369,12 @@ void InitialiseScarabGenerator(short item_number)
 	short flag;
 
 	item = &items[item_number];
-	flag = item->trigger_flags / 1000;
+	flag = item->ocb / 1000;
 	item->pos.x_rot = 0x2000;
 	item->item_flags[0] = flag & 1;
 	item->item_flags[1] = flag & 2;
 	item->item_flags[2] = flag & 4;
-	item->trigger_flags %= 1000;
+	item->ocb %= 1000;
 
 	if (!item->item_flags[0])
 	{

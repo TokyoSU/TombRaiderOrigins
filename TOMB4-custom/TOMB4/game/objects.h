@@ -163,6 +163,7 @@ enum object_types
 	AHMET,
 	MUTANT,
 	FISH,
+	TR2_RAT,
 
 	GAME_PIECE1 = TRAPS_INDEX,
 	GAME_PIECE2,
@@ -510,6 +511,7 @@ enum object_types
 	BLINKING_LIGHT,
 	LENS_FLARE,
 	FISH_EMITTER, // TR3 fish
+	FISH_TARGET, // Known as carcass !
 	
 	AI_GUARD = AI_INDEX,
 	AI_AMBUSH,

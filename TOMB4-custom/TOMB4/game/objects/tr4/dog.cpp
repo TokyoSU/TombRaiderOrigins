@@ -19,7 +19,7 @@ void InitialiseDog(short item_number)
 
 	item->current_anim_state = 1;
 
-	if (item->trigger_flags)
+	if (item->ocb)
 	{
 		item->anim_number = objects[item->object_number].anim_index + 1;
 		item->status -= ITEM_INVISIBLE;

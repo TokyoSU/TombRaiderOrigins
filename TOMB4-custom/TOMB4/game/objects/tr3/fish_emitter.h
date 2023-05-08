@@ -43,3 +43,4 @@ extern void SetupFish(ITEM_INFO* item);
 extern void InitialiseFish(short item_number);
 extern void ControlFish(short item_number);
 extern void S_DrawFish(ITEM_INFO* item);
+extern void FishTargetControl(short item_number);

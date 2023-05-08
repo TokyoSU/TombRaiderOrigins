@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <array>
 #include <cmath>
 #include <string>
 #include <stdio.h>
@@ -33,12 +34,32 @@
 
 #define ONE_DEGREE 182
 constexpr short ANGLE(short value) { return value * ONE_DEGREE; }
-constexpr short DISTANCE(int value) { return value * 1024; }
+constexpr long DISTANCE(long value) { return value * 1024; }
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 extern void WinDisplayString(long x, long y, const char* string, ...);
 extern void WinDisplayString(long x, long y, unsigned char flags, const char* string, ...);
+
+#include <angelscript.h>
+#include "script/autowrapper/aswrappedcall.h"
+#include "script/contextmgr/contextmgr.h"
+#include "script/datetime/datetime.h"
+#include "script/debugger/debugger.h"
+#include "script/scriptany/scriptany.h"
+#include "script/scriptarray/scriptarray.h"
+#include "script/scriptbuilder/scriptbuilder.h"
+#include "script/scriptdictionary/scriptdictionary.h"
+#include "script/scriptfile/scriptfile.h"
+#include "script/scriptfile/scriptfilesystem.h"
+#include "script/scriptgrid/scriptgrid.h"
+#include "script/scripthandle/scripthandle.h"
+#include "script/scripthelper/scripthelper.h"
+#include "script/scriptmath/scriptmath.h"
+#include "script/scriptmath/scriptmathcomplex.h"
+#include "script/scriptstdstring/scriptstdstring.h"
+#include "script/serializer/serializer.h"
+#include "script/weakref/weakref.h"
 
 #endif //PCH_H

@@ -2498,7 +2498,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 	dx = target->x - start->x;
 	dy = target->y - start->y;
 	dz = target->z - start->z;
-	ClosestItem = 999;
+	ClosestItem = NO_ITEM;
 	ClosestDist = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
 	for (int i = 0; i < number_los_rooms; i++)
@@ -2508,8 +2508,7 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 		for (item_number = r->item_number; item_number != NO_ITEM; item_number = item->next_item)
 		{
 			item = &items[item_number];
-
-			if (item->status != ITEM_DEACTIVATED && item->status != ITEM_INVISIBLE && item->object_number != LARA)
+			if (item->object_number != LARA)
 			{
 				bounds = GetBoundsAccurate(item);
 				ItemPos.x_pos = item->pos.x_pos;
@@ -2518,7 +2517,11 @@ long ObjectOnLOS2(GAME_VECTOR* start, GAME_VECTOR* target, PHD_VECTOR* Coord, ME
 				ItemPos.y_rot = item->pos.y_rot;
 
 				if (DoRayBox(start, target, bounds, &ItemPos, Coord, item_number))
+				{
+					if (item->object_number == FISH_TARGET)
+						Log(1, "Shooted fish target !");
 					target->room_number = los_rooms[i];
+				}
 			}
 		}
 
@@ -2570,7 +2573,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 	}
 
 	item_no = (short)ObjectOnLOS2(src, dest, &v, &Mesh);
-	if (item_no != 999)
+	if (item_no != NO_ITEM)
 	{
 		target.x = v.x - ((v.x - src->x) >> 5);
 		target.y = v.y - ((v.y - src->y) >> 5);
@@ -2585,7 +2588,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 			{
 				if (item_no < 0)
 				{
-					if (Mesh->static_number >= SHATTER0 && Mesh->static_number < SHATTER8)
+					if (Mesh->static_number >= SHATTER0 && Mesh->static_number <= SHATTER9)
 					{
 						ShatterObject(0, Mesh, 128, target.room_number, 0);
 						SmashedMeshRoom[SmashedMeshCount] = target.room_number;
@@ -2601,7 +2604,6 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 				else
 				{
 					shotitem = &items[item_no];
-
 					if (shotitem->object_number != SWITCH_TYPE7 && shotitem->object_number != SWITCH_TYPE8)
 					{
 						if (objects[shotitem->object_number].explodable_meshbits & ShatterItem.Bit && LaserSight)
@@ -2617,15 +2619,14 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						}
 						else
 						{
-							if (objects[shotitem->object_number].HitEffect == 1)
+							if (objects[shotitem->object_number].hit_effect == 1)
 								DoBloodSplat(target.x, target.y, target.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
-							else if (objects[shotitem->object_number].HitEffect == 2)
+							else if (objects[shotitem->object_number].hit_effect == 2)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, -5);
-							else if (objects[shotitem->object_number].HitEffect == 3)
+							else if (objects[shotitem->object_number].hit_effect == 3)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 
 							shotitem->hit_status = 1;
-
 							if (!objects[shotitem->object_number].undead)
 								shotitem->hit_points -= weapons[lara.gun_type].damage;
 						}

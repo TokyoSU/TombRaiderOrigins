@@ -1,9 +1,13 @@
 #pragma once
 #include "global/types.h"
 
+typedef short(*EffectToCall)(long x, long y, long z, short speed, short yrot, short room_number);
+
+CREATURE_INFO* GetCreatureInfo(short item_number);
+CREATURE_INFO* GetCreatureInfo(ITEM_INFO* item);
 void CreatureDie(short item_number, long explode);
 void InitialiseCreature(short item_number);
-long CreatureActive(short item_number);
+bool CreatureActive(short item_number);
 void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info);
 long SearchLOT(LOT_INFO* LOT, long expansion);
 long UpdateLOT(LOT_INFO* LOT, long expansion);
@@ -11,7 +15,7 @@ void TargetBox(LOT_INFO* LOT, short box_number);
 long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number);
 long ValidBox(ITEM_INFO* item, short zone_number, short box_number);
 long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number);
-target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT);
+TARGET_TYPE_ENUM CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT);
 void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent);
 void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent);
 long CreatureCreature(short item_number);
@@ -22,9 +26,8 @@ void CreatureTilt(ITEM_INFO* item, short angle);
 void CreatureJoint(ITEM_INFO* item, short joint, short required);
 void CreatureFloat(short item_number);
 void CreatureUnderwater(ITEM_INFO* item, long depth);
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number));
-short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle,
-	short(*generate)(long x, long y, long z, short damage, short angle, short room_number));
+short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, EffectToCall effect);
+short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle, EffectToCall effect);
 long CreatureVault(short item_number, short angle, long vault, long shift);
 void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara_anim);
 void AlertAllGuards(short item_number);

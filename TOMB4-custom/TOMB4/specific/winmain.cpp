@@ -16,6 +16,7 @@
 #include "game/gameflow.h"
 #include "gamemain.h"
 #include "fmv.h"
+#include "scripting.h"
 #define SOKOL_IMPL
 #include <sokol_time.h>
 
@@ -135,8 +136,9 @@ void WinClose()
 	DXFreeInfo(&App.DXInfo);
 	DestroyAcceleratorTable(App.hAccel);
 	DXClose();
+	ReleaseScripting();
 
-	if (!G_dxptr)
+	if (G_dxptr == NULL)
 		return;
 
 	DXAttempt(G_dxptr->Keyboard->Unacquire());
@@ -513,6 +515,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 0;
 
 	LoadGameflow();
+	InitialiseScripting();
 	WinProcessCommandLine(lpCmdLine);
 
 	if (!WinRegisterWindow(hInstance))

@@ -106,6 +106,11 @@ unsigned int __stdcall LoadLevel(void* name)
 		S_LoadBar();
 
 		LoadObjects();
+		for (int i = 0; i < NUMBER_OBJECTS; i++)
+		{
+			if (objects[i].loaded && objects[i].initialise_script != NULL)
+				objects[i].initialise_script();
+		}
 		S_LoadBar();
 
 		LoadSprites();
@@ -163,6 +168,7 @@ unsigned int __stdcall LoadLevel(void* name)
 
 		SetFadeClip(0, 1);
 		reset_cutseq_vars();
+
 		FileClose(level_fp);
 	}
 
@@ -223,6 +229,14 @@ void FreeLevel()
 
 	Log(5, "Free Textures");
 	FreeTextures();
+
+	Log(5, "Free Entities Scripts");
+	for (int i = 0; i < NUMBER_OBJECTS; i++)
+	{
+		if (objects[i].loaded && objects[i].release_script != NULL)
+			objects[i].release_script();
+	}
+
 	Log(5, "Free Lights");
 	Sound.FreeSamples();
 	free(OutsideRoomTable);
@@ -809,7 +823,9 @@ bool LoadObjects()
 	{
 		slot = *(long*)FileData;
 		FileData += sizeof(long);
+
 		obj = &objects[slot];
+		obj->loaded = 1;
 
 		obj->nmeshes = *(short*)FileData;
 		FileData += sizeof(short);
@@ -825,8 +841,6 @@ bool LoadObjects()
 
 		obj->anim_index = *(short*)FileData;
 		FileData += sizeof(short);
-
-		obj->loaded = 1;
 	}
 
 	CreateSkinningData();
@@ -1133,7 +1147,7 @@ bool LoadItems()
 		item->shade = *(short*)FileData;
 		FileData += sizeof(short);
 
-		item->trigger_flags = *(short*)FileData;
+		item->ocb = *(short*)FileData;
 		FileData += sizeof(short);
 
 		item->flags = *(short*)FileData;

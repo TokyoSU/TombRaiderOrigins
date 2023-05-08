@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "tr3_objects.h"
+#include "collide.h"
 #include "objects.h"
 #include "fish_emitter.h"
 
@@ -15,6 +16,17 @@ void ObjectObjects(OBJECT_INFO* obj)
 		obj->save_position = 1;
 		obj->save_hitpoints = 1;
 		obj->save_flags = 1;
+	}
+
+	obj = &objects[FISH_TARGET];
+	if (obj->loaded)
+	{
+		obj->control = FishTargetControl;
+		obj->collision = ObjectCollision;
+		obj->save_position = 1;
+		obj->save_hitpoints = 1;
+		obj->save_flags = 1;
+		obj->hit_effect = 1;
 	}
 }
 

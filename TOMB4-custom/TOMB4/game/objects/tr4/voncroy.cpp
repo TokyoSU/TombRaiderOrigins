@@ -165,7 +165,7 @@ void GetAIEnemy(CREATURE_INFO* info, long tfl)
 			info->ai_target.pos.z_pos = ai->z;
 			info->ai_target.pos.y_rot = ai->y_rot;
 			info->ai_target.flags = ai->flags;
-			info->ai_target.trigger_flags = ai->trigger_flags;
+			info->ai_target.ocb = ai->trigger_flags;
 			info->ai_target.box_number = ai->box_number;
 
 			if (!(info->ai_target.flags & IFL_TRIGGERED))
@@ -204,7 +204,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 		return;
 	}
 
-	switch (item->trigger_flags)
+	switch (item->ocb)
 	{
 	case 0:
 		SetFadeClip(24, 1);
@@ -216,7 +216,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 		ScreenFadeBack = 0;
 		ScreenFadedOut = 1;
 		bDisableLaraControl = 1;
-		item->trigger_flags++;
+		item->ocb++;
 		input = 0;
 
 		if (item->item_flags[3] == 14)
@@ -286,7 +286,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 			SetCutSceneCamera(item);
 			ScreenFading = 0;
 			SetScreenFadeIn(16);
-			item->trigger_flags++;
+			item->ocb++;
 			Sound.PlaySoundTrack(VonCroyCutTracks[item->item_flags[3]], 0);
 		}
 
@@ -297,7 +297,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 		if (input & IN_LOOK && item->item_flags[3] != 43 && item->item_flags[3] != 53)
 		{
 			item->meshswap_meshbits &= ~0x8000;
-			item->trigger_flags = 3;
+			item->ocb = 3;
 
 			if (item->item_flags[3] != 14)
 				item->goal_anim_state = 1;
@@ -305,7 +305,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 		else
 		{
 			if (XATrack != VonCroyCutTracks[item->item_flags[3]])
-				item->trigger_flags = 3;
+				item->ocb = 3;
 
 			if (item->current_anim_state == 1)
 			{
@@ -332,7 +332,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 		IsAtmospherePlaying = 1;
 		bDisableLaraControl = 0;
 		SetFadeClip(0, 1);
-		item->trigger_flags = 0;
+		item->ocb = 0;
 		VonCroyCutFlags[item->item_flags[3]] = 1;
 		ang = info->enemy->pos.y_rot - item->pos.y_rot;
 
@@ -1109,7 +1109,7 @@ void VoncroyControl(short item_number)
 	if (!VonCroyCutFlags[item->item_flags[3]])
 	{
 		if (VonCroy->reached_goal && item->item_flags[3] == lara.locationPad && VonCroyCutTracks[item->item_flags[3]] != -1 ||
-			item->trigger_flags > 0 || lara.locationPad >= item->item_flags[3] &&
+			item->ocb > 0 || lara.locationPad >= item->item_flags[3] &&
 			!VonCroyCutFlags[lara.locationPad] && VonCroyCutTracks[lara.locationPad] != -1)
 		{
 			CreatureJoint(item, 0, VonCroyLaraAI.angle >> 1);

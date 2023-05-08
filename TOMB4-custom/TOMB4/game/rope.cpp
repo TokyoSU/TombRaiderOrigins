@@ -487,7 +487,7 @@ void RopeControl(short item_num)
 {
 	ROPE_STRUCT* currope;
 
-	currope = &RopeList[items[item_num].trigger_flags];
+	currope = &RopeList[items[item_num].ocb];
 
 	if (TriggerActive(&items[item_num]))
 	{
@@ -505,7 +505,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	short* bounds;
 	long x, y, z, rad;
 
-	rope = &RopeList[items[item_number].trigger_flags];
+	rope = &RopeList[items[item_number].ocb];
 
 	if (input & IN_ACTION && lara.gun_status == LG_NO_ARMS && (l->current_anim_state == AS_REACH || l->current_anim_state == AS_UPJUMP) && l->gravity_status && l->fallspeed > 0 && rope->Active)
 	{
@@ -535,7 +535,7 @@ void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			l->gravity_status = 0;
 			l->fallspeed = 0;
 			lara.gun_status = LG_HANDS_BUSY;
-			lara.RopePtr = items[item_number].trigger_flags;
+			lara.RopePtr = items[item_number].ocb;
 			lara.RopeSegment = i;
 			lara.RopeY = l->pos.y_rot;
 			AlignLaraToRope(l);

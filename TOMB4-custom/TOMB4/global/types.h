@@ -76,7 +76,7 @@ enum anim_commands
 	ACMD_FLIPEFFECT
 };
 
-enum ai_bits
+enum AI_BITS_ENUM
 {
 	GUARD =		1 << 0,
 	AMBUSH =	1 << 1,
@@ -141,19 +141,20 @@ enum sfx_types
 	SFX_WATERONLY =		0x8000
 };
 
-enum target_type
+enum TARGET_TYPE_ENUM
 {
 	NO_TARGET,
 	PRIME_TARGET,
 	SECONDARY_TARGET
 };
 
-enum mood_type
+enum MOOD_TYPE_ENUM
 {
 	BORED_MOOD,
 	ATTACK_MOOD,
 	ESCAPE_MOOD,
 	STALK_MOOD,
+	MAX_MOODTYPE
 };
 
 enum ZONE_TYPES
@@ -583,12 +584,13 @@ struct ITEM_LIGHT
 	void* pPrevLights;
 };
 
+#define ITEM_INFO_FLAG_COUNT 4
 struct ITEM_INFO
 {
 	short index;
-	long floor;
-	unsigned long touch_bits;
-	unsigned long mesh_bits;
+	int floor;
+	unsigned int touch_bits;
+	unsigned int mesh_bits;
 	short object_number;
 	short current_anim_state;
 	short goal_anim_state;
@@ -605,27 +607,27 @@ struct ITEM_INFO
 	short timer;
 	short flags;
 	short shade;
-	short trigger_flags;
+	short ocb;
 	short carried_item;
 	short after_death;
 	unsigned short fired_weapon;
-	short item_flags[4];
-	void* data;
+	short item_flags[ITEM_INFO_FLAG_COUNT];
+	LPVOID data;
 	PHD_3DPOS pos;
-	ITEM_LIGHT il;
-	unsigned long active : 1;
-	unsigned long status : 2;
-	unsigned long gravity_status : 1;
-	unsigned long hit_status : 1;
-	unsigned long collidable : 1;
-	unsigned long looked_at : 1;
-	unsigned long dynamic_light : 1;
-	unsigned long poisoned : 1;
-	unsigned long ai_bits : 5;
-	unsigned long really_active : 1;
-	unsigned long meshswap_meshbits;
+	ITEM_LIGHT il; // Not registered in the scripting, it's not required !
+	bool active;
+	short status;
+	bool gravity_status;
+	bool hit_status;
+	bool collidable;
+	bool looked_at;
+	short dynamic_light;
+	bool poisoned;
+	unsigned short ai_bits;
+	bool really_active;
+	unsigned int meshswap_meshbits;
 	short draw_room;
-	short TOSSPAD;
+	//short tosspad;
 };
 
 struct BOX_NODE
@@ -649,31 +651,47 @@ struct LOT_INFO
 	short target_box;
 	short required_box;
 	short fly;
-	unsigned short can_jump : 1;
-	unsigned short can_monkey : 1;
-	unsigned short is_amphibious : 1;
-	unsigned short is_jumping : 1;
-	unsigned short is_monkeying : 1;
+	bool can_jump;
+	bool can_monkey;
+	bool is_amphibious;
+	bool is_jumping;
+	bool is_monkeying;
 	PHD_VECTOR target;
 	ZONE_TYPES zone;
 };
 
+struct AI_INFO
+{
+	short zone_number = 0;
+	short enemy_zone = 0;
+	int distance = 0;
+	bool ahead = false;
+	bool bite = false;
+	short angle = 0;
+	short x_angle = 0;
+	short enemy_facing = 0;
+
+	AI_INFO() {}
+};
+
+#define CREATURE_JOINT_ROTATION_COUNT 4
 struct CREATURE_INFO
 {
-	short joint_rotation[4];
+	short joint_rotation[CREATURE_JOINT_ROTATION_COUNT];
 	short maximum_turn;
 	short flags;
-	unsigned short alerted : 1;
-	unsigned short head_left : 1;
-	unsigned short head_right : 1;
-	unsigned short reached_goal : 1;
-	unsigned short hurt_by_lara : 1;
-	unsigned short patrol2 : 1;
-	unsigned short jump_ahead : 1;
-	unsigned short monkey_ahead : 1;
-	mood_type mood;
+	bool alerted;
+	bool head_left;
+	bool head_right;
+	bool reached_goal;
+	bool hurt_by_lara;
+	bool patrol2;
+	bool jump_ahead;
+	bool monkey_ahead;
+	MOOD_TYPE_ENUM mood;
 	ITEM_INFO* enemy;
 	ITEM_INFO ai_target;
+	AI_INFO ai;
 	short pad;
 	short item_num;
 	PHD_VECTOR target;
@@ -852,16 +870,6 @@ struct LARA_INFO
 	char location;
 	char highest_location;
 	char locationPad;
-
-	Vector3 FromVelocityToVector3()
-	{
-		return Vector3(float(current_xvel), float(current_yvel), float(current_zvel));
-	}
-
-	BASS_3DVECTOR FromVelocityToBassVector()
-	{
-		return BASS_3DVECTOR(float(current_xvel), float(current_yvel), float(current_zvel));
-	}
 };
 
 struct GAMEFLOW
@@ -945,14 +953,14 @@ struct COLL_INFO
 	short* trigger;
 	char tilt_x;
 	char tilt_z;
-	char hit_by_baddie;
-	char hit_static;
-	unsigned short slopes_are_walls : 2;
-	unsigned short slopes_are_pits : 1;
-	unsigned short lava_is_pit : 1;
-	unsigned short enable_baddie_push : 1;
-	unsigned short enable_spaz : 1;
-	unsigned short hit_ceiling : 1;
+	bool hit_by_baddie;
+	bool hit_static;
+	bool slopes_are_walls;
+	bool slopes_are_pits;
+	bool lava_is_pit;
+	bool enable_baddie_push;
+	bool enable_spaz;
+	bool hit_ceiling;
 };
 
 struct OBJECT_INFO
@@ -963,11 +971,13 @@ struct OBJECT_INFO
 	short* frame_base;
 	void (*initialise)(short item_number);
 	void (*control)(short item_number);
+	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
 	void (*floor)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*ceiling)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*draw_routine)(ITEM_INFO* item);
-	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
-	short object_mip;
+	void (*draw_routine_extra)(ITEM_INFO* item);
+	void (*initialise_script)();
+	void (*release_script)();
 	short anim_index;
 	short hit_points;
 	short pivot_length;
@@ -984,12 +994,10 @@ struct OBJECT_INFO
 	unsigned short semi_transparent : 1;
 	unsigned short water_creature : 1;
 	unsigned short using_drawanimating_item : 1;
-	unsigned short HitEffect : 2;
+	unsigned short hit_effect : 2;
 	unsigned short undead : 1;
 	unsigned short save_mesh : 1;
-	void (*draw_routine_extra)(ITEM_INFO* item);
 	unsigned long explodable_meshbits;
-	unsigned long padfuck;
 };
 
 struct FLOOR_INFO
@@ -1899,18 +1907,6 @@ struct DRIP_STRUCT
 	unsigned char Pad = 0;
 
 	DRIP_STRUCT() {}
-};
-
-struct AI_INFO
-{
-	short zone_number;
-	short enemy_zone;
-	long distance;
-	long ahead;
-	long bite;
-	short angle;
-	short x_angle;
-	short enemy_facing;
 };
 
 struct AIOBJECT

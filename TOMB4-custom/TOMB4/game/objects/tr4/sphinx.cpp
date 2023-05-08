@@ -94,7 +94,7 @@ void SphinxControl(short item_number)
 	case 1:
 		sphinx->maximum_turn = 0;
 
-		if (info.distance < 0x100000 || item->trigger_flags)
+		if (info.distance < 0x100000 || item->ocb)
 			item->goal_anim_state = 3;
 		else if (!GetRandomControl())
 			item->goal_anim_state = 2;
@@ -104,7 +104,7 @@ void SphinxControl(short item_number)
 	case 2:
 		sphinx->maximum_turn = 0;
 
-		if (info.distance < 0x100000 || item->trigger_flags)
+		if (info.distance < 0x100000 || item->ocb)
 			item->goal_anim_state = 3;
 		else if (!GetRandomControl())
 			item->goal_anim_state = 1;

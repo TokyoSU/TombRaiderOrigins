@@ -302,10 +302,10 @@ void WraithControl(short item_number)
 			{
 				if (item->item_flags[1] < 30)
 				{
-					if (item->object_number == WRAITH2 && item->trigger_flags && !flip_stats[item->trigger_flags])
+					if (item->object_number == WRAITH2 && item->ocb && !flip_stats[item->ocb])
 					{
-						FlipMap(item->trigger_flags);
-						flip_stats[item->trigger_flags] = 1;
+						FlipMap(item->ocb);
+						flip_stats[item->ocb] = 1;
 					}
 
 					KillItem(item_number);
@@ -352,9 +352,9 @@ void WraithControl(short item_number)
 				ShockwaveExplosion(item, 0x606060, -32);
 				ShockwaveExplosion(item, 0x303030, 48);
 				target->hit_points = 0;
-				target->trigger_flags--;
+				target->ocb--;
 
-				if (target->trigger_flags > 0)
+				if (target->ocb > 0)
 					target->frame_number = anims[target->anim_number].frame_base;
 
 				KillItem(item_number);

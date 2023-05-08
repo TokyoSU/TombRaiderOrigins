@@ -826,9 +826,9 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade)
 	if (item->data && item != lara_item)
 		((CREATURE_INFO*)item->data)->hurt_by_lara = 1;
 
-	if (hitpos && obj->HitEffect)
+	if (hitpos && obj->hit_effect)
 	{
-		switch (obj->HitEffect)
+		switch (obj->hit_effect)
 		{
 		case 1:
 

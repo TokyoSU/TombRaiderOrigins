@@ -4,7 +4,9 @@
 #include "3dmath.h"
 #include "control.h"
 #include "lara.h"
+#include "effect2.h"
 #include "effects.h"
+#include "items.h"
 #include "specificfx.h"
 #include "dxshell.h"
 #include "objects.h"
@@ -93,62 +95,62 @@ static int nCurrentLeader = 0;
 
 int GetFishRangeCount(ITEM_INFO* item)
 {
-	if (IS_OCB_VALID(item->trigger_flags, OCB_Jungle))
+	if (IS_OCB_VALID(item->ocb, OCB_Jungle))
 		return 0;
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Temple))
+	else if (IS_OCB_VALID(item->ocb, OCB_Temple))
 		return 2;
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Quadbike))
+	else if (IS_OCB_VALID(item->ocb, OCB_Quadbike))
 		return 7;
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Gym))
+	else if (IS_OCB_VALID(item->ocb, OCB_Gym))
 		return 6;
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Shore))
+	else if (IS_OCB_VALID(item->ocb, OCB_Shore))
 		return 2;
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Crash))
+	else if (IS_OCB_VALID(item->ocb, OCB_Crash))
 		return 0;
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Rapids))
+	else if (IS_OCB_VALID(item->ocb, OCB_Rapids))
 		return 1;
 	return 0;
 }
 
 void SetupShoal(ITEM_INFO* item, LEADER_INFO* leader, short shoal_number)
 {
-	if (IS_OCB_VALID(item->trigger_flags, OCB_Jungle))
+	if (IS_OCB_VALID(item->ocb, OCB_Jungle))
 	{
 		leader->Xrange = (jungle_fish_ranges[shoal_number][0] + 2) << 8;
 		leader->Yrange = jungle_fish_ranges[shoal_number][2] << 8;
 		leader->Zrange = (jungle_fish_ranges[shoal_number][1] + 2) << 8;
 	}
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Temple))
+	else if (IS_OCB_VALID(item->ocb, OCB_Temple))
 	{
 		leader->Xrange = (temple_fish_ranges[shoal_number][0] + 2) << 8;
 		leader->Yrange = temple_fish_ranges[shoal_number][2] << 8;
 		leader->Zrange = (temple_fish_ranges[shoal_number][1] + 2) << 8;
 	}
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Quadbike))
+	else if (IS_OCB_VALID(item->ocb, OCB_Quadbike))
 	{
 		leader->Xrange = (quadchase_fish_ranges[shoal_number][0] + 2) << 8;
 		leader->Yrange = quadchase_fish_ranges[shoal_number][2] << 8;
 		leader->Zrange = (quadchase_fish_ranges[shoal_number][1] + 2) << 8;
 	}
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Gym))
+	else if (IS_OCB_VALID(item->ocb, OCB_Gym))
 	{
 		leader->Xrange = (house_fish_ranges[shoal_number][0] + 2) << 8;
 		leader->Yrange = house_fish_ranges[shoal_number][2] << 8;
 		leader->Zrange = (house_fish_ranges[shoal_number][1] + 2) << 8;
 	}
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Shore))
+	else if (IS_OCB_VALID(item->ocb, OCB_Shore))
 	{
 		leader->Xrange = (shore_fish_ranges[shoal_number][0] + 2) << 8;
 		leader->Yrange = shore_fish_ranges[shoal_number][2] << 8;
 		leader->Zrange = (shore_fish_ranges[shoal_number][1] + 2) << 8;
 	}
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Crash))
+	else if (IS_OCB_VALID(item->ocb, OCB_Crash))
 	{
 		leader->Xrange = (crash_fish_ranges[shoal_number][0] + 2) << 8;
 		leader->Yrange = (crash_fish_ranges[shoal_number][2]) << 8;
 		leader->Zrange = (crash_fish_ranges[shoal_number][1] + 2) << 8;
 	}
-	else if (IS_OCB_VALID(item->trigger_flags, OCB_Rapids))
+	else if (IS_OCB_VALID(item->ocb, OCB_Rapids))
 	{
 		leader->Xrange = (rapids_fish_ranges[shoal_number][0] + 2) << 8;
 		leader->Yrange = rapids_fish_ranges[shoal_number][2] << 8;
@@ -230,6 +232,18 @@ void InitialiseFish(short item_number)
 	SetupFish(item);
 }
 
+static short FishFoundCarcassTarget(ITEM_INFO* pirahna)
+{
+	for (int i = 0; i < level_items; i++)
+	{
+		auto* item = &items[i];
+		// need to be the fish_target AND in the same room !
+		if (item->object_number == FISH_TARGET && pirahna->room_number == item->room_number && item->status == ITEM_ACTIVE)
+			return i;
+	}
+	return NO_ITEM;
+}
+
 void ControlFish(short item_number)
 {
 	ITEM_INFO* item;
@@ -244,8 +258,9 @@ void ControlFish(short item_number)
 		return;
 	enemy = item;
 	pLeader = &LeadInfo[item->hit_points];
+	pLeader->carcass_item = FishFoundCarcassTarget(item);
 
-	if ((item->trigger_flags & OCB_PirahnaMode))
+	if ((item->ocb & OCB_PirahnaMode))
 	{
 		if (pLeader->carcass_item != NO_ITEM)
 			pirahna_attack = 2;
@@ -415,7 +430,7 @@ void ControlFish(short item_number)
 	{
 		pFish = &Fishes[(MAX_FISHES * item->hit_points) + i + 8];
 
-		if (item->trigger_flags & OCB_PirahnaMode)
+		if (item->ocb & OCB_PirahnaMode)
 		{
 			pos.x_pos = item->pos.x_pos + pFish->x;
 			pos.y_pos = item->pos.y_pos + pFish->y;
@@ -645,7 +660,7 @@ void S_DrawFish(ITEM_INFO* item)
 		v[2].specular = RGBA_MAKE(0, 0, 0, 255);
 
 		SPRITESTRUCT* sprite;
-		if ((item->trigger_flags & OCB_PirahnaMode)) // Pirahna
+		if ((item->ocb & OCB_PirahnaMode)) // Pirahna
 			sprite = &spriteinfo[objects[FISH_SPRITES].mesh_index + 0];
 		else
 			sprite = &spriteinfo[objects[FISH_SPRITES].mesh_index + 1];
@@ -674,5 +689,71 @@ void S_DrawFish(ITEM_INFO* item)
 
 		tex.flag = 0;
 		AddTriSorted(v, 0, 1, 2, &tex, 1);
+	}
+}
+
+void FishTargetControl(short item_number)
+{
+	ITEM_INFO* item;
+	FLOOR_INFO* floor;
+	long h;
+	short old_room, room_number, maxfs;
+
+	item = &items[item_number];
+	if (item->status != ITEM_ACTIVE)
+		return;
+
+	item->pos.y_pos += item->fallspeed;
+	old_room = item->room_number;
+	room_number = item->room_number;
+	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
+	h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
+	if (item->room_number != room_number)
+		ItemNewRoom(item_number, room_number);
+
+	h -= 64;
+	if (item->pos.y_pos >= h)
+	{
+		item->pos.y_pos = h;
+		item->fallspeed = 0;
+		item->pos.z_rot = 0x6000;
+		return;
+	}
+
+	if (rooms[room_number].flags & ROOM_UNDERWATER)
+		item->pos.z_rot += item->fallspeed << 3;
+	else
+		item->pos.z_rot += item->fallspeed << 1;
+
+	if (item->pos.z_rot > 0x6000)
+		item->pos.z_rot = 0x6000;
+
+	item->fallspeed += rooms[room_number].flags & ROOM_UNDERWATER ? 1 : 8;
+	maxfs = rooms[old_room].flags & ROOM_UNDERWATER ? 64 : 512;
+
+	if (item->fallspeed > maxfs)
+		item->fallspeed = maxfs;
+
+	if (rooms[room_number].flags & ROOM_UNDERWATER && !(rooms[old_room].flags & ROOM_UNDERWATER))
+	{
+		splash_setup.x = item->pos.x_pos;
+		splash_setup.y = rooms[room_number].maxceiling;
+		splash_setup.z = item->pos.z_pos;
+		splash_setup.InnerRad = 16;
+		splash_setup.InnerSize = 12;
+		splash_setup.InnerRadVel = 160;
+		splash_setup.InnerYVel = -72 * item->fallspeed;
+		splash_setup.pad1 = 24;
+		splash_setup.MiddleRad = 24;
+		splash_setup.MiddleSize = 224;
+		splash_setup.MiddleRadVel = -36 * item->fallspeed;
+		splash_setup.MiddleYVel = 32;
+		splash_setup.pad2 = 32;
+		splash_setup.OuterRad = 272;
+		SetupSplash(&splash_setup);
+		SplashCount = 16;
+
+		item->fallspeed = 16;
+		item->pos.y_pos = rooms[room_number].maxceiling + 1;
 	}
 }

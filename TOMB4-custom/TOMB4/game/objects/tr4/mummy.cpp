@@ -18,7 +18,7 @@ void InitialiseMummy(short item_number)
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 
-	if (item->trigger_flags == 2)
+	if (item->ocb == 2)
 	{
 		item->anim_number = objects[MUMMY].anim_index + 12;
 		item->current_anim_state = 8;
@@ -115,7 +115,7 @@ void MummyControl(short item_number)
 		case 0:
 			mummy->maximum_turn = 0;
 
-			if (info.distance < 0x100000 || item->trigger_flags > -1)
+			if (info.distance < 0x100000 || item->ocb > -1)
 				item->goal_anim_state = 2;
 
 			break;
@@ -135,20 +135,20 @@ void MummyControl(short item_number)
 				torso_y = 0;
 				item->goal_anim_state = 1;
 				
-				if (item->trigger_flags > -100 && item->trigger_flags < 0)
-					item->trigger_flags++;
+				if (item->ocb > -100 && item->ocb < 0)
+					item->ocb++;
 			}
 
 			break;
 
 		case 2:
 
-			if (item->trigger_flags == 1)
+			if (item->ocb == 1)
 			{
 				mummy->maximum_turn = 0;
 
 				if (item->frame_number == anims[item->anim_number].frame_end)
-					item->trigger_flags = 0;
+					item->ocb = 0;
 			}
 			else
 			{

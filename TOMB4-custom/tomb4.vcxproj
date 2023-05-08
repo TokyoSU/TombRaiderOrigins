@@ -97,7 +97,7 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)TOMB4\;$(SolutionDir)TOMB4\game;$(SolutionDir)TOMB4\game\weapons;$(SolutionDir)TOMB4\game\objects;$(SolutionDir)TOMB4\game\objects\tr1;$(SolutionDir)TOMB4\game\objects\tr2;$(SolutionDir)TOMB4\game\objects\tr3;$(SolutionDir)TOMB4\game\objects\tr4;$(SolutionDir)TOMB4\game\objects\tr5;$(SolutionDir)TOMB4\specific;$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)TOMB4\;$(SolutionDir)TOMB4\game;$(SolutionDir)TOMB4\game\script;$(SolutionDir)TOMB4\game\weapons;$(SolutionDir)TOMB4\game\objects;$(SolutionDir)TOMB4\game\objects\tr1;$(SolutionDir)TOMB4\game\objects\tr2;$(SolutionDir)TOMB4\game\objects\tr3;$(SolutionDir)TOMB4\game\objects\tr4;$(SolutionDir)TOMB4\game\objects\tr5;$(SolutionDir)TOMB4\specific;$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -123,7 +123,7 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)TOMB4\;$(SolutionDir)TOMB4\game;$(SolutionDir)TOMB4\game\weapons;$(SolutionDir)TOMB4\game\objects;$(SolutionDir)TOMB4\game\objects\tr1;$(SolutionDir)TOMB4\game\objects\tr2;$(SolutionDir)TOMB4\game\objects\tr3;$(SolutionDir)TOMB4\game\objects\tr4;$(SolutionDir)TOMB4\game\objects\tr5;$(SolutionDir)TOMB4\specific;$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)TOMB4\;$(SolutionDir)TOMB4\game;$(SolutionDir)TOMB4\game\script;$(SolutionDir)TOMB4\game\weapons;$(SolutionDir)TOMB4\game\objects;$(SolutionDir)TOMB4\game\objects\tr1;$(SolutionDir)TOMB4\game\objects\tr2;$(SolutionDir)TOMB4\game\objects\tr3;$(SolutionDir)TOMB4\game\objects\tr4;$(SolutionDir)TOMB4\game\objects\tr5;$(SolutionDir)TOMB4\specific;$(SolutionDir)TOMB4\tomb4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -178,6 +178,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="TOMB4\game\lara_states.h" />
     <ClInclude Include="TOMB4\game\objects\tr1_objects.h" />
+    <ClInclude Include="TOMB4\game\objects\tr2\tr2_rat.h" />
     <ClInclude Include="TOMB4\game\objects\tr2_objects.h" />
     <ClInclude Include="TOMB4\game\objects\tr3\fish_emitter.h" />
     <ClInclude Include="TOMB4\game\objects\tr3_objects.h" />
@@ -246,6 +247,9 @@
     <ClInclude Include="TOMB4\game\objects\tr4\senet.h" />
     <ClInclude Include="TOMB4\game\objects\tr4\sentrygun.h" />
     <ClInclude Include="TOMB4\game\objects\tr4\seth.h" />
+    <ClInclude Include="TOMB4\game\scripting.h" />
+    <ClInclude Include="TOMB4\game\script\creature_script.h" />
+    <ClInclude Include="TOMB4\game\script\item_script.h" />
     <ClInclude Include="TOMB4\game\setup.h" />
     <ClInclude Include="TOMB4\game\objects\tr4\skeleton.h" />
     <ClInclude Include="TOMB4\game\objects\tr2\snowmobile.h" />
@@ -295,11 +299,30 @@
     <ClInclude Include="TOMB4\tomb4\libs\discordRPC\discord_rpc.h" />
     <ClInclude Include="TOMB4\tomb4\pch.h" />
     <ClInclude Include="TOMB4\tomb4\pl_mpeg.h" />
+    <ClInclude Include="TOMB4\tomb4\script\autowrapper\aswrappedcall.h" />
+    <ClInclude Include="TOMB4\tomb4\script\contextmgr\contextmgr.h" />
+    <ClInclude Include="TOMB4\tomb4\script\datetime\datetime.h" />
+    <ClInclude Include="TOMB4\tomb4\script\debugger\debugger.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptany\scriptany.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptarray\scriptarray.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptbuilder\scriptbuilder.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptdictionary\scriptdictionary.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptfile\scriptfile.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptfile\scriptfilesystem.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptgrid\scriptgrid.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scripthandle\scripthandle.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scripthelper\scripthelper.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptmath\scriptmath.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptmath\scriptmathcomplex.h" />
+    <ClInclude Include="TOMB4\tomb4\script\scriptstdstring\scriptstdstring.h" />
+    <ClInclude Include="TOMB4\tomb4\script\serializer\serializer.h" />
+    <ClInclude Include="TOMB4\tomb4\script\weakref\weakref.h" />
     <ClInclude Include="TOMB4\tomb4\tomb4.h" />
     <ClInclude Include="TOMB4\tomb4\troyestuff.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TOMB4\game\objects\tr1_objects.cpp" />
+    <ClCompile Include="TOMB4\game\objects\tr2\tr2_rat.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr2_objects.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr3\fish_emitter.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr3_objects.cpp" />
@@ -368,6 +391,9 @@
     <ClCompile Include="TOMB4\game\objects\tr4\senet.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr4\sentrygun.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr4\seth.cpp" />
+    <ClCompile Include="TOMB4\game\scripting.cpp" />
+    <ClCompile Include="TOMB4\game\script\creature_script.cpp" />
+    <ClCompile Include="TOMB4\game\script\item_script.cpp" />
     <ClCompile Include="TOMB4\game\setup.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr4\skeleton.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr2\snowmobile.cpp" />
@@ -413,6 +439,78 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\contextmgr\contextmgr.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\datetime\datetime.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\debugger\debugger.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptany\scriptany.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptarray\scriptarray.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptbuilder\scriptbuilder.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptdictionary\scriptdictionary.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptfile\scriptfile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptfile\scriptfilesystem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptgrid\scriptgrid.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scripthandle\scripthandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scripthelper\scripthelper.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptmath\scriptmath.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptmath\scriptmathcomplex.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptstdstring\scriptstdstring.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\scriptstdstring\scriptstdstring_utils.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\serializer\serializer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TOMB4\tomb4\script\weakref\weakref.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\tomb4.cpp" />
     <ClCompile Include="TOMB4\tomb4\troyestuff.cpp" />

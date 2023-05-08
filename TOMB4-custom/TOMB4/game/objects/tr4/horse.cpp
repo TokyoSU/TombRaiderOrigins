@@ -57,7 +57,7 @@ void HorsemanControl(short item_number)
 			{
 				item2 = &items[i];
 
-				if (item2->object_number == HORSE && item->trigger_flags == item2->trigger_flags)
+				if (item2->object_number == HORSE && item->ocb == item2->ocb)
 				{
 					item->item_flags[0] = i;
 					item2->flags |= IFL_TRIGGERED;

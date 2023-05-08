@@ -90,7 +90,7 @@ void InitialiseSkidoo(short item_number)
 	skinfo->extra_rotation = 0;
 	skinfo->track_mesh = 0;
 	skinfo->pitch = 0;
-	skinfo->armed = skidoo->trigger_flags & 1;
+	skinfo->armed = skidoo->ocb & 1;
 }
 
 int SkidooCheckGetOn(short item_number, COLL_INFO* coll)

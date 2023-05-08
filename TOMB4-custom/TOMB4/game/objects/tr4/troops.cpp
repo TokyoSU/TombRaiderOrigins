@@ -20,7 +20,7 @@ void InitialiseTroop(short item_number)
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 
-	if (item->trigger_flags == 1)
+	if (item->ocb == 1)
 	{
 		item->anim_number = objects[TROOPS].anim_index + 27;
 		item->current_anim_state = 16;
@@ -88,7 +88,7 @@ void TroopControl(short item_number)
 					item->current_anim_state = 15;
 					item->goal_anim_state = 15;
 					item->pos = enemy->pos;
-					enemy->trigger_flags = 99;
+					enemy->ocb = 99;
 				}
 				else
 					item->item_flags[0]++;

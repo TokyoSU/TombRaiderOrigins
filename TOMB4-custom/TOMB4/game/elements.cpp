@@ -25,11 +25,11 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (!item->trigger_flags)
+	if (!item->ocb)
 		mesh = LARA_WATER_MESH;
-	else if (item->trigger_flags == 1)
+	else if (item->ocb == 1)
 		mesh = LARA_PETROL_MESH;
-	else if (item->trigger_flags == 2)
+	else if (item->ocb == 2)
 		mesh = LARA_DIRT_MESH;
 	else
 		return;
@@ -54,13 +54,13 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 			if (l->frame_number == anims[ANIM_FILLSCALE].frame_base + 74 && lara_item->item_flags[2] == mesh)
 			{
-				if (!item->trigger_flags)
+				if (!item->ocb)
 				{
 					item->mesh_bits = 48;
 					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 1, item->flags & IFL_CODEBITS);
 					item->item_flags[0] = 1;
 				}
-				else if (item->trigger_flags == 1 && lara.pickupitems[2])
+				else if (item->ocb == 1 && lara.pickupitems[2])
 				{
 					item->mesh_bits = 3;
 					item->item_flags[0] = 1;
@@ -81,7 +81,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		item->pos.y_rot = rotY;
 	}
 	else if (lara.gun_type == WEAPON_TORCH && lara.gun_status == LG_READY && !lara.left_arm.lock && input & IN_ACTION &&
-		item->trigger_flags == 1 && item->item_flags[0] == 1 && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH &&
+		item->ocb == 1 && item->item_flags[0] == 1 && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH &&
 		lara.LitTorch && !l->gravity_status)
 	{
 		bounds = GetBoundsAccurate(item);
@@ -123,11 +123,11 @@ void InitialiseElementPuzzle(short item_number)
 
 	item = &items[item_number];
 
-	if (!item->trigger_flags)
+	if (!item->ocb)
 		item->mesh_bits = 80;
-	else if (item->trigger_flags == 1)
+	else if (item->ocb == 1)
 		item->mesh_bits = 65;
-	else if (item->trigger_flags == 2)
+	else if (item->ocb == 2)
 		item->mesh_bits = 68;
 	else
 		item->mesh_bits = 0;
@@ -146,7 +146,7 @@ void ControlElementPuzzle(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	if (item->trigger_flags == 1)
+	if (item->ocb == 1)
 	{
 		Sound.PlayEffect(SFX_LOOP_FOR_SMALL_FIRES, &item->pos);
 		r = (GetRandomControl() & 0x3F) + 192;
@@ -172,7 +172,7 @@ void ControlElementPuzzle(short item_number)
 		AddFire(item->pos.x_pos, item->pos.y_pos - 620, item->pos.z_pos, 1, item->room_number, fade);
 		TriggerDynamic(item->pos.x_pos, item->pos.y_pos - 768, item->pos.z_pos, 12, r, g, 0);
 	}
-	else if (item->trigger_flags == 3)
+	else if (item->ocb == 3)
 	{
 		if (item->item_flags[1] > 90)
 			Sound.PlayEffect(SFX_JOBY_WIND, &item->pos);
@@ -219,7 +219,7 @@ void ControlElementPuzzle(short item_number)
 					RemoveActiveItem(itemNum);
 					item2->status = ITEM_INACTIVE;
 				}
-				else if (item2->object_number == ELEMENT_PUZZLE && item2->trigger_flags == 1 && !item2->item_flags[3])
+				else if (item2->object_number == ELEMENT_PUZZLE && item2->ocb == 1 && !item2->item_flags[3])
 					item2->item_flags[3] = 90;
 			}
 		}

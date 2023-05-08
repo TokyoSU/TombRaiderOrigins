@@ -204,23 +204,23 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	item = &items[item_number];
 
 	if (input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && lara.gun_status == LG_NO_ARMS
-		&& item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && item->trigger_flags >= 0
+		&& item->status == ITEM_INACTIVE && !(item->flags & IFL_INVISIBLE) && item->ocb >= 0
 		|| lara.IsMoving && lara.GeneralPtr == (void*)item_number)
 	{
 		bounds = GetBoundsAccurate(item);
 
-		if (item->trigger_flags == 3 && item->current_anim_state == 1)
+		if (item->ocb == 3 && item->current_anim_state == 1)
 			return;
 
 		SwitchBounds[0] = bounds[0] - 256;
 		SwitchBounds[1] = bounds[1] + 256;
 
-		if (item->trigger_flags)
+		if (item->ocb)
 		{
 			SwitchBounds[4] = bounds[4] - 512;
 			SwitchBounds[5] = bounds[5] + 512;
 
-			if (item->trigger_flags == 3)
+			if (item->ocb == 3)
 				SwitchPos.z = bounds[4] - 256;
 			else
 				SwitchPos.z = bounds[4] - 128;
@@ -238,7 +238,7 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			{
 				if (item->current_anim_state == 1)
 				{
-					if (item->trigger_flags)
+					if (item->ocb)
 					{
 						l->anim_number = ANIM_HIDDENPICKUP;
 						l->current_anim_state = AS_HIDDENPICKUP;
@@ -253,12 +253,12 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 				}
 				else
 				{
-					if (!item->trigger_flags)
+					if (!item->ocb)
 					{
 						l->anim_number = ANIM_SWITCHON;
 						l->current_anim_state = AS_SWITCHON;
 					}
-					else if (item->trigger_flags == 3)
+					else if (item->ocb == 3)
 						l->anim_number = ANIM_SMALLSWITCH;
 					else
 					{
@@ -843,7 +843,7 @@ void FullBlockSwitchControl(short item_number)
 	else
 	{
 		item->item_flags[0] = 1;
-		Sequences[CurrentSequence] = (unsigned char)item->trigger_flags;
+		Sequences[CurrentSequence] = (unsigned char)item->ocb;
 		CurrentSequence++;
 
 		if (CurrentSequence == 3 && SequenceUsed[SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]]])

@@ -90,3 +90,34 @@ void Log(unsigned long type, const char* s, ...)
 	fwrite(buf, strlen(buf), 1, logF);
 #endif
 }
+
+void Log2(std::string s)
+{
+#ifdef DO_LOG
+	va_list list;
+	char buf[4096];
+
+	if (!logF)
+		logF = fopen("log.txt", "w+");
+
+	const char* message = s.c_str();
+	if (message == NULL)
+		return;
+	va_start(list, message);
+	vsprintf(buf, message, list);
+	strcat(buf, "\n");
+	va_end(list);
+	fwrite(buf, strlen(buf), 1, logF);
+#endif
+}
+
+void Log2(short s)
+{
+	Log2((long)s);
+}
+
+void Log2(long s)
+{
+	auto str = std::to_string(s);
+	Log2(str);
+}

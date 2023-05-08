@@ -417,10 +417,10 @@ void ControlLocustEmitter(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	if (item->trigger_flags)
+	if (item->ocb)
 	{
 		TriggerLocust(item);
-		item->trigger_flags--;
+		item->ocb--;
 	}
 	else
 		KillItem(item_number);

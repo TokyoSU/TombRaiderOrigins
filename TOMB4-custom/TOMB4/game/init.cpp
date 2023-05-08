@@ -29,7 +29,7 @@ void InitialiseLightningConductor(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags == 2)
+	if (item->ocb == 2)
 	{
 		pack = 0;
 
@@ -174,12 +174,12 @@ void InitialiseFlameEmitter(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags < 0)
+	if (item->ocb < 0)
 	{
 		item->item_flags[0] = (GetRandomControl() & 0x3F) + 90;
 		item->item_flags[2] = 256;
 
-		if ((-item->trigger_flags & 7) == 7)
+		if ((-item->ocb & 7) == 7)
 		{
 			if (!item->pos.y_rot)
 				item->pos.z_pos += 512;
@@ -200,32 +200,32 @@ void InitialiseFlameEmitter2(short item_number)
 	item = &items[item_number];
 	item->pos.y_pos -= 64;
 
-	if (item->trigger_flags != 123)
+	if (item->ocb != 123)
 	{
 		if (!item->pos.y_rot)
 		{
-			if (item->trigger_flags == 2)
+			if (item->ocb == 2)
 				item->pos.z_pos += 80;
 			else
 				item->pos.z_pos += 256;
 		}
 		else if (item->pos.y_rot == 0x4000)
 		{
-			if (item->trigger_flags == 2)
+			if (item->ocb == 2)
 				item->pos.x_pos += 80;
 			else
 				item->pos.x_pos += 256;
 		}
 		else if (item->pos.y_rot == -0x8000)
 		{
-			if (item->trigger_flags == 2)
+			if (item->ocb == 2)
 				item->pos.z_pos -= 80;
 			else
 				item->pos.z_pos -= 256;
 		}
 		else if (item->pos.y_rot == -0x4000)
 		{
-			if (item->trigger_flags == 2)
+			if (item->ocb == 2)
 				item->pos.x_pos -= 80;
 			else
 				item->pos.x_pos -= 256;
@@ -240,7 +240,7 @@ void InitialiseFlameEmitter3(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags < 3)
+	if (item->ocb < 3)
 		return;
 
 	for (int i = 0; i < level_items; i++)
@@ -249,9 +249,9 @@ void InitialiseFlameEmitter3(short item_number)
 
 		if (item2->object_number == ANIMATING3)
 		{
-			if (item2->trigger_flags == item->trigger_flags)
+			if (item2->ocb == item->ocb)
 				item->item_flags[2] = i;
-			else if (!item2->trigger_flags)
+			else if (!item2->ocb)
 				item->item_flags[3] = i;
 		}
 	}
@@ -312,21 +312,21 @@ void InitialiseScaledSpike(short item_number)
 	xzrots[7] = 0x6000;
 	item->status = ITEM_INVISIBLE;
 
-	if (item->trigger_flags & 8)
+	if (item->ocb & 8)
 	{
-		item->pos.x_rot = xzrots[item->trigger_flags & 7];
+		item->pos.x_rot = xzrots[item->ocb & 7];
 		item->pos.y_rot = 0x4000;
-		item->pos.z_pos -= SPxzoffs[item->trigger_flags & 7];
+		item->pos.z_pos -= SPxzoffs[item->ocb & 7];
 	}
 	else
 	{
-		item->pos.z_rot = xzrots[item->trigger_flags & 7];
-		item->pos.x_pos += SPxzoffs[item->trigger_flags & 7];
+		item->pos.z_rot = xzrots[item->ocb & 7];
+		item->pos.x_pos += SPxzoffs[item->ocb & 7];
 	}
 
 	item->item_flags[0] = 1024;
 	item->item_flags[2] = 0;
-	item->pos.y_pos += SPyoffs[item->trigger_flags & 7];
+	item->pos.y_pos += SPyoffs[item->ocb & 7];
 }
 
 void InitialiseRaisingBlock(short item_number)
@@ -352,7 +352,7 @@ void InitialiseRaisingBlock(short item_number)
 			item->pos.x_pos -= 511;
 	}
 
-	if (item->trigger_flags == 2)
+	if (item->ocb == 2)
 	{
 		item->flags |= IFL_CODEBITS;
 		AddActiveItem(item_number);
@@ -374,7 +374,7 @@ void InitialiseSethBlade(short item_number)
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 2;
 	item->goal_anim_state = 2;
-	item->item_flags[2] = abs(item->trigger_flags);
+	item->item_flags[2] = abs(item->ocb);
 }
 
 void InitialiseObelisk(short item_number)
@@ -389,7 +389,7 @@ void InitialiseObelisk(short item_number)
 	AddActiveItem(item_number);
 	item->status = ITEM_ACTIVE;
 
-	if (item->trigger_flags == 2)
+	if (item->ocb == 2)
 	{
 		ifl = item->item_flags;
 
@@ -412,7 +412,7 @@ void InitialiseMineHelicopter(short item_number)
 
 	item = &items[item_number];
 
-	if (!item->trigger_flags)
+	if (!item->ocb)
 		item->mesh_bits = 0;
 }
 
@@ -438,7 +438,7 @@ void InitialiseStatuePlinth(short item_number)
 
 	item = &items[item_number];
 
-	if (!item->trigger_flags)
+	if (!item->ocb)
 		item->mesh_bits = 1;
 }
 
@@ -451,9 +451,9 @@ void InitialiseSmokeEmitter(short item_number)
 	if (item->object_number != STEAM_EMITTER)
 		return;
 
-	if (item->trigger_flags & 8)
+	if (item->ocb & 8)
 	{
-		item->item_flags[0] = item->trigger_flags >> 4;
+		item->item_flags[0] = item->ocb >> 4;
 
 		if (!item->pos.y_rot)
 			item->pos.z_pos += 320;
@@ -464,7 +464,7 @@ void InitialiseSmokeEmitter(short item_number)
 		else if (item->pos.y_rot == -0x8000)
 			item->pos.z_pos -= 320;
 	}
-	else if (rooms[item->room_number].flags & ROOM_UNDERWATER && item->trigger_flags == 1)
+	else if (rooms[item->room_number].flags & ROOM_UNDERWATER && item->ocb == 1)
 	{
 		item->item_flags[0] = 20;
 		item->item_flags[1] = 1;
@@ -476,8 +476,8 @@ void InitialisePulley(short item_number)
 	ITEM_INFO* item;
 
 	item = &items[item_number];
-	item->item_flags[3] = item->trigger_flags;
-	item->trigger_flags = abs(item->trigger_flags);
+	item->item_flags[3] = item->ocb;
+	item->ocb = abs(item->ocb);
 
 	if (item->status == ITEM_INVISIBLE)
 	{
@@ -493,19 +493,19 @@ void InitialisePickUp(short item_number)
 	short ocb;
 
 	item = &items[item_number];
-	ocb = item->trigger_flags & 0x3F;
+	ocb = item->ocb & 0x3F;
 	bounds = GetBoundsAccurate(item);
 
 	if (ocb == 0 || ocb == 3 || ocb == 4)
 		item->pos.y_pos -= bounds[3];
 
-	if (item->trigger_flags & 128)
+	if (item->ocb & 128)
 	{
 		RPickups[NumRPickups] = (unsigned char)item_number;
 		NumRPickups++;
 	}
 
-	if (item->trigger_flags & 256)
+	if (item->ocb & 256)
 		item->mesh_bits = 0;
 
 	if (item->status == ITEM_INVISIBLE)
@@ -552,7 +552,7 @@ void InitialiseRope(short item_number)
 	RopeDir.y = 0x4000;
 	RopeDir.z = 0;
 	CreateRope(&RopeList[nRope], &RopePos, &RopeDir, 128, item);
-	item->trigger_flags = (short)nRope;
+	item->ocb = (short)nRope;
 	nRope++;
 }
 

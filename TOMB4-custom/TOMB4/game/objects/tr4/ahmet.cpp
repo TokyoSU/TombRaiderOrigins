@@ -57,9 +57,9 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					AddActiveItem(item_number);
 					item->status = ITEM_ACTIVE;
 
-					if (l->item_flags[3] < item->trigger_flags)			//too little
+					if (l->item_flags[3] < item->ocb)			//too little
 						item->goal_anim_state = 4;
-					else if (l->item_flags[3] == item->trigger_flags)	//nice
+					else if (l->item_flags[3] == item->ocb)	//nice
 						item->goal_anim_state = 2;
 					else												//too much
 						item->goal_anim_state = 3;
@@ -141,7 +141,7 @@ long ReTriggerAhmet(short item_number)
 		item->collidable = 1;
 		item->status = ITEM_ACTIVE;
 		EnableBaddieAI(item_number, 1);
-		item->trigger_flags = 1;
+		item->ocb = 1;
 		return 1;
 	}
 
@@ -255,9 +255,9 @@ void AhmetControl(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags == 1)
+	if (item->ocb == 1)
 	{
-		item->trigger_flags = 0;
+		item->ocb = 0;
 		return;
 	}
 

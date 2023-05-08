@@ -63,7 +63,7 @@ void InitialiseSenet(short item_number)
 			break;
 
 		case ENEMY_PIECE:
-			senet_item[item->trigger_flags + 3] = lp;
+			senet_item[item->ocb + 3] = lp;
 			break;
 		}
 	}
@@ -124,7 +124,7 @@ void SenetControl(short item_number)
 
 	item = &items[item_number];
 
-	if (last_throw > 0 && item->trigger_flags != 1)
+	if (last_throw > 0 && item->ocb != 1)
 		MakeMove(item->object_number - GAME_PIECE1, last_throw);
 
 	RemoveActiveItem(item_number);
@@ -168,7 +168,7 @@ void InitialiseGameStix(short item_number)
 
 	item = &items[item_number];
 	item->data = item->item_flags;
-	item->trigger_flags = NO_ITEM;
+	item->ocb = NO_ITEM;
 }
 
 void ThrowSticks(ITEM_INFO* item)
@@ -177,7 +177,7 @@ void ThrowSticks(ITEM_INFO* item)
 	char rnd;
 
 	last_throw = 0;
-	item->trigger_flags = 0;
+	item->ocb = 0;
 
 	for (lp = 0; lp < 4; lp++)
 	{
@@ -185,7 +185,7 @@ void ThrowSticks(ITEM_INFO* item)
 		last_throw += rnd;
 
 		if (rnd)
-			item->trigger_flags |= 1 << lp;
+			item->ocb |= 1 << lp;
 	}
 
 	if (!last_throw)
@@ -194,7 +194,7 @@ void ThrowSticks(ITEM_INFO* item)
 	item->hit_points = 120;
 
 	for (lp = 0; lp < 3; lp++)
-		items[senet_item[lp]].trigger_flags = 1;
+		items[senet_item[lp]].ocb = 1;
 }
 
 void GameStixControl(short item_number)
@@ -207,7 +207,7 @@ void GameStixControl(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags > -1)
+	if (item->ocb > -1)
 	{
 		if (item->hit_points == 100)
 			Sound.PlayEffect(SFX_SPINNING_PUZZLE, &item->pos);
@@ -220,9 +220,9 @@ void GameStixControl(short item_number)
 
 				if (item->hit_points < 120 - (2 * i + 80))
 				{
-					if (item->item_flags[i] > -4096 && item->item_flags[i] < 4096 && item->trigger_flags & 1 << i)
+					if (item->item_flags[i] > -4096 && item->item_flags[i] < 4096 && item->ocb & 1 << i)
 						item->item_flags[i] = 0;
-					else if ((item->item_flags[i] > 28672 || item->item_flags[i] < -28672) && !(item->trigger_flags & 1 << i))
+					else if ((item->item_flags[i] > 28672 || item->item_flags[i] < -28672) && !(item->ocb & 1 << i))
 						item->item_flags[i] = -0x8000;
 				}
 			}
@@ -233,9 +233,9 @@ void GameStixControl(short item_number)
 		if (!item->hit_points)
 		{
 			for (int i = 0; i < 3; i++)
-				items[senet_item[i]].trigger_flags = 0;
+				items[senet_item[i]].ocb = 0;
 
-			item->trigger_flags = NO_ITEM;
+			item->ocb = NO_ITEM;
 
 			if (piece_moving == NO_ITEM && !last_throw)
 			{

@@ -157,7 +157,7 @@ void KeyHoleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void PuzzleDoneCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 {
-	if (items[item_num].trigger_flags != 999)
+	if (items[item_num].ocb != 999)
 		ObjectCollision(item_num, l, coll);
 }
 
@@ -176,7 +176,7 @@ void PuzzleDone(ITEM_INFO* item, short item_number)
 
 void AnimatingPickUp(short item_number)
 {
-	if ((items[item_number].trigger_flags & 0x3F) == 2)
+	if ((items[item_number].ocb & 0x3F) == 2)
 		AnimateItem(&items[item_number]);
 }
 
@@ -255,7 +255,7 @@ long PickupTrigger(short item_num)
 
 	item = &items[item_num];
 
-	if (item->flags & IFL_CLEARBODY || item->status != ITEM_INVISIBLE || item->item_flags[3] != 1 || item->trigger_flags & 128)
+	if (item->flags & IFL_CLEARBODY || item->status != ITEM_INVISIBLE || item->item_flags[3] != 1 || item->ocb & 128)
 		return 0;
 
 	KillItem(item_num);
@@ -325,7 +325,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	rotx = item->pos.x_rot;
 	roty = item->pos.y_rot;
 	rotz = item->pos.z_rot;
-	ocb = item->trigger_flags & 0x3F;
+	ocb = item->ocb & 0x3F;
 	item->pos.y_rot = l->pos.y_rot;
 	item->pos.z_rot = 0;
 
@@ -532,7 +532,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 					{
 						AddDisplayPickup(item->object_number);
 
-						if (item->trigger_flags & 0x100)
+						if (item->ocb & 0x100)
 						{
 							for (int i = 0; i < level_items; i++)
 							{
@@ -544,7 +544,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 						}
 					}
 
-					if (!(item->trigger_flags & 0xC0))
+					if (!(item->ocb & 0xC0))
 						KillItem(item_number);
 					else
 					{
@@ -612,7 +612,7 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		{
 			AddDisplayPickup(item->object_number);
 
-			if (!(item->trigger_flags & 0xC0))
+			if (!(item->ocb & 0xC0))
 				KillItem(item_number);
 			else
 			{
@@ -650,11 +650,11 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 	PuzzleType = 0;
 	item = &items[item_num];
 
-	if (item->trigger_flags < 0)
+	if (item->ocb < 0)
 		PuzzleType = 1;
-	else if (item->trigger_flags > 1024)
+	else if (item->ocb > 1024)
 		PuzzleType = 2;
-	else if (item->trigger_flags && item->trigger_flags != 999)
+	else if (item->ocb && item->ocb != 999)
 		PuzzleType = 3;
 
 	if (((input & IN_ACTION || GLOBAL_inventoryitemchosen != NO_ITEM) &&
@@ -705,13 +705,13 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 
 			pos.z = bounds[4] - 100;
 
-			if ((PuzzleType == 2 && item->trigger_flags != 1036) || MoveLaraPosition(&pos, item, l))
+			if ((PuzzleType == 2 && item->ocb != 1036) || MoveLaraPosition(&pos, item, l))
 			{
 				remove_inventory_item(short(hole + PUZZLE_ITEM1));
 
 				if (PuzzleType == 1)
 				{
-					l->anim_number = -item->trigger_flags;
+					l->anim_number = -item->ocb;
 					l->current_anim_state = AS_CONTROLLED;
 
 					if (l->anim_number != 423)
@@ -719,7 +719,7 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 				}
 				else if (PuzzleType == 2)
 				{
-					cutseq_num = item->trigger_flags - 1024;
+					cutseq_num = item->ocb - 1024;
 					PuzzleDone(item, item_num);
 				}
 				else
@@ -756,7 +756,7 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 			l->frame_number == anims[ANIM_USEPUZZLE].frame_base + 80 && item->item_flags[0])
 		{
 			if (PuzzleType == 3)
-				l->item_flags[0] = item->trigger_flags;
+				l->item_flags[0] = item->ocb;
 			else
 				l->item_flags[0] = 0;
 

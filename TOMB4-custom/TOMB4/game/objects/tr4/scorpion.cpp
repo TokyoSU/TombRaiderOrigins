@@ -25,7 +25,7 @@ void InitialiseScorpion(short item_number)
 	item = &items[item_number];
 	InitialiseCreature(item_number);
 
-	if (item->trigger_flags == 1)
+	if (item->ocb == 1)
 	{
 		item->anim_number = objects[SCORPION].anim_index + 7;
 		item->current_anim_state = 8;
@@ -107,7 +107,7 @@ void ScorpionControl(short item_number)
 
 		if (item->current_anim_state != 6)
 		{
-			if (item->trigger_flags > 0 && item->trigger_flags < 7)
+			if (item->ocb > 0 && item->ocb < 7)
 			{
 				cutseq_num = 4;
 				item->anim_number = objects[SCORPION].anim_index + 5;
@@ -120,7 +120,7 @@ void ScorpionControl(short item_number)
 				{
 					enemy = &items[target_num];
 
-					if (enemy->object_number == TROOPS && enemy->trigger_flags == 1)
+					if (enemy->object_number == TROOPS && enemy->ocb == 1)
 					{
 						DisableBaddieAI(target_num);
 						KillItem(target_num);
@@ -296,9 +296,9 @@ void ScorpionControl(short item_number)
 			scorpion->maximum_turn = 0;
 
 			if (item->frame_number == anims[item->anim_number].frame_end)
-				item->trigger_flags++;
+				item->ocb++;
 
-			if (enemy && enemy->hit_points <= 0 || item->trigger_flags > 6)
+			if (enemy && enemy->hit_points <= 0 || item->ocb > 6)
 			{
 				item->goal_anim_state = 7;
 				enemy->hit_points = 0;

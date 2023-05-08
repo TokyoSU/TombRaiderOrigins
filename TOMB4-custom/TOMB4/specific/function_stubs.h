@@ -8,6 +8,9 @@ void SeedRandomDraw(long seed);
 void init_game_malloc();
 void* game_malloc(long size);
 void Log(unsigned long type, const char* s, ...);
+void Log2(std::string s);
+void Log2(short s);
+void Log2(long s);
 
 extern FILE* logF;
 extern PHD_VECTOR CamPos;

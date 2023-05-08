@@ -372,13 +372,13 @@ void BaboonControl(short item_number)
 				break;
 
 			case 21:
-				objects[item->object_number].HitEffect = 0;
+				objects[item->object_number].hit_effect = 0;
 				item->hit_points = -16384;
 
 				if (item->frame_number == anims[item->anim_number].frame_base + 212)
 				{
 					TestTriggersAtXYZ(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos + 1024, item->room_number, 1, 0);
-					item->trigger_flags = 1;
+					item->ocb = 1;
 				}
 
 				break;
@@ -432,9 +432,9 @@ void ReTriggerBaboon(short item_number)
 	item->status = ITEM_INVISIBLE;
 	DisableBaddieAI(item_number);
 
-	if (item->object_number != BABOON_NORMAL || !item->trigger_flags)
+	if (item->object_number != BABOON_NORMAL || !item->ocb)
 	{
-		if (item->object_number == BABOON_NORMAL || !item->trigger_flags)
+		if (item->object_number == BABOON_NORMAL || !item->ocb)
 			item->ai_bits = FOLLOW;
 
 		FindCrowbarSwitch(item, 0);

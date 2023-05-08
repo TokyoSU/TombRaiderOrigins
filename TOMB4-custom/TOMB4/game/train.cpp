@@ -156,7 +156,7 @@ void InitialiseTrainJeep(short item_number)
 	{
 		item2 = &items[i];
 
-		if (item != item2 && item2->trigger_flags == item->trigger_flags)
+		if (item != item2 && item2->ocb == item->ocb)
 		{
 			item->item_flags[1] = i;
 			item2->item_flags[0] = -80;

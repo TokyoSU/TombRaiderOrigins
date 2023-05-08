@@ -45,12 +45,12 @@ void InitialiseRaghead(short item_number)
 	}
 
 	item->item_flags[1] = -1;
-	flag = item->trigger_flags % 1000;
+	flag = item->ocb % 1000;
 
 	if (flag > 9 && flag < 20)
 	{
 		item->item_flags[2] += 24;
-		item->trigger_flags -= 10;
+		item->ocb -= 10;
 		flag -= 10;
 	}
 
@@ -130,18 +130,18 @@ void RagheadControl(short item_number)
 	torso_x = 0;
 	torso_y = 0;
 
-	if (item->trigger_flags % 1000)
+	if (item->ocb % 1000)
 	{
 		raghead->LOT.is_jumping = 1;
 		raghead->maximum_turn = 0;
 
-		if (item->trigger_flags % 1000 > 100)
+		if (item->ocb % 1000 > 100)
 		{
 			item->item_flags[0] = -80;
 			FindAITargetObject(raghead, AI_X1);
 		}
 
-		item->trigger_flags = 1000 * (item->trigger_flags / 1000);
+		item->ocb = 1000 * (item->ocb / 1000);
 	}
 
 	Xoffset = 942 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
@@ -267,13 +267,13 @@ void RagheadControl(short item_number)
 			item->current_anim_state = 32;
 			raghead->LOT.is_jumping = 1;
 
-			if (item->trigger_flags > 999)
+			if (item->ocb > 999)
 			{
 				for (target_num = rooms[2].item_number; target_num != NO_ITEM; target_num = target->next_item)
 				{
 					target = &items[target_num];
 
-					if (target->trigger_flags / 1000 == item->trigger_flags / 1000 + 1)
+					if (target->ocb / 1000 == item->ocb / 1000 + 1)
 					{
 						target->touch_bits = 0;
 

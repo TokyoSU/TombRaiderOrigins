@@ -106,7 +106,7 @@ void ControlLightningConductor(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	if (item->trigger_flags == 2)
+	if (item->ocb == 2)
 	{
 		if (!flip_stats[1])
 			return;
@@ -124,7 +124,7 @@ void ControlLightningConductor(short item_number)
 			item->item_flags[1] = (GetRandomControl() & 0x3FF) - 512;
 		}
 	}
-	else if (item->trigger_flags == 1 && flip_stats[1])
+	else if (item->ocb == 1 && flip_stats[1])
 	{
 		KillItem(item_number);
 		return;
@@ -166,7 +166,7 @@ void ControlLightningConductor(short item_number)
 
 		TriggerLightningGlow(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, RGBA(r, g, b, 64));
 
-		if (item->trigger_flags == 2 && !item->item_flags[0])
+		if (item->ocb == 2 && !item->item_flags[0])
 		{
 			ExplodeItemNode(&items[item->item_flags[2] & 0xFF], 0, 0, -128);
 			KillItem(item->item_flags[2] & 0xFF);
@@ -176,7 +176,7 @@ void ControlLightningConductor(short item_number)
 		}
 		else
 		{
-			if (item->trigger_flags == 1 && !lara.burn && !((item->pos.x_pos ^ lara_item->pos.x_pos) & -1024) &&
+			if (item->ocb == 1 && !lara.burn && !((item->pos.x_pos ^ lara_item->pos.x_pos) & -1024) &&
 				!((item->pos.z_pos ^ lara_item->pos.z_pos) & -1024) && lara_item->pos.y_pos <= item->pos.y_pos)
 			{
 				LaraBurn();
@@ -278,7 +278,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	item = &items[item_number];
 
 	if (input & IN_ACTION && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status &&
-		lara.gun_status == LG_NO_ARMS && !item->trigger_flags && !item->item_flags[0])
+		lara.gun_status == LG_NO_ARMS && !item->ocb && !item->item_flags[0])
 	{
 		if (!item->item_flags[1])
 		{
@@ -502,7 +502,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags || !lara.LitTorch)
+	if (item->ocb || !lara.LitTorch)
 		return;
 
 	nSpheres = GetSpheres(item, Slist, 1);
@@ -527,7 +527,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 		if (dx < sphere->r && dy < sphere->r && dz < sphere->r)
 		{
-			item->trigger_flags = 1;
+			item->ocb = 1;
 			item->item_flags[0] = i << 1;
 			item->item_flags[1] = i << 1;
 			item->item_flags[2] = i;
@@ -549,14 +549,14 @@ void ControlWaterfall(short item_number)
 	{
 		item->status = ITEM_ACTIVE;
 
-		if (item->trigger_flags == 668)
+		if (item->ocb == 668)
 			Sound.PlayEffect(SFX_SAND_LOOP, &item->pos);
-		else if (item->trigger_flags == 777)
+		else if (item->ocb == 777)
 			Sound.PlayEffect(SFX_WATERFALL_LOOP, &item->pos);
 	}
 	else
 	{
-		if (item->trigger_flags == 2 || item->trigger_flags == 668)
+		if (item->ocb == 2 || item->ocb == 668)
 			item->status = ITEM_INVISIBLE;
 	}
 }
@@ -723,7 +723,7 @@ void ControlAnimatingSlots(short item_number)
 		item->status = ITEM_ACTIVE;
 		AnimateItem(item);
 
-		if (item->trigger_flags == 666)
+		if (item->ocb == 666)
 		{
 			pos.x = 0;
 			pos.y = 0;
@@ -735,7 +735,7 @@ void ControlAnimatingSlots(short item_number)
 				item->flags &= ~IFL_CODEBITS;
 		}
 	}
-	else if (item->trigger_flags == 2)
+	else if (item->ocb == 2)
 		item->status = ITEM_INVISIBLE;
 }
 
@@ -800,7 +800,7 @@ void EarthQuake(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	if (item->trigger_flags == 888)
+	if (item->ocb == 888)
 	{
 		camera.bounce = -64 - (GetRandomControl() & 0x1F);
 		Sound.PlayEffect(SFX_EARTHQUAKE_LOOP);
@@ -812,7 +812,7 @@ void EarthQuake(short item_number)
 			KillItem(item_number);
 		}
 	}
-	else if (item->trigger_flags == 333)
+	else if (item->ocb == 333)
 	{
 		if (item->item_flags[0] >= 495)
 			KillItem(item_number);

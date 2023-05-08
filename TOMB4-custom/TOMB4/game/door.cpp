@@ -81,7 +81,7 @@ void DoorControl(short item_number)
 	item = &items[item_number];
 	door = (DOOR_DATA*)item->data;
 
-	if (item->trigger_flags == 1)
+	if (item->ocb == 1)
 	{
 		if (item->item_flags[0])
 		{
@@ -166,7 +166,7 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_num];
 
-	if (item->trigger_flags == 2 && item->status != ITEM_ACTIVE && ((input & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM) &&
+	if (item->ocb == 2 && item->status != ITEM_ACTIVE && ((input & IN_ACTION || GLOBAL_inventoryitemchosen == CROWBAR_ITEM) &&
 		l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH && !l->gravity_status && lara.gun_status == LG_NO_ARMS ||
 		lara.IsMoving && lara.GeneralPtr == (void*)item_num))
 	{
@@ -458,14 +458,14 @@ void SequenceDoorControl(short item_number)
 
 				if (CurrentSequence == 3)
 				{
-					if (SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]] == item->trigger_flags &&
+					if (SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]] == item->ocb &&
 						!Sequences[0] && Sequences[1] == 1 && Sequences[2] == 2)
 					{
 						CurrentSequence = 4;
-						SequenceUsed[item->trigger_flags] = Sequences[1];
+						SequenceUsed[item->ocb] = Sequences[1];
 					}
 				}
-				else if ((CurrentSequence == 1 || CurrentSequence == 2) && item->trigger_flags == 2)
+				else if ((CurrentSequence == 1 || CurrentSequence == 2) && item->ocb == 2)
 				{
 					item->flags &= ~(IFL_INVISIBLE | IFL_ANTITRIGGER_ONESHOT);
 					item->goal_anim_state = 0;
@@ -479,12 +479,12 @@ void SequenceDoorControl(short item_number)
 				item->goal_anim_state = 0;
 			else
 			{
-				if (CurrentSequence == 3 && SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]] == item->trigger_flags)
+				if (CurrentSequence == 3 && SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]] == item->ocb)
 				{
 					CurrentSequence = 4;
 
-					if (item->trigger_flags != 2)
-						SequenceUsed[item->trigger_flags] = 1;
+					if (item->ocb != 2)
+						SequenceUsed[item->ocb] = 1;
 				}
 
 				if (door->Opened)
@@ -498,9 +498,9 @@ void SequenceDoorControl(short item_number)
 			}
 		}
 	}
-	else if (!item->current_anim_state && CurrentSequence == 3 && SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]] == item->trigger_flags)
+	else if (!item->current_anim_state && CurrentSequence == 3 && SequenceResults[Sequences[0]][Sequences[1]][Sequences[2]] == item->ocb)
 	{
-		if (item->trigger_flags && item->trigger_flags != 2 && !SequenceUsed[0])
+		if (item->ocb && item->ocb != 2 && !SequenceUsed[0])
 		{
 			Sequences[1] = 0;
 			Sequences[0] = 1;

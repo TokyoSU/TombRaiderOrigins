@@ -26,7 +26,7 @@ void InitialiseInjuredSas(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags)
+	if (item->ocb)
 	{
 		item->anim_number = objects[SAS_DYING].anim_index;
 		item->current_anim_state = 1;

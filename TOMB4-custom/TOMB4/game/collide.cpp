@@ -657,30 +657,21 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 
 void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
-
+	ITEM_INFO* item = &items[item_number];
 	if (TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
 		ItemPushLara(item, l, coll, 0, 1);
 }
 
 void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
-
+	ITEM_INFO* item = &items[item_number];
 	if (TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
 		ItemPushLara(item, l, coll, 0, 0);
 }
 
 void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
-
+	ITEM_INFO* item = &items[item_number];
 	if (item->status == ITEM_ACTIVE)
 	{
 		if (!TestBoundsCollide(item, l, coll->radius))
@@ -688,7 +679,6 @@ void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 	else if (item->status == ITEM_INVISIBLE)
 		return;
-
 	ObjectCollision(item_number, l, coll);
 }
 

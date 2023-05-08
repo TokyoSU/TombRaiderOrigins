@@ -111,7 +111,7 @@ static short temp_rotation_buffer[160];
 static char cutseq_busy_timeout = 0;
 static char lara_chat_cnt = 0;
 static char actor_chat_cnt = 0;
-static char old_status_flags[16];
+static short old_status_flags[16];
 
 void handle_cutseq_triggering(long name)
 {

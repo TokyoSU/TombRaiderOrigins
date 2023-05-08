@@ -2839,26 +2839,26 @@ void lara_as_pulley(ITEM_INFO* item, COLL_INFO* coll)
 	coll->enable_spaz = 0;
 	coll->enable_baddie_push = 0;
 
-	if (input & IN_ACTION && p->trigger_flags)
+	if (input & IN_ACTION && p->ocb)
 		item->goal_anim_state = AS_PULLEY;
 	else
 		item->goal_anim_state = AS_STOP;
 
 	if (item->anim_number == ANIM_PULLEY && item->frame_number == anims[ANIM_PULLEY].frame_base + 44)
 	{
-		if (p->trigger_flags)
+		if (p->ocb)
 		{
 			if (!p->item_flags[1])
 			{
-				p->trigger_flags--;
+				p->ocb--;
 
-				if (!p->trigger_flags)
+				if (!p->ocb)
 				{
 					p->status = ITEM_DEACTIVATED;
 					p->item_flags[2] = 1;
 
 					if (p->item_flags[3] >= 0)
-						p->trigger_flags = abs(p->item_flags[3]);
+						p->ocb = abs(p->item_flags[3]);
 					else
 						p->item_flags[0] = 1;
 				}

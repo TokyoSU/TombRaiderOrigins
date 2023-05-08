@@ -23,9 +23,9 @@ void ControlPulseLight(short item_number)
 	if (!flip_stats[4] && gfLevelFlags & GF_PULSE)
 		return;
 
-	if (item->trigger_flags == 1)
+	if (item->ocb == 1)
 	{
-		item->trigger_flags = 0;
+		item->ocb = 0;
 		FlashFadeR = 128;
 		FlashFadeG = 255;
 		FlashFadeB = 255;
@@ -34,7 +34,7 @@ void ControlPulseLight(short item_number)
 		Sound.PlayEffect(SFX_BOULDER_FALL);
 		Sound.PlayEffect(SFX_EXPLOSION2);
 	}
-	else if (item->trigger_flags == 2)
+	else if (item->ocb == 2)
 	{
 		Sound.PlayEffect(SFX_MAPPER_PYRAMID_OPEN, &item->pos);
 
@@ -104,9 +104,9 @@ void ControlElectricalLight(short item_number)
 		}
 	}
 
-	r = ((shade * (item->trigger_flags & 0x1F)) << 3) >> 8;
-	g = (shade * ((item->trigger_flags >> 2) & 0xF8)) >> 8;
-	b = (shade * ((item->trigger_flags >> 7) & 0xF8)) >> 8;
+	r = ((shade * (item->ocb & 0x1F)) << 3) >> 8;
+	g = (shade * ((item->ocb >> 2) & 0xF8)) >> 8;
+	b = (shade * ((item->ocb >> 7) & 0xF8)) >> 8;
 	TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 16, r, g, b);
 }
 
@@ -120,9 +120,9 @@ void ControlBlinker(short item_number)
 	if (!TriggerActive(item))
 		return;
 
-	item->trigger_flags--;
+	item->ocb--;
 
-	if (item->trigger_flags >= 3)
+	if (item->ocb >= 3)
 		item->mesh_bits = 1;
 	else
 	{
@@ -133,7 +133,7 @@ void ControlBlinker(short item_number)
 		TriggerDynamic(pos.x, pos.y, pos.z, 16, 255, 192, 16);
 		item->mesh_bits = 2;
 
-		if (item->trigger_flags < 0)
-			item->trigger_flags = 30;
+		if (item->ocb < 0)
+			item->ocb = 30;
 	}
 }

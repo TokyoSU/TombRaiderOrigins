@@ -23,7 +23,7 @@ void JeanYvesControl(short item_number)
 
 	item = &items[item_number];
 
-	if (item->trigger_flags < lara.highest_location)
+	if (item->ocb < lara.highest_location)
 	{
 		if (lara.highest_location > 3)
 			lara.highest_location = 3;
@@ -33,7 +33,7 @@ void JeanYvesControl(short item_number)
 		item->current_anim_state = item->goal_anim_state;
 		item->anim_number = objects[JEAN_YVES].anim_index + random;
 		item->frame_number = anims[item->anim_number].frame_base;
-		item->trigger_flags = lara.highest_location;
+		item->ocb = lara.highest_location;
 	}
 	else
 	{

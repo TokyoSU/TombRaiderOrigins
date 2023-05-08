@@ -20,19 +20,25 @@ unsigned short* overlap;
 short* ground_zone[5][2];
 long num_boxes;
 
+CREATURE_INFO* GetCreatureInfo(short item_number)
+{
+	return reinterpret_cast<CREATURE_INFO*>(items[item_number].data);
+}
+
+CREATURE_INFO* GetCreatureInfo(ITEM_INFO* item)
+{
+	return reinterpret_cast<CREATURE_INFO*>(item->data);
+}
+
 void CreatureDie(short item_number, long explode)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* pickup;
-	short pickup_number, room_number;
-
-	item = &items[item_number];
+	auto* item = &items[item_number];
 	item->hit_points = -16384;
 	item->collidable = 0;
 
 	if (explode)
 	{
-		if (objects[item->object_number].HitEffect == 1)
+		if (objects[item->object_number].hit_effect == 1)
 			ExplodingDeath2(item_number, -1, 258); // BLOOD
 		else
 			ExplodingDeath2(item_number, -1, 256); // NORMAL
@@ -45,15 +51,12 @@ void CreatureDie(short item_number, long explode)
 	DisableBaddieAI(item_number);
 	item->flags |= IFL_INVISIBLE | IFL_CLEARBODY;
 
-	//inlined DropBaddyPickups..
-
-	pickup_number = item->carried_item;
-
+	auto pickup_number = item->carried_item;
 	while (pickup_number != NO_ITEM)
 	{
-		pickup = &items[pickup_number];
+		auto* pickup = &items[pickup_number];
 
-		if (item->object_number == TROOPS && item->trigger_flags == 1)
+		if (item->object_number == TROOPS && item->ocb == 1)
 		{
 			pickup->pos.x_pos = ((item->pos.x_pos + ((1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT)) & -512) | 512;
 			pickup->pos.z_pos = ((item->pos.z_pos + ((1024 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT)) & -512) | 512;
@@ -64,9 +67,8 @@ void CreatureDie(short item_number, long explode)
 			pickup->pos.z_pos = (item->pos.z_pos & -512) | 512;
 		}
 
-		room_number = item->room_number;
-		pickup->pos.y_pos = GetHeight(GetFloor(pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos, &room_number),
-			pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos);
+		auto room_number = item->room_number;
+		pickup->pos.y_pos = GetHeight(GetFloor(pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos, &room_number), pickup->pos.x_pos, item->pos.y_pos, pickup->pos.z_pos);
 		pickup->pos.y_pos -= GetBoundsAccurate(pickup)[3];
 		ItemNewRoom(pickup_number, item->room_number);
 		pickup->flags |= IFL_TRIGGERED;
@@ -76,31 +78,24 @@ void CreatureDie(short item_number, long explode)
 
 void InitialiseCreature(short item_number)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
-	item->collidable = 1;
-	item->data = 0;
+	auto* item = &items[item_number];
+	item->collidable = TRUE;
+	item->data = NULL;
 }
 
-long CreatureActive(short item_number)
+bool CreatureActive(short item_number)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
-
+	auto* item = &items[item_number];
 	if (item->flags & IFL_CLEARBODY)
-		return 0;
-
+		return false;
 	if (item->status == ITEM_INVISIBLE)
 	{
 		if (EnableBaddieAI(item_number, 0))
 			item->status = ITEM_ACTIVE;
 		else
-			return 0;
+			return false;
 	}
-
-	return 1;
+	return true;
 }
 
 void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
@@ -395,7 +390,7 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
 	return enemy_quad != baddie_quad || abs(enemy_quad - box_quad) != 2;
 }
 
-target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
+TARGET_TYPE_ENUM CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
 {
 	BOX_INFO* box;
 	long box_number, box_left, box_right, box_top, box_bottom;
@@ -623,7 +618,7 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	CREATURE_INFO* creature;
 	ITEM_INFO* enemy;
 	LOT_INFO* LOT;
-	static target_type type;
+	static TARGET_TYPE_ENUM type;
 	short index, box_no;
 
 	creature = (CREATURE_INFO*)item->data;
@@ -731,7 +726,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	CREATURE_INFO* creature;
 	ITEM_INFO* enemy;
 	LOT_INFO* LOT;
-	mood_type mood;
+	MOOD_TYPE_ENUM mood;
 
 	creature = (CREATURE_INFO*)item->data;
 
@@ -1372,27 +1367,24 @@ void CreatureUnderwater(ITEM_INFO* item, long depth)
 	}
 }
 
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number))
+short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, EffectToCall effect)
 {
 	PHD_VECTOR pos;
-
 	pos.x = bite->x;
 	pos.y = bite->y;
 	pos.z = bite->z;
 	GetJointAbsPosition(item, &pos, bite->mesh_num);
-	return generate(pos.x, pos.y, pos.z, item->speed, item->pos.y_rot, item->room_number);
+	return effect(pos.x, pos.y, pos.z, item->speed, item->pos.y_rot, item->room_number);
 }
 
-short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle,
-	short(*generate)(long x, long y, long z, short damage, short angle, short room_number))
+short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle, EffectToCall effect)
 {
 	PHD_VECTOR pos;
-
 	pos.x = bite->x;
 	pos.y = bite->y;
 	pos.z = bite->z;
 	GetJointAbsPosition(item, &pos, bite->mesh_num);
-	return generate(pos.x, pos.y, pos.z, damage, angle, item->room_number);
+	return effect(pos.x, pos.y, pos.z, damage, angle, item->room_number);
 }
 
 long CreatureVault(short item_number, short angle, long vault, long shift)
@@ -1633,7 +1625,7 @@ void FindAITargetObject(CREATURE_INFO* creature, short obj_num)
 		enemy->pos.z_pos = aiObj->z;
 		enemy->pos.y_rot = aiObj->y_rot;
 		enemy->flags = aiObj->flags;
-		enemy->trigger_flags = aiObj->trigger_flags;
+		enemy->ocb = aiObj->trigger_flags;
 		enemy->box_number = aiObj->box_number;
 
 		if (!(enemy->flags & 0x20))
@@ -1651,7 +1643,7 @@ void GetAITarget(CREATURE_INFO* creature)
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;
 	short enemy_object;
-	char ai_bits;
+	unsigned short ai_bits;
 
 	enemy = creature->enemy;
 
@@ -1697,7 +1689,7 @@ void GetAITarget(CREATURE_INFO* creature)
 			GetHeight(GetFloor(enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos, &enemy->room_number),
 				enemy->pos.x_pos, enemy->pos.y_pos, enemy->pos.z_pos);
 			TestTriggers(trigger_index, 1, 0);
-			creature->patrol2 = ~creature->patrol2;
+			creature->patrol2 = !creature->patrol2;
 		}
 	}
 	else if (ai_bits & AMBUSH)

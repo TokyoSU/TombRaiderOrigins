@@ -139,7 +139,7 @@ void AutogunControl(short item_number)
 		else
 			item->mesh_bits &= ~0x100;
 
-		if (!item->trigger_flags)
+		if (!item->ocb)
 		{
 			item->pos.y_pos -= 512;
 			CreatureAIInfo(item, &info);

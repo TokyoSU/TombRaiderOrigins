@@ -1967,7 +1967,7 @@ void EnemyJeepControl(short item_number)
 					jeep->enemy->pos.z_pos = aiobj->z;
 					jeep->enemy->pos.y_rot = aiobj->y_rot;
 					jeep->enemy->flags = aiobj->flags;
-					jeep->enemy->trigger_flags = aiobj->trigger_flags;
+					jeep->enemy->ocb = aiobj->trigger_flags;
 					jeep->enemy->box_number = aiobj->box_number;
 
 					if (!(jeep->enemy->flags & 0x20))
