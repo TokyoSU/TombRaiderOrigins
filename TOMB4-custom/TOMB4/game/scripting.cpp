@@ -4,6 +4,7 @@
 #include "function_stubs.h"
 #include "item_script.h"
 #include "creature_script.h"
+#include "effects_script.h"
 
 asIScriptEngine* scriptEngine;
 CContextMgr scriptManager;
@@ -35,26 +36,37 @@ void RegisterStructure_PHDVECTOR()
 
 void RegisterStructure_GAMEVECTOR()
 {
-	int r = scriptEngine->RegisterObjectType("GAME_VECTOR", sizeof(GAME_VECTOR), asOBJ_VALUE|asOBJ_POD|asOBJ_APP_CLASS); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 x", asOFFSET(GAME_VECTOR, x)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 y", asOFFSET(GAME_VECTOR, y)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 z", asOFFSET(GAME_VECTOR, z)); assert(r >= 0);
 	r = scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int16 room_number", asOFFSET(GAME_VECTOR, room_number)); assert(r >= 0);
 	r = scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int16 box_number", asOFFSET(GAME_VECTOR, box_number)); assert(r >= 0);
+	assert(scriptEngine->RegisterObjectType("GAME_VECTOR", sizeof(GAME_VECTOR), asOBJ_VALUE|asOBJ_POD|asOBJ_APP_CLASS) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 x", asOFFSET(GAME_VECTOR, x)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 y", asOFFSET(GAME_VECTOR, y)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 z", asOFFSET(GAME_VECTOR, z)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int16 room_number", asOFFSET(GAME_VECTOR, room_number)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int16 box_number", asOFFSET(GAME_VECTOR, box_number)) >= 0);
 }
 
 void RegisterStructure_PHD3DPOS()
 {
-	int r = scriptEngine->RegisterObjectType("PHD_3DPOS", sizeof(PHD_3DPOS), asOBJ_VALUE|asOBJ_POD|asOBJ_APP_CLASS); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int64 x_pos", asOFFSET(PHD_3DPOS, x_pos)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int64 y_pos", asOFFSET(PHD_3DPOS, y_pos)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int64 z_pos", asOFFSET(PHD_3DPOS, z_pos)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int16 x_rot", asOFFSET(PHD_3DPOS, x_rot)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int16 y_rot", asOFFSET(PHD_3DPOS, y_rot)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int16 z_rot", asOFFSET(PHD_3DPOS, z_rot)); assert(r >= 0);
+	assert(scriptEngine->RegisterObjectType("PHD_3DPOS", sizeof(PHD_3DPOS), asOBJ_VALUE|asOBJ_POD|asOBJ_APP_CLASS) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int64 x_pos", asOFFSET(PHD_3DPOS, x_pos)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int64 y_pos", asOFFSET(PHD_3DPOS, y_pos)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int64 z_pos", asOFFSET(PHD_3DPOS, z_pos)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int16 x_rot", asOFFSET(PHD_3DPOS, x_rot)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int16 y_rot", asOFFSET(PHD_3DPOS, y_rot)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("PHD_3DPOS", "int16 z_rot", asOFFSET(PHD_3DPOS, z_rot)) >= 0);
 }
 
-void RegisterStructure_ITEMINFO()
+void RegisterStructure_BITEINFO()
+{
+	assert(scriptEngine->RegisterObjectType("BITE_INFO", sizeof(BITE_INFO), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("BITE_INFO", "int x", asOFFSET(BITE_INFO, x)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("BITE_INFO", "int y", asOFFSET(BITE_INFO, y)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("BITE_INFO", "int z", asOFFSET(BITE_INFO, z)) >= 0);
+	assert(scriptEngine->RegisterObjectProperty("BITE_INFO", "int mesh_num", asOFFSET(BITE_INFO, mesh_num)) >= 0);
+}
+
+/*void RegisterStructure_ITEMINFO()
 {
 	int r = scriptEngine->RegisterObjectType("ITEM_INFO", sizeof(ITEM_INFO), asOBJ_VALUE|asOBJ_POD|asOBJ_APP_CLASS); assert(r >= 0);
 	r = scriptEngine->RegisterObjectProperty("ITEM_INFO", "int16 index", asOFFSET(ITEM_INFO, index)); assert(r >= 0);
@@ -242,7 +254,7 @@ void RegisterFunction_BOX()
 	r = scriptEngine->RegisterGlobalFunction("void GetAITarget(CREATURE_INFO creature)", asFUNCTION(GetAITarget), asCALL_CDECL);
 	r = scriptEngine->RegisterGlobalFunction("void CreatureYRot(PHD_3DPOS, int16, int16)", asFUNCTION(CreatureYRot), asCALL_CDECL);
 	r = scriptEngine->RegisterGlobalFunction("int64 MoveCreature3DPos(PHD_3DPOS, PHD_3DPOS, int64, int16, int64)", asFUNCTION(MoveCreature3DPos), asCALL_CDECL);
-}
+}*/
 
 void RegisterFunction_FunctionStubs()
 {
@@ -259,7 +271,7 @@ long SquaredBlock(long value, long div)
 {
 	if (div == 0)
 		div = 1;
-	return SQUARE(DISTANCE(value) / div);
+	return SQUARE((1024 * value) / div);
 }
 
 void InitialiseScripting()
@@ -285,6 +297,7 @@ void InitialiseScripting()
 	// Custom register
 	assert(scriptEngine->RegisterGlobalFunction("void Log2(string)", asFUNCTIONPR(Log2, (std::string), void), asCALL_CDECL) >= 0);
 	assert(scriptEngine->RegisterGlobalFunction("void Log2(int16)", asFUNCTIONPR(Log2, (short), void), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("void Log2(int)", asFUNCTIONPR(Log2, (int), void), asCALL_CDECL) >= 0);
 	assert(scriptEngine->RegisterGlobalFunction("void Log2(int64)", asFUNCTIONPR(Log2, (long), void), asCALL_CDECL) >= 0);
 	assert(scriptEngine->RegisterGlobalFunction("int SquaredBlock(int,int)", asFUNCTION(SquaredBlock), asCALL_CDECL) >= 0);
 	
@@ -292,12 +305,13 @@ void InitialiseScripting()
 	RegisterStructure_PHDVECTOR();
 	RegisterStructure_GAMEVECTOR();
 	RegisterStructure_PHD3DPOS();
-	//RegisterStructure_PCLIGHT(); // ITEMINFO require it, but for scripting, light is not required, it's managed by the renderer !
-	//RegisterStructure_ITEMLIGHT(); // ITEMINFO require it, but for scripting, light is not required, it's managed by the renderer !
+	RegisterStructure_BITEINFO();
+	//RegisterStructure_PCLIGHT(); // ITEMINFO require it, but for scripting, light is not required, it's managed by the renderer
+	//RegisterStructure_ITEMLIGHT(); // ITEMINFO require it, but for scripting, light is not required, it's managed by the renderer
 	//RegisterStructure_ITEMINFO();
 	//RegisterStructure_COLLINFO();
 	//RegisterStructure_LOTINFO();
-	RegisterStructure_AIINFO();
+	//RegisterStructure_AIINFO();
 	//RegisterStructure_CREATUREINFO();
 
 	// Then we can register the global function !
@@ -307,20 +321,12 @@ void InitialiseScripting()
 
 	RegisterItemHelper();
 	RegisterCreatureHelper();
+	RegisterEffectsHelper();
 	RegisterVariablesGlobal();
 }
 
 void ReleaseScripting()
 {
-	/*for (int i = 0; i < NUMBER_OBJECTS; i++)
-	{
-		if (entityContextList[i])
-		{
-			entityContextList[i]->Release();
-			entityContextList[i] = NULL;
-		}
-	}*/
-
 	if (scriptEngine != NULL)
 	{
 		scriptEngine->ShutDownAndRelease();

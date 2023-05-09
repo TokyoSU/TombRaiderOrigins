@@ -89,8 +89,9 @@ enum FishOcb
 
 #define IS_OCB_VALID(trigger, x) trigger & x
 
-static LEADER_INFO LeadInfo[8];
-static FISH_INFO Fishes[(MAX_FISHES * 256) + 8]; // +8 for the leader.
+static LEADER_INFO LeadInfo[MAX_FISHES_LEADER];
+// Possible to have 32 fish emitter...
+static FISH_INFO Fishes[(MAX_FISHES * 32) + MAX_FISHES_LEADER]; // +8 for the leader count.
 static int nCurrentLeader = 0;
 
 int GetFishRangeCount(ITEM_INFO* item)
@@ -184,7 +185,7 @@ void SetupFish(ITEM_INFO* item)
 	// Every fish except leader.
 	for (int i = 0; i < MAX_FISHES; i++)
 	{
-		pFish = &Fishes[(MAX_FISHES * item->hit_points) + 8 + i];
+		pFish = &Fishes[(MAX_FISHES * item->hit_points) + MAX_FISHES_LEADER + i];
 		pFish->x = GetRandomControl() % (x << 1) - x;
 		pFish->y = GetRandomControl() % y;
 		pFish->z = GetRandomControl() % (z << 1) - z;
@@ -222,7 +223,7 @@ void InitialiseFish(short item_number)
 	auto* item = &items[item_number];
 
 	// Get a fish leader for this item !
-	if (nCurrentLeader > 7) // reset and replace the first leader !
+	if (nCurrentLeader >= MAX_FISHES_LEADER) // reset and replace the first leader !
 		nCurrentLeader = 0;
 	item->hit_points = nCurrentLeader++;
 
@@ -232,14 +233,14 @@ void InitialiseFish(short item_number)
 	SetupFish(item);
 }
 
-static short FishFoundCarcassTarget(ITEM_INFO* pirahna)
+static short GetCarcassItemNumber(ITEM_INFO* pirahna)
 {
 	for (int i = 0; i < level_items; i++)
 	{
 		auto* item = &items[i];
 		// need to be the fish_target AND in the same room !
 		if (item->object_number == FISH_TARGET && pirahna->room_number == item->room_number && item->status == ITEM_ACTIVE)
-			return i;
+			return item->index;
 	}
 	return NO_ITEM;
 }
@@ -258,7 +259,7 @@ void ControlFish(short item_number)
 		return;
 	enemy = item;
 	pLeader = &LeadInfo[item->hit_points];
-	pLeader->carcass_item = FishFoundCarcassTarget(item);
+	pLeader->carcass_item = GetCarcassItemNumber(item);
 
 	if ((item->ocb & OCB_PirahnaMode))
 	{
@@ -428,7 +429,7 @@ void ControlFish(short item_number)
 
 	for (int i = 0; i < MAX_FISHES; i++)
 	{
-		pFish = &Fishes[(MAX_FISHES * item->hit_points) + i + 8];
+		pFish = &Fishes[(MAX_FISHES * item->hit_points) + MAX_FISHES_LEADER + i];
 
 		if (item->ocb & OCB_PirahnaMode)
 		{
@@ -580,7 +581,7 @@ void S_DrawFish(ITEM_INFO* item)
 	D3DTLVERTEX v[3];
 	TEXTURESTRUCT tex;
 
-	auto* pFish = &Fishes[(MAX_FISHES * item->hit_points) + 8];
+	auto* pFish = &Fishes[(MAX_FISHES * item->hit_points) + MAX_FISHES_LEADER];
 	long x1, y1, z1, x2, y2, z2, x3, y3, z3, size;
 	long XYZ[3][3]{};
 	long point[3];
@@ -733,6 +734,8 @@ void FishTargetControl(short item_number)
 
 	if (item->fallspeed > maxfs)
 		item->fallspeed = maxfs;
+
+	AnimateItem(item);
 
 	if (rooms[room_number].flags & ROOM_UNDERWATER && !(rooms[old_room].flags & ROOM_UNDERWATER))
 	{

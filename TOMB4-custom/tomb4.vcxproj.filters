@@ -392,6 +392,7 @@
     <ClInclude Include="TOMB4\game\objects\tr2\tr2_rat.h" />
     <ClInclude Include="TOMB4\game\script\item_script.h" />
     <ClInclude Include="TOMB4\game\script\creature_script.h" />
+    <ClInclude Include="TOMB4\game\script\effects_script.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TOMB4\game\lara.cpp">
@@ -794,6 +795,9 @@
       <Filter>TOMB4</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\script\creature_script.cpp">
+      <Filter>TOMB4</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\script\effects_script.cpp">
       <Filter>TOMB4</Filter>
     </ClCompile>
   </ItemGroup>

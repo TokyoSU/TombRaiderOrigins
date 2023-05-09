@@ -245,13 +245,11 @@ void GhostTrap(ITEM_INFO* item)
 		while (nex != NO_ITEM)
 		{
 			wraith = &items[nex];
-
 			if (wraith->object_number == WRAITH3 && !wraith->hit_points)
 			{
-				wraith->hit_points = item - items;
+				wraith->hit_points = item->index;
 				break;
 			}
-
 			nex = wraith->next_active;
 		}
 	}

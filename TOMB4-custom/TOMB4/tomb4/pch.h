@@ -34,7 +34,7 @@
 
 #define ONE_DEGREE 182
 constexpr short ANGLE(short value) { return value * ONE_DEGREE; }
-constexpr long DISTANCE(long value) { return value * 1024; }
+constexpr short DISTANCE(short value) { return value * 1024; }
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

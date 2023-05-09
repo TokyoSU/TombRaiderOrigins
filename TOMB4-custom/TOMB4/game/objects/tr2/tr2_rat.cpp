@@ -10,7 +10,7 @@ static asIScriptFunction* controlFunc = nullptr;
 static asIScriptContext* initialiseContext = nullptr;
 static asIScriptContext* controlContext = nullptr;
 
-void InitialiseRat_TR2_Script()
+void LoadTR2RatScript()
 {
 	scriptBuilder.AddSectionFromFile("scripts/creatures/tr2_rat.as");
 	scriptBuilder.BuildModule();
@@ -19,16 +19,18 @@ void InitialiseRat_TR2_Script()
 	initialiseFunc = mod->GetFunctionByName("InitialiseRat_TR2");
 	controlFunc = mod->GetFunctionByName("ControlRat_TR2");
 
+#if _DEBUG
 	Log(1, "TR2 rat script: (init: %s, control: %s)",
 		initialiseFunc != nullptr ? "exist" : "missing",
 		controlFunc != nullptr ? "exist" : "missing"
 	);
+#endif
 
 	initialiseContext = scriptEngine->CreateContext();
 	controlContext = scriptEngine->CreateContext();
 }
 
-void ReleaseRat_TR2_Script()
+void ReleaseTR2RatScript()
 {
 	if (initialiseContext != NULL)
 	{
@@ -43,16 +45,19 @@ void ReleaseRat_TR2_Script()
 		assert(controlContext->Release() >= 0);
 		controlContext = NULL;
 	}
-
+#if _DEBUG
 	Log(1, "Released tr2 rat script.");
+#endif
 }
 
 void InitialiseRat_TR2(short item_number)
 {
 	auto* item = &items[item_number];
-	if (initialiseContext == nullptr)
+	if (initialiseContext == NULL)
 	{
+#if _DEBUG
 		Log(2, "Error in initialise rat (tr2), the init context is nullptr !");
+#endif
 		return;
 	}
 	assert(initialiseContext->Prepare(initialiseFunc) >= 0);
@@ -66,9 +71,11 @@ void InitialiseRat_TR2(short item_number)
 void ControlRat_TR2(short item_number)
 {
 	auto* item = &items[item_number];
-	if (controlContext == nullptr)
+	if (controlContext == NULL)
 	{
+#if _DEBUG
 		Log(2, "Error in control rat (tr2), the control context is nullptr !");
+#endif
 		return;
 	}
 	assert(controlContext->Prepare(controlFunc) >= 0);

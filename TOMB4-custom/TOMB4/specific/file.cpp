@@ -108,8 +108,8 @@ unsigned int __stdcall LoadLevel(void* name)
 		LoadObjects();
 		for (int i = 0; i < NUMBER_OBJECTS; i++)
 		{
-			if (objects[i].loaded && objects[i].initialise_script != NULL)
-				objects[i].initialise_script();
+			if (objects[i].loaded && objects[i].load_script != NULL)
+				objects[i].load_script();
 		}
 		S_LoadBar();
 

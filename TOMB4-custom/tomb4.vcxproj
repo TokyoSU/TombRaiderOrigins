@@ -249,6 +249,7 @@
     <ClInclude Include="TOMB4\game\objects\tr4\seth.h" />
     <ClInclude Include="TOMB4\game\scripting.h" />
     <ClInclude Include="TOMB4\game\script\creature_script.h" />
+    <ClInclude Include="TOMB4\game\script\effects_script.h" />
     <ClInclude Include="TOMB4\game\script\item_script.h" />
     <ClInclude Include="TOMB4\game\setup.h" />
     <ClInclude Include="TOMB4\game\objects\tr4\skeleton.h" />
@@ -393,6 +394,7 @@
     <ClCompile Include="TOMB4\game\objects\tr4\seth.cpp" />
     <ClCompile Include="TOMB4\game\scripting.cpp" />
     <ClCompile Include="TOMB4\game\script\creature_script.cpp" />
+    <ClCompile Include="TOMB4\game\script\effects_script.cpp" />
     <ClCompile Include="TOMB4\game\script\item_script.cpp" />
     <ClCompile Include="TOMB4\game\setup.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr4\skeleton.cpp" />

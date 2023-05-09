@@ -2,6 +2,7 @@
 #include "global/types.h"
 
 constexpr auto MAX_FISHES = 24;
+constexpr auto MAX_FISHES_LEADER = 8;
 
 struct FISH_INFO
 {
@@ -43,4 +44,4 @@ extern void SetupFish(ITEM_INFO* item);
 extern void InitialiseFish(short item_number);
 extern void ControlFish(short item_number);
 extern void S_DrawFish(ITEM_INFO* item);
-extern void FishTargetControl(short item_number);
+extern void FishTargetControl(short item_number); // Carcass

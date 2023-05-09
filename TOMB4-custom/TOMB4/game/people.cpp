@@ -19,7 +19,6 @@ short GunShot(long x, long y, long z, short speed, short yrot, short room_number
 short GunHit(long x, long y, long z, short speed, short yrot, short room_number)
 {
 	PHD_VECTOR pos;
-
 	pos.x = 0;
 	pos.y = 0;
 	pos.z = 0;
@@ -32,7 +31,6 @@ short GunHit(long x, long y, long z, short speed, short yrot, short room_number)
 short GunMiss(long x, long y, long z, short speed, short yrot, short room_number)
 {
 	GAME_VECTOR pos;
-
 	pos.x = lara_item->pos.x_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;
 	pos.y = lara_item->floor;
 	pos.z = lara_item->pos.z_pos + ((GetRandomControl() - 0x4000) << 9) / 0x7FFF;

@@ -116,6 +116,11 @@ void Log2(short s)
 	Log2((long)s);
 }
 
+void Log2(int s)
+{
+	Log2((long)s);
+}
+
 void Log2(long s)
 {
 	auto str = std::to_string(s);

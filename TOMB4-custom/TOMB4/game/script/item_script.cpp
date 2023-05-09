@@ -218,6 +218,11 @@ static void SetItemAnimationAndFrame(short item_number, short anim_id, short fra
 	item.goal_anim_state = anim.current_anim_state;
 }
 
+static bool IsItemMeshCollidingWithTarget(short item_number, int mesh_num)
+{
+	return items[item_number].touch_bits & (1 << mesh_num);
+}
+
 void RegisterItemHelper()
 {
 	scriptEngine->RegisterGlobalFunction("int GetItemHeightFromFloor(int16)", asFUNCTION(GetItemHeightFromFloor), asCALL_CDECL);
@@ -259,4 +264,5 @@ void RegisterItemHelper()
 	scriptEngine->RegisterGlobalFunction("PHD_3DPOS GetItemPosition(int16)", asFUNCTION(SetItemStorageValue), asCALL_CDECL);
 	scriptEngine->RegisterGlobalFunction("void SetItemAnimation(int16,int16)", asFUNCTION(SetItemAnimation), asCALL_CDECL);
 	scriptEngine->RegisterGlobalFunction("void SetItemAnimationAndFrame(int16,int16,int16)", asFUNCTION(SetItemAnimationAndFrame), asCALL_CDECL);
+	scriptEngine->RegisterGlobalFunction("bool IsItemMeshCollidingWithTarget(int16,int)", asFUNCTION(IsItemMeshCollidingWithTarget), asCALL_CDECL);
 }

@@ -97,6 +97,13 @@ enum languages
 	DUTCH
 };
 
+enum HIT_EFFECTS
+{
+	HE_BLOOD = 1,
+	HE_SMOKE = 2,
+	HE_RICHOCHET = 3
+};
+
 enum font_flags
 {
 	FF_SMALL =		0x1000,
@@ -976,7 +983,7 @@ struct OBJECT_INFO
 	void (*ceiling)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*draw_routine)(ITEM_INFO* item);
 	void (*draw_routine_extra)(ITEM_INFO* item);
-	void (*initialise_script)();
+	void (*load_script)();
 	void (*release_script)();
 	short anim_index;
 	short hit_points;
@@ -1841,10 +1848,10 @@ struct GUNSHELL_STRUCT
 
 struct BITE_INFO
 {
-	long x;
-	long y;
-	long z;
-	long mesh_num;
+	int x;
+	int y;
+	int z;
+	int mesh_num;
 };
 
 struct D3DTLBUMPVERTEX
@@ -2437,7 +2444,7 @@ struct WEAPON_INFO
 	short recoil_frame = 0;
 	short flash_time = 0;
 	short draw_frame = 0;
-	int sample_num;
+	int sample_num = 0;
 
 	WEAPON_INFO() {}
 
