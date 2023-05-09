@@ -36,8 +36,6 @@ void RegisterStructure_PHDVECTOR()
 
 void RegisterStructure_GAMEVECTOR()
 {
-	r = scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int16 room_number", asOFFSET(GAME_VECTOR, room_number)); assert(r >= 0);
-	r = scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int16 box_number", asOFFSET(GAME_VECTOR, box_number)); assert(r >= 0);
 	assert(scriptEngine->RegisterObjectType("GAME_VECTOR", sizeof(GAME_VECTOR), asOBJ_VALUE|asOBJ_POD|asOBJ_APP_CLASS) >= 0);
 	assert(scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 x", asOFFSET(GAME_VECTOR, x)) >= 0);
 	assert(scriptEngine->RegisterObjectProperty("GAME_VECTOR", "int64 y", asOFFSET(GAME_VECTOR, y)) >= 0);
