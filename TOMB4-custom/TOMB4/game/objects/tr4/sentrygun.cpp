@@ -101,8 +101,9 @@ void AutogunControl(short item_number)
 	if (!CreatureActive(item_number))
 		return;
 
-	autogun = GetCreatureInfo(item);
-	if (autogun == NULL)
+	autogun = (CREATURE_INFO*)item->data;
+
+	if (!autogun)
 		return;
 
 	if (!(item->mesh_bits & 0x40))

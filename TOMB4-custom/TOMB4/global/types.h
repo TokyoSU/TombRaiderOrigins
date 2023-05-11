@@ -619,7 +619,7 @@ struct ITEM_INFO
 	short after_death;
 	unsigned short fired_weapon;
 	short item_flags[ITEM_INFO_FLAG_COUNT];
-	std::any data;
+	LPVOID data;
 	PHD_3DPOS pos;
 	ITEM_LIGHT il; // Not registered in the scripting, it's not required !
 	bool active;

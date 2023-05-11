@@ -261,9 +261,7 @@ void AhmetControl(short item_number)
 		return;
 	}
 
-	ahmet = GetCreatureInfo(item);
-	if (ahmet == NULL)
-		return;
+	ahmet = (CREATURE_INFO*)item->data;
 	angle = 0;
 	head = 0;
 

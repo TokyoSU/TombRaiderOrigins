@@ -36,9 +36,8 @@ void DisableBaddieAI(short item_number)
 	CREATURE_INFO* creature;
 
 	item = &items[item_number];
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return;
+	creature = (CREATURE_INFO*)item->data;
+	item->data = 0;
 
 	if (creature)
 	{
@@ -76,9 +75,7 @@ void CreateZone(ITEM_INFO* item)
 	short* flip;
 	short zone_number, flip_number;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return;
+	creature = (CREATURE_INFO*)item->data;
 	r = &rooms[item->room_number];
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
 
@@ -121,10 +118,11 @@ void CreateZone(ITEM_INFO* item)
 void InitialiseSlot(short item_number, long slot)
 {
 	ITEM_INFO* item;
+	CREATURE_INFO* creature;
 
-	CREATURE_INFO* creature = &baddie_slots[slot];
+	creature = &baddie_slots[slot];
 	item = &items[item_number];
-	item->data = std::make_any<CREATURE_INFO*>(creature);
+	item->data = creature;
 	creature->item_num = item_number;
 	creature->mood = BORED_MOOD;
 	creature->joint_rotation[0] = 0;
@@ -228,9 +226,9 @@ long EnableBaddieAI(short item_number, long Always)
 	long x, y, z, slot, worstslot, dist, worstdist;
 
 	item = &items[item_number];
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return 0;
+
+	if (item->data)
+		return 1;
 
 	if (slots_used < 5)
 	{

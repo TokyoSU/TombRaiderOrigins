@@ -41,9 +41,7 @@ void WildboarControl(short item_number)
 	headX = 0;
 	headY = 0;
 	item = &items[item_number];
-	boar = GetCreatureInfo(item);
-	if (boar == NULL)
-		return;
+	boar = (CREATURE_INFO*)item->data;
 
 	if (item->hit_points <= 0)
 	{

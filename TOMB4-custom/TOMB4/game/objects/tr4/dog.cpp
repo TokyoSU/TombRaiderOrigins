@@ -46,9 +46,7 @@ void DogControl(short item_number)
 	head = 0;
 	torso_y = 0;
 	item = &items[item_number];
-	dog = GetCreatureInfo(item);
-	if (dog == NULL)
-		return;
+	dog = (CREATURE_INFO*)item->data;
 
 	if (item->hit_points <= 0)
 	{

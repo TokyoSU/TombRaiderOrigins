@@ -276,9 +276,7 @@ void DemigodControl(short item_number)
 	if (!CreatureActive(item_number))
 		return;
 
-	god = GetCreatureInfo(item);
-	if (god == NULL)
-		return;
+	god = (CREATURE_INFO*)item->data;
 	objnum = item->object_number;
 	angle = 0;
 	head = 0;

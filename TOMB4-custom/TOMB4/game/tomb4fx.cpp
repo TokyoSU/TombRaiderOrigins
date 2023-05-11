@@ -16,7 +16,6 @@
 #include "lara.h"
 #include "gameflow.h"
 #include "text.h"
-#include <box.h>
 
 NODEOFFSET_INFO NodeOffsets[16] =
 {
@@ -132,11 +131,10 @@ long ExplodingDeath2(short item_number, long mesh_bits, short flags, short alter
 	rotation = frame + 9;
 	gar_RotYXZsuperpack(&rotation, 0);
 
-	auto* creature = GetCreatureInfo(item);
-	if (creature == NULL)
+	if (!item->data)
 		extra_rotation = no_rotation;
 	else
-		extra_rotation = creature->joint_rotation;
+		extra_rotation = (short*)item->data;
 
 	bone = &bones[obj->bone_index];
 	bit = 1;

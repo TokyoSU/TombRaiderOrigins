@@ -23,7 +23,6 @@
 #include "output.h"
 #include "game/lara_states.h"
 #include "game/deltapak.h"
-#include <wraith.h>
 
 #define CIRCUMFERENCE_POINTS 32 // Number of points in the circumference
 #define LINE_POINTS	4	//number of points in each grid line
@@ -2300,14 +2299,15 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 void InitTarget_2()
 {
 	OBJECT_INFO* obj;
-	D3DTLVERTEX* v = nullptr;
+	D3DTLVERTEX* v;
 
 	obj = &objects[TARGET_GRAPHICS];
+
 	if (!obj->loaded)
 		return;
 
 	targetMeshP = (MESH_DATA*)meshes[obj->mesh_index];
-	targetMeshP->SourceVB->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
+	targetMeshP->SourceVB->Lock(DDLOCK_READONLY, (void**)&v, 0);
 
 	for (int i = 0; i < targetMeshP->nVerts; i++)
 	{
@@ -2506,9 +2506,7 @@ void DrawWraithTrail(ITEM_INFO* item)
 		XY = (long*)&tsv_buffer[0];
 		Z = (long*)&tsv_buffer[512];
 		offsets = (long*)&tsv_buffer[1024];
-		wraith = GetWraithData(item);
-		if (wraith == NULL)
-			continue;
+		wraith = (WRAITH_STRUCT*)item->data;
 
 		for (int j = 0; j < 8; j++, XY += 2, Z += 2, wraith++)
 		{

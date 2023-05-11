@@ -32,13 +32,6 @@ static long bikefspeed = 0;
 static short broomies[22];
 static char dont_exit_bike = 0;
 
-static BIKEINFO* GetBikeData(ITEM_INFO* bike)
-{
-	if (!bike->data.has_value())
-		return NULL;
-	return std::any_cast<BIKEINFO*>(bike->data);
-}
-
 void InitialiseBike(short item_number)
 {
 	ITEM_INFO* item;
@@ -64,12 +57,8 @@ void InitialiseBike(short item_number)
 
 void DrawBikeExtras(ITEM_INFO* item)
 {
-	auto* bike = GetBikeData(item);
-	if (bike == NULL)
-		return;
-
 	if (lara.vehicle != NO_ITEM)
-		DrawBikeSpeedo(phd_winwidth - 64, phd_winheight - 16, bike->velocity, 0x8000, 0xC000, 32, 0);
+		DrawBikeSpeedo(phd_winwidth - 64, phd_winheight - 16, ((BIKEINFO*)item->data)->velocity, 0x8000, 0xC000, 32, 0);
 
 	DrawBikeBeam(GlobalBikeItem);
 }
@@ -81,9 +70,7 @@ void TriggerBikeBeam(ITEM_INFO* item)
 	PHD_VECTOR d;
 	long intensity;
 
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return;
+	bike = (BIKEINFO*)item->data;
 	s.x = 0;
 	s.y = -470;
 	s.z = 1836;
@@ -150,9 +137,8 @@ void DrawBikeBeam(ITEM_INFO* item)
 	long frac, rate, bounds, r, g, b;
 	short* rot2;
 
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return;
+	bike = (BIKEINFO*)item->data;
+
 	if (!bike->light_intensity)
 		return;
 
@@ -388,9 +374,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed)
 	BIKEINFO* bike;
 	short state, dmg;
 
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return;
+	bike = (BIKEINFO*)item->data;
 	state = lara_item->current_anim_state;
 
 	if (item->pos.y_pos != item->floor && state != 8 && state != 17 && state != 20 && !killed)
@@ -579,6 +563,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed)
 
 void BikeStart(ITEM_INFO* item, ITEM_INFO* l)
 {
+	BIKEINFO* bike = (BIKEINFO*)item->data;
 	lara.gun_status = LG_HANDS_BUSY;
 	lara.hit_direction = -1;
 	l->goal_anim_state = 15;
@@ -590,6 +575,7 @@ void BikeStart(ITEM_INFO* item, ITEM_INFO* l)
 	item->frame_number= l->frame_number + anims[item->anim_number].frame_base - anims[l->anim_number].frame_base;
 	item->flags |= IFL_TRIGGERED;
 	item->hit_points = 1;
+	bike->unused1 = 0;
 }
 
 long TestHeight(ITEM_INFO* item, long z, long x, PHD_VECTOR* pos)
@@ -628,9 +614,7 @@ static long BikeCheckGetOff()
 	short state;
 
 	item = &items[lara.vehicle];
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return 0;
+	bike = (BIKEINFO*)item->data;
 	state = lara_item->current_anim_state;
 
 	if (state == 10 && lara_item->frame_number == anims[lara_item->anim_number].frame_end)
@@ -737,9 +721,7 @@ void BikeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		return;
 
 	item = &items[item_number];
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return;
+	bike = (BIKEINFO*)item->data;
 
 	if (bike->light_intensity)
 	{
@@ -976,9 +958,7 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch)
 	long turn, vel;
 	short frame, base;
 
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return 0;
+	bike = (BIKEINFO*)item->data;
 
 	if (bike->light_intensity < 127)
 	{
@@ -1162,9 +1142,7 @@ long BikeDynamics(ITEM_INFO* item)
 	short ang, ang2, vel, room_number;
 
 	dont_exit_bike = 0;
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return 0;
+	bike = (BIKEINFO*)item->data;
 	front_left = TestHeight(item, 500, -350, &flPos);
 	front_right = TestHeight(item, 500, 128, &frPos);
 	back_left = TestHeight(item, -500, -350, &blPos);
@@ -1405,9 +1383,7 @@ void BikeControl(short item_number)
 	killed = 0;
 	pitch = 0;
 	item = &items[lara.vehicle];
-	bike = GetBikeData(item);
-	if (bike == NULL)
-		return;
+	bike = (BIKEINFO*)item->data;
 	hitWall = BikeDynamics(item);
 
 	if (hitWall == -888)	//hit the crocgod

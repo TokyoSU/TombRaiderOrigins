@@ -51,9 +51,7 @@ void TroopControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	troop = GetCreatureInfo(item);
-	if (troop == NULL)
-		return;
+	troop = (CREATURE_INFO*)item->data;
 	angle = 0;
 	tilt = 0;
 	torso_x = 0;

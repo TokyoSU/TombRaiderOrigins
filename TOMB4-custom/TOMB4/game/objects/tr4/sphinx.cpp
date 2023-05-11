@@ -39,9 +39,7 @@ void SphinxControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	sphinx = GetCreatureInfo(item);
-	if (sphinx == NULL)
-		return;
+	sphinx = (CREATURE_INFO*)item->data;
 	s = 614 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	c = 614 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 	x = item->pos.x_pos + s;

@@ -22,16 +22,12 @@ long num_boxes;
 
 CREATURE_INFO* GetCreatureInfo(short item_number)
 {
-	if (!items[item_number].data.has_value())
-		return NULL;
-	return std::any_cast<CREATURE_INFO*>(items[item_number].data);
+	return reinterpret_cast<CREATURE_INFO*>(items[item_number].data);
 }
 
 CREATURE_INFO* GetCreatureInfo(ITEM_INFO* item)
 {
-	if (!item->data.has_value())
-		return NULL;
-	return std::any_cast<CREATURE_INFO*>(item->data);
+	return reinterpret_cast<CREATURE_INFO*>(item->data);
 }
 
 void CreatureDie(short item_number, long explode)
@@ -113,11 +109,13 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 	long x, y, z;
 	short pivot, ang, state;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
+	creature = (CREATURE_INFO*)item->data;
+
+	if (!creature)
 		return;
 
 	obj = &objects[item->object_number];
+
 	if (item->poisoned)
 	{
 		if (!obj->undead && !(wibble & 0x3F) && item->hit_points > 1)
@@ -345,13 +343,16 @@ long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
 
 long ValidBox(ITEM_INFO* item, short zone_number, short box_number)
 {
-	CREATURE_INFO* creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return 0;
+	CREATURE_INFO* creature;
+	BOX_INFO* box;
+
+	creature = (CREATURE_INFO*)item->data;
+
 	if (!creature->LOT.fly && ground_zone[creature->LOT.zone][flip_status][box_number] != zone_number)
 		return 0;
 
-	BOX_INFO* box = &boxes[box_number];
+	box = &boxes[box_number];
+
 	if (creature->LOT.block_mask & box->overlap_index)
 		return 0;
 
@@ -614,15 +615,19 @@ TARGET_TYPE_ENUM CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* 
 
 void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 {
-	CREATURE_INFO* creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return;
-
+	CREATURE_INFO* creature;
+	ITEM_INFO* enemy;
+	LOT_INFO* LOT;
 	static TARGET_TYPE_ENUM type;
 	short index, box_no;
 
-	ITEM_INFO* enemy = creature->enemy;
-	LOT_INFO* LOT = &creature->LOT;
+	creature = (CREATURE_INFO*)item->data;
+
+	if (!creature)
+		return;
+
+	enemy = creature->enemy;
+	LOT = &creature->LOT;
 
 	switch (creature->mood)
 	{
@@ -723,8 +728,9 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	LOT_INFO* LOT;
 	MOOD_TYPE_ENUM mood;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
+	creature = (CREATURE_INFO*)item->data;
+
+	if (!creature)
 		return;
 
 	LOT = &creature->LOT;
@@ -901,9 +907,9 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 	short room_number, rad;
 
 	item = &items[item_number];
-	
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
+	creature = (CREATURE_INFO*)item->data;
+
+	if (!creature)
 		return 0;
 
 	LOT = &creature->LOT;
@@ -1210,8 +1216,9 @@ short CreatureTurn(ITEM_INFO* item, short maximum_turn)
 	long x, z, feelxplus, feelzplus, feelxminus, feelzminus, feelxmid, feelzmid, feelplus, feelminus, feelmid;
 	short angle;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL || !maximum_turn)
+	creature = (CREATURE_INFO*)item->data;
+	
+	if (!creature || !maximum_turn)
 		return 0;
 
 	x = item->pos.x_pos;
@@ -1280,8 +1287,9 @@ void CreatureJoint(ITEM_INFO* item, short joint, short required)
 	CREATURE_INFO* creature;
 	short change;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
+	creature = (CREATURE_INFO*)item->data;
+
+	if (!creature)
 		return;
 
 	change = required - creature->joint_rotation[joint];

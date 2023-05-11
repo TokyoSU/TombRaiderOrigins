@@ -201,9 +201,7 @@ void SasControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	sas = GetCreatureInfo(item);
-	if (sas == NULL)
-		return;
+	sas = (CREATURE_INFO*)item->data;
 	angle = 0;
 	tilt = 0;
 	head = 0;

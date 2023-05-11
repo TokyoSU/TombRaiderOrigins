@@ -13,7 +13,6 @@
 #include "specific/input.h"
 #include "lara.h"
 #include "newinv.h"
-#include <door.h>
 
 static PHD_VECTOR FullBlockSwitchPos = { 0, 256, 0 };
 static PHD_VECTOR SwitchPos = { 0, 0, 0 };
@@ -903,9 +902,7 @@ void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	while ((*data & 0x1F) != TRIGGER_TYPE && !(*data & 0x8000)) data++;
 
 	door_item = &items[data[3] & 0x3FF];
-	door = GetDoorData(door_item);
-	if (door == NULL)
-		return;
+	door = (DOOR_DATA*)door_item->data;
 
 	if (item->status != ITEM_INACTIVE)
 		return;

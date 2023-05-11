@@ -27,7 +27,6 @@
 #include "lara.h"
 #include "gameflow.h"
 #include "specific/dxshell.h"
-#include <box.h>
 
 static BITE_INFO EnemyBites[2] =
 {
@@ -419,11 +418,11 @@ void DrawAnimatingItem(ITEM_INFO* item)
 	if (clip)
 	{
 		CalculateObjectLighting(item, frm[0]);
-		auto* creature = GetCreatureInfo(item);
-		if (creature == NULL)
+
+		if (!item->data)
 			data = no_rotation;
 		else
-			data = creature->joint_rotation;
+			data = (short*)item->data;
 
 		bit = 1;
 		meshpp = &meshes[obj->mesh_index];

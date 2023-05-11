@@ -47,12 +47,10 @@ long TargetVisible(ITEM_INFO* item, AI_INFO* info)
 	GAME_VECTOR target;
 	short* bounds;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return 0;
+	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
-	if (!enemy || enemy->hit_points <= 0 || !enemy->data.has_value() || info->angle - creature->joint_rotation[2] <= -0x4000 ||
+	if (!enemy || enemy->hit_points <= 0 || !enemy->data || info->angle - creature->joint_rotation[2] <= -0x4000 ||
 		info->angle - creature->joint_rotation[2] >= 0x4000 || info->distance >= 0x4000000)
 		return 0;
 
@@ -77,12 +75,10 @@ long Targetable(ITEM_INFO* item, AI_INFO* info)
 	GAME_VECTOR target;
 	short* bounds;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return 0;
+	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
-	if (!enemy || enemy->hit_points <= 0 || !enemy->data.has_value() || !info->ahead || info->distance >= 0x4000000 && item->object_number != SETHA)
+	if (!enemy || enemy->hit_points <= 0 || !enemy->data || !info->ahead || info->distance >= 0x4000000 && item->object_number != SETHA)
 		return 0;
 
 	bounds = GetBestFrame(item);
@@ -105,9 +101,7 @@ long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotati
 	PHD_VECTOR pos;
 	long hit, targetable, random, distance;
 
-	creature = GetCreatureInfo(item);
-	if (creature == NULL)
-		return 0;
+	creature = (CREATURE_INFO*)item->data;
 	enemy = creature->enemy;
 
 	if (info->distance <= 0x4000000 && Targetable(item, info))

@@ -56,9 +56,7 @@ void ScorpionControl(short item_number)
 
 	angle = 0;
 	item = &items[item_number];
-	scorpion = GetCreatureInfo(item);
-	if (scorpion == NULL)
-		return;
+	scorpion = (CREATURE_INFO*)item->data;
 	s = (682 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	c = (682 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
 
@@ -353,9 +351,7 @@ void SmlscorpControl(short item_number)
 
 	angle = 0;
 	item = &items[item_number];
-	scorpion = GetCreatureInfo(item);
-	if (scorpion == NULL)
-		return;
+	scorpion = (CREATURE_INFO*)item->data;
 
 	if (item->hit_points <= 0)
 	{

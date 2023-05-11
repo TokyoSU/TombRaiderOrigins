@@ -1794,7 +1794,7 @@ void InitialiseLara()
 	if (lara.item_number == NO_ITEM)
 		return;
 
-	lara_item->data = std::make_any<LARA_INFO*>(&lara);
+	lara_item->data = &lara;
 	lara_item->collidable = 0;
 	item_num = lara.item_number;
 	memset(&lara, 0, sizeof(LARA_INFO));
@@ -1989,4 +1989,6 @@ void SetupGame()
 	InitialiseLara();
 	GetCarriedItems();
 	GetAIPickups();
+	SeedRandomDraw(0xD371F947);
+	SeedRandomControl(0xD371F947);
 }

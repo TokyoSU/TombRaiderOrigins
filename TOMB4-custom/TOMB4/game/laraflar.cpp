@@ -16,7 +16,6 @@
 #include "gameflow.h"
 #include "draw.h"
 #include "tomb4fx.h"
-#include <flmtorch.h>
 
 void DrawFlareInAir(ITEM_INFO* item)
 {
@@ -210,9 +209,9 @@ void CreateFlare(short object, long thrown)
 		if (object == FLARE_ITEM)
 		{
 			if (DoFlareLight((PHD_VECTOR*)&flare->pos, lara.flare_age))
-				flare->data = std::make_any<long>(lara.flare_age | 0x8000);
+				flare->data = (void*)(lara.flare_age | 0x8000);
 			else
-				flare->data = std::make_any<long>(lara.flare_age & 0x7FFF);
+				flare->data = (void*)(lara.flare_age & 0x7FFF);
 		}
 		else
 			flare->item_flags[3] = lara.LitTorch;
@@ -438,7 +437,7 @@ void FlareControl(short item_number)
 	yv = flare->fallspeed;
 	flare->pos.y_pos += yv;
 	DoProperDetection(item_number, x, y, z, xv, yv, zv);
-	flare_age = GetFlareData(flare) & 0x7FFF;
+	flare_age = (long)flare->data & 0x7FFF;
 
 	if (flare_age >= 900)
 	{
@@ -463,5 +462,5 @@ void FlareControl(short item_number)
 		flare_age |= 0x8000;
 	}
 
-	flare->data = std::make_any<long>(flare_age);
+	flare->data = (void*)flare_age;
 }

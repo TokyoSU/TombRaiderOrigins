@@ -73,9 +73,7 @@ void HorsemanControl(short item_number)
 		else
 			item2 = 0;
 
-		horseman = GetCreatureInfo(item);
-		if (horseman == NULL)
-			return;
+		horseman = (CREATURE_INFO*)item->data;
 		angle = 0;
 
 		if (item2)

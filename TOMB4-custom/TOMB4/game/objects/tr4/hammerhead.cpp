@@ -32,9 +32,7 @@ void HammerheadControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	shark = GetCreatureInfo(item);
-	if (shark == NULL)
-		return;
+	shark = (CREATURE_INFO*)item->data;
 
 	if (item->hit_points <= 0)
 	{

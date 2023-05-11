@@ -135,9 +135,7 @@ void SkeletonControl(short item_number)
 
 	angle = 0;
 	item = &items[item_number];
-	skelly = GetCreatureInfo(item);
-	if (skelly == NULL)
-		return;
+	skelly = (CREATURE_INFO*)item->data;
 
 	Xoffset = 870 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	Zoffset = 870 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;

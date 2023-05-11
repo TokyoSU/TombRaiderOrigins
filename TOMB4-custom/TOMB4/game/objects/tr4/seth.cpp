@@ -401,9 +401,7 @@ void SethControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	seth = GetCreatureInfo(item);
-	if (seth == NULL)
-		return;
+	seth = (CREATURE_INFO*)item->data;
 
 	angle = 0;
 	Xoffset = 870 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;

@@ -61,19 +61,24 @@ void DXBitMask2ShiftCnt(unsigned long mask, unsigned char* shift, unsigned char*
 
 void DXReadKeyboard(char* KeyMap)
 {
-	HRESULT state = G_dxptr->Keyboard->GetDeviceState(256, KeyMap);
+	HRESULT state;
+
+	state = G_dxptr->Keyboard->GetDeviceState(256, KeyMap);
+
 	if (FAILED(state))
 	{
 		if (state == DIERR_INPUTLOST)
 			G_dxptr->Keyboard->Acquire();
+
 		G_dxptr->Keyboard->GetDeviceState(256, KeyMap);
 	}
 }
 
 long DXAttempt(HRESULT r)
 {
-	if SUCCEEDED(r)
+	if (SUCCEEDED(r))
 		return DD_OK;
+
 	Log(1, "ERROR : %s", DXGetErrorString(r));
 	return DD_FALSE;
 }
@@ -265,9 +270,11 @@ BOOL __stdcall DXEnumDirectSound(LPGUID lpGuid, LPCSTR lpcstrDescription, LPCSTR
 
 long DXGetInfo(DXINFO* dxinfo, HWND hwnd)
 {
-	Log(5, "Enumerating DirectDraw Devices");
+	Log(2, "DXInitialise");
 	G_hwnd = hwnd;
+	Log(5, "Enumerating DirectDraw Devices");
 	DXAttempt(DirectDrawEnumerate(DXEnumDirectDraw, dxinfo));
+	//DXAttempt(DirectSoundEnumerate(DXEnumDirectSound, dxinfo));
 	G_dxinfo = dxinfo;
 	return 1;
 }
@@ -371,6 +378,7 @@ HRESULT __stdcall DXEnumTextureFormats(LPDDPIXELFORMAT lpDDPixFmt, LPVOID lpCont
 
 	if (!(lpDDPixFmt->dwFlags & DDPF_ALPHAPIXELS) || !(lpDDPixFmt->dwFlags & DDPF_RGB))
 		return DDENUMRET_OK;
+
 	if (lpDDPixFmt->dwRGBBitCount == 16)
 		return DDENUMRET_OK;
 
