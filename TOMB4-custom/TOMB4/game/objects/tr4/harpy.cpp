@@ -284,7 +284,9 @@ void HarpyControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	harpy = (CREATURE_INFO*)item->data;
+	harpy = GetCreatureInfo(item);
+	if (harpy == NULL)
+		return;
 	angle = 0;
 	head = 0;
 	torso_x = 0;

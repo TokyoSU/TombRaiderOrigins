@@ -47,7 +47,9 @@ void MummyControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	mummy = (CREATURE_INFO*)item->data;
+	mummy = GetCreatureInfo(item);
+	if (mummy == NULL)
+		return;
 	angle = 0;
 	head = 0;
 	torso_x = 0;

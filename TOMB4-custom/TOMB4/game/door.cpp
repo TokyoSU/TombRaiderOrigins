@@ -25,6 +25,13 @@ static short CrowbarDoorBounds[12] = { -512, 512, -1024, 0, 0, 512, -14560, 1456
 static short PushPullKickDoorBounds[12] = { -384, 384, 0, 0, -1024, 512, -1820, 1820, -5460, 5460, -1820, 1820 };
 static short UnderwaterDoorBounds[12] = { -256, 256, -1024, 0, -1024, 0, -14560, 14560, -14560, 14560, -14560, 14560 };
 
+DOOR_DATA* GetDoorData(ITEM_INFO* item)
+{
+	if (!item->data.has_value())
+		return NULL;
+	return std::any_cast<DOOR_DATA*>(item->data);
+}
+
 void ShutThatDoor(DOORPOS_DATA* d)
 {
 	CREATURE_INFO* cinfo;
@@ -79,7 +86,9 @@ void DoorControl(short item_number)
 	short* bounds;
 
 	item = &items[item_number];
-	door = (DOOR_DATA*)item->data;
+	door = GetDoorData(item);
+	if (door == NULL)
+		return;
 
 	if (item->ocb == 1)
 	{
@@ -251,7 +260,9 @@ void PushPullKickDoorControl(short item_number)
 	DOOR_DATA* door;
 
 	item = &items[item_number];
-	door = (DOOR_DATA*)item->data;
+	door = GetDoorData(item);
+	if (door == NULL)
+		return;
 
 	if (!door->Opened)
 	{
@@ -437,7 +448,9 @@ void SequenceDoorControl(short item_number)
 	DOOR_DATA* door;
 
 	item = &items[item_number];
-	door = (DOOR_DATA*)item->data;
+	door = GetDoorData(item);
+	if (door == NULL)
+		return;
 
 	if (item->item_flags[0])
 	{

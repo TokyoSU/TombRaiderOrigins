@@ -1,6 +1,7 @@
 #pragma once
 #include "global/types.h"
 
+DOOR_DATA* GetDoorData(ITEM_INFO* item);
 void ShutThatDoor(DOORPOS_DATA* d);
 void OpenThatDoor(DOORPOS_DATA* d);
 void DoorControl(short item_number);

@@ -15,6 +15,13 @@
 static short DeathSlideBounds[12] = { -256, 256, -100, 100, 256, 512, 0, 0, -4550, 4550, 0, 0 };
 static PHD_VECTOR DeathSlidePosition = { 0, 0, 371 };
 
+static GAME_VECTOR* GetDeathSlideData(ITEM_INFO* item)
+{
+	if (!item->data.has_value())
+		return NULL;
+	return std::any_cast<GAME_VECTOR*>(item->data);
+}
+
 void InitialiseDeathSlide(short item_number)
 {
 	ITEM_INFO* item;
@@ -66,7 +73,9 @@ void ControlDeathSlide(short item_number)
 	short room_number;
 
 	item = &items[item_number];
-
+	old = GetDeathSlideData(item);
+	if (old == NULL)
+		return;
 	if (item->status != ITEM_ACTIVE)
 		return;
 
@@ -127,7 +136,6 @@ void ControlDeathSlide(short item_number)
 	}
 	else
 	{
-		old = (GAME_VECTOR*)item->data;
 		item->pos.x_pos = old->x;
 		item->pos.y_pos = old->y;
 		item->pos.z_pos = old->z;

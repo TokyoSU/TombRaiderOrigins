@@ -36,7 +36,9 @@ void BatControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	bat = (CREATURE_INFO*)item->data;
+	bat = GetCreatureInfo(item);
+	if (bat == NULL)
+		return;
 	angle = 0;
 
 	if (item->hit_points <= 0)

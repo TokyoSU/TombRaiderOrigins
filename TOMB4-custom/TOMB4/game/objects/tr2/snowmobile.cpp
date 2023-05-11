@@ -75,13 +75,15 @@ static BITE_INFO right_gun = { -235, -71, 550, 0 };
 
 static SNOWMOBILEINFO* GetSkidooData(ITEM_INFO* item)
 {
-	return (SNOWMOBILEINFO*)item->data;
+	if (!item->data.has_value())
+		return NULL;
+	return std::any_cast<SNOWMOBILEINFO*>(item->data);
 }
 
 void InitialiseSkidoo(short item_number)
 {
 	auto* skidoo = &items[item_number];
-	skidoo->data = game_malloc(sizeof(SNOWMOBILEINFO));
+	skidoo->data = (SNOWMOBILEINFO*)game_malloc(sizeof(SNOWMOBILEINFO));
 
 	auto* skinfo = GetSkidooData(skidoo);
 	skinfo->skidoo_turn = 0;
@@ -102,9 +104,9 @@ int SkidooCheckGetOn(short item_number, COLL_INFO* coll)
 	short rot = skidoo->pos.y_rot - lara_item->pos.y_rot;
 	short geton = 0;
 	if (rot > 0x2000 && rot < 0x6000)
-		geton = 1; //right
+		geton = 1; // right
 	else if (rot > -0x6000 && rot < -0x2000)
-		geton = 2; //left
+		geton = 2; // left
 	else
 		return 0;
 

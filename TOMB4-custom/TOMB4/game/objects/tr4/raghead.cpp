@@ -117,7 +117,9 @@ void RagheadControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	raghead = (CREATURE_INFO*)item->data;
+	raghead = GetCreatureInfo(item);
+	if (raghead == NULL)
+		return;
 
 	if (objects[SUPER_RAGHEAD].loaded)
 		obj_num = SUPER_RAGHEAD;

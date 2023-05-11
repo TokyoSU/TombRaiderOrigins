@@ -33,6 +33,13 @@
 static short jroomies[22];
 static char dont_exit_jeep = 0;
 
+static JEEPINFO* GetJeepData(ITEM_INFO* item)
+{
+	if (!item->data.has_value())
+		return NULL;
+	return std::any_cast<JEEPINFO*>(item->data);
+}
+
 void InitialiseJeep(short item_number)
 {
 	ITEM_INFO* item;
@@ -128,7 +135,9 @@ void DrawJeepExtras(ITEM_INFO* item)
 	if (lara.vehicle == NO_ITEM)
 		return;
 
-	jeep = (JEEPINFO*)item->data;
+	jeep = GetJeepData(item);
+	if (jeep == NULL)
+		return;
 	DrawJeepSpeedo(phd_winwidth - 64, phd_winheight - 16, jeep->velocity, 0x6000, 0x8000, 32, jeep->gear);
 }
 
@@ -369,7 +378,9 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		lara.torso_y_rot = 0;
 		lara.hit_direction = -1;
 		AnimateItem(l);
-		jeep = (JEEPINFO*)item->data;
+		jeep = GetJeepData(item);
+		if (jeep == NULL)
+			return;
 		jeep->unused1 = 0;
 		jeep->gear = 0;
 		item->flags |= IFL_TRIGGERED;
@@ -518,7 +529,9 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed)
 	JEEPINFO* jeep;
 	short state;
 
-	jeep = (JEEPINFO*)item->data;
+	jeep = GetJeepData(item);
+	if (jeep == NULL)
+		return;
 	state = lara_item->current_anim_state;
 
 	if (item->pos.y_pos != item->floor && state != 11 && state != 12 && !killed)
@@ -907,7 +920,9 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch)
 	if (lara_item->current_anim_state == 10 || lara_item->goal_anim_state == 10)
 		input = 0;
 
-	jeep = (JEEPINFO*)item->data;
+	jeep = GetJeepData(item);
+	if (jeep == NULL)
+		return 0;
 
 	if (jeep->unused1 > 16)
 	{
@@ -1061,7 +1076,9 @@ void JeepBaddieCollision(ITEM_INFO* item)
 	long j, dx, dy, dz;
 	short room_count, item_number;
 
-	jeep = (JEEPINFO*)item->data;
+	jeep = GetJeepData(item);
+	if (jeep == NULL)
+		return;
 	room_count = 1;
 	jroomies[0] = item->room_number;
 	doors = rooms[item->room_number].door;
@@ -1251,7 +1268,9 @@ long JeepDynamics(ITEM_INFO* item)
 	short ang, ang2, vel, room_number;
 
 	dont_exit_jeep = 0;
-	jeep = (JEEPINFO*)item->data;
+	jeep = GetJeepData(item);
+	if (jeep == NULL)
+		return 0;
 	front_left = TestHeight(item, 550, -256, &flPos);
 	front_right = TestHeight(item, 550, 256, &frPos);
 	back_left = TestHeight(item, -600, -256, &blPos);
@@ -1497,7 +1516,9 @@ void JeepControl(short item_number)
 	killed = 0;
 	pitch = 0;
 	item = &items[item_number];
-	jeep = (JEEPINFO*)item->data;
+	jeep = GetJeepData(item);
+	if (jeep == NULL)
+		return;
 	hitWall = JeepDynamics(item);
 	room_number = item->room_number;
 	floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
@@ -1654,7 +1675,9 @@ void JeepControl(short item_number)
 
 void JeepStart(ITEM_INFO* item, ITEM_INFO* laraitem)
 {
-	JEEPINFO* jeep = (JEEPINFO*)item->data;
+	auto* jeep = GetJeepData(item);
+	if (jeep == NULL)
+		return;
 	lara.gun_status = LG_HANDS_BUSY;
 	lara.hit_direction = -1;
 	laraitem->current_anim_state = 0;
@@ -1739,7 +1762,9 @@ void EnemyJeepControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	jeep = (CREATURE_INFO*)item->data;
+	jeep = GetCreatureInfo(item);
+	if (jeep == NULL)
+		return;
 	Xoffset = 682 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	Zoffset = 682 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 	x = item->pos.x_pos - Zoffset;

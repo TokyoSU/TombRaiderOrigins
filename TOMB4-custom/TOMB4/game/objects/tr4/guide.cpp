@@ -54,7 +54,9 @@ void GuideControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	guide = (CREATURE_INFO*)item->data;
+	guide = GetCreatureInfo(item);
+	if (guide == NULL)
+		return;
 	got_torch = 0;		//JUST grabbed the torch
 	tilt = 0;
 	head = 0;
