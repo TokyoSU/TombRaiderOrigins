@@ -22,6 +22,7 @@
 #include "savegame.h"
 #include "lot.h"
 #include "gameflow.h"
+#include <box.h>
 
 std::vector<WEAPON_INFO> weapons;
 
@@ -818,13 +819,12 @@ void LaraGetNewTarget(WEAPON_INFO* winfo)
 
 void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade)
 {
-	OBJECT_INFO* obj;
+	OBJECT_INFO* obj = &objects[item->object_number];
 
-	obj = &objects[item->object_number];
-	item->hit_status = 1;
-
-	if (item->data && item != lara_item)
-		((CREATURE_INFO*)item->data)->hurt_by_lara = 1;
+	item->hit_status = TRUE;
+	auto* creature = GetCreatureInfo(item);
+	if (creature && item != lara_item)
+		creature->hurt_by_lara = TRUE;
 
 	if (hitpos && obj->hit_effect)
 	{

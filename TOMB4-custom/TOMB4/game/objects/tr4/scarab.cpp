@@ -40,7 +40,9 @@ void ScarabControl(short item_number)
 
 	angle = 0;
 	item = &items[item_number];
-	beetle = (CREATURE_INFO*)item->data;
+	beetle = GetCreatureInfo(item);
+	if (beetle == NULL)
+		return;
 
 	if (item->hit_points <= 0)
 	{

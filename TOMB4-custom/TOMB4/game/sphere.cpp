@@ -5,6 +5,7 @@
 #include "lara.h"
 #include "objects.h"
 #include "control.h"
+#include <box.h>
 
 SPHERE Slist[34];
 char GotLaraSpheres;
@@ -66,7 +67,13 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	ptr++;
 	phd_PopMatrix();
 
-	extra_rot = (short*)item->data;
+	if (item->data.has_value() && item->data.type() == typeid(CREATURE_INFO))
+	{
+		auto* creature = GetCreatureInfo(item);
+		extra_rot = creature->joint_rotation;
+	}
+	else
+		extra_rot = no_rotation;
 
 	for (int i = 0; i < obj->nmeshes - 1; i++)
 	{
@@ -193,7 +200,7 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 	long* iMx;
 	long* bone;
 	short* frm[2];
-	short* extra_rotation;
+	short* extra_rot;
 	short* rot;
 	short* rot2;
 	long frac, rate, poppush;
@@ -208,10 +215,11 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 	phd_SetTrans(0, 0, 0);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
-	extra_rotation = (short*)item->data;
-
-	if (!extra_rotation)
-		extra_rotation = no_rotation;
+	auto* creature = GetCreatureInfo(item);
+	if (creature == NULL)
+		extra_rot = no_rotation;
+	else
+		extra_rot = creature->joint_rotation;
 
 	bone = &bones[obj->bone_index];
 
@@ -239,13 +247,13 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 			if (poppush & 0x1C)
 			{
 				if (poppush & 8)
-					phd_RotY_I(*extra_rotation++);
+					phd_RotY_I(*extra_rot++);
 
 				if (poppush & 4)
-					phd_RotX_I(*extra_rotation++);
+					phd_RotX_I(*extra_rot++);
 
 				if (poppush & 0x10)
-					phd_RotZ_I(*extra_rotation++);
+					phd_RotZ_I(*extra_rot++);
 			}
 
 			bone += 4;
@@ -276,13 +284,13 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 			if (poppush & 0x1C)
 			{
 				if (poppush & 8)
-					phd_RotY(*extra_rotation++);
+					phd_RotY(*extra_rot++);
 
 				if (poppush & 4)
-					phd_RotX(*extra_rotation++);
+					phd_RotX(*extra_rot++);
 
 				if (poppush & 0x10)
-					phd_RotZ(*extra_rotation++);
+					phd_RotZ(*extra_rot++);
 			}
 
 			bone += 4;

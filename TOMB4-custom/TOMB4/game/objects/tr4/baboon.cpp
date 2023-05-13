@@ -46,7 +46,9 @@ void BaboonControl(short item_number)
 		angle = 0;
 		head = 0;
 		item = &items[item_number];
-		baboon = (CREATURE_INFO*)item->data;
+		baboon = GetCreatureInfo(item);
+		if (baboon == NULL)
+			return;
 
 		if (!item->item_flags[2])
 			FindCrowbarSwitch(item, 1);

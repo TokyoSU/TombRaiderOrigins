@@ -13,6 +13,13 @@
 
 static short WraithSpeed = 64;
 
+WRAITH_STRUCT* GetWraithData(ITEM_INFO* item)
+{
+	if (!item->data.has_value())
+		return NULL;
+	return std::any_cast<WRAITH_STRUCT*>(item->data);
+}
+
 void InitialiseWraith(short item_number)
 {
 	ITEM_INFO* item;
@@ -398,7 +405,9 @@ void WraithControl(short item_number)
 	else if (!oob)
 		TriggerWraithEffect(x, y, z, item->pos.y_rot + 0x8000, item->object_number);
 
-	wraith = (WRAITH_STRUCT*)item->data;
+	wraith = GetWraithData(item);
+	if (wraith == NULL)
+		return;
 	wraith += 7;
 
 	for (int i = 0; i < 7; i++)

@@ -53,7 +53,9 @@ void TemplarControl(short item_number)
 		TriggerFlareSparks(pos.x, pos.y, pos.z, (GetRandomControl() & 0x1FF) - 256, -128 - (GetRandomControl() & 0x7F), (GetRandomControl() & 0x1FF) - 256, 0);
 	}
 
-	knight = (CREATURE_INFO*)item->data;
+	knight = GetCreatureInfo(item);
+	if (knight == NULL)
+		return;
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;

@@ -24,6 +24,8 @@
 #include "specific/file.h"
 #include "snowmobile.h"
 #include <fish_emitter.h>
+#include <box.h>
+#include <flmtorch.h>
 
 SAVEGAME_INFO savegame;
 
@@ -578,7 +580,7 @@ void SaveLevelData(long FullSave)
 					flags |= item->ai_bits << 25;
 					flags |= item->really_active << 30;
 
-					if (obj->intelligent && item->data)
+					if (obj->intelligent && item->data.has_value())
 						flags |= 0x80000000;
 
 					WriteSG(&flags, sizeof(unsigned long));
@@ -606,10 +608,10 @@ void SaveLevelData(long FullSave)
 
 					if (flags & 0x80000000)
 					{
-						creature = (CREATURE_INFO*)item->data;
+						creature = GetCreatureInfo(item);
 
 						creature->enemy = (ITEM_INFO*)((long)creature->enemy - (long)malloc_buffer);
-						WriteSG(item->data, 22);
+						WriteSG(creature, 22);
 						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
 
 						WriteSG(&creature->ai_target.object_number, sizeof(short));
@@ -635,11 +637,11 @@ void SaveLevelData(long FullSave)
 				}
 
 				if (item->object_number == MOTORBIKE)
-					WriteSG(item->data, sizeof(BIKEINFO));
+					WriteSG(std::any_cast<BIKEINFO*>(item->data), sizeof(BIKEINFO));
 				if (item->object_number == JEEP)
-					WriteSG(item->data, sizeof(JEEPINFO));
+					WriteSG(std::any_cast<JEEPINFO*>(item->data), sizeof(JEEPINFO));
 				if (item->object_number == SNOWMOBILE)
-					WriteSG(item->data, sizeof(SNOWMOBILEINFO));
+					WriteSG(std::any_cast<SNOWMOBILEINFO*>(item->data), sizeof(SNOWMOBILEINFO));
 			}
 			else
 				WriteSG(&packed, sizeof(unsigned short));
@@ -690,7 +692,7 @@ void SaveLevelData(long FullSave)
 
 				if (item->object_number == FLARE_ITEM)
 				{
-					flare_age = (long)item->data;
+					flare_age = GetFlareData(item);
 					WriteSG(&flare_age, sizeof(long));
 				}
 				else
@@ -1013,7 +1015,7 @@ void RestoreLevelData(long FullSave)
 				if (flags & 0x80000000)
 				{
 					EnableBaddieAI(i, 1);
-					creature = (CREATURE_INFO*)item->data;
+					creature = GetCreatureInfo(item);
 
 					if (creature)
 					{
@@ -1048,11 +1050,11 @@ void RestoreLevelData(long FullSave)
 				SetupFish(item);
 
 			if (item->object_number == MOTORBIKE)
-				ReadSG(item->data, sizeof(BIKEINFO));
+				ReadSG(&item->data, sizeof(BIKEINFO));
 			if (item->object_number == JEEP)
-				ReadSG(item->data, sizeof(JEEPINFO));
+				ReadSG(&item->data, sizeof(JEEPINFO));
 			if (item->object_number == SNOWMOBILE)
-				ReadSG(item->data, sizeof(SNOWMOBILEINFO));
+				ReadSG(&item->data, sizeof(SNOWMOBILEINFO));
 
 			if (obj->collision == PuzzleHoleCollision)
 			{
@@ -1116,7 +1118,7 @@ void RestoreLevelData(long FullSave)
 
 			case FLARE_ITEM:
 				ReadSG(&flare_age, sizeof(long));
-				item->data = (void*)flare_age;
+				item->data = std::make_any<long>(flare_age);
 				break;
 			}
 		}

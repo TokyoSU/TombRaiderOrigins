@@ -387,7 +387,9 @@ void VoncroyRaceControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	VonCroy = (CREATURE_INFO*)item->data;
+	VonCroy = GetCreatureInfo(item);
+	if (VonCroy == NULL)
+		return;
 	tilt = 0;
 	angle = 0;
 	head = 0;
@@ -954,7 +956,9 @@ void VoncroyControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	VonCroy = (CREATURE_INFO*)item->data;
+	VonCroy = GetCreatureInfo(item);
+	if (VonCroy == NULL)
+		return;
 
 	tilt = 0;
 	angle = 0;

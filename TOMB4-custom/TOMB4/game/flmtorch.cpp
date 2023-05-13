@@ -22,6 +22,13 @@
 static short FireBounds[12] = { 0, 0, 0, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 static ITEM_INFO* TorchItem = 0;
 
+long GetFlareData(ITEM_INFO* item)
+{
+	if (!item->data.has_value())
+		return 0;
+	return std::any_cast<long>(item->data);
+}
+
 void TriggerTorchFlame(short item_number, long node)
 {
 	SPARKS sptr;

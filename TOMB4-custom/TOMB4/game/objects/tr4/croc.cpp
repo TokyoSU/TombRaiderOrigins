@@ -57,7 +57,9 @@ void CrocControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	croc = (CREATURE_INFO*)item->data;
+	croc = GetCreatureInfo(item);
+	if (croc == NULL)
+		return;
 	angle = 0;
 	rot = 0;
 	s = (1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
@@ -678,7 +680,9 @@ void CrocgodControl(short item_number)
 	torso = 0;
 	neck = 0;
 	item = &items[item_number];
-	crocgod = (CREATURE_INFO*)item->data;
+	crocgod = GetCreatureInfo(item);
+	if (crocgod == NULL)
+		return;
 
 	if (item->hit_points <= 0)
 		item->hit_points = 0;
