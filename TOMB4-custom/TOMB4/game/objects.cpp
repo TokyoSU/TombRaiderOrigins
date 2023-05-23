@@ -87,7 +87,7 @@ void ControlMapper(short item_number)
 			sptr.MaxYvel = 0;
 			sptr.Gravity = (GetRandomControl() & 0x1F) + 32;
 			sptr.Flags = 10;
-			Sparks.push_back(sptr);
+			Sparks.AddEffect(sptr);
 		}
 	}
 
@@ -393,7 +393,7 @@ void TriggerRopeFlame(PHD_VECTOR* pos)
 	sptr.Size = (GetRandomControl() & 0xF) + 96;
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size >> 3;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void ControlBurningRope(short item_number)

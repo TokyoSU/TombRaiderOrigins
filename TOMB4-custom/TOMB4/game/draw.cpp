@@ -814,8 +814,8 @@ void DrawRooms(short CurrentRoom)
 
 	nPolyType = 6;
 	DrawRopeList();
+
 	nPolyType = 3;
-	S_DrawSparks();
 	lx = lara_item->pos.x_pos;
 	ly = lara_item->pos.y_pos;
 	lz = lara_item->pos.z_pos;
@@ -824,6 +824,7 @@ void DrawRooms(short CurrentRoom)
 	lara_item->pos.y_pos = camera.pos.y;
 	lara_item->pos.z_pos = camera.pos.z;
 	lara_item->room_number = camera.pos.room_number;
+	Sparks.Draw();
 	DoUwEffect();
 	S_DrawFires();
 	S_DrawSmokeSparks();

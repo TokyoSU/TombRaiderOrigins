@@ -76,7 +76,7 @@ void TriggerRiseEffect(ITEM_INFO* item)
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size << 2;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void InitialiseSkeleton(short item_number)

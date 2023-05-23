@@ -43,14 +43,14 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -109,6 +109,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)TOMB4\tomb4\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(TargetDir)$(TargetName).exe" "C:\Users\TokyoSU-PC\Documents\TombRaider4"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -137,6 +140,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)TOMB4\tomb4\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(TargetDir)$(TargetName).exe" "C:\Users\TokyoSU-PC\Documents\TombRaider4"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -153,6 +159,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(TargetDir)$(TargetName).exe" "C:\Users\TokyoSU-PC\Documents\TombRaider4"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -173,9 +182,15 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(TargetDir)$(TargetName).exe" "C:\Users\TokyoSU-PC\Documents\TombRaider4"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="TOMB4\game\effect2.h" />
+    <ClInclude Include="TOMB4\game\effect\effect.h" />
+    <ClInclude Include="TOMB4\game\effect\effect_spark.h" />
     <ClInclude Include="TOMB4\game\lara_states.h" />
     <ClInclude Include="TOMB4\game\objects\tr1_objects.h" />
     <ClInclude Include="TOMB4\game\objects\tr2\tr2_rat.h" />
@@ -200,7 +215,6 @@
     <ClInclude Include="TOMB4\game\objects\tr4\dog.h" />
     <ClInclude Include="TOMB4\game\door.h" />
     <ClInclude Include="TOMB4\game\draw.h" />
-    <ClInclude Include="TOMB4\game\effect2.h" />
     <ClInclude Include="TOMB4\game\effects.h" />
     <ClInclude Include="TOMB4\game\elements.h" />
     <ClInclude Include="TOMB4\game\flmtorch.h" />
@@ -322,6 +336,8 @@
     <ClInclude Include="TOMB4\tomb4\troyestuff.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TOMB4\game\effect2.cpp" />
+    <ClCompile Include="TOMB4\game\effect\effect_spark.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr1_objects.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr2\tr2_rat.cpp" />
     <ClCompile Include="TOMB4\game\objects\tr2_objects.cpp" />
@@ -345,7 +361,6 @@
     <ClCompile Include="TOMB4\game\objects\tr4\dog.cpp" />
     <ClCompile Include="TOMB4\game\door.cpp" />
     <ClCompile Include="TOMB4\game\draw.cpp" />
-    <ClCompile Include="TOMB4\game\effect2.cpp" />
     <ClCompile Include="TOMB4\game\effects.cpp" />
     <ClCompile Include="TOMB4\game\elements.cpp" />
     <ClCompile Include="TOMB4\game\flmtorch.cpp" />

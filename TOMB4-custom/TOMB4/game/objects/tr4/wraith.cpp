@@ -1,15 +1,16 @@
 #include "pch.h"
 #include "wraith.h"
-#include "specific/function_stubs.h"
-#include "effect2.h"
 #include "objects.h"
+#include "effect2.h"
 #include "sound.h"
-#include "specific/3dmath.h"
 #include "control.h"
 #include "items.h"
 #include "traps.h"
+#include "tomb4fx.h"
 #include "senet.h"
 #include "lara.h"
+#include "specific/3dmath.h"
+#include "specific/function_stubs.h"
 
 static short WraithSpeed = 64;
 
@@ -100,7 +101,7 @@ void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, lo
 	sptr.dSize = 2;
 	sptr.Size = (GetRandomControl() & 0x1F) + 48;
 	sptr.sSize = sptr.Size;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerWraithEffect(long x, long y, long z, short vel, long objnum)
@@ -168,7 +169,7 @@ void TriggerWraithEffect(long x, long y, long z, short vel, long objnum)
 		sptr.Size = (GetRandomControl() & 0x1F) + 48;
 		sptr.sSize = sptr.Size;
 		sptr.dSize = sptr.Size >> 2;
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 }
 

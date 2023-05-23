@@ -6,6 +6,7 @@
 #include "control.h"
 #include "effects.h"
 #include "lara.h"
+#include "tomb4fx.h"
 
 short next_fx_active;
 short next_item_active;
@@ -43,7 +44,7 @@ void KillItem(short item_num)
 		return;
 	}
 
-	DetatchSpark(item_num, 128);
+	Sparks.Detatch(item_num, SP_ITEM);
 	item = &items[item_num];
 	item->active = 0;
 	item->really_active = 0;
@@ -353,7 +354,7 @@ void KillEffect(short fx_num)
 		return;
 	}
 
-	DetatchSpark(fx_num, 64);
+	Sparks.Detatch(fx_num, SP_FX);
 	fx = &effects[fx_num];
 
 	if (next_fx_active == fx_num)

@@ -566,7 +566,7 @@ void init_all_ropes()
 
 void InitialiseEffects()
 {
-	Sparks.clear();
+	Sparks.Clear();
 	FireSparks.clear();
 	SmokeSparks.clear();
 	Gunshells.clear();

@@ -1680,7 +1680,7 @@ static void S_ShowEffectCountOnScreen()
 	if (keyMap_effect)
 	{
 		int i = 50;
-		WinDisplayString(40, i * 1, Sparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Sparks: %d", Sparks.size());
+		WinDisplayString(40, i * 1, Sparks.GetCount() > MAX_EFFECTS_LIMITS ? 3 : 0, "Sparks: %d", Sparks.GetCount());
 		WinDisplayString(40, i * 2, SmokeSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Smokes: %d", SmokeSparks.size());
 		WinDisplayString(40, i * 3, FireSparks.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Fires: %d", FireSparks.size());
 		WinDisplayString(40, i * 4, Lightning.size() > MAX_EFFECTS_LIMITS ? 3 : 0, "Lightnings: %d", Lightning.size());

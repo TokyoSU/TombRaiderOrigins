@@ -3,14 +3,15 @@
 #include "objects.h"
 #include "box.h"
 #include "effect2.h"
-#include "specific/function_stubs.h"
-#include "specific/3dmath.h"
+#include "tomb4fx.h"
 #include "control.h"
 #include "items.h"
 #include "sound.h"
 #include "sphere.h"
 #include "effects.h"
 #include "lara.h"
+#include "specific/function_stubs.h"
+#include "specific/3dmath.h"
 
 static BITE_INFO horseman_axe = { 0, 0, 0, 6 };
 static BITE_INFO horseman_lfoot = { 0, 0, 0, 14 };
@@ -549,7 +550,7 @@ void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num)
 		sptr.Friction = 34;
 		sptr.Flags = 0;
 		sptr.MaxYvel = 0;
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 
 	for (int i = 0; i < num; i++)
@@ -590,7 +591,7 @@ void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num)
 		sptr.Flags = 26;
 		sptr.MaxYvel = 0;
 
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 }
 

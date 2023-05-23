@@ -487,7 +487,7 @@ long ControlPhase(long nframes, long demo_mode)
 		CamRot.y = (mGetAngle(camera.pos.z, camera.pos.x, camera.target.z, camera.target.x) >> 4) & 0xFFF;
 		wibble = (wibble + 4) & 0xFC;
 		TriggerLaraDrips();
-		UpdateSparks();
+		Sparks.Update();
 		UpdateFireSparks();
 		UpdateSmokeSparks();
 		UpdateBubbles();

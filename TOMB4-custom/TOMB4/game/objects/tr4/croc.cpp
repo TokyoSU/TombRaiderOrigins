@@ -647,7 +647,7 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv)
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size >> 2;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void InitialiseCrocgod(short item_number)

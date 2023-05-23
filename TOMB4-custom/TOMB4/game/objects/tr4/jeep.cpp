@@ -198,7 +198,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 	sptr.dSize = unsigned char((GetRandomControl() & 7) + (velocity >> 7) + 32);
 	sptr.sSize = sptr.dSize >> 1;
 	sptr.Size = sptr.dSize >> 1;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void JeepExplode(ITEM_INFO* item)

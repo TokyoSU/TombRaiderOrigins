@@ -14,6 +14,7 @@
 #include "3dmath.h"
 #include "winmain.h"
 #include "file.h"
+#include "tomb4fx.h"
 #include "game/control.h"
 #include "game/gameflow.h"
 #include "tomb4/tomb4.h"

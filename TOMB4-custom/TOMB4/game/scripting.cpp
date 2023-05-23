@@ -275,11 +275,11 @@ long SquaredBlock(long value, long div)
 void InitialiseScripting()
 {
 	scriptEngine = asCreateScriptEngine();
+	assert(scriptEngine != nullptr);
 	assert(scriptEngine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL) >= 0);
 	assert(scriptBuilder.StartNewModule(scriptEngine, "tomb4") >= 0);
 
 	// Basic register from angelscript.
-
 	RegisterStdString(scriptEngine);
 	RegisterExceptionRoutines(scriptEngine);
 	RegisterScriptMath(scriptEngine);

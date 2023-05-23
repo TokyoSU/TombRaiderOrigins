@@ -64,7 +64,7 @@ void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
 	sptr.Size = (GetRandomControl() & 7) + 64;
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size >> 5;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type)
@@ -126,7 +126,7 @@ void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv)
 	sptr.MaxYvel = 0;
 	sptr.Gravity = 0;
 	sptr.Flags = 0;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size)
@@ -175,7 +175,7 @@ void TriggerSethFlame(short item_number, unsigned char NodeNumber, short size)
 	sptr.Size = unsigned char((GetRandomControl() & 0xF) + size);
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size >> 4;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void DoSethEffects(short item_number)

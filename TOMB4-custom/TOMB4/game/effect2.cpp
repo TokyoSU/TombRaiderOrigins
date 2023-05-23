@@ -21,20 +21,7 @@
 
 SPLASH_STRUCT splashes[4];
 RIPPLE_STRUCT ripples[16];
-SPLASH_SETUP splash_setup;
 std::vector<DYNAMIC> Dynamics;
-std::vector<SPARKS> Sparks;
-long wibble = 0;
-long SplashCount = 0;
-long KillEverythingFlag = 0;
-long SmokeCountL;
-long SmokeCountR;
-long SmokeWeapon;
-long SmokeWindX;
-long SmokeWindZ;
-
-static long DeadlyBounds[6];
-static long next_spark = 0;
 
 void ControlSmokeEmitter(short item_number)
 {
@@ -152,7 +139,7 @@ void ControlSmokeEmitter(short item_number)
 			else
 				item->item_flags[0] = item->ocb >> 4;
 
-			Sparks.push_back(sptr);
+			Sparks.AddEffect(sptr);
 		}
 
 		if (!normal)
@@ -235,7 +222,7 @@ void ControlSmokeEmitter(short item_number)
 			sptr.dB = 32;
 		}
 
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 }
 
@@ -318,7 +305,7 @@ void TriggerExplosionSmokeEnd(long x, long y, long z, long uw)
 	sptr.sSize = sptr.dSize >> 2;
 	sptr.Size = sptr.sSize;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerExplosionSmoke(long x, long y, long z, long uw)
@@ -377,7 +364,7 @@ void TriggerExplosionSmoke(long x, long y, long z, long uw)
 	sptr.sSize = sptr.dSize >> 2;
 	sptr.Size = sptr.sSize >> 2;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel, long smoke)
@@ -414,7 +401,7 @@ void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel,
 	sptr.dSize = ((GetRandomControl() >> 12) & 1) + 1;
 	sptr.MaxYvel = 0;
 	sptr.Gravity = 0;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 
 	if (smoke)
 	{
@@ -458,7 +445,7 @@ void TriggerFlareSparks(long x, long y, long z, long xvel, long yvel, long zvel,
 		smokeSpark.dSize = ((GetRandomControl() >> 8) & 0xF) + 24;
 		smokeSpark.sSize = smokeSpark.dSize >> 3;
 		smokeSpark.Size = smokeSpark.dSize >> 3;
-		Sparks.push_back(smokeSpark);
+		Sparks.AddEffect(smokeSpark);
 	}
 }
 
@@ -814,7 +801,7 @@ void TriggerWaterfallMist(long x, long y, long z, long ang)
 		sptr.dSize = (GetRandomControl() & 7) + 12;
 		sptr.sSize = sptr.dSize >> 1;
 		sptr.Size = sptr.dSize >> 1;
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 }
 
@@ -898,7 +885,7 @@ void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit)
 		sptr.dSize = (unsigned char)rand;
 	}
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void KillAllCurrentItems(short item_number)
@@ -948,7 +935,7 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number)
 	sptr.Size = size >> 1;
 	sptr.sSize = size >> 1;
 	sptr.dSize = size << 1;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 
 	for (int i = 0; i < 7; i++)
 	{
@@ -977,229 +964,6 @@ void ControlColouredLights(short item_number)
 	{
 		long objnum = item->object_number - RED_LIGHT;
 		TriggerDynamic(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 24, colours[objnum][0], colours[objnum][1], colours[objnum][2]);
-	}
-}
-
-void DetatchSpark(long num, long type)
-{
-	if (Sparks.empty())
-		return;
-
-	for (auto& sptr : Sparks)
-	{
-		if (sptr.On && (sptr.Flags & type) && sptr.FxObj == num)
-		{
-			if (type == 64)
-			{
-				FX_INFO* fx = &effects[num];
-				sptr.x += fx->pos.x_pos;
-				sptr.y += fx->pos.y_pos;
-				sptr.z += fx->pos.z_pos;
-				sptr.Flags &= ~64;
-			}
-			else if (type == 128)
-			{
-				ITEM_INFO* item = &items[num];
-				sptr.x += item->pos.x_pos;
-				sptr.y += item->pos.y_pos;
-				sptr.z += item->pos.z_pos;
-				sptr.Flags &= ~128;
-			}
-		}
-	}
-}
-
-void UpdateSparks()
-{
-	if (Sparks.empty())
-		return;
-
-	short* bounds;
-	long fade, uw, rad, rnd, x, y, z, r, g, b, falloff;
-
-	bounds = GetBoundsAccurate(lara_item);
-	DeadlyBounds[0] = lara_item->pos.x_pos + bounds[0];
-	DeadlyBounds[1] = lara_item->pos.x_pos + bounds[1];
-	DeadlyBounds[2] = lara_item->pos.y_pos + bounds[2];
-	DeadlyBounds[3] = lara_item->pos.y_pos + bounds[3];
-	DeadlyBounds[4] = lara_item->pos.z_pos + bounds[4];
-	DeadlyBounds[5] = lara_item->pos.z_pos + bounds[5];
-
-	for (auto& spark : Sparks)
-	{
-		if (!spark.On)
-			continue;
-
-		spark.Life--;
-		if (!spark.Life)
-		{
-			spark.On = 0;
-			continue;
-		}
-
-		if (spark.sLife - spark.Life < spark.ColFadeSpeed)
-		{
-			fade = ((spark.sLife - spark.Life) << 16) / spark.ColFadeSpeed;
-			spark.R = unsigned char(spark.sR + ((fade * (spark.dR - spark.sR)) >> 16));
-			spark.G = unsigned char(spark.sG + ((fade * (spark.dG - spark.sG)) >> 16));
-			spark.B = unsigned char(spark.sB + ((fade * (spark.dB - spark.sB)) >> 16));
-		}
-		else if (spark.Life < spark.FadeToBlack)
-		{
-			fade = ((spark.Life - spark.FadeToBlack) << 16) / spark.FadeToBlack + 0x10000;
-			spark.R = unsigned char((spark.dR * fade) >> 16);
-			spark.G = unsigned char((spark.dG * fade) >> 16);
-			spark.B = unsigned char((spark.dB * fade) >> 16);
-
-			if (spark.R < 8 && spark.G < 8 && spark.B < 8)
-			{
-				spark.On = 0;
-				continue;
-			}
-		}
-		else
-		{
-			spark.R = spark.dR;
-			spark.G = spark.dG;
-			spark.B = spark.dB;
-		}
-
-		if (spark.Life == spark.FadeToBlack && spark.Flags & 0x800)
-			spark.dSize >>= 2;
-
-		if (spark.Flags & 0x10)
-			spark.RotAng = (spark.RotAng + spark.RotAdd) & 0xFFF;
-
-		if (spark.sLife - spark.Life == spark.extras >> 3 && spark.extras & 7)
-		{
-			if (spark.Flags & 0x800)
-				uw = 1;
-			else if (spark.Flags & 0x2000)
-				uw = 2;
-			else
-				uw = 0;
-
-			for (int j = 0; j < (spark.extras & 7); j++)
-			{
-				TriggerExplosionSparks(spark.x, spark.y, spark.z, (spark.extras & 7) - 1, spark.Dynamic, uw, spark.RoomNumber);
-				spark.Dynamic = -1;
-			}
-
-			if (spark.Flags & 0x800)
-				TriggerExplosionBubble(spark.x, spark.y, spark.z, spark.RoomNumber);
-
-			spark.extras = 0;
-		}
-
-		fade = ((spark.sLife - spark.Life) << 16) / spark.sLife;
-		spark.Yvel += spark.Gravity;
-
-		if (spark.MaxYvel)
-		{
-			if (spark.Yvel < 0 && spark.Yvel < spark.MaxYvel << 5 || spark.Yvel > 0 && spark.Yvel > spark.MaxYvel << 5)
-				spark.Yvel = spark.MaxYvel << 5;
-		}
-
-		if (spark.Friction & 0xF)
-		{
-			spark.Xvel -= spark.Xvel >> (spark.Friction & 0xF);
-			spark.Zvel -= spark.Zvel >> (spark.Friction & 0xF);
-		}
-
-		if (spark.Friction & 0xF0)
-			spark.Yvel -= spark.Yvel >> (spark.Friction >> 4);
-
-		spark.x += spark.Xvel >> 5;
-		spark.y += spark.Yvel >> 5;
-		spark.z += spark.Zvel >> 5;
-
-		if (spark.Flags & 0x100)
-		{
-			spark.x += SmokeWindX >> 1;
-			spark.z += SmokeWindZ >> 1;
-		}
-
-		spark.Size = unsigned char(spark.sSize + ((fade * (spark.dSize - spark.sSize)) >> 16));
-
-		if (spark.Flags & 1 && !lara.burn || spark.Flags & 0x400)
-		{
-			rad = spark.Size << spark.Scalar >> 1;
-
-			if (spark.x + rad > DeadlyBounds[0] && spark.x - rad < DeadlyBounds[1] &&
-				spark.y + rad > DeadlyBounds[2] && spark.y - rad < DeadlyBounds[3] &&
-				spark.z + rad > DeadlyBounds[4] && spark.z - rad < DeadlyBounds[5])
-			{
-				if (spark.Flags & 1)
-					LaraBurn();
-				else
-					lara_item->hit_points -= 2;
-			}
-		}
-	}
-
-	Sparks.erase(
-		std::remove_if(
-			Sparks.begin(),
-			Sparks.end(),
-			[](SPARKS& spr) {
-				return spr.On == 0;
-			}
-		),
-		Sparks.end()
-	);
-
-	for (auto& spark : Sparks)
-	{
-		if (spark.On == 0 || spark.Dynamic == -1)
-			continue;
-
-		for (auto& dyn : Dynamics)
-		{
-			if (dyn.flags & 3)
-			{
-				rnd = GetRandomControl();
-				x = spark.x + 16 * (rnd & 0xF);
-				y = spark.y + (rnd & 0xF0);
-				z = spark.z + ((rnd >> 4) & 0xF0);
-				falloff = spark.sLife - spark.Life - 1;
-
-				if (falloff < 2)
-				{
-					if (dyn.falloff < 28)
-						dyn.falloff += 6;
-
-					r = 255 - (falloff << 3) - (rnd & 0x1F);
-					g = 255 - (falloff << 4) - (rnd & 0x1F);
-					b = 255 - (falloff << 6) - (rnd & 0x1F);
-				}
-				else if (falloff < 4)
-				{
-					if (dyn.falloff < 28)
-						dyn.falloff += 6;
-
-					r = 255 - (falloff << 3) - (rnd & 0x1F);
-					g = 128 - (falloff << 3);
-					b = 128 - (falloff << 5);
-
-					if (b < 0)
-						b = 0;
-				}
-				else
-				{
-					if (dyn.falloff > 0)
-						dyn.falloff--;
-
-					r = 224 + (rnd & 0x1F);
-					g = 128 + ((rnd >> 4) & 0x1F);
-					b = (rnd >> 8) & 0x3F;
-				}
-
-				if (spark.Flags & 0x2000)
-					TriggerDynamic(x, y, z, dyn.falloff > 31 ? 31 : dyn.falloff, b, r, g);
-				else
-					TriggerDynamic(x, y, z, dyn.falloff > 31 ? 31 : dyn.falloff, r, g, b);
-			}
-		}
 	}
 }
 
@@ -1233,7 +997,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 			sptr.Friction = 34;
 			sptr.Flags = 0;
 			sptr.MaxYvel = 0;
-			Sparks.push_back(sptr);
+			Sparks.AddEffect(sptr);
 		}
 
 		SPARKS sptr;
@@ -1270,7 +1034,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 		sptr.dSize = 1;
 		sptr.MaxYvel = 0;
 		sptr.Gravity = 0;
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 
 	for (int i = 0; i < 1 - smoke_only; i++)
@@ -1324,7 +1088,7 @@ void TriggerRicochetSpark(GAME_VECTOR* pos, long ang, long num, long smoke_only)
 		sptr.Size = ((GetRandomControl() >> 5) & 7) + 4;
 		sptr.sSize = sptr.Size;
 		sptr.dSize = sptr.Size << 2;
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 }
 
@@ -1377,7 +1141,7 @@ void TriggerRocketFlameTR3(long x, long y, long z, long xv, long yv, long zv, lo
 	unsigned char size = (GetRandomControl() & 7) + 32;
 	sptr.Size = sptr.sSize = size;
 	sptr.dSize = 2;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerRocketSmokeTR3(long x, long y, long z, long body_part)
@@ -1425,7 +1189,7 @@ void TriggerRocketSmokeTR3(long x, long y, long z, long body_part)
 	sptr.Size = sptr.sSize = size >> 2;
 	sptr.dSize = size;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 static unsigned char explosion_extra_tables[4]{ 0, 4, 7, 10 };
@@ -1569,7 +1333,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 		else
 			TriggerExplosionSmokeEnd(x, y, z, uw);
 
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 		z = 2 * gfMirrorZPlane - z;
 		mirror--;
 	}
@@ -1755,7 +1519,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		}
 	}
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly)
@@ -1824,7 +1588,7 @@ void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly)
 	else
 		sptr.Xvel = (short)dy;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerRocketSmokeTR4(long x, long y, long z, long col)
@@ -1870,7 +1634,7 @@ void TriggerRocketSmokeTR4(long x, long y, long z, long col)
 	sptr.sSize = sptr.dSize >> 2;
 	sptr.Size = sptr.dSize >> 2;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void SetupSplash(SPLASH_SETUP* setup)

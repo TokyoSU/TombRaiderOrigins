@@ -109,7 +109,7 @@ void TriggerDemigodMissileFlame(short fx_number, long xv, long yv, long zv)
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size >> 5;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerHammerSmoke(long x, long y, long z, long num)

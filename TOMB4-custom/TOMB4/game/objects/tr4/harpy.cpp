@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "harpy.h"
-#include "effect2.h"
+#include "specific/3dmath.h"
 #include "specific/function_stubs.h"
 #include "items.h"
 #include "objects.h"
+#include "tomb4fx.h"
 #include "sphere.h"
-#include "specific/3dmath.h"
 #include "box.h"
 #include "people.h"
 #include "effects.h"
@@ -125,7 +125,7 @@ void TriggerHarpySparks(long x, long y, long z, short xv, short yv, short zv)
 	sptr.MaxYvel = 0;
 	sptr.Gravity = 0;
 	sptr.Flags = 0;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size)
@@ -171,7 +171,7 @@ void TriggerHarpyFlame(short item_number, unsigned char NodeNumber, short size)
 	sptr.Size = unsigned char((GetRandomControl() & 0xF) + size);
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size >> 4;
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void DoHarpyEffects(ITEM_INFO* item, short item_number)

@@ -26,6 +26,15 @@
     <Filter Include="TOMB4\tomb4\libs\zlib">
       <UniqueIdentifier>{ac45d35f-3f2a-4795-bf31-b0e8064bd25d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TOMB4\tomb4\script">
+      <UniqueIdentifier>{415c2b99-df1c-40a1-9f3f-0834560c28cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TOMB4\game\scripts">
+      <UniqueIdentifier>{65a14b71-9d1a-4b4f-b67e-604f89f5d837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TOMB4\game\objects">
+      <UniqueIdentifier>{87faca66-7670-417e-bda8-ad47285bd760}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TOMB4\tomb4\pch.h">
@@ -89,9 +98,6 @@
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\draw.h">
-      <Filter>TOMB4\game</Filter>
-    </ClInclude>
-    <ClInclude Include="TOMB4\game\effect2.h">
       <Filter>TOMB4\game</Filter>
     </ClInclude>
     <ClInclude Include="TOMB4\game\effects.h">
@@ -393,6 +399,9 @@
     <ClInclude Include="TOMB4\game\script\item_script.h" />
     <ClInclude Include="TOMB4\game\script\creature_script.h" />
     <ClInclude Include="TOMB4\game\script\effects_script.h" />
+    <ClInclude Include="TOMB4\game\effect\effect.h" />
+    <ClInclude Include="TOMB4\game\effect\effect_spark.h" />
+    <ClInclude Include="TOMB4\game\effect2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TOMB4\game\lara.cpp">
@@ -453,9 +462,6 @@
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\draw.cpp">
-      <Filter>TOMB4\game</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\effect2.cpp">
       <Filter>TOMB4\game</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\effects.cpp">
@@ -710,94 +716,100 @@
     <ClCompile Include="TOMB4\specific\drawbars.cpp">
       <Filter>TOMB4\specific</Filter>
     </ClCompile>
-    <ClCompile Include="TOMB4\game\weapons\rocket_gun.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\objects\tr2\snowmobile.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\objects\tr1_objects.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\objects\tr2_objects.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\objects\tr3_objects.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\objects\tr5_objects.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\objects\tr3\fish_emitter.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\scripting.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\contextmgr\contextmgr.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\datetime\datetime.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\debugger\debugger.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptany\scriptany.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptarray\scriptarray.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptbuilder\scriptbuilder.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptdictionary\scriptdictionary.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptfile\scriptfile.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptfile\scriptfilesystem.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptgrid\scriptgrid.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scripthandle\scripthandle.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scripthelper\scripthelper.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptmath\scriptmath.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptmath\scriptmathcomplex.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptstdstring\scriptstdstring.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\scriptstdstring\scriptstdstring_utils.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\serializer\serializer.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\tomb4\script\weakref\weakref.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\objects\tr2\tr2_rat.cpp">
-      <Filter>TOMB4</Filter>
-    </ClCompile>
-    <ClCompile Include="TOMB4\game\script\item_script.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\tomb4\script</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\script\creature_script.cpp">
-      <Filter>TOMB4</Filter>
+      <Filter>TOMB4\game\scripts</Filter>
     </ClCompile>
     <ClCompile Include="TOMB4\game\script\effects_script.cpp">
+      <Filter>TOMB4\game\scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\script\item_script.cpp">
+      <Filter>TOMB4\game\scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\scripting.cpp">
+      <Filter>TOMB4\specific</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr1_objects.cpp">
+      <Filter>TOMB4\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr2_objects.cpp">
+      <Filter>TOMB4\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr3_objects.cpp">
+      <Filter>TOMB4\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr5_objects.cpp">
+      <Filter>TOMB4\game\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr2\tr2_rat.cpp">
+      <Filter>TOMB4\game</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr2\snowmobile.cpp">
+      <Filter>TOMB4\game</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\weapons\rocket_gun.cpp">
+      <Filter>TOMB4\game</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\objects\tr3\fish_emitter.cpp">
+      <Filter>TOMB4\game</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\effect\effect_spark.cpp">
+      <Filter>TOMB4</Filter>
+    </ClCompile>
+    <ClCompile Include="TOMB4\game\effect2.cpp">
       <Filter>TOMB4</Filter>
     </ClCompile>
   </ItemGroup>

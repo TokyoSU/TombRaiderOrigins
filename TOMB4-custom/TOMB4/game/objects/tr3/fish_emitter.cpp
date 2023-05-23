@@ -10,6 +10,7 @@
 #include "specificfx.h"
 #include "dxshell.h"
 #include "objects.h"
+#include "tomb4fx.h"
 #include "file.h"
 #include "function_table.h"
 #include "gamemain.h"

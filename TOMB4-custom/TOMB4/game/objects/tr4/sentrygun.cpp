@@ -71,7 +71,7 @@ void TriggerAutogunFlamethrower(ITEM_INFO* item)
 		sptr.Size = unsigned char(v >> 12);
 		sptr.sSize = sptr.Size;
 
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 	}
 }
 

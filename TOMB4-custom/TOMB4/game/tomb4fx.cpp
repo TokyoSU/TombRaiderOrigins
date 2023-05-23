@@ -10,7 +10,6 @@
 #include "delstuff.h"
 #include "control.h"
 #include "specific/specificfx.h"
-#include "effect2.h"
 #include "sphere.h"
 #include "effects.h"
 #include "lara.h"
@@ -39,6 +38,7 @@ NODEOFFSET_INFO NodeOffsets[16] =
 	{ 0, 0, 0, 0, 0 }
 };
 
+CEffectSparks Sparks;
 std::vector<LIGHTNING_STRUCT> Lightning;
 std::vector<GUNSHELL_STRUCT> Gunshells;
 std::vector<DRIP_STRUCT> Drips;
@@ -62,10 +62,16 @@ short FadeScreenHeight = 0;
 short DestFadeScreenHeight = 0;
 short FadeClipSpeed = 0;
 short ScreenFadeSpeed = 8;
+SPLASH_SETUP splash_setup;
+long wibble;
+long SplashCount;
+long KillEverythingFlag;
+long SmokeCountL;
+long SmokeCountR;
+long SmokeWeapon;
+long SmokeWindX;
+long SmokeWindZ;
 char tsv_buffer[16384];
-
-static PHD_VECTOR NodeVectors[16];
-
 
 LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, unsigned char flags, unsigned char size, unsigned char segments)
 {
@@ -1030,7 +1036,7 @@ void UpdateGunShells()
 		if (rooms[shell.room_number].flags & ROOM_UNDERWATER && !(rooms[oroom].flags & ROOM_UNDERWATER))
 		{
 			TriggerSmallSplash(shell.pos.x_pos, rooms[shell.room_number].maxceiling, shell.pos.z_pos, 8);
-			SetupRipple(shell.pos.x_pos, rooms[shell.room_number].maxceiling, shell.pos.z_pos, (GetRandomControl() & 3) + 8, 2);
+			//SetupRipple(shell.pos.x_pos, rooms[shell.room_number].maxceiling, shell.pos.z_pos, (GetRandomControl() & 3) + 8, 2);
 			shell.fallspeed >>= 5;
 			continue;
 		}
@@ -1117,7 +1123,7 @@ void TriggerSmallSplash(long x, long y, long z, long num)
 		sptr.MaxYvel = 0;
 		sptr.Gravity = (GetRandomControl() & 0xF) + 64;
 
-		Sparks.push_back(sptr);
+		Sparks.AddEffect(sptr);
 		num--;
 	}
 }
@@ -1385,7 +1391,7 @@ void UpdateBubbles()
 
 		if (!(rooms[room_number].flags & ROOM_UNDERWATER))
 		{
-			SetupRipple(bubble.pos.x, rooms[bubble.room_number].maxceiling, bubble.pos.z, (GetRandomControl() & 0xF) + 48, 2);
+			//SetupRipple(bubble.pos.x, rooms[bubble.room_number].maxceiling, bubble.pos.z, (GetRandomControl() & 0xF) + 48, 2);
 			bubble.size = 0;
 			continue;
 		}
@@ -1529,7 +1535,7 @@ void TriggerShockwaveHitEffect(long x, long y, long z, long rgb, short dir, long
 	sptr.sSize = sptr.Size;
 	sptr.dSize = sptr.Size >> 2;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void UpdateShockwaves()
@@ -1725,7 +1731,7 @@ void TriggerLightningGlow(long x, long y, long z, long rgb)
 	sptr.dSize = sptr.Size;
 	sptr.sSize = sptr.Size;
 
-	Sparks.push_back(sptr);
+	Sparks.AddEffect(sptr);
 }
 
 void TriggerFlashSmoke(long x, long y, long z, short room_number)
@@ -1734,7 +1740,7 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number)
 
 	if (rooms[room_number].flags & ROOM_UNDERWATER)
 	{
-		TriggerExplosionBubble(x, y, z, (short)room_number);
+		//TriggerExplosionBubble(x, y, z, (short)room_number);
 		uw = 1;
 	}
 	else
@@ -1788,150 +1794,6 @@ void TriggerFlashSmoke(long x, long y, long z, short room_number)
 	sptr.mirror = room_number == gfMirrorRoom;
 
 	SmokeSparks.push_back(sptr);
-}
-
-void S_DrawSparks()
-{
-	FX_INFO* fx;
-	ITEM_INFO* item;
-	PHD_VECTOR pos;
-	long* XY;
-	long* Z;
-	long* offsets;
-	float perspz;
-	long x, y, z, smallest_size;
-
-	smallest_size = 0;
-
-	for (int i = 0; i < 16; i++)
-		NodeOffsets[i].GotIt = 0;
-
-	phd_PushMatrix();
-	phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
-	XY = (long*)&tsv_buffer[0];
-	Z = (long*)&tsv_buffer[512];
-	offsets = (long*)&tsv_buffer[1024];
-
-	for (auto& sptr : Sparks)
-	{
-		if (!sptr.On)
-			continue;
-
-		if (sptr.Flags & 0x40)
-		{
-			fx = &effects[sptr.FxObj];
-			x = sptr.x + fx->pos.x_pos;
-			y = sptr.y + fx->pos.y_pos;
-			z = sptr.z + fx->pos.z_pos;
-
-			if (sptr.sLife - sptr.Life > (GetRandomDraw() & 7) + 4)
-			{
-				sptr.x = x;
-				sptr.y = y;
-				sptr.z = z;
-				sptr.Flags &= ~0x40;
-			}
-		}
-		else if (sptr.Flags & 0x80)
-		{
-			item = &items[sptr.FxObj];
-
-			if (sptr.Flags & 0x1000)
-			{
-				if (NodeOffsets[sptr.NodeNumber].GotIt)
-				{
-					pos.x = NodeVectors[sptr.NodeNumber].x;
-					pos.y = NodeVectors[sptr.NodeNumber].y;
-					pos.z = NodeVectors[sptr.NodeNumber].z;
-				}
-				else
-				{
-					pos.x = NodeOffsets[sptr.NodeNumber].x;
-					pos.y = NodeOffsets[sptr.NodeNumber].y;
-					pos.z = NodeOffsets[sptr.NodeNumber].z;
-
-					if (NodeOffsets[sptr.NodeNumber].mesh_num < 0)
-						GetLaraJointPos(&pos, -NodeOffsets[sptr.NodeNumber].mesh_num);
-					else
-						GetJointAbsPosition(item, &pos, NodeOffsets[sptr.NodeNumber].mesh_num);
-
-					NodeOffsets[sptr.NodeNumber].GotIt = 1;
-					NodeVectors[sptr.NodeNumber].x = pos.x;
-					NodeVectors[sptr.NodeNumber].y = pos.y;
-					NodeVectors[sptr.NodeNumber].z = pos.z;
-				}
-
-				x = sptr.x + pos.x;
-				y = sptr.y + pos.y;
-				z = sptr.z + pos.z;
-
-				if (sptr.sLife - sptr.Life > (GetRandomDraw() & 3) + 8)
-				{
-					sptr.x = x;
-					sptr.y = y;
-					sptr.z = z;
-					sptr.Flags &= ~0x1080;
-				}
-			}
-			else
-			{
-				x = sptr.x + item->pos.x_pos;
-				y = sptr.y + item->pos.y_pos;
-				z = sptr.z + item->pos.z_pos;
-			}
-		}
-		else
-		{
-			x = sptr.x;
-			y = sptr.y;
-			z = sptr.z;
-		}
-
-		x -= lara_item->pos.x_pos;
-		y -= lara_item->pos.y_pos;
-		z -= lara_item->pos.z_pos;
-
-		if (x < -0x5000 || x > 0x5000 || y < -0x5000 || y > 0x5000 || z < -0x5000 || z > 0x5000)
-		{
-			sptr.On = 0;
-			continue;
-		}
-
-		offsets[0] = x;
-		offsets[1] = y;
-		offsets[2] = z;
-		FVECTOR fPos;
-		fPos.x = mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2] + mMXPtr[M03];
-		fPos.y = mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13];
-		fPos.z = mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23];
-		perspz = f_persp / fPos.z;
-		XY[0] = long(fPos.x * perspz + f_centerx);
-		XY[1] = long(fPos.y * perspz + f_centery);
-		Z[0] = (long)fPos.z;
-
-		if (sptr.Flags & 8)
-		{
-			if (sptr.Flags & 2)
-				smallest_size = 4;
-		}
-		else
-		{
-			offsets[0] = x - (sptr.Xvel >> 4);
-			offsets[1] = y - (sptr.Yvel >> 4);
-			offsets[2] = z - (sptr.Zvel >> 4);
-			fPos.x = mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2] + mMXPtr[M03];
-			fPos.y = mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13];
-			fPos.z = mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23];
-			perspz = f_persp / fPos.z;
-			XY[2] = long(fPos.x * perspz + f_centerx);
-			XY[3] = long(fPos.y * perspz + f_centery);
-			Z[1] = (long)fPos.z;
-		}
-
-		S_DrawDrawSparks(sptr, smallest_size, XY, Z);
-	}
-
-	phd_PopMatrix();
 }
 
 void SetFadeClip(short height, short speed)

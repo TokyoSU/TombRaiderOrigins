@@ -485,7 +485,7 @@ void ControlSprinkler(short item_number)
 			sptr.Flags = GetRandomControl() & 0x20;
 			sptr.Gravity = (GetRandomControl() & 0x3F) + 64;
 			sptr.MaxYvel = 0;
-			Sparks.push_back(sptr);
+			Sparks.AddEffect(sptr);
 		}
 
 		for (int i = 0; i < 1; i++)
