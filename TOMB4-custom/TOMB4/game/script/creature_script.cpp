@@ -242,29 +242,29 @@ void RegisterCreatureHelper()
 	assert(scriptEngine->RegisterEnumValue("MOOD_TYPE", "STALK_MOOD", STALK_MOOD) >= 0);
 
 	// Helper
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetCreatureJointRotation(int16,int16)", asFUNCTION(GetCreatureJointRotation), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetCreatureMaximumTurn(int16)", asFUNCTION(GetCreatureMaximumTurn), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("void SetCreatureMaximumTurn(int16,int16)", asFUNCTION(SetCreatureMaximumTurn), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool IsCreatureAlerted(int16)", asFUNCTION(IsCreatureAlerted), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("void SetCreatureAlerted(int16,bool)", asFUNCTION(SetCreatureAlerted), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool IsCreatureHeadLeft(int16)", asFUNCTION(IsCreatureHeadLeft), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool IsCreatureHeadRight(int16)", asFUNCTION(IsCreatureHeadRight), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool IsCreatureReachedGoal(int16)", asFUNCTION(IsCreatureReachedGoal), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("void SetCreatureReachedGoal(int16,bool)", asFUNCTION(SetCreatureReachedGoal), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool IsCreatureHurtByLara(int16)", asFUNCTION(IsCreatureHurtByLara), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool DoCreatureHaveJumpAhead(int16)", asFUNCTION(DoCreatureHaveJumpAhead), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool DoCreatureHaveMonkeyAhead(int16)", asFUNCTION(DoCreatureHaveMonkeyAhead), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetCreatureItemNumber(int16)", asFUNCTION(GetCreatureItemNumber), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("MOOD_TYPE GetCreatureMoodType(int16)", asFUNCTION(GetCreatureMoodType), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("void SetCreatureMoodType(int16,MOOD_TYPE)", asFUNCTION(SetCreatureMoodType), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetZoneNumberFromCreatureAI(int16)", asFUNCTION(GetZoneNumberFromCreatureAI), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetEnemyZoneFromCreatureAI(int16)", asFUNCTION(GetEnemyZoneFromCreatureAI), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int GetCreatureAITargetDistance(int16)", asFUNCTION(GetCreatureAITargetDistance), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool IsCreatureAITargetAhead(int16)", asFUNCTION(IsCreatureAITargetAhead), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("bool IsCreatureAITargetCouldBite(int16)", asFUNCTION(IsCreatureAITargetCouldBite), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetCreatureAITargetAngleY(int16)", asFUNCTION(GetCreatureAITargetAngleY), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetCreatureAITargetAngleX(int16)", asFUNCTION(GetCreatureAITargetAngleX), asCALL_CDECL) >= 0);
-	assert(scriptEngine->RegisterGlobalFunction("int16 GetCreatureAIEnemyFacingAngle(int16)", asFUNCTION(GetCreatureAIEnemyFacingAngle), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetJointRotation(int16,int16)", asFUNCTION(GetCreatureJointRotation), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetMaximumTurn(int16)", asFUNCTION(GetCreatureMaximumTurn), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("void Creature_SetMaximumTurn(int16,int16)", asFUNCTION(SetCreatureMaximumTurn), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsAlerted(int16)", asFUNCTION(IsCreatureAlerted), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("void Creature_SetAlerted(int16,bool)", asFUNCTION(SetCreatureAlerted), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsHeadLeft(int16)", asFUNCTION(IsCreatureHeadLeft), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsHeadRight(int16)", asFUNCTION(IsCreatureHeadRight), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsReachedGoal(int16)", asFUNCTION(IsCreatureReachedGoal), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("void Creature_SetReachedGoal(int16,bool)", asFUNCTION(SetCreatureReachedGoal), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsHurtByLara(int16)", asFUNCTION(IsCreatureHurtByLara), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsJumpAhead(int16)", asFUNCTION(DoCreatureHaveJumpAhead), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsMonkeyswingAhead(int16)", asFUNCTION(DoCreatureHaveMonkeyAhead), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetItemNumber(int16)", asFUNCTION(GetCreatureItemNumber), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("MOOD_TYPE Creature_GetMoodType(int16)", asFUNCTION(GetCreatureMoodType), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("void Creature_SetMoodType(int16,MOOD_TYPE)", asFUNCTION(SetCreatureMoodType), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetZoneNumber(int16)", asFUNCTION(GetZoneNumberFromCreatureAI), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetEnemyZoneNumber(int16)", asFUNCTION(GetEnemyZoneFromCreatureAI), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int Creature_GetTargetDistance(int16)", asFUNCTION(GetCreatureAITargetDistance), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_IsTargetAhead(int16)", asFUNCTION(IsCreatureAITargetAhead), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("bool Creature_CanBite(int16)", asFUNCTION(IsCreatureAITargetCouldBite), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetTargetAngleY(int16)", asFUNCTION(GetCreatureAITargetAngleY), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetTargetAngleX(int16)", asFUNCTION(GetCreatureAITargetAngleX), asCALL_CDECL) >= 0);
+	assert(scriptEngine->RegisterGlobalFunction("int16 Creature_GetEnemyAngle(int16)", asFUNCTION(GetCreatureAIEnemyFacingAngle), asCALL_CDECL) >= 0);
 	
 	// From box.cpp
 	assert(scriptEngine->RegisterGlobalFunction("void CreatureAIInfo(int16)", asFUNCTION(Creature_AIInfo), asCALL_CDECL) >= 0);

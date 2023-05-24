@@ -825,6 +825,6 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
+    <Image Include="TombRaiderOrigins.ico" />
   </ItemGroup>
 </Project>
