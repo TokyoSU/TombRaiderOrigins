@@ -1,0 +1,685 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico">
+      <Filter>ressources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\math_tbls.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="modded\pch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="modded\tomb4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="modded\troyestuff.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\3dmath.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\audio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\clipping.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\cmdline.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\d3dmatrix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\drawbars.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\drawroom.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\dxshell.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\dxsound.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\file.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\fmv.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\function_stubs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\function_table.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\gamemain.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\input.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\lighting.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\LoadSave.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\output.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\polyinsert.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\registry.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\specificfx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\texture.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\timer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="specific\winmain.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\ahmet.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\baboon.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\bat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\bike.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\box.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\clockworkbeetle.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\collide.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\control.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\croc.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\deathsld.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\debris.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\delstuff.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\deltapak.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\demigod.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\dog.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\door.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\draw.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\effect2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\effects.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\elements.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\flmtorch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\footprnt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\gameflow.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\guide.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\hair.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\hammerhead.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\harpy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\health.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\horse.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\init.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\items.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\jean.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\jeep.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\lara.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\lara_states.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\lara1gun.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\lara2gun.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\laraclmb.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\laradouble.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\larafire.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\laraflar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\laramisc.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\laraskin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\larasurf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\laraswim.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\lot.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\mirror.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\missile.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\moveblok.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\mummy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\newinv.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\objects.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\objlight.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\people.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\pickup.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\raghead.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\rope.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\sas.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\savegame.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\scarab.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\scorpion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\senet.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\sentrygun.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\seth.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\setup.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\skeleton.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\sound.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\sphere.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\sphinx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\spotcam.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\switch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\templar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\text.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\tomb4fx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\train.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\traps.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\troops.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\voncroy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\wildboar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="game\wraith.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="tomb4.rc">
+      <Filter>ressources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="modded\pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="modded\tomb4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="modded\troyestuff.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\3dmath.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\audio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\clipping.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\cmdline.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\d3dmatrix.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\drawbars.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\drawroom.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\dxshell.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\dxsound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\file.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\fmv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\function_stubs.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\function_table.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\gamemain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\input.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\lighting.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\LoadSave.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\output.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\polyinsert.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\registry.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\specificfx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\texture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\timer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="specific\winmain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\ahmet.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\baboon.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\bat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\bike.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\box.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\clockworkbeetle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\collide.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\control.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\croc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\deathsld.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\debris.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\delstuff.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\deltapak.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\demigod.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\dog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\door.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\draw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\effect2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\effects.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\elements.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\flmtorch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\footprnt.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\gameflow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\guide.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\hair.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\hammerhead.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\harpy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\health.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\horse.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\init.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\items.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\jean.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\jeep.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\lara.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\lara1gun.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\lara2gun.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\laraclmb.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\laradouble.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\larafire.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\laraflar.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\laramisc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\laraskin.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\larasurf.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\laraswim.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\lot.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\mirror.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\missile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\moveblok.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\mummy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\newinv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\objects.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\objlight.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\people.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\pickup.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\raghead.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\rope.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\sas.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\savegame.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\scarab.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\scorpion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\senet.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\sentrygun.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\seth.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\setup.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\skeleton.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\sound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\sphere.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\sphinx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\spotcam.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\switch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\templar.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\text.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\tomb4fx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\train.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\traps.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\troops.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\voncroy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\wildboar.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\wraith.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
