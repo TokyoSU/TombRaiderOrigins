@@ -134,7 +134,6 @@ void WinClose()
 	DXFreeInfo(&App.DXInfo);
 	DestroyAcceleratorTable(App.hAccel);
 	DXClose();
-	FreeBinkStuff();
 
 	if (!G_dxptr)
 		return;
@@ -192,7 +191,6 @@ void WinDisplayString(long x, long y, char* string, ...)
 {
 	va_list list;
 	char buf[4096];
-
 	va_start(list, string);
 	vsprintf(buf, string, list);
 	PrintString(x, y, 6, buf, 0);
@@ -207,7 +205,6 @@ void WinProcMsg()
 	do
 	{
 		GetMessage(&msg, 0, 0, 0);
-
 		if (!TranslateAccelerator(App.hWnd, App.hAccel, &msg))
 		{
 			TranslateMessage(&msg);
@@ -416,80 +413,57 @@ LRESULT CALLBACK WinMainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 void ClearSurfaces()
 {
-	D3DRECT r;
-
+	D3DRECT r{};
 	r.x1 = App.dx.rViewport.left;
 	r.y1 = App.dx.rViewport.top;
 	r.y2 = App.dx.rViewport.top + App.dx.rViewport.bottom;
 	r.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
-
 	if (App.dx.Flags & DXF_HWR)
 		DXAttempt(App.dx.lpViewport->Clear2(1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
-
-	S_DumpScreen();
-
-	if (App.dx.Flags & DXF_HWR)
-		DXAttempt(App.dx.lpViewport->Clear2(1, &r, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0F, 0));
-
 	S_DumpScreen();
 }
 
 bool WinRegisterWindow(HINSTANCE hinstance)
 {
 	App.hInstance = hinstance;
-	App.WindowClass.hIcon = 0;
+	App.WindowClass.hIcon = LoadIcon(hinstance, IDI_APPLICATION);
 	App.WindowClass.lpszMenuName = 0;
 	App.WindowClass.lpszClassName = "MainGameWindow";
 	App.WindowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	App.WindowClass.hInstance = hinstance;
 	App.WindowClass.style = CS_VREDRAW | CS_HREDRAW;
 	App.WindowClass.lpfnWndProc = WinMainWndProc;
-	App.WindowClass.cbClsExtra = 0;
-	App.WindowClass.cbWndExtra = 0;
+	App.WindowClass.cbClsExtra = NULL;
+	App.WindowClass.cbWndExtra = NULL;
 	App.WindowClass.hCursor = LoadCursor(0, IDC_ARROW);
-
-	if (!RegisterClass(&App.WindowClass))
-		return 0;
-
-	return 1;
+	return RegisterClass(&App.WindowClass);
 }
 
 bool WinCreateWindow()
 {
-	App.hWnd = CreateWindowEx(WS_EX_APPWINDOW, "MainGameWindow", "Tomb Raider - The Last Revelation", WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-		0, 0, App.hInstance, 0);
-
-	if (!App.hWnd)
-		return 0;
-
-	return 1;
+	App.hWnd = CreateWindow("MainGameWindow", "Tomb Raider - The Last Revelation", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, NULL, NULL, App.hInstance, NULL);
+	return App.hWnd != NULL;
 }
 
 void WinSetStyle(bool fullscreen, ulong& set)
 {
-	ulong style;
-
-	style = GetWindowLong(App.hWnd, GWL_STYLE);
-
+	ulong style = GetWindowLong(App.hWnd, GWL_STYLE);
 	if (fullscreen)
 		style = (style & ~WS_OVERLAPPEDWINDOW) | WS_POPUP;
 	else
 		style = (style & ~WS_POPUP) | WS_OVERLAPPEDWINDOW;
-
 	style &= ~(WS_THICKFRAME | WS_MAXIMIZEBOX | WS_SYSMENU);
 	SetWindowLong(App.hWnd, GWL_STYLE, style);
-
 	if (set)
 		set = style;
 }
 
-int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nShowCmd)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
 	DXDISPLAYMODE* dm;
 	HWND desktop;
 	HDC hdc;
-	DEVMODE devmode;
+	DEVMODE devmode{};
 	char* buf;
 	long size;
 
@@ -532,17 +506,6 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 		LoadSettings();
 	}
-
-#ifndef TIMES_LEVEL
-	if (!fmvs_disabled)
-	{
-		if (!LoadBinkStuff())
-		{
-			MessageBox(0, "Failed to load Bink, disabling FMVs.", "Tomb Raider IV", 0);
-			fmvs_disabled = 1;
-		}
-	}
-#endif
 
 	SetWindowPos(App.hWnd, 0, App.dx.rScreen.left, App.dx.rScreen.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	desktop = GetDesktopWindow();

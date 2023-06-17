@@ -3746,7 +3746,6 @@ void DrawBlood()
 			continue;
 
 		size = ((phd_persp * bptr->Size) << 1) / Z[0];
-
 		if (size > (bptr->Size << 1))
 			size = (bptr->Size << 1);
 		else if (size < 4)

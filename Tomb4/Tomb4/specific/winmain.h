@@ -13,7 +13,6 @@ void ClearSurfaces();
 bool WinRegisterWindow(HINSTANCE hinstance);
 bool WinCreateWindow();
 void WinSetStyle(bool fullscreen, ulong& set);
-int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nShowCmd);
 
 extern WINAPP App;
 extern char* cutseqpakPtr;

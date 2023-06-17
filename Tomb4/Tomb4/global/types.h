@@ -885,7 +885,6 @@ struct OBJECT_INFO
 	void (*ceiling)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*draw_routine)(ITEM_INFO* item);
 	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
-	short object_mip;
 	short anim_index;
 	short hit_points;
 	short pivot_length;

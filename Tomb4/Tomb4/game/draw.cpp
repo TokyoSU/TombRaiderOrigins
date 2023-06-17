@@ -402,9 +402,6 @@ void DrawAnimatingItem(ITEM_INFO* item)
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
-	if (obj->object_mip && (obj + 1)->loaded && mMXPtr[M23] / 4 > obj->object_mip)
-		obj++;
-
 	if (item->object_number < ENEMY_JEEP || item->object_number > SETHA_MIP)
 		calc_animating_item_clip_window(item, frm[0]);
 	else
@@ -488,7 +485,6 @@ void DrawAnimatingItem(ITEM_INFO* item)
 					phd_TranslateRel_I(bite->x, bite->y, bite->z);
 					phd_RotYXZ_I(0, -0x3FFC, short((rnd << 14) + (rnd >> 2) - 4096));
 					mInterpolateMatrix();
-					//empty func call here
 					phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], clip);
 					phd_PopMatrix_I();
 					item->fired_weapon--;

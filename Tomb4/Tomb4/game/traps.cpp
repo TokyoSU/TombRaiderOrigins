@@ -2064,7 +2064,7 @@ void DartEmitterControl(short item_number)
 		x = 0;
 		z = 0;
 		dart = &items[num];
-		dart->object_number = DARTS;
+		dart->object_number = DART;
 		dart->room_number = item->room_number;
 
 		if (!item->pos.y_rot)
