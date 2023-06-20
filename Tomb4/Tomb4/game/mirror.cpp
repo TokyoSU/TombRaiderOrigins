@@ -31,9 +31,9 @@ void Draw_Mirror_Lara()
 	lara_item->pos.x_rot = -lara_item->pos.x_rot;
 	lara_item->pos.y_rot = -lara_item->pos.y_rot;
 	lara_item->pos.z_rot += 0x8000;
-	CalcLaraMatrices(2);
+	CalcLaraMatrices(CM_Mirror);
 	SetCullCW();
-	DrawLara(lara_item, 1);
+	DrawLara(lara_item, true);
 	DrawGunshells();
 	SetCullCCW();
 	lara_item->pos.z_pos = zplane - lara_item->pos.z_pos;

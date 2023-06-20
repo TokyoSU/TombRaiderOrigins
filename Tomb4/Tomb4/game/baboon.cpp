@@ -372,7 +372,7 @@ void BaboonControl(short item_number)
 				break;
 
 			case 21:
-				objects[item->object_number].HitEffect = 0;
+				objects[item->object_number].hit_effect = 0;
 				item->hit_points = -16384;
 
 				if (item->frame_number == anims[item->anim_number].frame_base + 212)

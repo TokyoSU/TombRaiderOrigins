@@ -114,9 +114,7 @@ void phd_GetMatrixAngles(MATRIX_INT* m, short* dest)
 
 void GetRopePos(ROPE_STRUCT* rope, long pos, long* x, long* y, long* z)
 {
-	long segment;
-
-	segment = pos >> 7;
+	long segment = pos >> 7;
 	pos &= 0x7F;
 	*x = (rope->NormalisedSegment[segment].x * pos >> (W2V_SHIFT + 2)) + (rope->MeshSegment[segment].x >> (W2V_SHIFT + 2)) + rope->Position.x;
 	*y = (rope->NormalisedSegment[segment].y * pos >> (W2V_SHIFT + 2)) + (rope->MeshSegment[segment].y >> (W2V_SHIFT + 2)) + rope->Position.y;

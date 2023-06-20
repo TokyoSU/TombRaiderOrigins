@@ -1,12 +1,18 @@
 #pragma once
 
+enum CalcMatrixFlag
+{
+	CM_Skin = 0,
+	CM_Joint = 1,
+	CM_Mirror = 2
+};
 
-void DrawLara(ITEM_INFO* item, long mirror);
+void DrawLara(ITEM_INFO* item, bool isMirror);
 void GetLaraJointPos(PHD_VECTOR* pos, long node);
 void SetLaraUnderwaterNodes();
-void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag);
-void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, long flag);
-void CalcLaraMatrices(long flag);
+void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, CalcMatrixFlag flag);
+void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, CalcMatrixFlag flag);
+void CalcLaraMatrices(CalcMatrixFlag flag);
 
 extern short* GLaraShadowframe;
 extern MATRIX_FLT lara_matrices[NUM_LARA_MESHES];

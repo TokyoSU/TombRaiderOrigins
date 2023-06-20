@@ -46,6 +46,7 @@
 #include "scarab.h"
 #include "sentrygun.h"
 #include "lara1gun.h"
+#include "laradraw.h"
 #include "switch.h"
 #include "missile.h"
 #include "dog.h"
@@ -70,7 +71,6 @@ void ObjectObjects()
 	OBJECT_INFO* obj;
 
 	obj = &objects[CAMERA_TARGET];
-	obj->using_drawanimating_item = 0;
 	obj->draw_routine = 0;
 
 	obj = &objects[FLARE_ITEM];
@@ -78,7 +78,6 @@ void ObjectObjects()
 	obj->control = FlareControl;
 	obj->collision = PickUpCollision;
 	obj->draw_routine = DrawFlareInAir;
-	obj->using_drawanimating_item = 0;
 	obj->pivot_length = 256;
 	obj->hit_points = 256;
 	obj->save_position = 1;
@@ -288,14 +287,12 @@ void ObjectObjects()
 	obj->control = ControlCrossbow;
 	obj->collision = 0;
 	obj->draw_routine = DrawWeaponMissile;
-	obj->using_drawanimating_item = 0;
 
 	obj = &objects[GRENADE];
 	obj->initialise = 0;
 	obj->control = ControlGrenade;
 	obj->collision = 0;
 	obj->draw_routine = DrawWeaponMissile;
-	obj->using_drawanimating_item = 0;
 
 	obj = &objects[FLARE_INV_ITEM];
 	obj->initialise = InitialisePickUp;
@@ -357,7 +354,7 @@ void ObjectObjects()
 		obj->control = ControlAnimatingSlots;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
-		obj->HitEffect = 0;
+		obj->hit_effect = 0;
 	}
 
 	obj = &objects[FIREROPE];
@@ -370,7 +367,6 @@ void ObjectObjects()
 	obj->initialise = InitialiseRaisingBlock;
 	obj->control = ControlRaisingBlock;
 	obj->draw_routine = DrawScaledSpike;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[SQUISHY_BLOCK1];
@@ -428,20 +424,18 @@ void ObjectObjects()
 	obj->collision = ScalesCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
-	obj->HitEffect = 0;
+	obj->hit_effect = 0;
 
 	obj = &objects[TEETH_SPIKES];
 	obj->initialise = InitialiseScaledSpike;
 	obj->control = ControlScaledSpike;
 	obj->draw_routine = DrawScaledSpike;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[JOBY_SPIKES];
 	obj->initialise = InitialiseJobySpike;
 	obj->control = ControlJobySpike;
 	obj->draw_routine = DrawScaledSpike;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[SLICER_DICER];
@@ -464,7 +458,6 @@ void ObjectObjects()
 		obj->control = ControlRaisingBlock;
 		obj->collision = 0;
 		obj->draw_routine = DrawScaledSpike;
-		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
 
@@ -474,7 +467,6 @@ void ObjectObjects()
 		obj->initialise = InitialiseSmokeEmitter;
 		obj->control = ControlSmokeEmitter;
 		obj->draw_routine = 0;
-		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
 
@@ -483,7 +475,6 @@ void ObjectObjects()
 		obj = &objects[i];
 		obj->control = ControlColouredLights;
 		obj->draw_routine = 0;
-		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
 
@@ -491,7 +482,6 @@ void ObjectObjects()
 	obj->initialise = InitialiseLightningConductor;
 	obj->control = ControlLightningConductor;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[BUBBLES];
@@ -503,18 +493,15 @@ void ObjectObjects()
 	obj = &objects[WATERFALLMIST];
 	obj->control = WaterFall;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 
 	obj = &objects[AMBER_LIGHT];
 	obj->control = ControlPulseLight;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[WHITE_LIGHT];
 	obj->control = ControlElectricalLight;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[BLINKING_LIGHT];
@@ -523,7 +510,6 @@ void ObjectObjects()
 
 	obj = &objects[LENS_FLARE];
 	obj->draw_routine = DrawLensFlares;
-	obj->using_drawanimating_item = 0;
 
 	for (int i = WATERFALL1; i <= WATERFALL3; i++)
 	{
@@ -539,13 +525,11 @@ void ObjectObjects()
 	obj = &objects[GOD_HEAD];
 	obj->control = ControlGodHead;
 	obj->draw_routine = DrawGodHead;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[EARTHQUAKE];
 	obj->control = EarthQuake;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[BODY_PART];
@@ -663,7 +647,6 @@ void TrapObjects()
 	obj->control = KillAllCurrentItems;
 	obj->draw_routine = 0;
 	obj->hit_points = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[DEATH_SLIDE];
@@ -731,32 +714,27 @@ void TrapObjects()
 	obj->control = DartsControl;
 	obj->collision = ObjectCollision;
 	obj->draw_routine = S_DrawDarts;
-	obj->using_drawanimating_item = 0;
 	obj->shadow_size = 128;
 
 	obj = &objects[DART_EMITTER];
 	obj->control = DartEmitterControl;
 	obj->draw_routine = 0;
 	obj->save_flags = 1;
-	obj->using_drawanimating_item = 0;
 
 	obj = &objects[HOMING_DART_EMITTER];
 	obj->control = DartEmitterControl;
 	obj->draw_routine = 0;
 	obj->save_flags = 1;
-	obj->using_drawanimating_item = 0;
 
 	obj = &objects[FLAME];
 	obj->control = FlameControl;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 
 	obj = &objects[FLAME_EMITTER];
 	obj->initialise = InitialiseFlameEmitter;
 	obj->control = FlameEmitterControl;
 	obj->collision = FireCollision;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[FLAME_EMITTER2];
@@ -764,14 +742,12 @@ void TrapObjects()
 	obj->control = FlameEmitter2Control;
 	obj->collision = FireCollision;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[FLAME_EMITTER3];
 	obj->initialise = InitialiseFlameEmitter3;
 	obj->control = FlameEmitter3Control;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	init_all_ropes();
@@ -780,7 +756,6 @@ void TrapObjects()
 	obj->control = RopeControl;
 	obj->collision = RopeCollision;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[POLEROPE];
@@ -791,7 +766,7 @@ void TrapObjects()
 	obj->initialise = InitialiseMineHelicopter;
 	obj->control = ControlMineHelicopter;
 	obj->collision = MineCollision;
-	obj->HitEffect = 3;
+	obj->hit_effect = 3;
 
 	obj = &objects[SPRINKLER];
 	obj->control = ControlSprinkler;
@@ -802,7 +777,6 @@ void TrapObjects()
 	obj->initialise = ControlTriggerTriggerer;
 	obj->control = ControlTriggerTriggerer;
 	obj->draw_routine = 0;
-	obj->using_drawanimating_item = 0;
 	obj->save_flags = 1;
 
 	obj = &objects[PLANET_EFFECT];
@@ -810,7 +784,6 @@ void TrapObjects()
 	obj->control = ControlPlanetEffect;
 	obj->draw_routine = DrawPlanetEffect;
 	obj->save_flags = 1;
-	obj->using_drawanimating_item = 0;
 	obj->save_mesh = 1;
 }
 
@@ -820,10 +793,9 @@ void BaddyObjects()
 
 	obj = &objects[LARA];
 	obj->initialise = InitialiseLaraLoad;
-	obj->draw_routine = 0;
+	obj->draw_routine = nullptr;
 	obj->shadow_size = 160;
 	obj->hit_points = 1000;
-	obj->using_drawanimating_item = 0;
 	obj->save_hitpoints = 1;
 	obj->save_position = 1;
 	obj->save_flags = 1;
@@ -873,7 +845,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 2;
+		obj->hit_effect = 2;
 		obj->undead = 1;
 	}
 
@@ -898,7 +870,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 0;
+		obj->hit_effect = 0;
 		obj->undead = 1;
 		bones[obj->bone_index + 24] |= 4;
 		bones[obj->bone_index + 24] |= 8;
@@ -928,7 +900,7 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->radius = 128;
 		obj->intelligent = 1;
-		obj->HitEffect = 0;
+		obj->hit_effect = 0;
 		obj->save_flags = 1;
 		obj->save_mesh = 1;
 		obj->save_anim = 1;
@@ -969,7 +941,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		bones[obj->bone_index + 28] |= 4;
 		bones[obj->bone_index + 28] |= 8;
 		bones[obj->bone_index + 88] |= 4;
@@ -1006,7 +978,7 @@ void BaddyObjects()
 		obj->radius = 102;
 		obj->bite_offset = 1;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_mesh = 1;
@@ -1044,7 +1016,7 @@ void BaddyObjects()
 		obj->pivot_length = 50;
 		obj->radius = 512;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1062,7 +1034,7 @@ void BaddyObjects()
 		obj->pivot_length = 20;
 		obj->radius = 128;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1084,7 +1056,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 2;
+		obj->hit_effect = 2;
 		obj->undead = 1;
 		bones[obj->bone_index + 28] |= 4;
 		bones[obj->bone_index + 28] |= 8;
@@ -1106,7 +1078,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 2;
+		obj->hit_effect = 2;
 		obj->undead = 1;
 		bones[obj->bone_index + 24] |= 4;
 		bones[obj->bone_index + 24] |= 8;
@@ -1128,7 +1100,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 3;
+		obj->hit_effect = 3;
 		obj->undead = 1;
 	}
 
@@ -1161,7 +1133,7 @@ void BaddyObjects()
 		obj->pivot_length = 50;
 		obj->radius = 128;
 		obj->intelligent = 1;
-		obj->HitEffect = 3;
+		obj->hit_effect = 3;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1179,7 +1151,7 @@ void BaddyObjects()
 		obj->pivot_length = 50;
 		obj->radius = 409;
 		obj->intelligent = 1;
-		obj->HitEffect = 3;
+		obj->hit_effect = 3;
 		obj->undead = 1;
 		obj->save_mesh = 1;
 		obj->save_flags = 1;
@@ -1199,7 +1171,7 @@ void BaddyObjects()
 		obj->pivot_length = 300;
 		obj->radius = 341;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->water_creature = 1;
@@ -1222,7 +1194,7 @@ void BaddyObjects()
 		obj->pivot_length = 300;
 		obj->radius = 409;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->water_creature = 1;
@@ -1248,7 +1220,7 @@ void BaddyObjects()
 		obj->save_flags = 1;
 		obj->undead = 1;
 		obj->save_anim = 1;
-		obj->HitEffect = 3;
+		obj->hit_effect = 3;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
 		bones[obj->bone_index + 32] |= 4;
@@ -1314,7 +1286,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 3;
+		obj->hit_effect = 3;
 		obj->undead = 1;
 		bones[obj->bone_index + 24] |= 4;
 		bones[obj->bone_index + 24] |= 8;
@@ -1334,7 +1306,7 @@ void BaddyObjects()
 		obj->radius = 102;
 		obj->bite_offset = 0;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1357,7 +1329,7 @@ void BaddyObjects()
 		obj->radius = 102;
 		obj->bite_offset = 0;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1379,7 +1351,7 @@ void BaddyObjects()
 		obj->pivot_length = 50;
 		obj->radius = 409;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1397,7 +1369,7 @@ void BaddyObjects()
 		obj->hit_points = 40;
 		obj->radius = 102;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1419,7 +1391,7 @@ void BaddyObjects()
 		obj->pivot_length = 300;
 		obj->radius = 341;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1440,7 +1412,7 @@ void BaddyObjects()
 		obj->pivot_length = 300;
 		obj->radius = 341;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1461,7 +1433,7 @@ void BaddyObjects()
 			obj->pivot_length = 200;
 			obj->radius = 256;
 			obj->intelligent = 1;
-			obj->HitEffect = 1;
+			obj->hit_effect = 1;
 			obj->save_flags = 1;
 			obj->save_anim = 1;
 			obj->save_hitpoints = 1;
@@ -1498,7 +1470,7 @@ void BaddyObjects()
 			obj->save_anim = 1;
 			obj->save_hitpoints = 1;
 			obj->save_position = 1;
-			obj->HitEffect = 2;
+			obj->hit_effect = 2;
 			obj->undead = 1;
 			bones[obj->bone_index + 32] |= 4;
 			bones[obj->bone_index + 36] |= 4;
@@ -1518,7 +1490,7 @@ void BaddyObjects()
 		obj->pivot_length = 10;
 		obj->radius = 102;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1536,7 +1508,7 @@ void BaddyObjects()
 		obj->pivot_length = 50;
 		obj->radius = 204;
 		obj->intelligent = 1;
-		obj->HitEffect = 1;
+		obj->hit_effect = 1;
 		obj->save_flags = 1;
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
@@ -1559,7 +1531,7 @@ void BaddyObjects()
 		obj->save_anim = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
-		obj->HitEffect = 3;
+		obj->hit_effect = 3;
 		obj->undead = 1;
 		bones[obj->bone_index] |= 8;
 		bones[obj->bone_index + 4] |= 4;
@@ -1659,7 +1631,6 @@ void BaddyObjects()
 		obj->initialise = InitialiseScarabGenerator;
 		obj->control = TriggerScarab;
 		obj->draw_routine = 0;
-		obj->using_drawanimating_item = 0;
 	}
 
 	obj = &objects[FISH];
@@ -1668,7 +1639,6 @@ void BaddyObjects()
 		obj->initialise = InitialiseLocustEmitter;
 		obj->control = ControlLocustEmitter;
 		obj->draw_routine = 0;
-		obj->using_drawanimating_item = 0;
 		obj->save_flags = 1;
 	}
 }
@@ -1890,7 +1860,6 @@ void InitialiseObjects()
 		obj->save_flags = 0;
 		obj->save_anim = 0;
 		obj->water_creature = 0;
-		obj->using_drawanimating_item = 1;
 		obj->save_mesh = 0;
 		obj->draw_routine = DrawAnimatingItem;
 		obj->ceiling = 0;

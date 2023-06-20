@@ -61,6 +61,7 @@
     <ClInclude Include="game\lara2gun.h" />
     <ClInclude Include="game\laraclmb.h" />
     <ClInclude Include="game\laradouble.h" />
+    <ClInclude Include="game\laradraw.h" />
     <ClInclude Include="game\larafire.h" />
     <ClInclude Include="game\laraflar.h" />
     <ClInclude Include="game\laramisc.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="game\lara2gun.cpp" />
     <ClCompile Include="game\laraclmb.cpp" />
     <ClCompile Include="game\laradouble.cpp" />
+    <ClCompile Include="game\laradraw.cpp" />
     <ClCompile Include="game\larafire.cpp" />
     <ClCompile Include="game\laraflar.cpp" />
     <ClCompile Include="game\laramisc.cpp" />

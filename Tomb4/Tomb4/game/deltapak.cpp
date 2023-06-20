@@ -522,21 +522,19 @@ short GetTrackWord(long off, char* packed, long packmethod)
 
 void frigup_lara()
 {
-	long* bone;
-
 	lara_item->pos.x_pos = GLOBAL_cutme->orgx;
 	lara_item->pos.y_pos = GLOBAL_cutme->orgy;
 	lara_item->pos.z_pos = GLOBAL_cutme->orgz;
-	bone = &bones[objects[lara_item->object_number].bone_index];
+	auto* bone = &bones[objects[lara_item->object_number].bone_index];
 	updateAnimFrame(actor_pnodes[0], 16, temp_rotation_buffer);
-	Rich_CalcLaraMatrices_Normal(temp_rotation_buffer, bone, 0);
+	Rich_CalcLaraMatrices_Normal(temp_rotation_buffer, bone, CM_Skin);
 	phd_PushUnitMatrix();
-	Rich_CalcLaraMatrices_Normal(temp_rotation_buffer, bone, 1);
+	Rich_CalcLaraMatrices_Normal(temp_rotation_buffer, bone, CM_Joint);
 	phd_PopMatrix();
-	HairControl(0, 0, temp_rotation_buffer);
 
+	HairControl(TRUE, FALSE, temp_rotation_buffer);
 	if (gfLevelFlags & GF_YOUNGLARA)
-		HairControl(0, 1, temp_rotation_buffer);
+		HairControl(TRUE, TRUE, temp_rotation_buffer);
 
 	if (cutseq_num == 12)
 		GLaraShadowframe = frig_jeep_shadow_bbox;

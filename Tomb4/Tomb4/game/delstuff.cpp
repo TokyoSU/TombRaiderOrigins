@@ -95,7 +95,7 @@ static uchar SkinUseMatrix[NUM_LARA_MESHES][2] =
 
 static long in_joints;
 
-void DrawLara(ITEM_INFO* item, long mirror)
+void DrawLara(ITEM_INFO* item, bool isMirror)
 {
 	OBJECT_INFO* obj;
 	FVECTOR v0;
@@ -103,7 +103,7 @@ void DrawLara(ITEM_INFO* item, long mirror)
 	short** meshpp;
 	long* bone;
 	short* rot;
-	long top, bottom, left, right, dx, dy, dz, dist, stash, xRot;
+	long top, bottom, left, right, dx, dy, dz, dist, xRot;
 	static long a = 255;
 	
 	top = phd_top;
@@ -152,10 +152,10 @@ void DrawLara(ITEM_INFO* item, long mirror)
 		}
 	}
 
-	if (!mirror)
+	if (!isMirror)
 		CalculateObjectLightingLara();
 
-	for (int i = 0; i < 15; i++) // Skin
+	for (int i = 0; i < NUM_LARA_MESHES; i++) // Skin
 	{
 		mMXPtr->m00 = lara_matrices[i].m00;
 		mMXPtr->m01 = lara_matrices[i].m01;
@@ -179,11 +179,9 @@ void DrawLara(ITEM_INFO* item, long mirror)
 
 		for (int j = 0; j < 4; j++)
 		{
-			stash = (uchar)NodesToStashFromScratch[i][j];
-
+			long stash = (long)((uchar)NodesToStashFromScratch[i][j]);
 			if (stash == 255)
 				break;
-
 			StashSkinVertices(stash);
 		}
 	}
@@ -390,7 +388,7 @@ void SetLaraUnderwaterNodes()
 	}
 }
 
-void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
+void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, CalcMatrixFlag flag)
 {
 	PHD_VECTOR vec;
 	MATRIX_FLT* matrix;
@@ -398,20 +396,20 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	short* rot2;
 	short gun;
 
-	if (flag == 1)
+	if (flag == CM_Joint)
 		matrix = lara_joint_matrices;
 	else
 		matrix = lara_matrices;
 
 	phd_PushMatrix();
 
-	if (!flag || flag == 2)
+	if (flag == CM_Skin || flag == CM_Mirror)
 		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
 	else
 		phd_SetTrans(0, 0, 0);
 
 	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
-	if (flag == 2)
+	if (flag == CM_Mirror)
 	{
 		vec.x = -16384;
 		vec.y = -16384;
@@ -466,10 +464,10 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
-	gun = WEAPON_NONE;
-
 	if (lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS)
 		gun = lara.gun_type;
+	else
+		gun = WEAPON_NONE;
 
 	switch (gun)
 	{
@@ -663,7 +661,7 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	GLaraShadowframe = frame;
 }
 
-void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, long flag)
+void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, CalcMatrixFlag flag)
 {
 	PHD_VECTOR vec{};
 	MATRIX_FLT* matrix;
@@ -674,20 +672,20 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	short* rot2copy;
 	short gun;
 
-	if (flag == 1)
+	if (flag == CM_Joint)
 		matrix = lara_joint_matrices;
 	else
 		matrix = lara_matrices;
 
 	phd_PushMatrix();
 
-	if (flag == 0 || flag == 2)
+	if (flag == CM_Skin || flag == CM_Mirror)
 		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
 	else
 		phd_SetTrans(0, 0, 0);
 
 	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
-	if (flag == 2)
+	if (flag == CM_Mirror)
 	{
 		vec.x = -16384;
 		vec.y = -16384;
@@ -967,7 +965,7 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	phd_PopMatrix();
 }
 
-void CalcLaraMatrices(long flag)
+void CalcLaraMatrices(CalcMatrixFlag flag)
 {
 	long* bone;
 	short* frame;

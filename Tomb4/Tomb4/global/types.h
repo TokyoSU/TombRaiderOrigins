@@ -928,11 +928,12 @@ struct OBJECT_INFO
 	long bone_index;
 	short* frame_base;
 	void (*initialise)(short item_number);
+	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
 	void (*control)(short item_number);
 	void (*floor)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*ceiling)(ITEM_INFO* item, long x, long y, long z, long* height);
 	void (*draw_routine)(ITEM_INFO* item);
-	void (*collision)(short item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
+	void (*draw_routine_extra)(ITEM_INFO* item);
 	short anim_index;
 	short hit_points;
 	short pivot_length;
@@ -948,11 +949,9 @@ struct OBJECT_INFO
 	ushort save_anim : 1;
 	ushort semi_transparent : 1;
 	ushort water_creature : 1;
-	ushort using_drawanimating_item : 1;
-	ushort HitEffect : 2;
+	ushort hit_effect : 2;
 	ushort undead : 1;
 	ushort save_mesh : 1;
-	void (*draw_routine_extra)(ITEM_INFO* item);
 	ulong explodable_meshbits;
 	ulong padfuck;
 };

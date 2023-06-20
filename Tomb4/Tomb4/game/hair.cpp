@@ -372,7 +372,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 			pos.z = hair->pos.z_pos;
 
 			if (in_cutscene)
-				height = 32767;
+				height = -NO_HEIGHT;
 			else
 			{
 				floor = GetFloor(hair->pos.x_pos, hair->pos.y_pos, hair->pos.z_pos, &room_num);

@@ -285,10 +285,8 @@ void mInterpolateArmMatrix(MATRIX_FLT* mx)
 
 void S_InsertRoom(short room_number)
 {
-	ROOM_INFO* r;
-
 	current_room = room_number;
-	r = &room[room_number];
+	auto* r = &room[room_number];
 	phd_TranslateAbs(0, 0, 0);
 	phd_left = r->left;
 	phd_right = r->right;
@@ -530,7 +528,6 @@ void DrawAnimatingItem(ITEM_INFO* item)
 					phd_PushMatrix();
 					phd_RotX(-16380);
 					phd_TranslateRel(bite->x, bite->y, bite->z);
-					//empty func call here
 					phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_index], clip);
 					phd_PopMatrix();
 					item->fired_weapon--;
@@ -771,7 +768,6 @@ void DrawRooms(short CurrentRoom)
 	}
 
 	nPolyType = 0;
-
 	for (int i = 0; i < MAX_DYNAMICS; i++)
 	{
 		if (dynamics[i].on)
@@ -933,14 +929,12 @@ void RenderIt(short CurrentRoom)
 
 long DrawPhaseGame()
 {
-	CalcLaraMatrices(0);
+	CalcLaraMatrices(CM_Skin);
 	phd_PushUnitMatrix();
-	CalcLaraMatrices(1);
+	CalcLaraMatrices(CM_Joint);
 	phd_PopMatrix();
-
 	if (GLOBAL_playing_cutseq)
 		frigup_lara();
-
 	SetLaraUnderwaterNodes();
 	DrawRooms(camera.pos.room_number);
 	DrawGameInfo(1);

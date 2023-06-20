@@ -468,10 +468,9 @@ long ControlPhase(long nframes, long demo_mode)
 
 		if (!GLOBAL_playing_cutseq)
 		{
-			HairControl(0, 0, 0);
-
+			HairControl(FALSE, FALSE, nullptr);
 			if (gfLevelFlags & GF_YOUNGLARA)
-				HairControl(0, 1, 0);
+				HairControl(FALSE, TRUE, nullptr);
 		}
 
 		if (GLOBAL_playing_cutseq)
@@ -2622,11 +2621,11 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 						}
 						else
 						{
-							if (objects[shotitem->object_number].HitEffect == 1)
+							if (objects[shotitem->object_number].hit_effect == 1)
 								DoBloodSplat(target.x, target.y, target.z, (GetRandomControl() & 3) + 3, shotitem->pos.y_rot, shotitem->room_number);
-							else if (objects[shotitem->object_number].HitEffect == 2)
+							else if (objects[shotitem->object_number].hit_effect == 2)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, -5);
-							else if (objects[shotitem->object_number].HitEffect == 3)
+							else if (objects[shotitem->object_number].hit_effect == 3)
 								TriggerRicochetSpark(&target, lara_item->pos.y_rot, 3, 0);
 
 							shotitem->hit_status = 1;

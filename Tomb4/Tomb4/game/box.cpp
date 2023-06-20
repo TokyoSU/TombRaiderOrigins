@@ -32,7 +32,7 @@ void CreatureDie(short item_number, long explode)
 
 	if (explode)
 	{
-		if (objects[item->object_number].HitEffect == 1)
+		if (objects[item->object_number].hit_effect == 1)
 			ExplodingDeath2(item_number, -1, 258);
 		else
 			ExplodingDeath2(item_number, -1, 256);
