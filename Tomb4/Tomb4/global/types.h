@@ -264,6 +264,26 @@ enum lara_mesh
 	NUM_LARA_MESHES
 };
 
+enum lara_bone
+{
+	LB_HIPS = 1,
+	LB_LTHIGH,
+	LB_LSHIN,
+	LB_LFOOT,
+	LB_RTHIGH,
+	LB_RSHIN,
+	LB_RFOOT,
+	LB_TORSO,
+	LB_RINARM,
+	LB_ROUTARM,
+	LB_RHAND,
+	LB_LINARM,
+	LB_LOUTARM,
+	LB_LHAND,
+	LB_HEAD,
+	NUM_LARA_BONES = LM_HEAD
+};
+
 enum trigger_types
 {
 	TRIGGER,
