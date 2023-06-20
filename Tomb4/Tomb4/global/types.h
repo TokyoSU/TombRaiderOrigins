@@ -299,15 +299,6 @@ enum trigobj_types
 	TO_CUTSCENE
 };
 
-enum matrix_indices
-{
-	M00, M01, M02, M03,
-	M10, M11, M12, M13,
-	M20, M21, M22, M23,
-
-	indices_count
-};
-
 enum input_buttons
 {
 	IN_NONE =				0x0,
@@ -405,6 +396,42 @@ enum gf_level_options
 	GF_MIRROR =			0x2000,
 	GF_REMOVEAMULET =	0x4000,
 	GF_NOLEVEL =		0x8000
+};
+
+struct MATRIX_INT
+{
+	long m00;
+	long m01;
+	long m02;
+	long m03;
+
+	long m10;
+	long m11;
+	long m12;
+	long m13;
+
+	long m20;
+	long m21;
+	long m22;
+	long m23;
+};
+
+struct MATRIX_FLT
+{
+	float m00;
+	float m01;
+	float m02;
+	float m03;
+
+	float m10;
+	float m11;
+	float m12;
+	float m13;
+
+	float m20;
+	float m21;
+	float m22;
+	float m23;
 };
 
 struct CVECTOR
@@ -717,7 +744,8 @@ struct LARA_INFO
 	short torso_z_rot;
 	LARA_ARM left_arm;
 	LARA_ARM right_arm;
-	ushort holster;
+	ushort holster_l;
+	ushort holster_r;
 	CREATURE_INFO* creature;
 	long CornerX;
 	long CornerZ;
@@ -2134,7 +2162,7 @@ struct STRINGHEADER
 
 struct GUNFLASH_STRUCT
 {
-	float mx[12];
+	MATRIX_FLT mx;
 	short on;
 };
 

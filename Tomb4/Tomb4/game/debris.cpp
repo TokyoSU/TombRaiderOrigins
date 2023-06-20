@@ -265,9 +265,9 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		z = (long)*vtx++;
 		vtx += 5;
 
-		offsets[0] = short(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z + mMXPtr[M03]);
-		offsets[1] = short(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z + mMXPtr[M13]);
-		offsets[2] = short(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z + mMXPtr[M23]);
+		offsets[0] = short(mMXPtr->m00 * x + mMXPtr->m01 * y + mMXPtr->m02 * z + mMXPtr->m03);
+		offsets[1] = short(mMXPtr->m10 * x + mMXPtr->m11 * y + mMXPtr->m12 * z + mMXPtr->m13);
+		offsets[2] = short(mMXPtr->m20 * x + mMXPtr->m21 * y + mMXPtr->m22 * z + mMXPtr->m23);
 
 		pos.x += offsets[0];
 		pos.y += offsets[1];

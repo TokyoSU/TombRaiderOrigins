@@ -2,7 +2,7 @@
 
 
 D3DMATRIX* D3DIdentityMatrix(D3DMATRIX* mx);
-void SetD3DMatrix(D3DMATRIX* mx, float* imx);
+void SetD3DMatrix(D3DMATRIX* mx, MATRIX_FLT* imx);
 void SetD3DViewMatrix();
 void D3DTransform(D3DVECTOR* vec, D3DMATRIX* mx);
 D3DVECTOR* D3DNormalise(D3DVECTOR* vec);

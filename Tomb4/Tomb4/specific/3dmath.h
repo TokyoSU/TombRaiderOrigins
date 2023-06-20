@@ -1,6 +1,5 @@
 #pragma once
 
-
 void phd_PushMatrix();
 void phd_PushUnitMatrix();
 void phd_SetTrans(long x, long y, long z);
@@ -18,7 +17,7 @@ long phd_atan(long x, long y);
 ulong phd_sqrt(ulong num);
 void ScaleCurrentMatrix(PHD_VECTOR* vec);
 void SetupZRange(long znear, long zfar);
-void InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov, long a, long b);
+void phd_InitWindow(long x, long y, long w, long h, long znear, long zfar, long fov, long a, long b);
 void phd_GenerateW2V(PHD_3DPOS* viewPos);
 void phd_LookAt(long sx, long sy, long sz, long tx, long ty, long tz, short roll);
 
@@ -27,14 +26,14 @@ extern float mone;
 extern float FogStart;
 extern float FogEnd;
 
-extern float* mMXPtr;
-extern float mW2V[indices_count];
-extern float fMXStack[20 * indices_count];
+extern MATRIX_FLT* mMXPtr;
+extern MATRIX_FLT mW2V;
+extern MATRIX_FLT fMXStack[20];
 extern float fcossin_tbl[65536];
 
-extern long* phd_mxptr;
-extern long w2v_matrix[indices_count];
-extern long matrix_stack[20 * indices_count];
+extern MATRIX_INT* phd_mxptr;
+extern MATRIX_INT w2v_matrix;
+extern MATRIX_INT matrix_stack[20];
 
 extern float f_centerx;
 extern float f_centery;
@@ -68,6 +67,7 @@ extern long phd_right;
 extern long phd_znear;
 extern long phd_zfar;
 extern long phd_persp;
+extern long phd_viewdist;
 extern short phd_winxmax;
 extern short phd_winxmin;
 extern short phd_winymax;
@@ -97,11 +97,11 @@ __inline float fCos(long angle)
 
 __inline void mPopMatrix()
 {
-	mMXPtr -= indices_count;
+	mMXPtr--;
 }
 
 __inline void phd_PopMatrix()
 {
-	phd_mxptr -= indices_count;
+	phd_mxptr--;
 	mPopMatrix();
 }

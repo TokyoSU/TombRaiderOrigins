@@ -37,9 +37,8 @@ STATIC_INFO static_objects[NUMBER_STATIC_OBJECTS];
 
 long IM_rate;
 long IM_frac;
-
-float* mIMptr;
-float mIMstack[indices_count * 64];
+MATRIX_FLT* mIMptr;
+MATRIX_FLT mIMstack[64];
 
 long current_room;
 short no_rotation[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -76,28 +75,26 @@ void InitInterpolate(long frac, long rate)
 	IM_rate = rate;
 	IM_frac = frac;
 	mIMptr = mIMstack;
-	memcpy(mIMstack, mMXPtr, 48);
+	memcpy(mIMstack, mMXPtr, sizeof(MATRIX_FLT));
 }
 
 void phd_PopMatrix_I()
 {
 	phd_PopMatrix();
-	mIMptr -= indices_count;
+	mIMptr--;
 }
 
 void phd_PushMatrix_I()
 {
 	phd_PushMatrix();
-	memcpy(mIMptr + indices_count, mIMptr, 48);
-	mIMptr += indices_count;
+	mIMptr[1] = mIMptr[0];
+	mIMptr++;
 }
 
 void phd_RotY_I(short ang)
 {
-	float* mPtr;
-
 	phd_RotY(ang);
-	mPtr = mMXPtr;
+	auto* mPtr = mMXPtr;
 	mMXPtr = mIMptr;
 	phd_RotY(ang);
 	mMXPtr = mPtr;
@@ -105,10 +102,8 @@ void phd_RotY_I(short ang)
 
 void phd_RotX_I(short ang)
 {
-	float* mPtr;
-
 	phd_RotX(ang);
-	mPtr = mMXPtr;
+	auto* mPtr = mMXPtr;
 	mMXPtr = mIMptr;
 	phd_RotX(ang);
 	mMXPtr = mPtr;
@@ -116,10 +111,8 @@ void phd_RotX_I(short ang)
 
 void phd_RotZ_I(short ang)
 {
-	float* mPtr;
-
 	phd_RotZ(ang);
-	mPtr = mMXPtr;
+	auto* mPtr = mMXPtr;
 	mMXPtr = mIMptr;
 	phd_RotZ(ang);
 	mMXPtr = mPtr;
@@ -127,10 +120,8 @@ void phd_RotZ_I(short ang)
 
 void phd_TranslateRel_I(long x, long y, long z)
 {
-	float* mPtr;
-
 	phd_TranslateRel(x, y, z);
-	mPtr = mMXPtr;
+	auto* mPtr = mMXPtr;
 	mMXPtr = mIMptr;
 	phd_TranslateRel(x, y, z);
 	mMXPtr = mPtr;
@@ -138,10 +129,8 @@ void phd_TranslateRel_I(long x, long y, long z)
 
 void phd_TranslateRel_ID(long x, long y, long z, long x2, long y2, long z2)
 {
-	float* mPtr;
-
 	phd_TranslateRel(x, y, z);
-	mPtr = mMXPtr;
+	auto* mPtr = mMXPtr;
 	mMXPtr = mIMptr;
 	phd_TranslateRel(x2, y2, z2);
 	mMXPtr = mPtr;
@@ -149,10 +138,8 @@ void phd_TranslateRel_ID(long x, long y, long z, long x2, long y2, long z2)
 
 void phd_RotYXZ_I(short y, short x, short z)
 {
-	float* mPtr;
-
 	phd_RotYXZ(y, x, z);
-	mPtr = mMXPtr;
+	auto* mPtr = mMXPtr;
 	mMXPtr = mIMptr;
 	phd_RotYXZ(y, x, z);
 	mMXPtr = mPtr;
@@ -160,10 +147,8 @@ void phd_RotYXZ_I(short y, short x, short z)
 
 void gar_RotYXZsuperpack_I(short** pprot1, short** pprot2, long skip)
 {
-	float* mPtr;
-
 	gar_RotYXZsuperpack(pprot1, skip);
-	mPtr = mMXPtr;
+	auto* mPtr = mMXPtr;
 	mMXPtr = mIMptr;
 	gar_RotYXZsuperpack(pprot2, skip);
 	mMXPtr = mPtr;
@@ -221,80 +206,80 @@ void mInterpolateMatrix()
 {
 	if (IM_rate == 2 || (IM_frac == 2 && IM_rate == 4))
 	{
-		mMXPtr[M00] = (mMXPtr[M00] + mIMptr[M00]) * 0.5F;
-		mMXPtr[M01] = (mMXPtr[M01] + mIMptr[M01]) * 0.5F;
-		mMXPtr[M02] = (mMXPtr[M02] + mIMptr[M02]) * 0.5F;
-		mMXPtr[M03] = (mMXPtr[M03] + mIMptr[M03]) * 0.5F;
-		mMXPtr[M10] = (mMXPtr[M10] + mIMptr[M10]) * 0.5F;
-		mMXPtr[M11] = (mMXPtr[M11] + mIMptr[M11]) * 0.5F;
-		mMXPtr[M12] = (mMXPtr[M12] + mIMptr[M12]) * 0.5F;
-		mMXPtr[M13] = (mMXPtr[M13] + mIMptr[M13]) * 0.5F;
-		mMXPtr[M20] = (mMXPtr[M20] + mIMptr[M20]) * 0.5F;
-		mMXPtr[M21] = (mMXPtr[M21] + mIMptr[M21]) * 0.5F;
-		mMXPtr[M22] = (mMXPtr[M22] + mIMptr[M22]) * 0.5F;
-		mMXPtr[M23] = (mMXPtr[M23] + mIMptr[M23]) * 0.5F;
+		mMXPtr->m00 = (mMXPtr->m00 + mIMptr->m00) * 0.5F;
+		mMXPtr->m01 = (mMXPtr->m01 + mIMptr->m01) * 0.5F;
+		mMXPtr->m02 = (mMXPtr->m02 + mIMptr->m02) * 0.5F;
+		mMXPtr->m03 = (mMXPtr->m03 + mIMptr->m03) * 0.5F;
+		mMXPtr->m10 = (mMXPtr->m10 + mIMptr->m10) * 0.5F;
+		mMXPtr->m11 = (mMXPtr->m11 + mIMptr->m11) * 0.5F;
+		mMXPtr->m12 = (mMXPtr->m12 + mIMptr->m12) * 0.5F;
+		mMXPtr->m13 = (mMXPtr->m13 + mIMptr->m13) * 0.5F;
+		mMXPtr->m20 = (mMXPtr->m20 + mIMptr->m20) * 0.5F;
+		mMXPtr->m21 = (mMXPtr->m21 + mIMptr->m21) * 0.5F;
+		mMXPtr->m22 = (mMXPtr->m22 + mIMptr->m22) * 0.5F;
+		mMXPtr->m23 = (mMXPtr->m23 + mIMptr->m23) * 0.5F;
 	}
 	else if (IM_frac == 1)
 	{
-		mMXPtr[M00] += (mIMptr[M00] - mMXPtr[M00]) * 0.25F;
-		mMXPtr[M01] += (mIMptr[M01] - mMXPtr[M01]) * 0.25F;
-		mMXPtr[M02] += (mIMptr[M02] - mMXPtr[M02]) * 0.25F;
-		mMXPtr[M03] += (mIMptr[M03] - mMXPtr[M03]) * 0.25F;
-		mMXPtr[M10] += (mIMptr[M10] - mMXPtr[M10]) * 0.25F;
-		mMXPtr[M11] += (mIMptr[M11] - mMXPtr[M11]) * 0.25F;
-		mMXPtr[M12] += (mIMptr[M12] - mMXPtr[M12]) * 0.25F;
-		mMXPtr[M13] += (mIMptr[M13] - mMXPtr[M13]) * 0.25F;
-		mMXPtr[M20] += (mIMptr[M20] - mMXPtr[M20]) * 0.25F;
-		mMXPtr[M21] += (mIMptr[M21] - mMXPtr[M21]) * 0.25F;
-		mMXPtr[M22] += (mIMptr[M22] - mMXPtr[M22]) * 0.25F;
-		mMXPtr[M23] += (mIMptr[M23] - mMXPtr[M23]) * 0.25F;
+		mMXPtr->m00 += (mIMptr->m00 - mMXPtr->m00) * 0.25F;
+		mMXPtr->m01 += (mIMptr->m01 - mMXPtr->m01) * 0.25F;
+		mMXPtr->m02 += (mIMptr->m02 - mMXPtr->m02) * 0.25F;
+		mMXPtr->m03 += (mIMptr->m03 - mMXPtr->m03) * 0.25F;
+		mMXPtr->m10 += (mIMptr->m10 - mMXPtr->m10) * 0.25F;
+		mMXPtr->m11 += (mIMptr->m11 - mMXPtr->m11) * 0.25F;
+		mMXPtr->m12 += (mIMptr->m12 - mMXPtr->m12) * 0.25F;
+		mMXPtr->m13 += (mIMptr->m13 - mMXPtr->m13) * 0.25F;
+		mMXPtr->m20 += (mIMptr->m20 - mMXPtr->m20) * 0.25F;
+		mMXPtr->m21 += (mIMptr->m21 - mMXPtr->m21) * 0.25F;
+		mMXPtr->m22 += (mIMptr->m22 - mMXPtr->m22) * 0.25F;
+		mMXPtr->m23 += (mIMptr->m23 - mMXPtr->m23) * 0.25F;
 	}
 	else
 	{
-		mMXPtr[M00] = mIMptr[M00] - ((mIMptr[M00] - mMXPtr[M00]) * 0.25F);
-		mMXPtr[M01] = mIMptr[M01] - ((mIMptr[M01] - mMXPtr[M01]) * 0.25F);
-		mMXPtr[M02] = mIMptr[M02] - ((mIMptr[M02] - mMXPtr[M02]) * 0.25F);
-		mMXPtr[M03] = mIMptr[M03] - ((mIMptr[M03] - mMXPtr[M03]) * 0.25F);
-		mMXPtr[M10] = mIMptr[M10] - ((mIMptr[M10] - mMXPtr[M10]) * 0.25F);
-		mMXPtr[M11] = mIMptr[M11] - ((mIMptr[M11] - mMXPtr[M11]) * 0.25F);
-		mMXPtr[M12] = mIMptr[M12] - ((mIMptr[M12] - mMXPtr[M12]) * 0.25F);
-		mMXPtr[M13] = mIMptr[M13] - ((mIMptr[M13] - mMXPtr[M13]) * 0.25F);
-		mMXPtr[M20] = mIMptr[M20] - ((mIMptr[M20] - mMXPtr[M20]) * 0.25F);
-		mMXPtr[M21] = mIMptr[M21] - ((mIMptr[M21] - mMXPtr[M21]) * 0.25F);
-		mMXPtr[M22] = mIMptr[M22] - ((mIMptr[M22] - mMXPtr[M22]) * 0.25F);
-		mMXPtr[M23] = mIMptr[M23] - ((mIMptr[M23] - mMXPtr[M23]) * 0.25F);
+		mMXPtr->m00 = mIMptr->m00 - ((mIMptr->m00 - mMXPtr->m00) * 0.25F);
+		mMXPtr->m01 = mIMptr->m01 - ((mIMptr->m01 - mMXPtr->m01) * 0.25F);
+		mMXPtr->m02 = mIMptr->m02 - ((mIMptr->m02 - mMXPtr->m02) * 0.25F);
+		mMXPtr->m03 = mIMptr->m03 - ((mIMptr->m03 - mMXPtr->m03) * 0.25F);
+		mMXPtr->m10 = mIMptr->m10 - ((mIMptr->m10 - mMXPtr->m10) * 0.25F);
+		mMXPtr->m11 = mIMptr->m11 - ((mIMptr->m11 - mMXPtr->m11) * 0.25F);
+		mMXPtr->m12 = mIMptr->m12 - ((mIMptr->m12 - mMXPtr->m12) * 0.25F);
+		mMXPtr->m13 = mIMptr->m13 - ((mIMptr->m13 - mMXPtr->m13) * 0.25F);
+		mMXPtr->m20 = mIMptr->m20 - ((mIMptr->m20 - mMXPtr->m20) * 0.25F);
+		mMXPtr->m21 = mIMptr->m21 - ((mIMptr->m21 - mMXPtr->m21) * 0.25F);
+		mMXPtr->m22 = mIMptr->m22 - ((mIMptr->m22 - mMXPtr->m22) * 0.25F);
+		mMXPtr->m23 = mIMptr->m23 - ((mIMptr->m23 - mMXPtr->m23) * 0.25F);
 	}
 }
 
-void mInterpolateArmMatrix(float* mx)
+void mInterpolateArmMatrix(MATRIX_FLT* mx)
 {
-	mMXPtr[M00] = mx[M00];
-	mMXPtr[M01] = mx[M01];
-	mMXPtr[M02] = mx[M02];
-	mMXPtr[M10] = mx[M10];
-	mMXPtr[M11] = mx[M11];
-	mMXPtr[M12] = mx[M12];
-	mMXPtr[M20] = mx[M20];
-	mMXPtr[M21] = mx[M21];
-	mMXPtr[M22] = mx[M22];
+	mMXPtr->m00 = mx->m00;
+	mMXPtr->m01 = mx->m01;
+	mMXPtr->m02 = mx->m02;
+	mMXPtr->m10 = mx->m10;
+	mMXPtr->m11 = mx->m11;
+	mMXPtr->m12 = mx->m12;
+	mMXPtr->m20 = mx->m20;
+	mMXPtr->m21 = mx->m21;
+	mMXPtr->m22 = mx->m22;
 
 	if (IM_rate == 2 || (IM_frac == 2 && IM_rate == 4))
 	{
-		mMXPtr[M03] = (mMXPtr[M03] + mIMptr[M03]) * 0.5F;
-		mMXPtr[M13] = (mMXPtr[M13] + mIMptr[M13]) * 0.5F;
-		mMXPtr[M23] = (mMXPtr[M23] + mIMptr[M23]) * 0.5F;
+		mMXPtr->m03 = (mMXPtr->m03 + mIMptr->m03) * 0.5F;
+		mMXPtr->m13 = (mMXPtr->m13 + mIMptr->m13) * 0.5F;
+		mMXPtr->m23 = (mMXPtr->m23 + mIMptr->m23) * 0.5F;
 	}
 	else if (IM_frac == 1)
 	{
-		mMXPtr[M03] += (mIMptr[M03] - mMXPtr[M03]) * 0.25F;
-		mMXPtr[M13] += (mIMptr[M13] - mMXPtr[M13]) * 0.25F;
-		mMXPtr[M23] += (mIMptr[M23] - mMXPtr[M23]) * 0.25F;
+		mMXPtr->m03 += (mIMptr->m03 - mMXPtr->m03) * 0.25F;
+		mMXPtr->m13 += (mIMptr->m13 - mMXPtr->m13) * 0.25F;
+		mMXPtr->m23 += (mIMptr->m23 - mMXPtr->m23) * 0.25F;
 	}
 	else
 	{
-		mMXPtr[M03] = mIMptr[M03] - ((mIMptr[M03] - mMXPtr[M03]) * 0.25F);
-		mMXPtr[M13] = mIMptr[M13] - ((mIMptr[M13] - mMXPtr[M13]) * 0.25F);
-		mMXPtr[M23] = mIMptr[M23] - ((mIMptr[M23] - mMXPtr[M23]) * 0.25F);
+		mMXPtr->m03 = mIMptr->m03 - ((mIMptr->m03 - mMXPtr->m03) * 0.25F);
+		mMXPtr->m13 = mIMptr->m13 - ((mIMptr->m13 - mMXPtr->m13) * 0.25F);
+		mMXPtr->m23 = mIMptr->m23 - ((mIMptr->m23 - mMXPtr->m23) * 0.25F);
 	}
 }
 
@@ -324,9 +309,9 @@ void CalculateObjectLighting(ITEM_INFO* item, short* frame)
 		phd_SetTrans(0, 0, 0);
 		phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 		phd_TranslateRel((frame[0] + frame[1]) >> 1, (frame[2] + frame[3]) >> 1, (frame[4] + frame[5]) >> 1);
-		x = item->pos.x_pos + (long)mMXPtr[M03];
-		y = item->pos.y_pos + (long)mMXPtr[M13];
-		z = item->pos.z_pos + (long)mMXPtr[M23];
+		x = item->pos.x_pos + (long)mMXPtr->m03;
+		y = item->pos.y_pos + (long)mMXPtr->m13;
+		z = item->pos.z_pos + (long)mMXPtr->m23;
 		phd_PopMatrix();
 		current_item = item;
 		item->il.item_pos.x = x;
@@ -744,35 +729,35 @@ void DrawRooms(short CurrentRoom)
 
 				if (lara.right_arm.flash_gun)
 				{
-					mMXPtr[M00] = lara_matrices[132 + M00];
-					mMXPtr[M01] = lara_matrices[132 + M01];
-					mMXPtr[M02] = lara_matrices[132 + M02];
-					mMXPtr[M03] = lara_matrices[132 + M03];
-					mMXPtr[M10] = lara_matrices[132 + M10];
-					mMXPtr[M11] = lara_matrices[132 + M11];
-					mMXPtr[M12] = lara_matrices[132 + M12];
-					mMXPtr[M13] = lara_matrices[132 + M13];
-					mMXPtr[M20] = lara_matrices[132 + M20];
-					mMXPtr[M21] = lara_matrices[132 + M21];
-					mMXPtr[M22] = lara_matrices[132 + M22];
-					mMXPtr[M23] = lara_matrices[132 + M23];
+					mMXPtr->m00 = lara_matrices[LM_RHAND + 1].m00;
+					mMXPtr->m01 = lara_matrices[LM_RHAND + 1].m01;
+					mMXPtr->m02 = lara_matrices[LM_RHAND + 1].m02;
+					mMXPtr->m03 = lara_matrices[LM_RHAND + 1].m03;
+					mMXPtr->m10 = lara_matrices[LM_RHAND + 1].m10;
+					mMXPtr->m11 = lara_matrices[LM_RHAND + 1].m11;
+					mMXPtr->m12 = lara_matrices[LM_RHAND + 1].m12;
+					mMXPtr->m13 = lara_matrices[LM_RHAND + 1].m13;
+					mMXPtr->m20 = lara_matrices[LM_RHAND + 1].m20;
+					mMXPtr->m21 = lara_matrices[LM_RHAND + 1].m21;
+					mMXPtr->m22 = lara_matrices[LM_RHAND + 1].m22;
+					mMXPtr->m23 = lara_matrices[LM_RHAND + 1].m23;
 					SetGunFlash(lara.gun_type);
 				}
 
 				if (lara.left_arm.flash_gun)
 				{
-					mMXPtr[M00] = lara_matrices[168 + M00];
-					mMXPtr[M01] = lara_matrices[168 + M01];
-					mMXPtr[M02] = lara_matrices[168 + M02];
-					mMXPtr[M03] = lara_matrices[168 + M03];
-					mMXPtr[M10] = lara_matrices[168 + M10];
-					mMXPtr[M11] = lara_matrices[168 + M11];
-					mMXPtr[M12] = lara_matrices[168 + M12];
-					mMXPtr[M13] = lara_matrices[168 + M13];
-					mMXPtr[M20] = lara_matrices[168 + M20];
-					mMXPtr[M21] = lara_matrices[168 + M21];
-					mMXPtr[M22] = lara_matrices[168 + M22];
-					mMXPtr[M23] = lara_matrices[168 + M23];
+					mMXPtr->m00 = lara_matrices[LM_LHAND + 1].m00;
+					mMXPtr->m01 = lara_matrices[LM_LHAND + 1].m01;
+					mMXPtr->m02 = lara_matrices[LM_LHAND + 1].m02;
+					mMXPtr->m03 = lara_matrices[LM_LHAND + 1].m03;
+					mMXPtr->m10 = lara_matrices[LM_LHAND + 1].m10;
+					mMXPtr->m11 = lara_matrices[LM_LHAND + 1].m11;
+					mMXPtr->m12 = lara_matrices[LM_LHAND + 1].m12;
+					mMXPtr->m13 = lara_matrices[LM_LHAND + 1].m13;
+					mMXPtr->m20 = lara_matrices[LM_LHAND + 1].m20;
+					mMXPtr->m21 = lara_matrices[LM_LHAND + 1].m21;
+					mMXPtr->m22 = lara_matrices[LM_LHAND + 1].m22;
+					mMXPtr->m23 = lara_matrices[LM_LHAND + 1].m23;
 					SetGunFlash(lara.gun_type);
 				}
 
@@ -1025,9 +1010,9 @@ void GetRoomBounds()
 			{
 				rn = *door++;
 
-				if (door[0] * long(r->x + door[3] - mW2V[M03]) +
-					door[1] * long(r->y + door[4] - mW2V[M13]) +
-					door[2] * long(r->z + door[5] - mW2V[M23]) < 0)
+				if (door[0] * long(r->x + door[3] - mW2V.m03) +
+					door[1] * long(r->y + door[4] - mW2V.m13) +
+					door[2] * long(r->z + door[5] - mW2V.m23) < 0)
 					SetRoomBounds(door, rn, r);
 
 				door += 15;
@@ -1062,9 +1047,9 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom)
 
 	for (int i = 0; i < 4; i++, v++, door += 3)
 	{
-		v->x = mMXPtr[M00] * door[0] + mMXPtr[M01] * door[1] + mMXPtr[M02] * door[2] + mMXPtr[M03];
-		v->y = mMXPtr[M10] * door[0] + mMXPtr[M11] * door[1] + mMXPtr[M12] * door[2] + mMXPtr[M13];
-		v->z = mMXPtr[M20] * door[0] + mMXPtr[M21] * door[1] + mMXPtr[M22] * door[2] + mMXPtr[M23];
+		v->x = mMXPtr->m00 * door[0] + mMXPtr->m01 * door[1] + mMXPtr->m02 * door[2] + mMXPtr->m03;
+		v->y = mMXPtr->m10 * door[0] + mMXPtr->m11 * door[1] + mMXPtr->m12 * door[2] + mMXPtr->m13;
+		v->z = mMXPtr->m20 * door[0] + mMXPtr->m21 * door[1] + mMXPtr->m22 * door[2] + mMXPtr->m23;
 		x = v->x;
 		y = v->y;
 		z = v->z;
@@ -1200,7 +1185,7 @@ void DrawEffect(short fx_num)
 		phd_PushMatrix();
 		phd_TranslateAbs(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 
-		if (mMXPtr[M23] > f_mznear && mMXPtr[M23] < f_mzfar)
+		if (mMXPtr->m23 > f_mznear && mMXPtr->m23 < f_mzfar)
 		{
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
 			
@@ -1471,9 +1456,9 @@ void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds)
 
 	for (int i = 0; i < 8; i++)
 	{
-		x = pos[i].x * phd_mxptr[M00] + pos[i].y * phd_mxptr[M01] + pos[i].z * phd_mxptr[M02] + phd_mxptr[M03];
-		y = pos[i].x * phd_mxptr[M10] + pos[i].y * phd_mxptr[M11] + pos[i].z * phd_mxptr[M12] + phd_mxptr[M13];
-		z = pos[i].x * phd_mxptr[M20] + pos[i].y * phd_mxptr[M21] + pos[i].z * phd_mxptr[M22] + phd_mxptr[M23];
+		x = pos[i].x * phd_mxptr->m00 + pos[i].y * phd_mxptr->m01 + pos[i].z * phd_mxptr->m02 + phd_mxptr->m03;
+		y = pos[i].x * phd_mxptr->m10 + pos[i].y * phd_mxptr->m11 + pos[i].z * phd_mxptr->m12 + phd_mxptr->m13;
+		z = pos[i].x * phd_mxptr->m20 + pos[i].y * phd_mxptr->m21 + pos[i].z * phd_mxptr->m22 + phd_mxptr->m23;
 
 		if (x < xMin)
 			xMin = (short)x;

@@ -9,8 +9,8 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 void CalcLaraMatrices(long flag);
 
 extern short* GLaraShadowframe;
-extern float lara_matrices[180];
-extern float lara_joint_matrices[180];
+extern MATRIX_FLT lara_matrices[NUM_LARA_MESHES];
+extern MATRIX_FLT lara_joint_matrices[NUM_LARA_MESHES];
 extern long LaraNodeAmbient[2];
 extern long bLaraUnderWater;
 extern uchar LaraNodeUnderwater[15];

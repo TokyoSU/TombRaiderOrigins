@@ -59,9 +59,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	if (!(WorldSpace & 2))
 		phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 
-	ptr->x = x + (long)mMXPtr[M03];
-	ptr->y = y + (long)mMXPtr[M13];
-	ptr->z = z + (long)mMXPtr[M23];
+	ptr->x = x + (long)mMXPtr->m03;
+	ptr->y = y + (long)mMXPtr->m13;
+	ptr->z = z + (long)mMXPtr->m23;
 	ptr->r = meshp[3];
 	ptr++;
 	phd_PopMatrix();
@@ -99,9 +99,9 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 		if (!(WorldSpace & 2))
 			phd_TranslateRel(meshp[0], meshp[1], meshp[2]);
 
-		ptr->x = x + (long)mMXPtr[M03];
-		ptr->y = y + (long)mMXPtr[M13];
-		ptr->z = z + (long)mMXPtr[M23];
+		ptr->x = x + (long)mMXPtr->m03;
+		ptr->y = y + (long)mMXPtr->m13;
+		ptr->z = z + (long)mMXPtr->m23;
 		ptr->r = meshp[3];
 		ptr++;
 		phd_PopMatrix();
@@ -181,16 +181,16 @@ void InitInterpolate2(long frac, long rate)
 {
 	IM_frac = frac;
 	IM_rate = rate;
-	mIMptr = &mIMstack[384];
-	memcpy(mIMptr, mMXPtr, 48);
+	mIMptr = mIMstack;
+	memcpy(mIMptr, mMXPtr, sizeof(MATRIX_FLT));
 }
 
 void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 {
 	OBJECT_INFO* obj;
-	float* mMx;
-	float* mIMx;
-	long* iMx;
+	MATRIX_FLT* mMx;
+	MATRIX_FLT* mIMx;
+	MATRIX_INT* iMx;
 	long* bone;
 	short* frm[2];
 	short* extra_rotation;
@@ -291,9 +291,9 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 		phd_TranslateRel(pos->x, pos->y, pos->z);
 	}
 
-	pos->x = item->pos.x_pos + (long)mMXPtr[M03];
-	pos->y = item->pos.y_pos + (long)mMXPtr[M13];
-	pos->z = item->pos.z_pos + (long)mMXPtr[M23];
+	pos->x = item->pos.x_pos + (long)mMXPtr->m03;
+	pos->y = item->pos.y_pos + (long)mMXPtr->m13;
+	pos->z = item->pos.z_pos + (long)mMXPtr->m23;
 	mMXPtr = mMx;
 	mIMptr = mIMx;
 	phd_mxptr = iMx;

@@ -3022,16 +3022,16 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	x = target->x - ItemPos->x_pos;
 	y = target->y - ItemPos->y_pos;
 	z = target->z - ItemPos->z_pos;
-	tpos.x = long(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
-	tpos.y = long(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
-	tpos.z = long(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
+	tpos.x = long(mMXPtr->m00 * x + mMXPtr->m01 * y + mMXPtr->m02 * z);
+	tpos.y = long(mMXPtr->m10 * x + mMXPtr->m11 * y + mMXPtr->m12 * z);
+	tpos.z = long(mMXPtr->m20 * x + mMXPtr->m21 * y + mMXPtr->m22 * z);
 
 	x = start->x - ItemPos->x_pos;
 	y = start->y - ItemPos->y_pos;
 	z = start->z - ItemPos->z_pos;
-	spos.x = long(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z);
-	spos.y = long(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z);
-	spos.z = long(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z);
+	spos.x = long(mMXPtr->m00 * x + mMXPtr->m01 * y + mMXPtr->m02 * z);
+	spos.y = long(mMXPtr->m10 * x + mMXPtr->m11 * y + mMXPtr->m12 * z);
+	spos.z = long(mMXPtr->m20 * x + mMXPtr->m21 * y + mMXPtr->m22 * z);
 
 	phd_PopMatrix();
 
@@ -3057,9 +3057,9 @@ long DoRayBox(GAME_VECTOR* start, GAME_VECTOR* target, short* bounds, PHD_3DPOS*
 	phd_PushUnitMatrix();
 	phd_RotY(ItemPos->y_rot);
 
-	x = long(mMXPtr[M00] * Coord->x + mMXPtr[M01] * Coord->y + mMXPtr[M02] * Coord->z);
-	y = long(mMXPtr[M10] * Coord->x + mMXPtr[M11] * Coord->y + mMXPtr[M12] * Coord->z);
-	z = long(mMXPtr[M20] * Coord->x + mMXPtr[M21] * Coord->y + mMXPtr[M22] * Coord->z);
+	x = long(mMXPtr->m00 * Coord->x + mMXPtr->m01 * Coord->y + mMXPtr->m02 * Coord->z);
+	y = long(mMXPtr->m10 * Coord->x + mMXPtr->m11 * Coord->y + mMXPtr->m12 * Coord->z);
+	z = long(mMXPtr->m20 * Coord->x + mMXPtr->m21 * Coord->y + mMXPtr->m22 * Coord->z);
 	Coord->x = x;
 	Coord->y = y;
 	Coord->z = z;

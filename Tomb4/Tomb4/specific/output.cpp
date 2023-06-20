@@ -266,7 +266,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 
 	clip = clipflags;
 
-	if (gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
+	if (gfLevelFlags & GF_TRAIN)
 		DistanceFogStart = 12.0F * 1024.0F;
 	else
 		DistanceFogStart = tomb4.distance_fog * 1024.0F;
@@ -1052,11 +1052,6 @@ void S_InitialisePolyList()
 
 	if (gfLevelFlags & GF_TRAIN)
 		col = 0xD2B163;
-	else if (gfCurrentLevel == 5 || gfCurrentLevel == 6)
-	{
-		col = FogTableColor[19];
-		SetFogColor(CLRR(col), CLRG(col), CLRB(col));
-	}
 	else
 		col = 0;
 	
@@ -1364,7 +1359,7 @@ long S_GetObjectBounds(short* bounds)
 	FVECTOR vtx[8];
 	float xMin, xMax, yMin, yMax, zMin, zMax, numZ, xv, yv, zv;
 
-	if (mMXPtr[M23] >= f_mzfar && !outside)
+	if (mMXPtr->m23 >= f_mzfar && !outside)
 		return 0;
 
 	xMin = bounds[0];
@@ -1414,7 +1409,7 @@ long S_GetObjectBounds(short* bounds)
 
 	for (int i = 0; i < 8; i++)
 	{
-		zv = vtx[i].x * mMXPtr[M20] + vtx[i].y * mMXPtr[M21] + vtx[i].z * mMXPtr[M22] + mMXPtr[M23];
+		zv = vtx[i].x * mMXPtr->m20 + vtx[i].y * mMXPtr->m21 + vtx[i].z * mMXPtr->m22 + mMXPtr->m23;
 
 		if (zv > f_mznear && zv < f_mzfar)
 		{
@@ -1425,7 +1420,7 @@ long S_GetObjectBounds(short* bounds)
 				zv = 1;
 
 			zv = 1 / zv;
-			xv = zv * (vtx[i].x * mMXPtr[M00] + vtx[i].y * mMXPtr[M01] + vtx[i].z * mMXPtr[M02] + mMXPtr[M03]);
+			xv = zv * (vtx[i].x * mMXPtr->m00 + vtx[i].y * mMXPtr->m01 + vtx[i].z * mMXPtr->m02 + mMXPtr->m03);
 
 			if (xv < xMin)
 				xMin = xv;
@@ -1433,7 +1428,7 @@ long S_GetObjectBounds(short* bounds)
 			if (xv > xMax)
 				xMax = xv;
 
-			yv = zv * (vtx[i].x * mMXPtr[M10] + vtx[i].y * mMXPtr[M11] + vtx[i].z * mMXPtr[M12] + mMXPtr[M13]);
+			yv = zv * (vtx[i].x * mMXPtr->m10 + vtx[i].y * mMXPtr->m11 + vtx[i].z * mMXPtr->m12 + mMXPtr->m13);
 
 			if (yv < yMin)
 				yMin = yv;
@@ -1660,9 +1655,7 @@ void S_AnimateTextures(long n)
 
 long S_DumpScreen()
 {
-	long n;
-
-	n = Sync();
+	long n = Sync();
 
 	while (n < 2)
 	{
@@ -1702,10 +1695,9 @@ void S_OutputPolyList()
 	if (App.dx.lpZBuffer)
 		DrawBuckets();
 
-	if (!gfCurrentLevel)
+	if (gfCurrentLevel == 0) // Title
 	{
 		Fade();
-
 		if (App.dx.lpZBuffer)
 			DrawSortList();
 	}

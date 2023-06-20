@@ -35,21 +35,21 @@ D3DMATRIX* D3DIdentityMatrix(D3DMATRIX* mx)
 	return mx;
 }
 
-void SetD3DMatrix(D3DMATRIX* mx, float* imx)
+void SetD3DMatrix(D3DMATRIX* mx, MATRIX_FLT* imx)
 {
 	D3DIdentityMatrix(mx);
-	mx->_11 = imx[M00];
-	mx->_12 = imx[M10];
-	mx->_13 = imx[M20];
-	mx->_21 = imx[M01];
-	mx->_22 = imx[M11];
-	mx->_23 = imx[M21];
-	mx->_31 = imx[M02];
-	mx->_32 = imx[M12];
-	mx->_33 = imx[M22];
-	mx->_41 = imx[M03];
-	mx->_42 = imx[M13];
-	mx->_43 = imx[M23];
+	mx->_11 = imx->m00;
+	mx->_12 = imx->m10;
+	mx->_13 = imx->m20;
+	mx->_21 = imx->m01;
+	mx->_22 = imx->m11;
+	mx->_23 = imx->m21;
+	mx->_31 = imx->m02;
+	mx->_32 = imx->m12;
+	mx->_33 = imx->m22;
+	mx->_41 = imx->m03;
+	mx->_42 = imx->m13;
+	mx->_43 = imx->m23;
 }
 
 void SetD3DViewMatrix()
@@ -60,11 +60,9 @@ void SetD3DViewMatrix()
 
 void D3DTransform(D3DVECTOR* vec, D3DMATRIX* mx)
 {
-	float x, y, z;
-
-	x = mx->_11 * vec->x + mx->_21 * vec->y + mx->_31 * vec->z;
-	y = mx->_12 * vec->x + mx->_22 * vec->y + mx->_32 * vec->z;
-	z = mx->_13 * vec->x + mx->_23 * vec->y + mx->_33 * vec->z;
+	float x = mx->_11 * vec->x + mx->_21 * vec->y + mx->_31 * vec->z;
+	float y = mx->_12 * vec->x + mx->_22 * vec->y + mx->_32 * vec->z;
+	float z = mx->_13 * vec->x + mx->_23 * vec->y + mx->_33 * vec->z;
 	vec->x = x;
 	vec->y = y;
 	vec->z = z;

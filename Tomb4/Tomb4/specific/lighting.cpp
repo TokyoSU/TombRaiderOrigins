@@ -226,18 +226,18 @@ void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient)
 	}
 }
 
-void mApplyMatrix(float* matrix, FVECTOR* start, FVECTOR* dest)
+void mApplyMatrix(MATRIX_FLT* matrix, FVECTOR* start, FVECTOR* dest)
 {
-	dest->x = start->x * matrix[M00] + start->y * matrix[M01] + start->z * matrix[M02];
-	dest->y = start->x * matrix[M10] + start->y * matrix[M11] + start->z * matrix[M12];
-	dest->z = start->x * matrix[M20] + start->y * matrix[M21] + start->z * matrix[M22];
+	dest->x = start->x * matrix->m00 + start->y * matrix->m01 + start->z * matrix->m02;
+	dest->y = start->x * matrix->m10 + start->y * matrix->m11 + start->z * matrix->m12;
+	dest->z = start->x * matrix->m20 + start->y * matrix->m21 + start->z * matrix->m22;
 }
 
-void mApplyTransposeMatrix(float* matrix, FVECTOR* start, FVECTOR* dest)
+void mApplyTransposeMatrix(MATRIX_FLT* matrix, FVECTOR* start, FVECTOR* dest)
 {
-	dest->x = start->x * matrix[M00] + start->y * matrix[M10] + start->z * matrix[M20];
-	dest->y = start->x * matrix[M01] + start->y * matrix[M11] + start->z * matrix[M21];
-	dest->z = start->x * matrix[M02] + start->y * matrix[M12] + start->z * matrix[M22];
+	dest->x = start->x * matrix->m00 + start->y * matrix->m10 + start->z * matrix->m20;
+	dest->y = start->x * matrix->m01 + start->y * matrix->m11 + start->z * matrix->m21;
+	dest->z = start->x * matrix->m02 + start->y * matrix->m12 + start->z * matrix->m22;
 }
 
 void CreateLightList(ITEM_INFO* item)

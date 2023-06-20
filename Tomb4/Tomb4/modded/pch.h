@@ -20,6 +20,7 @@
 #include <cmath>
 #include <stdio.h>
 #include <process.h>
+#include <algorithm>
 #include <dinput.h>
 #include <dsound.h>
 #include <xaudio2.h>

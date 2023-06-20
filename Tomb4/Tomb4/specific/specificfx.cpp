@@ -177,12 +177,12 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
 	{
 		fx = cp[i].x;
 		fz = cp[i].z;
-		cp[i].x = fx * mMXPtr[M00] + fz * mMXPtr[M02] + mMXPtr[M03];
-		cp[i].z = fx * mMXPtr[M20] + fz * mMXPtr[M22] + mMXPtr[M23];
+		cp[i].x = fx * mMXPtr->m00 + fz * mMXPtr->m02 + mMXPtr->m03;
+		cp[i].z = fx * mMXPtr->m20 + fz * mMXPtr->m22 + mMXPtr->m23;
 	}
 
-	ccp.x = mMXPtr[M03];
-	ccp.z = mMXPtr[M23];
+	ccp.x = mMXPtr->m03;
+	ccp.z = mMXPtr->m23;
 	phd_PopMatrix();
 
 	for (int i = 0; i < CIRCUMFERENCE_POINTS; i++)
@@ -209,15 +209,15 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
 		fx = cv[i].x;
 		fy = (cp[i].y - item->floor);
 		fz = cv[i].z;
-		cv[i].x = mMXPtr[M00] * fx + mMXPtr[M01] * fy + mMXPtr[M02] * fz + mMXPtr[M03];
-		cv[i].y = mMXPtr[M10] * fx + mMXPtr[M11] * fy + mMXPtr[M12] * fz + mMXPtr[M13];
-		cv[i].z = mMXPtr[M20] * fx + mMXPtr[M21] * fy + mMXPtr[M22] * fz + mMXPtr[M23];
+		cv[i].x = mMXPtr->m00 * fx + mMXPtr->m01 * fy + mMXPtr->m02 * fz + mMXPtr->m03;
+		cv[i].y = mMXPtr->m10 * fx + mMXPtr->m11 * fy + mMXPtr->m12 * fz + mMXPtr->m13;
+		cv[i].z = mMXPtr->m20 * fx + mMXPtr->m21 * fy + mMXPtr->m22 * fz + mMXPtr->m23;
 	}
 
 	fy = float(ccp.y - item->floor);
-	ccv.x = mMXPtr[M01] * fy + mMXPtr[M03];
-	ccv.y = mMXPtr[M11] * fy + mMXPtr[M13];
-	ccv.z = mMXPtr[M21] * fy + mMXPtr[M23];
+	ccv.x = mMXPtr->m01 * fy + mMXPtr->m03;
+	ccv.y = mMXPtr->m11 * fy + mMXPtr->m13;
+	ccv.z = mMXPtr->m21 * fy + mMXPtr->m23;
 	phd_PopMatrix();
 
 	for (int i = 0; i < CIRCUMFERENCE_POINTS; i++) // Draw the pizza
@@ -350,8 +350,8 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
 	{
 		x = hXZ[0];
 		z = hXZ[1];
-		hXZ[0] = long(x * mMXPtr[M00] + z * mMXPtr[M02] + mMXPtr[M03]);
-		hXZ[1] = long(x * mMXPtr[M20] + z * mMXPtr[M22] + mMXPtr[M23]);
+		hXZ[0] = long(x * mMXPtr->m00 + z * mMXPtr->m02 + mMXPtr->m03);
+		hXZ[1] = long(x * mMXPtr->m20 + z * mMXPtr->m22 + mMXPtr->m23);
 	}
 
 	phd_PopMatrix();
@@ -379,9 +379,9 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
 		x = sXYZ[0];
 		y = *hY - item->floor;
 		z = sXYZ[2];
-		sXYZ[0] = long(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z + mMXPtr[M03]);
-		sXYZ[1] = long(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z + mMXPtr[M13]);
-		sXYZ[2] = long(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z + mMXPtr[M23]);
+		sXYZ[0] = long(mMXPtr->m00 * x + mMXPtr->m01 * y + mMXPtr->m02 * z + mMXPtr->m03);
+		sXYZ[1] = long(mMXPtr->m10 * x + mMXPtr->m11 * y + mMXPtr->m12 * z + mMXPtr->m13);
+		sXYZ[2] = long(mMXPtr->m20 * x + mMXPtr->m21 * y + mMXPtr->m22 * z + mMXPtr->m23);
 	}
 
 	phd_PopMatrix();
@@ -517,8 +517,8 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item)
 	{
 		x = hXZ[0];
 		z = hXZ[1];
-		hXZ[0] = long(x * mMXPtr[M00] + z * mMXPtr[M02] + mMXPtr[M03]);
-		hXZ[1] = long(x * mMXPtr[M20] + z * mMXPtr[M22] + mMXPtr[M23]);
+		hXZ[0] = long(x * mMXPtr->m00 + z * mMXPtr->m02 + mMXPtr->m03);
+		hXZ[1] = long(x * mMXPtr->m20 + z * mMXPtr->m22 + mMXPtr->m23);
 	}
 
 	phd_PopMatrix();
@@ -546,9 +546,9 @@ void S_PrintShadow(short size, short* box, ITEM_INFO* item)
 		x = sXYZ[0];
 		y = *hY - item->floor;
 		z = sXYZ[2];
-		sXYZ[0] = long(mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z + mMXPtr[M03]);
-		sXYZ[1] = long(mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z + mMXPtr[M13]);
-		sXYZ[2] = long(mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z + mMXPtr[M23]);
+		sXYZ[0] = long(mMXPtr->m00 * x + mMXPtr->m01 * y + mMXPtr->m02 * z + mMXPtr->m03);
+		sXYZ[1] = long(mMXPtr->m10 * x + mMXPtr->m11 * y + mMXPtr->m12 * z + mMXPtr->m13);
+		sXYZ[2] = long(mMXPtr->m20 * x + mMXPtr->m21 * y + mMXPtr->m22 * z + mMXPtr->m23);
 	}
 
 	phd_PopMatrix();
@@ -1031,23 +1031,23 @@ void DrawDebris()
 		offsets[0] = dptr->XYZOffsets1[0];
 		offsets[1] = dptr->XYZOffsets1[1];
 		offsets[2] = dptr->XYZOffsets1[2];
-		XY[0] = long(mMXPtr[M03] + mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2]);
-		XY[1] = long(mMXPtr[M13] + mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2]);
-		Z[0] = long(mMXPtr[M23] + mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2]);
+		XY[0] = long(mMXPtr->m03 + mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2]);
+		XY[1] = long(mMXPtr->m13 + mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2]);
+		Z[0] = long(mMXPtr->m23 + mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2]);
 
 		offsets[0] = dptr->XYZOffsets2[0];
 		offsets[1] = dptr->XYZOffsets2[1];
 		offsets[2] = dptr->XYZOffsets2[2];
-		XY[2] = long(mMXPtr[M03] + mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2]);
-		XY[3] = long(mMXPtr[M13] + mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2]);
-		Z[1] = long(mMXPtr[M23] + mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2]);
+		XY[2] = long(mMXPtr->m03 + mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2]);
+		XY[3] = long(mMXPtr->m13 + mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2]);
+		Z[1] = long(mMXPtr->m23 + mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2]);
 
 		offsets[0] = dptr->XYZOffsets3[0];
 		offsets[1] = dptr->XYZOffsets3[1];
 		offsets[2] = dptr->XYZOffsets3[2];
-		XY[4] = long(mMXPtr[M03] + mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2]);
-		XY[5] = long(mMXPtr[M13] + mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2]);
-		Z[2] = long(mMXPtr[M23] + mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2]);
+		XY[4] = long(mMXPtr->m03 + mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2]);
+		XY[5] = long(mMXPtr->m13 + mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2]);
+		Z[2] = long(mMXPtr->m23 + mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2]);
 
 		setXYZ3(v, XY[0], XY[1], Z[0], XY[2], XY[3], Z[1], XY[4], XY[5], Z[2], clipflags);
 		phd_PopMatrix();
@@ -1278,17 +1278,17 @@ void S_DrawDarts(ITEM_INFO* item)
 
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
-	zv = f_persp / mMXPtr[M23];
-	x1 = short(mMXPtr[M03] * zv + f_centerx);
-	y1 = short(mMXPtr[M13] * zv + f_centery);
-	z1 = (long)mMXPtr[M23];
+	zv = f_persp / mMXPtr->m23;
+	x1 = short(mMXPtr->m03 * zv + f_centerx);
+	y1 = short(mMXPtr->m13 * zv + f_centery);
+	z1 = (long)mMXPtr->m23;
 	num = (-96 * phd_cos(item->pos.x_rot)) >> W2V_SHIFT;
 	mxx = (num * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	mxy = (96 * phd_sin(item->pos.x_rot)) >> W2V_SHIFT;
 	mxz = (num * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
-	fx = mMXPtr[M00] * mxx + mMXPtr[M01] * mxy + mMXPtr[M02] * mxz + mMXPtr[M03];
-	fy = mMXPtr[M10] * mxx + mMXPtr[M11] * mxy + mMXPtr[M12] * mxz + mMXPtr[M13];
-	fz = mMXPtr[M20] * mxx + mMXPtr[M21] * mxy + mMXPtr[M22] * mxz + mMXPtr[M23];
+	fx = mMXPtr->m00 * mxx + mMXPtr->m01 * mxy + mMXPtr->m02 * mxz + mMXPtr->m03;
+	fy = mMXPtr->m10 * mxx + mMXPtr->m11 * mxy + mMXPtr->m12 * mxz + mMXPtr->m13;
+	fz = mMXPtr->m20 * mxx + mMXPtr->m21 * mxy + mMXPtr->m22 * mxz + mMXPtr->m23;
 	zv = f_persp / fz;
 	x2 = short(fx * zv + f_centerx);
 	y2 = short(fy * zv + f_centery);
@@ -1386,9 +1386,9 @@ void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype)
 		x = vec[i].x;
 		y = vec[i].y;
 		z = vec[i].z;
-		vec[i].x = mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z + mMXPtr[M03];
-		vec[i].y = mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z + mMXPtr[M13];
-		vec[i].z = mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z + mMXPtr[M23];
+		vec[i].x = mMXPtr->m00 * x + mMXPtr->m01 * y + mMXPtr->m02 * z + mMXPtr->m03;
+		vec[i].y = mMXPtr->m10 * x + mMXPtr->m11 * y + mMXPtr->m12 * z + mMXPtr->m13;
+		vec[i].z = mMXPtr->m20 * x + mMXPtr->m21 * y + mMXPtr->m22 * z + mMXPtr->m23;
 		v[i].color = color | 0xFF000000;
 		v[i].specular = 0xFF000000;
 		CalcColorSplit(color, &v[i].color);
@@ -1434,9 +1434,9 @@ void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype)
 		x = vec[i].x;
 		y = vec[i].y;
 		z = vec[i].z;
-		vec[i].x = mMXPtr[M00] * x + mMXPtr[M01] * y + mMXPtr[M02] * z + mMXPtr[M03];
-		vec[i].y = mMXPtr[M10] * x + mMXPtr[M11] * y + mMXPtr[M12] * z + mMXPtr[M13];
-		vec[i].z = mMXPtr[M20] * x + mMXPtr[M21] * y + mMXPtr[M22] * z + mMXPtr[M23];
+		vec[i].x = mMXPtr->m00 * x + mMXPtr->m01 * y + mMXPtr->m02 * z + mMXPtr->m03;
+		vec[i].y = mMXPtr->m10 * x + mMXPtr->m11 * y + mMXPtr->m12 * z + mMXPtr->m13;
+		vec[i].z = mMXPtr->m20 * x + mMXPtr->m21 * y + mMXPtr->m22 * z + mMXPtr->m23;
 		v[i].color |= 0xFF000000;
 		v[i].specular = 0xFF000000;
 		CalcColorSplit(color, &v[i].color);
@@ -1472,9 +1472,9 @@ void OutputSky()
 
 void ProjectTriPoints(PHD_VECTOR* pos, long& x, long& y, long& z)
 {
-	x = long(mMXPtr[M00] * pos->x + mMXPtr[M01] * pos->y + mMXPtr[M02] * pos->z + mMXPtr[M03]);
-	y = long(mMXPtr[M10] * pos->x + mMXPtr[M11] * pos->y + mMXPtr[M12] * pos->z + mMXPtr[M13]);
-	z = long(mMXPtr[M20] * pos->x + mMXPtr[M21] * pos->y + mMXPtr[M22] * pos->z + mMXPtr[M23]);
+	x = long(mMXPtr->m00 * pos->x + mMXPtr->m01 * pos->y + mMXPtr->m02 * pos->z + mMXPtr->m03);
+	y = long(mMXPtr->m10 * pos->x + mMXPtr->m11 * pos->y + mMXPtr->m12 * pos->z + mMXPtr->m13);
+	z = long(mMXPtr->m20 * pos->x + mMXPtr->m21 * pos->y + mMXPtr->m22 * pos->z + mMXPtr->m23);
 }
 
 void setXY4(D3DTLVERTEX* v, long x1, long y1, long x2, long y2, long x3, long y3, long x4, long y4, long z, short* clip)
@@ -1897,9 +1897,9 @@ void DrawLaserSightSprite()
 	pos[0] = LaserSightX - lara_item->pos.x_pos;
 	pos[1] = LaserSightY - lara_item->pos.y_pos;
 	pos[2] = LaserSightZ - lara_item->pos.z_pos;
-	vec.x = mMXPtr[M00] * pos[0] + mMXPtr[M01] * pos[1] + mMXPtr[M02] * pos[2] + mMXPtr[M03];
-	vec.y = mMXPtr[M10] * pos[0] + mMXPtr[M11] * pos[1] + mMXPtr[M12] * pos[2] + mMXPtr[M13];
-	vec.z = mMXPtr[M20] * pos[0] + mMXPtr[M21] * pos[1] + mMXPtr[M22] * pos[2] + mMXPtr[M23];
+	vec.x = mMXPtr->m00 * pos[0] + mMXPtr->m01 * pos[1] + mMXPtr->m02 * pos[2] + mMXPtr->m03;
+	vec.y = mMXPtr->m10 * pos[0] + mMXPtr->m11 * pos[1] + mMXPtr->m12 * pos[2] + mMXPtr->m13;
+	vec.z = mMXPtr->m20 * pos[0] + mMXPtr->m21 * pos[1] + mMXPtr->m22 * pos[2] + mMXPtr->m23;
 	perspz = f_persp / vec.z;
 	XY[0] = long(vec.x * perspz + f_centerx);
 	XY[1] = long(vec.y * perspz + f_centery);
@@ -2201,9 +2201,9 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 		vec[2] = pos.z;
 	}
 
-	fPos.x = mMXPtr[M00] * vec[0] + mMXPtr[M01] * vec[1] + mMXPtr[M02] * vec[2] + mMXPtr[M03];
-	fPos.y = mMXPtr[M10] * vec[0] + mMXPtr[M11] * vec[1] + mMXPtr[M12] * vec[2] + mMXPtr[M13];
-	fPos.z = mMXPtr[M20] * vec[0] + mMXPtr[M21] * vec[1] + mMXPtr[M22] * vec[2] + mMXPtr[M23];
+	fPos.x = mMXPtr->m00 * vec[0] + mMXPtr->m01 * vec[1] + mMXPtr->m02 * vec[2] + mMXPtr->m03;
+	fPos.y = mMXPtr->m10 * vec[0] + mMXPtr->m11 * vec[1] + mMXPtr->m12 * vec[2] + mMXPtr->m13;
+	fPos.z = mMXPtr->m20 * vec[0] + mMXPtr->m21 * vec[1] + mMXPtr->m22 * vec[2] + mMXPtr->m23;
 	perspz = f_persp / fPos.z;
 	XY[0] = long(fPos.x * perspz + f_centerx);
 	XY[1] = long(fPos.y * perspz + f_centery);
@@ -2492,9 +2492,9 @@ void DrawWraithTrail(ITEM_INFO* item)
 			offsets[0] = wraith->pos.x - item->pos.x_pos;
 			offsets[1] = wraith->pos.y - item->pos.y_pos;
 			offsets[2] = wraith->pos.z - item->pos.z_pos;
-			pos.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
-			pos.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
-			pos.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
+			pos.x = offsets[0] * mMXPtr->m00 + offsets[1] * mMXPtr->m01 + offsets[2] * mMXPtr->m02 + mMXPtr->m03;
+			pos.y = offsets[0] * mMXPtr->m10 + offsets[1] * mMXPtr->m11 + offsets[2] * mMXPtr->m12 + mMXPtr->m13;
+			pos.z = offsets[0] * mMXPtr->m20 + offsets[1] * mMXPtr->m21 + offsets[2] * mMXPtr->m22 + mMXPtr->m23;
 			perspz = f_persp / pos.z;
 			XY[0] = long(pos.x * perspz + f_centerx);
 			XY[1] = long(pos.y * perspz + f_centery);
@@ -2596,9 +2596,9 @@ void DrawDrips()
 		if (pos[0] < -20480 || pos[0] > 20480 || pos[1] < -20480 || pos[1] > 20480 || pos[2] < -20480 || pos[2] > 20480)
 			continue;
 
-		vec.x = pos[0] * mMXPtr[M00] + pos[1] * mMXPtr[M01] + pos[2] * mMXPtr[M02] + mMXPtr[M03];
-		vec.y = pos[0] * mMXPtr[M10] + pos[1] * mMXPtr[M11] + pos[2] * mMXPtr[M12] + mMXPtr[M13];
-		vec.z = pos[0] * mMXPtr[M20] + pos[1] * mMXPtr[M21] + pos[2] * mMXPtr[M22] + mMXPtr[M23];
+		vec.x = pos[0] * mMXPtr->m00 + pos[1] * mMXPtr->m01 + pos[2] * mMXPtr->m02 + mMXPtr->m03;
+		vec.y = pos[0] * mMXPtr->m10 + pos[1] * mMXPtr->m11 + pos[2] * mMXPtr->m12 + mMXPtr->m13;
+		vec.z = pos[0] * mMXPtr->m20 + pos[1] * mMXPtr->m21 + pos[2] * mMXPtr->m22 + mMXPtr->m23;
 
 		perspz = f_persp / vec.z;
 		XY[0] = long(vec.x * perspz + f_centerx);
@@ -2613,9 +2613,9 @@ void DrawDrips()
 			pos[1] -= SmokeWindZ >> 1;
 		}
 
-		vec.x = pos[0] * mMXPtr[M00] + pos[1] * mMXPtr[M01] + pos[2] * mMXPtr[M02] + mMXPtr[M03];
-		vec.y = pos[0] * mMXPtr[M10] + pos[1] * mMXPtr[M11] + pos[2] * mMXPtr[M12] + mMXPtr[M13];
-		vec.z = pos[0] * mMXPtr[M20] + pos[1] * mMXPtr[M21] + pos[2] * mMXPtr[M22] + mMXPtr[M23];
+		vec.x = pos[0] * mMXPtr->m00 + pos[1] * mMXPtr->m01 + pos[2] * mMXPtr->m02 + mMXPtr->m03;
+		vec.y = pos[0] * mMXPtr->m10 + pos[1] * mMXPtr->m11 + pos[2] * mMXPtr->m12 + mMXPtr->m13;
+		vec.z = pos[0] * mMXPtr->m20 + pos[1] * mMXPtr->m21 + pos[2] * mMXPtr->m22 + mMXPtr->m23;
 
 		perspz = f_persp / vec.z;
 		XY[2] = long(vec.x * perspz + f_centerx);
@@ -2714,9 +2714,9 @@ void DrawBubbles()
 		offsets[0] = dx;
 		offsets[1] = dy;
 		offsets[2] = dz;
-		pos.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
-		pos.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
-		pos.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
+		pos.x = offsets[0] * mMXPtr->m00 + offsets[1] * mMXPtr->m01 + offsets[2] * mMXPtr->m02 + mMXPtr->m03;
+		pos.y = offsets[0] * mMXPtr->m10 + offsets[1] * mMXPtr->m11 + offsets[2] * mMXPtr->m12 + mMXPtr->m13;
+		pos.z = offsets[0] * mMXPtr->m20 + offsets[1] * mMXPtr->m21 + offsets[2] * mMXPtr->m22 + mMXPtr->m23;
 		perspz = f_persp / pos.z;
 		XY[0] = long(pos.x * perspz + f_centerx);
 		XY[1] = long(pos.y * perspz + f_centery);
@@ -2835,17 +2835,17 @@ void DrawShockwaves()
 			{
 				v = k * 0x3000;
 
-				p1.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
-				p1.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
-				p1.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
+				p1.x = offsets[0] * mMXPtr->m00 + offsets[1] * mMXPtr->m01 + offsets[2] * mMXPtr->m02 + mMXPtr->m03;
+				p1.y = offsets[0] * mMXPtr->m10 + offsets[1] * mMXPtr->m11 + offsets[2] * mMXPtr->m12 + mMXPtr->m13;
+				p1.z = offsets[0] * mMXPtr->m20 + offsets[1] * mMXPtr->m21 + offsets[2] * mMXPtr->m22 + mMXPtr->m23;
 
-				p2.x = offsets[4] * mMXPtr[M00] + offsets[5] * mMXPtr[M01] + offsets[6] * mMXPtr[M02] + mMXPtr[M03];
-				p2.y = offsets[4] * mMXPtr[M10] + offsets[5] * mMXPtr[M11] + offsets[6] * mMXPtr[M12] + mMXPtr[M13];
-				p2.z = offsets[4] * mMXPtr[M20] + offsets[5] * mMXPtr[M21] + offsets[6] * mMXPtr[M22] + mMXPtr[M23];
+				p2.x = offsets[4] * mMXPtr->m00 + offsets[5] * mMXPtr->m01 + offsets[6] * mMXPtr->m02 + mMXPtr->m03;
+				p2.y = offsets[4] * mMXPtr->m10 + offsets[5] * mMXPtr->m11 + offsets[6] * mMXPtr->m12 + mMXPtr->m13;
+				p2.z = offsets[4] * mMXPtr->m20 + offsets[5] * mMXPtr->m21 + offsets[6] * mMXPtr->m22 + mMXPtr->m23;
 
-				p3.x = offsets[8] * mMXPtr[M00] + offsets[9] * mMXPtr[M01] + offsets[10] * mMXPtr[M02] + mMXPtr[M03];
-				p3.y = offsets[8] * mMXPtr[M10] + offsets[9] * mMXPtr[M11] + offsets[10] * mMXPtr[M12] + mMXPtr[M13];
-				p3.z = offsets[8] * mMXPtr[M20] + offsets[9] * mMXPtr[M21] + offsets[10] * mMXPtr[M22] + mMXPtr[M23];
+				p3.x = offsets[8] * mMXPtr->m00 + offsets[9] * mMXPtr->m01 + offsets[10] * mMXPtr->m02 + mMXPtr->m03;
+				p3.y = offsets[8] * mMXPtr->m10 + offsets[9] * mMXPtr->m11 + offsets[10] * mMXPtr->m12 + mMXPtr->m13;
+				p3.z = offsets[8] * mMXPtr->m20 + offsets[9] * mMXPtr->m21 + offsets[10] * mMXPtr->m22 + mMXPtr->m23;
 
 				offsets[0] = (rad * phd_sin(v)) >> W2V_SHIFT;
 				offsets[2] = (rad * phd_cos(v)) >> W2V_SHIFT;
@@ -2970,17 +2970,17 @@ void DrawTrainFloorStrip(long x, long z, TEXTURESTRUCT* tex, long y_and_flags)
 
 		for (int j = 0; j < 41; j++)
 		{
-			p1.x = offsets[0].x * mMXPtr[M00] + offsets[0].y * mMXPtr[M01] + offsets[0].z * mMXPtr[M02] + mMXPtr[M03];
-			p1.y = offsets[0].x * mMXPtr[M10] + offsets[0].y * mMXPtr[M11] + offsets[0].z * mMXPtr[M12] + mMXPtr[M13];
-			p1.z = offsets[0].x * mMXPtr[M20] + offsets[0].y * mMXPtr[M21] + offsets[0].z * mMXPtr[M22] + mMXPtr[M23];
+			p1.x = offsets[0].x * mMXPtr->m00 + offsets[0].y * mMXPtr->m01 + offsets[0].z * mMXPtr->m02 + mMXPtr->m03;
+			p1.y = offsets[0].x * mMXPtr->m10 + offsets[0].y * mMXPtr->m11 + offsets[0].z * mMXPtr->m12 + mMXPtr->m13;
+			p1.z = offsets[0].x * mMXPtr->m20 + offsets[0].y * mMXPtr->m21 + offsets[0].z * mMXPtr->m22 + mMXPtr->m23;
 
-			p2.x = offsets[1].x * mMXPtr[M00] + offsets[1].y * mMXPtr[M01] + offsets[1].z * mMXPtr[M02] + mMXPtr[M03];
-			p2.y = offsets[1].x * mMXPtr[M10] + offsets[1].y * mMXPtr[M11] + offsets[1].z * mMXPtr[M12] + mMXPtr[M13];
-			p2.z = offsets[1].x * mMXPtr[M20] + offsets[1].y * mMXPtr[M21] + offsets[1].z * mMXPtr[M22] + mMXPtr[M23];
+			p2.x = offsets[1].x * mMXPtr->m00 + offsets[1].y * mMXPtr->m01 + offsets[1].z * mMXPtr->m02 + mMXPtr->m03;
+			p2.y = offsets[1].x * mMXPtr->m10 + offsets[1].y * mMXPtr->m11 + offsets[1].z * mMXPtr->m12 + mMXPtr->m13;
+			p2.z = offsets[1].x * mMXPtr->m20 + offsets[1].y * mMXPtr->m21 + offsets[1].z * mMXPtr->m22 + mMXPtr->m23;
 
-			p3.x = offsets[2].x * mMXPtr[M00] + offsets[2].y * mMXPtr[M01] + offsets[2].z * mMXPtr[M02] + mMXPtr[M03];
-			p3.y = offsets[2].x * mMXPtr[M10] + offsets[2].y * mMXPtr[M11] + offsets[2].z * mMXPtr[M12] + mMXPtr[M13];
-			p3.z = offsets[2].x * mMXPtr[M20] + offsets[2].y * mMXPtr[M21] + offsets[2].z * mMXPtr[M22] + mMXPtr[M23];
+			p3.x = offsets[2].x * mMXPtr->m00 + offsets[2].y * mMXPtr->m01 + offsets[2].z * mMXPtr->m02 + mMXPtr->m03;
+			p3.y = offsets[2].x * mMXPtr->m10 + offsets[2].y * mMXPtr->m11 + offsets[2].z * mMXPtr->m12 + mMXPtr->m13;
+			p3.z = offsets[2].x * mMXPtr->m20 + offsets[2].y * mMXPtr->m21 + offsets[2].z * mMXPtr->m22 + mMXPtr->m23;
 
 			offsets[0].x += 512;
 			offsets[1].x += 512;
@@ -3102,9 +3102,9 @@ void S_DrawSplashes()	//	(also draws ripples and underwater blood (which is a ri
 				offsets[0] = (rads[j] * phd_sin(k)) >> (W2V_SHIFT - 1);
 				offsets[1] = yVals[j] >> 3;
 				offsets[2] = (rads[j] * phd_cos(k)) >> (W2V_SHIFT - 1);
-				*XY++ = long(mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2] + mMXPtr[M03]);
-				*XY++ = long(mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13]);
-				*Z++ = long(mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23]);
+				*XY++ = long(mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2] + mMXPtr->m03);
+				*XY++ = long(mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2] + mMXPtr->m13);
+				*Z++ = long(mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2] + mMXPtr->m23);
 				Z++;	//?
 			}
 		}
@@ -3217,33 +3217,33 @@ void S_DrawSplashes()	//	(also draws ripples and underwater blood (which is a ri
 		offsets[0] = -ripple->size;
 		offsets[1] = 0;
 		offsets[2] = -ripple->size;
-		*XY++ = long(mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2] + mMXPtr[M03]);
-		*XY++ = long(mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13]);
-		*Z++ = long(mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23]);
+		*XY++ = long(mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2] + mMXPtr->m03);
+		*XY++ = long(mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2] + mMXPtr->m13);
+		*Z++ = long(mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2] + mMXPtr->m23);
 		Z++;
 
 		offsets[0] = -ripple->size;
 		offsets[1] = 0;
 		offsets[2] = ripple->size;
-		*XY++ = long(mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2] + mMXPtr[M03]);
-		*XY++ = long(mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13]);
-		*Z++ = long(mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23]);
+		*XY++ = long(mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2] + mMXPtr->m03);
+		*XY++ = long(mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2] + mMXPtr->m13);
+		*Z++ = long(mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2] + mMXPtr->m23);
 		Z++;
 
 		offsets[0] = ripple->size;
 		offsets[1] = 0;
 		offsets[2] = ripple->size;
-		*XY++ = long(mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2] + mMXPtr[M03]);
-		*XY++ = long(mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13]);
-		*Z++ = long(mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23]);
+		*XY++ = long(mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2] + mMXPtr->m03);
+		*XY++ = long(mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2] + mMXPtr->m13);
+		*Z++ = long(mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2] + mMXPtr->m23);
 		Z++;
 
 		offsets[0] = ripple->size;
 		offsets[1] = 0;
 		offsets[2] = -ripple->size;
-		*XY++ = long(mMXPtr[M00] * offsets[0] + mMXPtr[M01] * offsets[1] + mMXPtr[M02] * offsets[2] + mMXPtr[M03]);
-		*XY++ = long(mMXPtr[M10] * offsets[0] + mMXPtr[M11] * offsets[1] + mMXPtr[M12] * offsets[2] + mMXPtr[M13]);
-		*Z++ = long(mMXPtr[M20] * offsets[0] + mMXPtr[M21] * offsets[1] + mMXPtr[M22] * offsets[2] + mMXPtr[M23]);
+		*XY++ = long(mMXPtr->m00 * offsets[0] + mMXPtr->m01 * offsets[1] + mMXPtr->m02 * offsets[2] + mMXPtr->m03);
+		*XY++ = long(mMXPtr->m10 * offsets[0] + mMXPtr->m11 * offsets[1] + mMXPtr->m12 * offsets[2] + mMXPtr->m13);
+		*Z++ = long(mMXPtr->m20 * offsets[0] + mMXPtr->m21 * offsets[1] + mMXPtr->m22 * offsets[2] + mMXPtr->m23);
 		Z++;
 
 		phd_PopMatrix();
@@ -3471,9 +3471,9 @@ void S_DrawFireSparks(long size, long life)
 		offsets[0] = dx;
 		offsets[1] = dy;
 		offsets[2] = dz;
-		pos.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
-		pos.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
-		pos.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
+		pos.x = offsets[0] * mMXPtr->m00 + offsets[1] * mMXPtr->m01 + offsets[2] * mMXPtr->m02 + mMXPtr->m03;
+		pos.y = offsets[0] * mMXPtr->m10 + offsets[1] * mMXPtr->m11 + offsets[2] * mMXPtr->m12 + mMXPtr->m13;
+		pos.z = offsets[0] * mMXPtr->m20 + offsets[1] * mMXPtr->m21 + offsets[2] * mMXPtr->m22 + mMXPtr->m23;
 		perspz = f_persp / pos.z;
 		XY[0] = long(pos.x * perspz + f_centerx);
 		XY[1] = long(pos.y * perspz + f_centery);
@@ -3734,9 +3734,9 @@ void DrawBlood()
 		offsets[0] = dx;
 		offsets[1] = dy;
 		offsets[2] = dz;
-		pos.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
-		pos.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
-		pos.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
+		pos.x = offsets[0] * mMXPtr->m00 + offsets[1] * mMXPtr->m01 + offsets[2] * mMXPtr->m02 + mMXPtr->m03;
+		pos.y = offsets[0] * mMXPtr->m10 + offsets[1] * mMXPtr->m11 + offsets[2] * mMXPtr->m12 + mMXPtr->m13;
+		pos.z = offsets[0] * mMXPtr->m20 + offsets[1] * mMXPtr->m21 + offsets[2] * mMXPtr->m22 + mMXPtr->m23;
 		perspz = f_persp / pos.z;
 		XY[0] = long(pos.x * perspz + f_centerx);
 		XY[1] = long(pos.y * perspz + f_centery);
@@ -3854,9 +3854,9 @@ void S_DrawSmokeSparks()
 		offsets[0] = dx;
 		offsets[1] = dy;
 		offsets[2] = dz;
-		pos.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
-		pos.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
-		pos.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
+		pos.x = offsets[0] * mMXPtr->m00 + offsets[1] * mMXPtr->m01 + offsets[2] * mMXPtr->m02 + mMXPtr->m03;
+		pos.y = offsets[0] * mMXPtr->m10 + offsets[1] * mMXPtr->m11 + offsets[2] * mMXPtr->m12 + mMXPtr->m13;
+		pos.z = offsets[0] * mMXPtr->m20 + offsets[1] * mMXPtr->m21 + offsets[2] * mMXPtr->m22 + mMXPtr->m23;
 		perspz = f_persp / pos.z;
 		XY[0] = long(pos.x * perspz + f_centerx);
 		XY[1] = long(pos.y * perspz + f_centery);
@@ -4039,9 +4039,9 @@ void DoUwEffect()
 		offsets[0] = x;
 		offsets[1] = y;
 		offsets[2] = z;
-		pos.x = offsets[0] * mMXPtr[M00] + offsets[1] * mMXPtr[M01] + offsets[2] * mMXPtr[M02] + mMXPtr[M03];
-		pos.y = offsets[0] * mMXPtr[M10] + offsets[1] * mMXPtr[M11] + offsets[2] * mMXPtr[M12] + mMXPtr[M13];
-		pos.z = offsets[0] * mMXPtr[M20] + offsets[1] * mMXPtr[M21] + offsets[2] * mMXPtr[M22] + mMXPtr[M23];
+		pos.x = offsets[0] * mMXPtr->m00 + offsets[1] * mMXPtr->m01 + offsets[2] * mMXPtr->m02 + mMXPtr->m03;
+		pos.y = offsets[0] * mMXPtr->m10 + offsets[1] * mMXPtr->m11 + offsets[2] * mMXPtr->m12 + mMXPtr->m13;
+		pos.z = offsets[0] * mMXPtr->m20 + offsets[1] * mMXPtr->m21 + offsets[2] * mMXPtr->m22 + mMXPtr->m23;
 		perspz = f_persp / pos.z;
 		XY[0] = long(pos.x * perspz + f_centerx);
 		XY[1] = long(pos.y * perspz + f_centery);
@@ -4155,17 +4155,17 @@ void DrawLightning()
 
 		for (int j = 0; j < pL->Segments; j++)
 		{
-			p1.x = offsets[0].x * mMXPtr[M00] + offsets[0].y * mMXPtr[M01] + offsets[0].z * mMXPtr[M02] + mMXPtr[M03];
-			p1.y = offsets[0].x * mMXPtr[M10] + offsets[0].y * mMXPtr[M11] + offsets[0].z * mMXPtr[M12] + mMXPtr[M13];
-			p1.z = offsets[0].x * mMXPtr[M20] + offsets[0].y * mMXPtr[M21] + offsets[0].z * mMXPtr[M22] + mMXPtr[M23];
+			p1.x = offsets[0].x * mMXPtr->m00 + offsets[0].y * mMXPtr->m01 + offsets[0].z * mMXPtr->m02 + mMXPtr->m03;
+			p1.y = offsets[0].x * mMXPtr->m10 + offsets[0].y * mMXPtr->m11 + offsets[0].z * mMXPtr->m12 + mMXPtr->m13;
+			p1.z = offsets[0].x * mMXPtr->m20 + offsets[0].y * mMXPtr->m21 + offsets[0].z * mMXPtr->m22 + mMXPtr->m23;
 
-			p2.x = offsets[1].x * mMXPtr[M00] + offsets[1].y * mMXPtr[M01] + offsets[1].z * mMXPtr[M02] + mMXPtr[M03];
-			p2.y = offsets[1].x * mMXPtr[M10] + offsets[1].y * mMXPtr[M11] + offsets[1].z * mMXPtr[M12] + mMXPtr[M13];
-			p2.z = offsets[1].x * mMXPtr[M20] + offsets[1].y * mMXPtr[M21] + offsets[1].z * mMXPtr[M22] + mMXPtr[M23];
+			p2.x = offsets[1].x * mMXPtr->m00 + offsets[1].y * mMXPtr->m01 + offsets[1].z * mMXPtr->m02 + mMXPtr->m03;
+			p2.y = offsets[1].x * mMXPtr->m10 + offsets[1].y * mMXPtr->m11 + offsets[1].z * mMXPtr->m12 + mMXPtr->m13;
+			p2.z = offsets[1].x * mMXPtr->m20 + offsets[1].y * mMXPtr->m21 + offsets[1].z * mMXPtr->m22 + mMXPtr->m23;
 
-			p3.x = offsets[2].x * mMXPtr[M00] + offsets[2].y * mMXPtr[M01] + offsets[2].z * mMXPtr[M02] + mMXPtr[M03];
-			p3.y = offsets[2].x * mMXPtr[M10] + offsets[2].y * mMXPtr[M11] + offsets[2].z * mMXPtr[M12] + mMXPtr[M13];
-			p3.z = offsets[2].x * mMXPtr[M20] + offsets[2].y * mMXPtr[M21] + offsets[2].z * mMXPtr[M22] + mMXPtr[M23];
+			p3.x = offsets[2].x * mMXPtr->m00 + offsets[2].y * mMXPtr->m01 + offsets[2].z * mMXPtr->m02 + mMXPtr->m03;
+			p3.y = offsets[2].x * mMXPtr->m10 + offsets[2].y * mMXPtr->m11 + offsets[2].z * mMXPtr->m12 + mMXPtr->m13;
+			p3.z = offsets[2].x * mMXPtr->m20 + offsets[2].y * mMXPtr->m21 + offsets[2].z * mMXPtr->m22 + mMXPtr->m23;
 
 			XY[0] = (long)p1.x;
 			XY[1] = (long)p1.y;

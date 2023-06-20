@@ -10,25 +10,20 @@
 
 void Draw_Mirror_Lara()
 {
-	HAIR_STRUCT* hair;
+	HAIR_STRUCT* hair = &hairs[0][0];
 	GUNSHELL_STRUCT* gunshell;
-	long zplane;
+	long zplane = gfMirrorZPlane << 1;
 
-	zplane = gfMirrorZPlane << 1;
-	hair = &hairs[0][0];
-
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++, hair++)
 	{
 		hair->pos.z_pos = zplane - hair->pos.z_pos;
 		hair->pos.y_rot = 0x8000 - hair->pos.y_rot;
-		hair++;
 	}
 
 	for (int i = 0; i < 24; i++)
 	{
 		gunshell = &Gunshells[i];
-
-		if (gunshell->counter)
+		if (gunshell->counter > 0)
 			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
 	}
 
@@ -49,35 +44,35 @@ void Draw_Mirror_Lara()
 
 	if (lara.right_arm.flash_gun)
 	{
-		mMXPtr[M00] = lara_matrices[11 * indices_count + M00];
-		mMXPtr[M01] = lara_matrices[11 * indices_count + M01];
-		mMXPtr[M02] = lara_matrices[11 * indices_count + M02];
-		mMXPtr[M03] = lara_matrices[11 * indices_count + M03];
-		mMXPtr[M10] = lara_matrices[11 * indices_count + M10];
-		mMXPtr[M11] = lara_matrices[11 * indices_count + M11];
-		mMXPtr[M12] = lara_matrices[11 * indices_count + M12];
-		mMXPtr[M13] = lara_matrices[11 * indices_count + M13];
-		mMXPtr[M20] = lara_matrices[11 * indices_count + M20];
-		mMXPtr[M21] = lara_matrices[11 * indices_count + M21];
-		mMXPtr[M22] = lara_matrices[11 * indices_count + M22];
-		mMXPtr[M23] = lara_matrices[11 * indices_count + M23];
+		mMXPtr->m00 = lara_matrices[LM_RHAND + 1].m00;
+		mMXPtr->m01 = lara_matrices[LM_RHAND + 1].m01;
+		mMXPtr->m02 = lara_matrices[LM_RHAND + 1].m02;
+		mMXPtr->m03 = lara_matrices[LM_RHAND + 1].m03;
+		mMXPtr->m10 = lara_matrices[LM_RHAND + 1].m10;
+		mMXPtr->m11 = lara_matrices[LM_RHAND + 1].m11;
+		mMXPtr->m12 = lara_matrices[LM_RHAND + 1].m12;
+		mMXPtr->m13 = lara_matrices[LM_RHAND + 1].m13;
+		mMXPtr->m20 = lara_matrices[LM_RHAND + 1].m20;
+		mMXPtr->m21 = lara_matrices[LM_RHAND + 1].m21;
+		mMXPtr->m22 = lara_matrices[LM_RHAND + 1].m22;
+		mMXPtr->m23 = lara_matrices[LM_RHAND + 1].m23;
 		SetGunFlash(lara.gun_type);
 	}
 
 	if (lara.left_arm.flash_gun)
 	{
-		mMXPtr[M00] = lara_matrices[14 * indices_count + M00];
-		mMXPtr[M01] = lara_matrices[14 * indices_count + M01];
-		mMXPtr[M02] = lara_matrices[14 * indices_count + M02];
-		mMXPtr[M03] = lara_matrices[14 * indices_count + M03];
-		mMXPtr[M10] = lara_matrices[14 * indices_count + M10];
-		mMXPtr[M11] = lara_matrices[14 * indices_count + M11];
-		mMXPtr[M12] = lara_matrices[14 * indices_count + M12];
-		mMXPtr[M13] = lara_matrices[14 * indices_count + M13];
-		mMXPtr[M20] = lara_matrices[14 * indices_count + M20];
-		mMXPtr[M21] = lara_matrices[14 * indices_count + M21];
-		mMXPtr[M22] = lara_matrices[14 * indices_count + M22];
-		mMXPtr[M23] = lara_matrices[14 * indices_count + M23];
+		mMXPtr->m00 = lara_matrices[LM_LHAND + 1].m00;
+		mMXPtr->m01 = lara_matrices[LM_LHAND + 1].m01;
+		mMXPtr->m02 = lara_matrices[LM_LHAND + 1].m02;
+		mMXPtr->m03 = lara_matrices[LM_LHAND + 1].m03;
+		mMXPtr->m10 = lara_matrices[LM_LHAND + 1].m10;
+		mMXPtr->m11 = lara_matrices[LM_LHAND + 1].m11;
+		mMXPtr->m12 = lara_matrices[LM_LHAND + 1].m12;
+		mMXPtr->m13 = lara_matrices[LM_LHAND + 1].m13;
+		mMXPtr->m20 = lara_matrices[LM_LHAND + 1].m20;
+		mMXPtr->m21 = lara_matrices[LM_LHAND + 1].m21;
+		mMXPtr->m22 = lara_matrices[LM_LHAND + 1].m22;
+		mMXPtr->m23 = lara_matrices[LM_LHAND + 1].m23;
 		SetGunFlash(lara.gun_type);
 	}
 
@@ -86,17 +81,14 @@ void Draw_Mirror_Lara()
 	for (int i = 0; i < 24; i++)
 	{
 		gunshell = &Gunshells[i];
-
-		if (gunshell->counter)
+		if (gunshell->counter > 0)
 			gunshell->pos.z_pos = zplane - gunshell->pos.z_pos;
 	}
 
 	hair = &hairs[0][0];
-
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++, hair++)
 	{
 		hair->pos.z_pos = zplane - hair->pos.z_pos;
 		hair->pos.y_rot = 0x8000 - hair->pos.y_rot;
-		hair++;
 	}
 }

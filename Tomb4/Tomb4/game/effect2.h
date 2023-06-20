@@ -1,5 +1,16 @@
 #pragma once
 
+#define SPRITE_REL			0x00000000
+#define SPRITE_ABS			0x01000000
+#define SPRITE_SEMITRANS	0x02000000
+#define SPRITE_SCALE		0x04000000
+#define SPRITE_SHADE		0x08000000
+#define SPRITE_TINT			0x10000000
+
+#define SPRITE_TRANS_HALF	0x00000000
+#define SPRITE_TRANS_ADD	0x20000000
+#define SPRITE_TRANS_SUB	0x40000000
+#define SPRITE_TRANS_QUARTER 0x60000000
 
 void ControlSmokeEmitter(short item_number);
 void TriggerExplosionSmokeEnd(long x, long y, long z, long uw);

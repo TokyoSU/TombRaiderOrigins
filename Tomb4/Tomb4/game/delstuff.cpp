@@ -15,11 +15,11 @@
 #include "tomb4.h"
 
 short* GLaraShadowframe;
-float lara_matrices[180];
-float lara_joint_matrices[180];
+MATRIX_FLT lara_matrices[NUM_LARA_MESHES];
+MATRIX_FLT lara_joint_matrices[NUM_LARA_MESHES];
 long LaraNodeAmbient[2];
 long bLaraUnderWater;
-uchar LaraNodeUnderwater[15];
+uchar LaraNodeUnderwater[NUM_LARA_MESHES];
 char SkinVertNums[40][12];
 char ScratchVertNums[40][12];
 char bLaraInWater;
@@ -33,10 +33,10 @@ char HairRotScratchVertNums[5][12] =
 	{ 4, 5, 6, 7, -1, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-static long lara_mesh_sweetness_table[15] = { 0, 1, 2, 3, 4, 5, 6, 7, 14, 8, 9, 10, 11, 12, 13 };
-static char lara_underwater_skin_sweetness_table[15] = { 0, 2, 3, 0, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 0 };
+static long lara_mesh_sweetness_table[NUM_LARA_MESHES] = { 0, 1, 2, 3, 4, 5, 6, 7, 14, 8, 9, 10, 11, 12, 13 };
+static char lara_underwater_skin_sweetness_table[NUM_LARA_MESHES] = { 0, 2, 3, 0, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 0 };
 
-static char NodesToStashToScratch[14][2] =
+static char NodesToStashToScratch[NUM_LARA_MESHES][2] =
 {
 	{1, 3},
 	{4, 5},
@@ -51,10 +51,11 @@ static char NodesToStashToScratch[14][2] =
 	{15, 22},
 	{23, 24},
 	{25, 26},
-	{16, 27}
+	{16, 27},
+	{127, 127}
 };
 
-static char NodesToStashFromScratch[15][4] =
+static char NodesToStashFromScratch[NUM_LARA_MESHES][4] =
 {
 	{0, 1, 2, -1},
 	{3, 4, -1, 0},
@@ -73,22 +74,23 @@ static char NodesToStashFromScratch[15][4] =
 	{26, -1, 0, 0}
 };
 
-static uchar SkinUseMatrix[14][2] =
+static uchar SkinUseMatrix[NUM_LARA_MESHES][2] =
 {
 	{255, 255},
-	{1, 2},
+	{LM_LTHIGH, LM_LSHIN},
 	{255, 255},
 	{255, 255},
-	{4, 5},
+	{LM_RTHIGH, LM_RSHIN},
 	{255, 255},
 	{255, 255},
 	{255, 255},
-	{9, 10},
+	{LM_ROUTARM, LM_RHAND},
 	{255, 255},
 	{255, 255},
-	{12, 13},
+	{LM_LOUTARM, LM_LHAND},
 	{255, 255},
-	{255, 255}
+	{255, 255},
+	{254, 254}
 };
 
 static long in_joints;
@@ -103,7 +105,7 @@ void DrawLara(ITEM_INFO* item, long mirror)
 	short* rot;
 	long top, bottom, left, right, dx, dy, dz, dist, stash, xRot;
 	static long a = 255;
-
+	
 	top = phd_top;
 	bottom = phd_bottom;
 	left = phd_left;
@@ -153,22 +155,22 @@ void DrawLara(ITEM_INFO* item, long mirror)
 	if (!mirror)
 		CalculateObjectLightingLara();
 
-	for (int i = 0; i < 15; i++)//skin
+	for (int i = 0; i < 15; i++) // Skin
 	{
-		mMXPtr[M00] = lara_matrices[i * 12 + M00];
-		mMXPtr[M01] = lara_matrices[i * 12 + M01];
-		mMXPtr[M02] = lara_matrices[i * 12 + M02];
-		mMXPtr[M03] = lara_matrices[i * 12 + M03];
-		mMXPtr[M10] = lara_matrices[i * 12 + M10];
-		mMXPtr[M11] = lara_matrices[i * 12 + M11];
-		mMXPtr[M12] = lara_matrices[i * 12 + M12];
-		mMXPtr[M13] = lara_matrices[i * 12 + M13];
-		mMXPtr[M20] = lara_matrices[i * 12 + M20];
-		mMXPtr[M21] = lara_matrices[i * 12 + M21];
-		mMXPtr[M22] = lara_matrices[i * 12 + M22];
-		mMXPtr[M23] = lara_matrices[i * 12 + M23];
+		mMXPtr->m00 = lara_matrices[i].m00;
+		mMXPtr->m01 = lara_matrices[i].m01;
+		mMXPtr->m02 = lara_matrices[i].m02;
+		mMXPtr->m03 = lara_matrices[i].m03;
+		mMXPtr->m10 = lara_matrices[i].m10;
+		mMXPtr->m11 = lara_matrices[i].m11;
+		mMXPtr->m12 = lara_matrices[i].m12;
+		mMXPtr->m13 = lara_matrices[i].m13;
+		mMXPtr->m20 = lara_matrices[i].m20;
+		mMXPtr->m21 = lara_matrices[i].m21;
+		mMXPtr->m22 = lara_matrices[i].m22;
+		mMXPtr->m23 = lara_matrices[i].m23;
 
-		if (LaraNodeUnderwater[i])
+		if (LaraNodeUnderwater[i] != 0)
 			bLaraUnderWater = i;
 		else
 			bLaraUnderWater = -1;
@@ -195,39 +197,41 @@ void DrawLara(ITEM_INFO* item, long mirror)
 	meshpp = &meshes[obj->mesh_index];
 	meshpp += 2;
 
-	for (int i = 0; i < 14; i++)//joints
+	for (int i = 0; i < NUM_LARA_MESHES; i++) // Joints
 	{
-		SkinVerticesToScratch(NodesToStashToScratch[i][0]);
-		SkinVerticesToScratch(NodesToStashToScratch[i][1]);
+		if (NodesToStashToScratch[i][0] < 127) SkinVerticesToScratch(NodesToStashToScratch[i][0]);
+		if (NodesToStashToScratch[i][1] < 127) SkinVerticesToScratch(NodesToStashToScratch[i][1]);
 
 		if (LaraNodeUnderwater[lara_underwater_skin_sweetness_table[i]])
 			bLaraUnderWater = lara_underwater_skin_sweetness_table[i];
 		else
 			bLaraUnderWater = -1;
 
-		if (SkinUseMatrix[i][0] >= 255)
-			phd_PutPolygons(*meshpp, -1);
-		else
+		if (SkinUseMatrix[i][0] >= 255 || SkinUseMatrix[i][1] >= 255)
 		{
-			mMXPtr[M00] = lara_matrices[SkinUseMatrix[i][1] * 12 + M00];
-			mMXPtr[M01] = lara_matrices[SkinUseMatrix[i][1] * 12 + M01];
-			mMXPtr[M02] = lara_matrices[SkinUseMatrix[i][1] * 12 + M02];
-			mMXPtr[M03] = lara_matrices[SkinUseMatrix[i][1] * 12 + M03];
-			mMXPtr[M10] = lara_matrices[SkinUseMatrix[i][1] * 12 + M10];
-			mMXPtr[M11] = lara_matrices[SkinUseMatrix[i][1] * 12 + M11];
-			mMXPtr[M12] = lara_matrices[SkinUseMatrix[i][1] * 12 + M12];
-			mMXPtr[M13] = lara_matrices[SkinUseMatrix[i][1] * 12 + M13];
-			mMXPtr[M20] = lara_matrices[SkinUseMatrix[i][1] * 12 + M20];
-			mMXPtr[M21] = lara_matrices[SkinUseMatrix[i][1] * 12 + M21];
-			mMXPtr[M22] = lara_matrices[SkinUseMatrix[i][1] * 12 + M22];
-			mMXPtr[M23] = lara_matrices[SkinUseMatrix[i][1] * 12 + M23];
+			phd_PutPolygons(*meshpp, -1);
+		}
+		else if (SkinUseMatrix[i][0] < 254 || SkinUseMatrix[i][1] < 254)
+		{
+			mMXPtr->m00 = lara_matrices[SkinUseMatrix[i][1]].m00;
+			mMXPtr->m01 = lara_matrices[SkinUseMatrix[i][1]].m01;
+			mMXPtr->m02 = lara_matrices[SkinUseMatrix[i][1]].m02;
+			mMXPtr->m03 = lara_matrices[SkinUseMatrix[i][1]].m03;
+			mMXPtr->m10 = lara_matrices[SkinUseMatrix[i][1]].m10;
+			mMXPtr->m11 = lara_matrices[SkinUseMatrix[i][1]].m11;
+			mMXPtr->m12 = lara_matrices[SkinUseMatrix[i][1]].m12;
+			mMXPtr->m13 = lara_matrices[SkinUseMatrix[i][1]].m13;
+			mMXPtr->m20 = lara_matrices[SkinUseMatrix[i][1]].m20;
+			mMXPtr->m21 = lara_matrices[SkinUseMatrix[i][1]].m21;
+			mMXPtr->m22 = lara_matrices[SkinUseMatrix[i][1]].m22;
+			mMXPtr->m23 = lara_matrices[SkinUseMatrix[i][1]].m23;
 			phd_PushMatrix();
-			v0.x = lara_matrices[12 * SkinUseMatrix[i][0] + M01];
-			v0.y = lara_matrices[12 * SkinUseMatrix[i][0] + M11];
-			v0.z = lara_matrices[12 * SkinUseMatrix[i][0] + M21];
-			v1.x = lara_matrices[12 * SkinUseMatrix[i][1] + M01];
-			v1.y = lara_matrices[12 * SkinUseMatrix[i][1] + M11];
-			v1.z = lara_matrices[12 * SkinUseMatrix[i][1] + M21];
+			v0.x = lara_matrices[SkinUseMatrix[i][0]].m01;
+			v0.y = lara_matrices[SkinUseMatrix[i][0]].m11;
+			v0.z = lara_matrices[SkinUseMatrix[i][0]].m21;
+			v1.x = lara_matrices[SkinUseMatrix[i][1]].m01;
+			v1.y = lara_matrices[SkinUseMatrix[i][1]].m11;
+			v1.z = lara_matrices[SkinUseMatrix[i][1]].m21;
 			xRot = long(32768.0F / (float)M_PI * acosf(v0.x * v1.x + v0.y * v1.y + v0.z * v1.z));
 			phd_RotX(short(xRot >> 1));
 			phd_PutPolygons(*meshpp, -1);
@@ -242,60 +246,62 @@ void DrawLara(ITEM_INFO* item, long mirror)
 
 	if (!(gfLevelFlags & GF_YOUNGLARA))
 	{
-		obj = &objects[lara.holster];
+		obj = &objects[lara.holster_l];
 		meshpp = &meshes[obj->mesh_index];
 		meshpp += 8;
-		mMXPtr[M00] = lara_matrices[1 * 12 + M00];
-		mMXPtr[M01] = lara_matrices[1 * 12 + M01];
-		mMXPtr[M02] = lara_matrices[1 * 12 + M02];
-		mMXPtr[M03] = lara_matrices[1 * 12 + M03];
-		mMXPtr[M10] = lara_matrices[1 * 12 + M10];
-		mMXPtr[M11] = lara_matrices[1 * 12 + M11];
-		mMXPtr[M12] = lara_matrices[1 * 12 + M12];
-		mMXPtr[M13] = lara_matrices[1 * 12 + M13];
-		mMXPtr[M20] = lara_matrices[1 * 12 + M20];
-		mMXPtr[M21] = lara_matrices[1 * 12 + M21];
-		mMXPtr[M22] = lara_matrices[1 * 12 + M22];
-		mMXPtr[M23] = lara_matrices[1 * 12 + M23];
+		mMXPtr->m00 = lara_matrices[LM_LTHIGH].m00;
+		mMXPtr->m01 = lara_matrices[LM_LTHIGH].m01;
+		mMXPtr->m02 = lara_matrices[LM_LTHIGH].m02;
+		mMXPtr->m03 = lara_matrices[LM_LTHIGH].m03;
+		mMXPtr->m10 = lara_matrices[LM_LTHIGH].m10;
+		mMXPtr->m11 = lara_matrices[LM_LTHIGH].m11;
+		mMXPtr->m12 = lara_matrices[LM_LTHIGH].m12;
+		mMXPtr->m13 = lara_matrices[LM_LTHIGH].m13;
+		mMXPtr->m20 = lara_matrices[LM_LTHIGH].m20;
+		mMXPtr->m21 = lara_matrices[LM_LTHIGH].m21;
+		mMXPtr->m22 = lara_matrices[LM_LTHIGH].m22;
+		mMXPtr->m23 = lara_matrices[LM_LTHIGH].m23;
 		phd_PutPolygons(*meshpp, -1);
 
-		meshpp += 8;
-		mMXPtr[M00] = lara_matrices[4 * 12 + M00];
-		mMXPtr[M01] = lara_matrices[4 * 12 + M01];
-		mMXPtr[M02] = lara_matrices[4 * 12 + M02];
-		mMXPtr[M03] = lara_matrices[4 * 12 + M03];
-		mMXPtr[M10] = lara_matrices[4 * 12 + M10];
-		mMXPtr[M11] = lara_matrices[4 * 12 + M11];
-		mMXPtr[M12] = lara_matrices[4 * 12 + M12];
-		mMXPtr[M13] = lara_matrices[4 * 12 + M13];
-		mMXPtr[M20] = lara_matrices[4 * 12 + M20];
-		mMXPtr[M21] = lara_matrices[4 * 12 + M21];
-		mMXPtr[M22] = lara_matrices[4 * 12 + M22];
-		mMXPtr[M23] = lara_matrices[4 * 12 + M23];
+		obj = &objects[lara.holster_r];
+		meshpp = &meshes[obj->mesh_index];
+		meshpp += 16;
+		mMXPtr->m00 = lara_matrices[LM_RTHIGH].m00;
+		mMXPtr->m01 = lara_matrices[LM_RTHIGH].m01;
+		mMXPtr->m02 = lara_matrices[LM_RTHIGH].m02;
+		mMXPtr->m03 = lara_matrices[LM_RTHIGH].m03;
+		mMXPtr->m10 = lara_matrices[LM_RTHIGH].m10;
+		mMXPtr->m11 = lara_matrices[LM_RTHIGH].m11;
+		mMXPtr->m12 = lara_matrices[LM_RTHIGH].m12;
+		mMXPtr->m13 = lara_matrices[LM_RTHIGH].m13;
+		mMXPtr->m20 = lara_matrices[LM_RTHIGH].m20;
+		mMXPtr->m21 = lara_matrices[LM_RTHIGH].m21;
+		mMXPtr->m22 = lara_matrices[LM_RTHIGH].m22;
+		mMXPtr->m23 = lara_matrices[LM_RTHIGH].m23;
 		phd_PutPolygons(*meshpp, -1);
 
 		if (lara.back_gun)
 		{
 			phd_PushMatrix();
-			mMXPtr[M00] = lara_matrices[84 + M00];
-			mMXPtr[M01] = lara_matrices[84 + M01];
-			mMXPtr[M02] = lara_matrices[84 + M02];
-			mMXPtr[M03] = lara_matrices[84 + M03];
-			mMXPtr[M10] = lara_matrices[84 + M10];
-			mMXPtr[M11] = lara_matrices[84 + M11];
-			mMXPtr[M12] = lara_matrices[84 + M12];
-			mMXPtr[M13] = lara_matrices[84 + M13];
-			mMXPtr[M20] = lara_matrices[84 + M20];
-			mMXPtr[M21] = lara_matrices[84 + M21];
-			mMXPtr[M22] = lara_matrices[84 + M22];
-			mMXPtr[M23] = lara_matrices[84 + M23];
+			mMXPtr->m00 = lara_matrices[LM_TORSO].m00;
+			mMXPtr->m01 = lara_matrices[LM_TORSO].m01;
+			mMXPtr->m02 = lara_matrices[LM_TORSO].m02;
+			mMXPtr->m03 = lara_matrices[LM_TORSO].m03;
+			mMXPtr->m10 = lara_matrices[LM_TORSO].m10;
+			mMXPtr->m11 = lara_matrices[LM_TORSO].m11;
+			mMXPtr->m12 = lara_matrices[LM_TORSO].m12;
+			mMXPtr->m13 = lara_matrices[LM_TORSO].m13;
+			mMXPtr->m20 = lara_matrices[LM_TORSO].m20;
+			mMXPtr->m21 = lara_matrices[LM_TORSO].m21;
+			mMXPtr->m22 = lara_matrices[LM_TORSO].m22;
+			mMXPtr->m23 = lara_matrices[LM_TORSO].m23;
 			obj = &objects[lara.back_gun];
 			bone = &bones[obj->bone_index];
 			meshpp = &meshes[obj->mesh_index];
 			meshpp += 28;
 			phd_TranslateRel(bone[53], bone[54], bone[55]);
 			rot = objects[lara.back_gun].frame_base + 9;
-			gar_RotYXZsuperpack(&rot, 14);
+			gar_RotYXZsuperpack(&rot, LM_HEAD);
 			phd_PutPolygons(*meshpp, -1);
 			phd_PopMatrix();
 		}
@@ -313,22 +319,22 @@ void DrawLara(ITEM_INFO* item, long mirror)
 void GetLaraJointPos(PHD_VECTOR* pos, long node)
 {
 	phd_PushMatrix();
-	mMXPtr[M00] = lara_joint_matrices[node * 12 + M00];
-	mMXPtr[M01] = lara_joint_matrices[node * 12 + M01];
-	mMXPtr[M02] = lara_joint_matrices[node * 12 + M02];
-	mMXPtr[M03] = lara_joint_matrices[node * 12 + M03];
-	mMXPtr[M10] = lara_joint_matrices[node * 12 + M10];
-	mMXPtr[M11] = lara_joint_matrices[node * 12 + M11];
-	mMXPtr[M12] = lara_joint_matrices[node * 12 + M12];
-	mMXPtr[M13] = lara_joint_matrices[node * 12 + M13];
-	mMXPtr[M20] = lara_joint_matrices[node * 12 + M20];
-	mMXPtr[M21] = lara_joint_matrices[node * 12 + M21];
-	mMXPtr[M22] = lara_joint_matrices[node * 12 + M22];
-	mMXPtr[M23] = lara_joint_matrices[node * 12 + M23];
+	mMXPtr->m00 = lara_joint_matrices[node].m00;
+	mMXPtr->m01 = lara_joint_matrices[node].m01;
+	mMXPtr->m02 = lara_joint_matrices[node].m02;
+	mMXPtr->m03 = lara_joint_matrices[node].m03;
+	mMXPtr->m10 = lara_joint_matrices[node].m10;
+	mMXPtr->m11 = lara_joint_matrices[node].m11;
+	mMXPtr->m12 = lara_joint_matrices[node].m12;
+	mMXPtr->m13 = lara_joint_matrices[node].m13;
+	mMXPtr->m20 = lara_joint_matrices[node].m20;
+	mMXPtr->m21 = lara_joint_matrices[node].m21;
+	mMXPtr->m22 = lara_joint_matrices[node].m22;
+	mMXPtr->m23 = lara_joint_matrices[node].m23;
 	phd_TranslateRel(pos->x, pos->y, pos->z);
-	pos->x = (long)mMXPtr[M03];
-	pos->y = (long)mMXPtr[M13];
-	pos->z = (long)mMXPtr[M23];
+	pos->x = (long)mMXPtr->m03;
+	pos->y = (long)mMXPtr->m13;
+	pos->z = (long)mMXPtr->m23;
 	pos->x += lara_item->pos.x_pos;
 	pos->y += lara_item->pos.y_pos;
 	pos->z += lara_item->pos.z_pos;
@@ -337,7 +343,7 @@ void GetLaraJointPos(PHD_VECTOR* pos, long node)
 
 void SetLaraUnderwaterNodes()
 {
-	PHD_VECTOR pos;
+	PHD_VECTOR pos{};
 	long bit;
 	short room_num;
 
@@ -387,7 +393,7 @@ void SetLaraUnderwaterNodes()
 void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 {
 	PHD_VECTOR vec;
-	float* matrix;
+	MATRIX_FLT* matrix;
 	short* rot;
 	short* rot2;
 	short gun;
@@ -405,7 +411,6 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		phd_SetTrans(0, 0, 0);
 
 	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
-
 	if (flag == 2)
 	{
 		vec.x = -16384;
@@ -418,56 +423,47 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	rot = &frame[9];
 	phd_TranslateRel(frame[6], frame[7], frame[8]);
 	gar_RotYXZsuperpack(&rot, 0);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 	phd_PushMatrix();
 	phd_TranslateRel(bone[1], bone[2], bone[3]);
 	gar_RotYXZsuperpack(&rot, 0);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 	phd_TranslateRel(bone[5], bone[6], bone[7]);
 	gar_RotYXZsuperpack(&rot, 0);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 	phd_TranslateRel(bone[9], bone[10], bone[11]);
 	gar_RotYXZsuperpack(&rot, 0);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_PushMatrix();
 	phd_TranslateRel(bone[13], bone[14], bone[15]);
 	gar_RotYXZsuperpack(&rot, 0);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 	phd_TranslateRel(bone[17], bone[18], bone[19]);
 	gar_RotYXZsuperpack(&rot, 0);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 	phd_TranslateRel(bone[21], bone[22], bone[23]);
 	gar_RotYXZsuperpack(&rot, 0);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_TranslateRel(bone[25], bone[26], bone[27]);
 	gar_RotYXZsuperpack(&rot, 0);
 	phd_RotYXZ(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 	phd_PushMatrix();
 	phd_TranslateRel(bone[53], bone[54], bone[55]);
 	rot2 = rot;
 	gar_RotYXZsuperpack(&rot2, 6);
 	phd_RotYXZ(lara.head_y_rot, lara.head_x_rot, lara.head_z_rot);
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	gun = WEAPON_NONE;
@@ -483,18 +479,15 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		phd_PushMatrix();
 		phd_TranslateRel(bone[29], bone[30], bone[31]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_PushMatrix();
@@ -502,26 +495,21 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 
 		if (lara.flare_control_left)
 		{
-			rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) *
-				(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
-
+			rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * (lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
 			gar_RotYXZsuperpack(&rot, 11);
 		}
 		else
 			gar_RotYXZsuperpack(&rot, 0);
 
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		break;
 
 	case WEAPON_PISTOLS:
@@ -529,126 +517,111 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 		phd_PushMatrix();
 		phd_TranslateRel(bone[29], bone[30], bone[31]);
 
-		mMXPtr[M00] = mMXPtr[-2 * indices_count + M00];
-		mMXPtr[M01] = mMXPtr[-2 * indices_count + M01];
-		mMXPtr[M02] = mMXPtr[-2 * indices_count + M02];
-		mMXPtr[M10] = mMXPtr[-2 * indices_count + M10];
-		mMXPtr[M11] = mMXPtr[-2 * indices_count + M11];
-		mMXPtr[M12] = mMXPtr[-2 * indices_count + M12];
-		mMXPtr[M20] = mMXPtr[-2 * indices_count + M20];
-		mMXPtr[M21] = mMXPtr[-2 * indices_count + M21];
-		mMXPtr[M22] = mMXPtr[-2 * indices_count + M22];
+		mMXPtr->m00 = mMXPtr[-2].m00;
+		mMXPtr->m01 = mMXPtr[-2].m01;
+		mMXPtr->m02 = mMXPtr[-2].m02;
+		mMXPtr->m10 = mMXPtr[-2].m10;
+		mMXPtr->m11 = mMXPtr[-2].m11;
+		mMXPtr->m12 = mMXPtr[-2].m12;
+		mMXPtr->m20 = mMXPtr[-2].m20;
+		mMXPtr->m21 = mMXPtr[-2].m21;
+		mMXPtr->m22 = mMXPtr[-2].m22;
 
 		phd_RotYXZ(lara.right_arm.y_rot, lara.right_arm.x_rot, lara.right_arm.z_rot);
-		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) *
-			(lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
+		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * (lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_PushMatrix();
 		phd_TranslateRel(bone[41], bone[42], bone[43]);
 
-		mMXPtr[M00] = mMXPtr[-2 * indices_count + M00];
-		mMXPtr[M01] = mMXPtr[-2 * indices_count + M01];
-		mMXPtr[M02] = mMXPtr[-2 * indices_count + M02];
-		mMXPtr[M10] = mMXPtr[-2 * indices_count + M10];
-		mMXPtr[M11] = mMXPtr[-2 * indices_count + M11];
-		mMXPtr[M12] = mMXPtr[-2 * indices_count + M12];
-		mMXPtr[M20] = mMXPtr[-2 * indices_count + M20];
-		mMXPtr[M21] = mMXPtr[-2 * indices_count + M21];
-		mMXPtr[M22] = mMXPtr[-2 * indices_count + M22];
+		mMXPtr->m00 = mMXPtr[-2].m00;
+		mMXPtr->m01 = mMXPtr[-2].m01;
+		mMXPtr->m02 = mMXPtr[-2].m02;
+		mMXPtr->m10 = mMXPtr[-2].m10;
+		mMXPtr->m11 = mMXPtr[-2].m11;
+		mMXPtr->m12 = mMXPtr[-2].m12;
+		mMXPtr->m20 = mMXPtr[-2].m20;
+		mMXPtr->m21 = mMXPtr[-2].m21;
+		mMXPtr->m22 = mMXPtr[-2].m22;
 
 		phd_RotYXZ(lara.left_arm.y_rot, lara.left_arm.x_rot, lara.left_arm.z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) *
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * (lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		break;
 
 	case WEAPON_REVOLVER:
 		phd_PushMatrix();
 		phd_TranslateRel(bone[29], bone[30], bone[31]);
 
-		mMXPtr[M00] = mMXPtr[-2 * indices_count + M00];
-		mMXPtr[M01] = mMXPtr[-2 * indices_count + M01];
-		mMXPtr[M02] = mMXPtr[-2 * indices_count + M02];
-		mMXPtr[M10] = mMXPtr[-2 * indices_count + M10];
-		mMXPtr[M11] = mMXPtr[-2 * indices_count + M11];
-		mMXPtr[M12] = mMXPtr[-2 * indices_count + M12];
-		mMXPtr[M20] = mMXPtr[-2 * indices_count + M20];
-		mMXPtr[M21] = mMXPtr[-2 * indices_count + M21];
-		mMXPtr[M22] = mMXPtr[-2 * indices_count + M22];
+		mMXPtr->m00 = mMXPtr[-2].m00;
+		mMXPtr->m01 = mMXPtr[-2].m01;
+		mMXPtr->m02 = mMXPtr[-2].m02;
+		mMXPtr->m10 = mMXPtr[-2].m10;
+		mMXPtr->m11 = mMXPtr[-2].m11;
+		mMXPtr->m12 = mMXPtr[-2].m12;
+		mMXPtr->m20 = mMXPtr[-2].m20;
+		mMXPtr->m21 = mMXPtr[-2].m21;
+		mMXPtr->m22 = mMXPtr[-2].m22;
 
 		phd_RotYXZ(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
 		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) *
 			(lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_PushMatrix();
 		phd_TranslateRel(bone[41], bone[42], bone[43]);
 
-		mMXPtr[M00] = mMXPtr[-2 * indices_count + M00];
-		mMXPtr[M01] = mMXPtr[-2 * indices_count + M01];
-		mMXPtr[M02] = mMXPtr[-2 * indices_count + M02];
-		mMXPtr[M10] = mMXPtr[-2 * indices_count + M10];
-		mMXPtr[M11] = mMXPtr[-2 * indices_count + M11];
-		mMXPtr[M12] = mMXPtr[-2 * indices_count + M12];
-		mMXPtr[M20] = mMXPtr[-2 * indices_count + M20];
-		mMXPtr[M21] = mMXPtr[-2 * indices_count + M21];
-		mMXPtr[M22] = mMXPtr[-2 * indices_count + M22];
+		mMXPtr->m00 = mMXPtr[-2].m00;
+		mMXPtr->m01 = mMXPtr[-2].m01;
+		mMXPtr->m02 = mMXPtr[-2].m02;
+		mMXPtr->m10 = mMXPtr[-2].m10;
+		mMXPtr->m11 = mMXPtr[-2].m11;
+		mMXPtr->m12 = mMXPtr[-2].m12;
+		mMXPtr->m20 = mMXPtr[-2].m20;
+		mMXPtr->m21 = mMXPtr[-2].m21;
+		mMXPtr->m22 = mMXPtr[-2].m22;
 
 		phd_RotYXZ(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) *
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * (lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		break;
 
 	case WEAPON_SHOTGUN:
@@ -656,38 +629,31 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 	case WEAPON_CROSSBOW:
 		phd_PushMatrix();
 		phd_TranslateRel(bone[29], bone[30], bone[31]);
-		rot = &lara.right_arm.frame_base[lara.right_arm.frame_number *
-			(anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
+		rot = &lara.right_arm.frame_base[lara.right_arm.frame_number * (anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_PushMatrix();
 		phd_TranslateRel(bone[41], bone[42], bone[43]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		break;
 	}
 
@@ -699,9 +665,9 @@ void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, long flag)
 
 void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac, long rate, long* bone, long flag)
 {
-	PHD_VECTOR vec;
-	float* matrix;
-	float* arms;
+	PHD_VECTOR vec{};
+	MATRIX_FLT* matrix;
+	MATRIX_FLT* arms;
 	short* rot;
 	short* rot2;
 	short* rotcopy;
@@ -715,13 +681,12 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 
 	phd_PushMatrix();
 
-	if (!flag || flag == 2)
+	if (flag == 0 || flag == 2)
 		phd_TranslateAbs(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos);
 	else
 		phd_SetTrans(0, 0, 0);
 
 	phd_RotYXZ(lara_item->pos.y_rot, lara_item->pos.x_rot, lara_item->pos.z_rot);
-
 	if (flag == 2)
 	{
 		vec.x = -16384;
@@ -740,8 +705,7 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_PushMatrix_I();
@@ -749,24 +713,21 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_TranslateRel_I(bone[5], bone[6], bone[7]);
 	gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_TranslateRel_I(bone[9], bone[10], bone[11]);
 	gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 	phd_PopMatrix_I();
 
@@ -775,24 +736,21 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_TranslateRel_I(bone[17], bone[18], bone[19]);
 	gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_TranslateRel_I(bone[21], bone[22], bone[23]);
 	gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 	phd_PopMatrix_I();
 
@@ -801,8 +759,7 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	phd_RotYXZ_I(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 
 	phd_PushMatrix_I();
@@ -813,15 +770,14 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	phd_RotYXZ_I(lara.head_y_rot, lara.head_x_rot, lara.head_z_rot);
 	phd_PushMatrix();
 	mInterpolateMatrix();
-	memcpy(matrix, mMXPtr, 48);
-	matrix += 12;
+	memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 	phd_PopMatrix();
 	phd_PopMatrix_I();
 
-	gun = WEAPON_NONE;
-
 	if (lara.gun_status == LG_READY || lara.gun_status == LG_FLARE || lara.gun_status == LG_DRAW_GUNS || lara.gun_status == LG_UNDRAW_GUNS)
 		gun = lara.gun_type;
+	else
+		gun = WEAPON_NONE;
 
 	switch (gun)
 	{
@@ -833,24 +789,21 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 		phd_PopMatrix_I();
 
@@ -859,8 +812,7 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 
 		if (lara.flare_control_left)
 		{
-			rot2 = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) *
-				(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+			rot2 = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * (lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
 			rot = rot2;
 			gar_RotYXZsuperpack_I(&rot, &rot2, 11);
 		}
@@ -869,24 +821,21 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 		break;
 
@@ -896,42 +845,34 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		phd_TranslateRel_I(bone[29], bone[30], bone[31]);
 		mInterpolateArmMatrix(arms);
 		phd_RotYXZ(lara.right_arm.y_rot, lara.right_arm.x_rot, lara.right_arm.z_rot);
-		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) *
-			(lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
+		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * (lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		
 		phd_TranslateRel(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		
 		phd_TranslateRel(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix_I();
 
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[41], bone[42], bone[43]);
 		mInterpolateArmMatrix(arms);
 		phd_RotYXZ(lara.left_arm.y_rot, lara.left_arm.x_rot, lara.left_arm.z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) *
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * (lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		break;
 
 	case WEAPON_REVOLVER:
@@ -939,42 +880,34 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		phd_TranslateRel_I(bone[29], bone[30], bone[31]);
 		mInterpolateArmMatrix(arms);
 		phd_RotYXZ_I(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) *
-			(lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
+		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * (lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix_I();
 
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[41], bone[42], bone[43]);
 		mInterpolateArmMatrix(arms);
 		phd_RotYXZ_I(lara.torso_y_rot, lara.torso_x_rot, lara.torso_z_rot);
-		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) *
-			(lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
+		rot = &lara.left_arm.frame_base[(anims[lara.left_arm.anim_number].interpolation >> 8) * (lara.left_arm.frame_number - anims[lara.left_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 11);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 
 		phd_TranslateRel(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack(&rot, 0);
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		break;
 
 	case WEAPON_SHOTGUN:
@@ -982,30 +915,26 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 	case WEAPON_CROSSBOW:
 		phd_PushMatrix_I();
 		phd_TranslateRel_I(bone[29], bone[30], bone[31]);
-		rot2 = &lara.right_arm.frame_base[lara.right_arm.frame_number *
-			(anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
+		rot2 = &lara.right_arm.frame_base[lara.right_arm.frame_number * (anims[lara.right_arm.anim_number].interpolation >> 8) + 9];
 		rot = rot2;
 		gar_RotYXZsuperpack_I(&rot, &rot2, 8);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 		phd_PopMatrix_I();
 
@@ -1014,24 +943,21 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[45], bone[46], bone[47]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 
 		phd_TranslateRel_I(bone[49], bone[50], bone[51]);
 		gar_RotYXZsuperpack_I(&rot, &rot2, 0);
 		phd_PushMatrix();
 		mInterpolateMatrix();
-		memcpy(matrix, mMXPtr, 48);
-		matrix += 12;
+		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
 		phd_PopMatrix();
 		break;
 	}

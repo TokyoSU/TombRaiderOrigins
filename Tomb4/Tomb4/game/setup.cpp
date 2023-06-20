@@ -1842,7 +1842,8 @@ void InitialiseLara()
 	lara.vehicle = NO_ITEM;
 	lara.weapon_item = NO_ITEM;
 	lara.water_surface_dist = 100;
-	lara.holster = LARA_HOLSTERS_PISTOLS;
+	lara.holster_l = LARA_HOLSTERS_PISTOLS;
+	lara.holster_r = LARA_HOLSTERS_PISTOLS;
 	lara.location = -1;
 	lara.highest_location = -1;
 	lara.RopePtr = -1;

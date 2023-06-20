@@ -100,8 +100,8 @@ void S_DrawFootPrints()
 
 			for (int j = 0; j < 3; j++)
 			{
-				x = long(pos[j].x * mMXPtr[M00] + pos[j].z * mMXPtr[M02] + mMXPtr[M03]);
-				z = long(pos[j].x * mMXPtr[M20] + pos[j].z * mMXPtr[M22] + mMXPtr[M23]);
+				x = long(pos[j].x * mMXPtr->m00 + pos[j].z * mMXPtr->m02 + mMXPtr->m03);
+				z = long(pos[j].x * mMXPtr->m20 + pos[j].z * mMXPtr->m22 + mMXPtr->m23);
 				room_number = lara_item->room_number;
 				pos[j].y = GetHeight(GetFloor(x, print->y, z, &room_number), x, print->y, z) - print->y;
 

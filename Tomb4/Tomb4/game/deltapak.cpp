@@ -119,7 +119,8 @@ static ulong cutseq_meshswapbits[10];
 static long GLOBAL_numcutseq_frames;
 static long lastcamnum;
 static long numnailed;
-static short old_lara_holster;
+static short old_lara_holster_l;
+static short old_lara_holster_r;
 static short temp_rotation_buffer[160];
 static char cutseq_busy_timeout = 0;
 static char lara_chat_cnt = 0;
@@ -663,9 +664,9 @@ void GetJointAbsPositionCutSeq(ITEM_INFO* item, OBJECT_INFO* obj, short* rot, PH
 	phd_TranslateRel(rot[6], rot[7], rot[8]);
 	rot2 = rot + 9;
 	gar_RotYXZsuperpack(&rot2, 0);
-	pos->x = (long)mMXPtr[M03];
-	pos->y = (long)mMXPtr[M13];
-	pos->z = (long)mMXPtr[M23];
+	pos->x = (long)mMXPtr->m03;
+	pos->y = (long)mMXPtr->m13;
+	pos->z = (long)mMXPtr->m23;
 	pos->x += item->pos.x_pos;
 	pos->y += item->pos.y_pos;
 	pos->z += item->pos.z_pos;
@@ -713,9 +714,11 @@ void third_cutseq_control()
 
 void fourth_cutseq_init()
 {
-	old_lara_holster = lara.holster;
-	lara.holster = LARA_HOLSTERS;
-	draw_pistol_meshes(1);
+	old_lara_holster_l = lara.holster_l;
+	lara.holster_l = LARA_HOLSTERS;
+	old_lara_holster_r = lara.holster_r;
+	lara.holster_r = LARA_HOLSTERS;
+	draw_pistol_meshes(WEAPON_PISTOLS);
 }
 
 void fourth_cutseq_control()
@@ -726,22 +729,23 @@ void fourth_cutseq_control()
 
 	if (frame == 309)
 	{
-		undraw_pistol_mesh_left(1);
-		undraw_pistol_mesh_right(1);
-		lara.holster = old_lara_holster;
+		undraw_pistol_mesh_left(WEAPON_PISTOLS);
+		undraw_pistol_mesh_right(WEAPON_PISTOLS);
+		lara.holster_l = old_lara_holster_l;
+		lara.holster_r = old_lara_holster_r;
 	}
 	else
 	{
 		if (frame == 51 || frame == 68)
-			cutseq_shoot_pistols(11);
+			cutseq_shoot_pistols(LM_RHAND);
 
 		if (frame == 51 || frame == 64 || frame == 73)
-			cutseq_shoot_pistols(14);
+			cutseq_shoot_pistols(LM_LHAND);
 
 		if (frame == 108 || frame == 114 || frame == 120 || frame == 128 || frame == 134 || frame == 141 || frame == 147 || frame == 158)
 		{
-			cutseq_shoot_pistols(11);
-			cutseq_shoot_pistols(14);
+			cutseq_shoot_pistols(LM_RHAND);
+			cutseq_shoot_pistols(LM_LHAND);
 		}
 	}
 
@@ -1281,18 +1285,21 @@ void twentythree_end()
 void twentyfour_init()
 {
 	cutseq_kill_item(ANIMATING13);
-	old_lara_holster = lara.holster;
-	lara.holster = LARA_HOLSTERS;
-	draw_pistol_meshes(1);
+	old_lara_holster_l = lara.holster_l;
+	lara.holster_l = LARA_HOLSTERS;
+	old_lara_holster_r = lara.holster_r;
+	lara.holster_r = LARA_HOLSTERS;
+	draw_pistol_meshes(WEAPON_PISTOLS);
 }
 
 void twentyfour_control()
 {
 	if (GLOBAL_cutseq_frame == 552)
 	{
-		undraw_pistol_mesh_left(1);
-		undraw_pistol_mesh_right(1);
-		lara.holster = old_lara_holster;
+		undraw_pistol_mesh_left(WEAPON_PISTOLS);
+		undraw_pistol_mesh_right(WEAPON_PISTOLS);
+		lara.holster_l = old_lara_holster_l;
+		lara.holster_r = old_lara_holster_r;
 	}
 
 	handle_lara_chatting(lara_chat_ranges24);
@@ -1401,12 +1408,12 @@ void do_key_meshswap()
 
 void cutseq_shoot_pistols(long left_or_right)
 {
-	if (left_or_right == 14)
+	if (left_or_right == LM_LHAND)
 	{
 		lara.left_arm.flash_gun = 4;
 		SmokeCountL = 16;
 	}
-	else
+	else if (left_or_right == LM_RHAND)
 	{
 		lara.right_arm.flash_gun = 4;
 		SmokeCountR = 16;
