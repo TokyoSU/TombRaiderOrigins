@@ -18,6 +18,7 @@
 #include <d3d.h>
 #include <d3dtypes.h>
 #include <cmath>
+#include <functional>
 #include <stdio.h>
 #include <process.h>
 #include <algorithm>

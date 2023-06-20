@@ -326,7 +326,7 @@ void ScorpionControl(short item_number)
 		CreatureAnimation(item_number, angle, 0);
 }
 
-void InitialiseSmlscorp(short item_number)
+void InitialiseSmallScorpion(short item_number)
 {
 	ITEM_INFO* item;
 
@@ -338,7 +338,7 @@ void InitialiseSmlscorp(short item_number)
 	item->goal_anim_state = 1;
 }
 
-void SmlscorpControl(short item_number)
+void SmallScorpionControl(short item_number)
 {
 	ITEM_INFO* item;
 	ITEM_INFO* enemy;

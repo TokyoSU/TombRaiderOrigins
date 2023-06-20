@@ -226,10 +226,6 @@ void handle_cutseq_triggering(long name)
 	else if (cutseq_trig == 3)
 	{
 		SetScreenFadeOut(16, 1);
-
-	//	if (cutseq_num != 1 && gfCurrentLevel)
-			//empty func call here
-
 		cutseq_trig = 4;
 	}
 	else if (cutseq_trig == 4)
@@ -721,10 +717,7 @@ void fourth_cutseq_init()
 
 void fourth_cutseq_control()
 {
-	long frame;
-
-	frame = GLOBAL_cutseq_frame;
-
+	long frame = GLOBAL_cutseq_frame;
 	if (frame == 309)
 	{
 		undraw_pistol_mesh_left(WEAPON_PISTOLS);

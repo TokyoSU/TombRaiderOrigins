@@ -1,6 +1,5 @@
 #pragma once
 
-
 void ObjectObjects();
 void TrapObjects();
 void BaddyObjects();

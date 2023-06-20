@@ -359,7 +359,7 @@ void TriggerLocust(ITEM_INFO* item)
 
 	fx = &Locusts[fx_number];
 
-	if (item->object_number == FISH)
+	if (item->object_number == LOCUST_EMITTER)
 	{
 		vec.x = item->pos.x_pos;
 		vec.y = item->pos.y_pos;

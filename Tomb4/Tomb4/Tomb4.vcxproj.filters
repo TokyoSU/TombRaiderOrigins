@@ -356,6 +356,9 @@
     <ClInclude Include="game\laradraw.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="game\objects_register.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tomb4.rc">
@@ -685,6 +688,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="game\laradraw.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="game\objects_register.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

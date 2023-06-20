@@ -1037,7 +1037,7 @@ void RestoreLevelData(long FullSave)
 			if (item->object_number == JEEP)
 				ReadSG(item->data, sizeof(JEEPINFO));
 
-			if (obj->collision == PuzzleHoleCollision)
+			if (obj->collision && obj->is_puzzlehole)
 			{
 				if (item->status == ITEM_DEACTIVATED || item->status == ITEM_ACTIVE)
 				{

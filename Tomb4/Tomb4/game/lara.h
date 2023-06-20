@@ -1,5 +1,6 @@
 #pragma once
 
+constexpr auto LARA_HITPOINTS = 1000;
 
 void lara_void_func(ITEM_INFO* item, COLL_INFO* coll);
 void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll);

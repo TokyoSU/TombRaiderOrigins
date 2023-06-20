@@ -208,7 +208,6 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 	{
 	case 0:
 		SetFadeClip(24, 1);
-		//empty func call here
 		ScreenFading = 1;
 		dScreenFade = 255;
 		ScreenFade = 255;
@@ -359,9 +358,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 
 void InitialiseVoncroy(short item_number)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
+	ITEM_INFO* item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = objects[VON_CROY].anim_index + 11;
 	item->frame_number = anims[item->anim_number].frame_base;
@@ -1092,8 +1089,7 @@ void VoncroyControl(short item_number)
 
 	if ((lara.locationPad == 9 || lara.locationPad == 10) && item->item_flags[3] == 11)
 		lara.locationPad = 11;
-	else if (lara.locationPad == 10 && item->item_flags[3] == 12 &&
-		(item->item_flags[0] || lara_item->anim_number == objects[LARA].anim_index + 90 && lara_item->frame_number == anims[lara_item->anim_number].frame_end))
+	else if (lara.locationPad == 10 && item->item_flags[3] == 12 && (item->item_flags[0] || lara_item->anim_number == (objects[LARA].anim_index + 90) && lara_item->frame_number == anims[lara_item->anim_number].frame_end))
 	{
 		lara.locationPad = (char)item->item_flags[3];
 		item->item_flags[0] = 1;
@@ -1103,7 +1099,7 @@ void VoncroyControl(short item_number)
 		lara.locationPad = (char)item->item_flags[3];
 		lara.location = lara.locationPad;
 	}
-	else if (lara.location == 43 && (item->item_flags[3] == 44 || item->item_flags[3] == 54 || item->item_flags[3] == 44 || item->item_flags[3] == 54))
+	else if (lara.location == 43 && (item->item_flags[3] == 44 || item->item_flags[3] == 54))
 		lara.location = (char)item->item_flags[3];
 
 	if (!VonCroyCutFlags[item->item_flags[3]])
@@ -1648,8 +1644,7 @@ void VoncroyControl(short item_number)
 	if (ifl3 == -1)
 	{
 		enemy = &VonCroy->ai_target;
-		TestTriggersAtXYZ(VonCroy->ai_target.pos.x_pos, VonCroy->ai_target.pos.y_pos, VonCroy->ai_target.pos.z_pos, 
-			VonCroy->ai_target.room_number, 1, 0);
+		TestTriggersAtXYZ(VonCroy->ai_target.pos.x_pos, VonCroy->ai_target.pos.y_pos, VonCroy->ai_target.pos.z_pos, VonCroy->ai_target.room_number, 1, 0);
 		ifl3 = 1;
 	}
 
@@ -1668,7 +1663,9 @@ void VoncroyControl(short item_number)
 	CreatureJoint(item, 3, torso_x);
 
 	if (item->current_anim_state >= 15 || item->current_anim_state == 5)
+	{
 		CreatureAnimation(item_number, angle, 0);
+	}
 	else
 	{
 		switch (CreatureVault(item_number, angle, 2, 260))

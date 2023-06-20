@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "setup.h"
 #include "objects.h"
+#include "box.h"
 #include "pickup.h"
 #include "collide.h"
 #include "init.h"
@@ -65,6 +66,7 @@
 #include "deltapak.h"
 #include "gameflow.h"
 #include "file.h"
+#include "objects_register.h"
 
 void ObjectObjects()
 {
@@ -74,7 +76,7 @@ void ObjectObjects()
 	obj->draw_routine = 0;
 
 	obj = &objects[FLARE_ITEM];
-	obj->initialise = 0;
+	obj->initialise = nullptr;
 	obj->control = FlareControl;
 	obj->collision = PickUpCollision;
 	obj->draw_routine = DrawFlareInAir;
@@ -263,7 +265,7 @@ void ObjectObjects()
 	}
 
 	obj = &objects[BURNING_TORCH_ITEM];
-	obj->initialise = 0;
+	obj->initialise = nullptr;
 	obj->control = FlameTorchControl;
 	obj->save_position = 1;
 	obj->save_flags = 1;
@@ -283,15 +285,15 @@ void ObjectObjects()
 	obj->save_flags = 1;
 
 	obj = &objects[CROSSBOW_BOLT];
-	obj->initialise = 0;
+	obj->initialise = nullptr;
 	obj->control = ControlCrossbow;
-	obj->collision = 0;
+	obj->collision = nullptr;
 	obj->draw_routine = DrawWeaponMissile;
 
 	obj = &objects[GRENADE];
-	obj->initialise = 0;
+	obj->initialise = nullptr;
 	obj->control = ControlGrenade;
-	obj->collision = 0;
+	obj->collision = nullptr;
 	obj->draw_routine = DrawWeaponMissile;
 
 	obj = &objects[FLARE_INV_ITEM];
@@ -456,7 +458,7 @@ void ObjectObjects()
 		obj = &objects[i];
 		obj->initialise = InitialiseRaisingBlock;
 		obj->control = ControlRaisingBlock;
-		obj->collision = 0;
+		obj->collision = nullptr;
 		obj->draw_routine = DrawScaledSpike;
 		obj->save_flags = 1;
 	}
@@ -519,7 +521,7 @@ void ObjectObjects()
 	}
 
 	obj = &objects[CLOCKWORK_BEETLE];
-	obj->initialise = 0;
+	obj->initialise = nullptr;
 	obj->control = ControlClockworkBeetle;
 
 	obj = &objects[GOD_HEAD];
@@ -789,858 +791,63 @@ void TrapObjects()
 
 void BaddyObjects()
 {
-	OBJECT_INFO* obj;
+	ObjectRegisterFactory factory;
 
-	obj = &objects[LARA];
-	obj->initialise = InitialiseLaraLoad;
-	obj->draw_routine = nullptr;
-	obj->shadow_size = 160;
-	obj->hit_points = 1000;
-	obj->save_hitpoints = 1;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
+	factory.From(LARA)->Initialise(InitialiseLaraLoad)->Draw(nullptr)->Shadow(160)->HitPoints(LARA_HITPOINTS)->SaveDefault();
+	factory.From(LARA_DOUBLE)->CreatureDefault()->Initialise(InitialiseLaraDouble)->Control(LaraDoubleControl)->HitPoints(LARA_HITPOINTS)->Pivot(50)->HitEffect(3)->NonLot();
+	factory.From(MOTORBIKE)->Initialise(InitialiseBike)->Control(BikeControl)->Collision(BikeCollision)->DrawExtra(DrawBikeExtras)->Bone(1, BN_ROT_X)->Bone(3, BN_ROT_X)->Bone(7, BN_ROT_X)->SaveDefault();
+	factory.From(JEEP)->Initialise(InitialiseJeep)->Control(JeepControl)->Collision(JeepCollision)->DrawExtra(DrawJeepExtras)->Bone(8, BN_ROT_X)->Bone(9, BN_ROT_X)->Bone(11, BN_ROT_X)->Bone(12, BN_ROT_X)->SaveDefault();
+	factory.From(SKELETON)->CreatureDefault(true)->Initialise(InitialiseSkeleton)->Control(SkeletonControl)->HitPoints(15)->Pivot(50)->Undead()->HitEffect(2)->ExplosionMesh(9)->ExplosionMesh(11); // Head, Shield
+	factory.From(VON_CROY)->CreatureDefault(true)->Initialise(InitialiseVoncroy)->Control(gfCurrentLevel != 1 ? VoncroyRaceControl : VoncroyControl)->HitPoints(NOT_TARGETABLE)->HitEffect(2)->Bone(6, BN_ROT_X | BN_ROT_Y)->Bone(20, BN_ROT_X | BN_ROT_Y)->MeshFrom(15, MESHSWAP1)->MeshFrom(31, MESHSWAP1)->MeshFrom(37, MESHSWAP1);
+	factory.From(GUIDE)->CreatureDefault(true)->Initialise(InitialiseGuide)->Control(GuideControl)->HitPoints(NOT_TARGETABLE)->HitEffect(2)->Bone(6, BN_ROT_X | BN_ROT_Y)->Bone(20, BN_ROT_X | BN_ROT_Y)->MeshFrom(31, MESHSWAP2)->MeshFrom(37, MESHSWAP2)->MeshFrom(45, MESHSWAP2);
+	factory.From(RAGHEAD)->CreatureDefault(true)->Initialise(InitialiseRaghead)->Control(RagheadControl)->HitPoints(25)->Pivot(50)->Bone(7, BN_ROT_X | BN_ROT_Y)->Bone(22, BN_ROT_X | BN_ROT_Y)->MeshFrom(9, MESHSWAP3)->MeshFrom(15, MESHSWAP3);
+	factory.From(SUPER_RAGHEAD)->CreatureDefault(true)->Initialise(InitialiseRaghead)->Control(RagheadControl)->HitPoints(35)->Pivot(50)->Bone(7, BN_ROT_X | BN_ROT_Y)->Bone(22, BN_ROT_X | BN_ROT_Y)->MeshFrom(9, MESHSWAP2)->MeshFrom(15, MESHSWAP2);
+	factory.From(SCORPION)->CreatureDefault()->Initialise(InitialiseScorpion)->Control(ScorpionControl)->HitPoints(80)->Radius(512);
+	factory.From(SMALL_SCORPION)->CreatureDefault()->Initialise(InitialiseSmallScorpion)->Control(SmallScorpionControl)->HitPoints(8)->Pivot(20);
+	factory.From(MUMMY)->CreatureDefault()->Initialise(InitialiseMummy)->Control(MummyControl)->HitPoints(15)->Undead()->HitEffect(2)->Radius(170)->Pivot(50)->Bone(7, BN_ROT_X | BN_ROT_Y)->Bone(18, BN_ROT_Y);
+	factory.From(KNIGHTS_TEMPLAR)->CreatureDefault()->Initialise(InitialiseTemplar)->Control(TemplarControl)->HitPoints(15)->Undead()->Pivot(50)->HitEffect(2)->Bone(6, BN_ROT_X | BN_ROT_Y)->Bone(14, BN_ROT_Y);
+	factory.From(SPHINX)->CreatureDefault()->Initialise(InitialiseSphinx)->Control(SphinxControl)->HitPoints(1000)->Undead()->Pivot(500)->Radius(512)->HitEffect(3);
+	factory.From(SETHA)->CreatureDefault()->Initialise(InitialiseSeth)->Control(SethControl)->HitPoints(500)->Undead()->Pivot(50)->Radius(341);
+	factory.From(HORSEMAN)->CreatureDefault(true)->Initialise(InitialiseHorseman)->Control(HorsemanControl)->HitPoints(25)->Undead()->HitEffect(3)->Radius(409);
+	factory.From(HAMMERHEAD)->CreatureDefault()->Initialise(InitialiseHammerhead)->Control(HammerheadControl)->HitPoints(45)->WaterCreature()->Radius(341)->Pivot(300)->Bone(0, BN_ROT_Y)->Bone(1, BN_ROT_Y)->Bone(2, BN_ROT_Y)->Bone(9, BN_ROT_Y);
+	factory.From(CROCODILE)->CreatureDefault()->Initialise(InitialiseCroc)->Control(CrocControl)->HitPoints(36)->Pivot(300)->Radius(409)->WaterCreature()->Bone(0, BN_ROT_Y)->Bone(7, BN_ROT_Y)->Bone(9, BN_ROT_Y)->Bone(9, BN_ROT_Y);
+	factory.From(DEMIGOD1)->CreatureDefault()->Initialise(InitialiseDemigod)->Control(DemigodControl)->HitPoints(200)->Undead()->Pivot(50)->Radius(341)->HitEffect(3)->Bone(8, BN_ROT_X | BN_ROT_Y | BN_ROT_Z)->Bone(20, BN_ROT_Y);
+	factory.From(DEMIGOD2)->CreatureDefault()->Initialise(InitialiseDemigod)->Control(DemigodControl)->HitPoints(200)->Pivot(50)->Radius(341)->Bone(8, BN_ROT_X | BN_ROT_Y | BN_ROT_Z)->Bone(20, BN_ROT_Y);
+	factory.From(DEMIGOD3)->CreatureDefault()->Initialise(InitialiseDemigod)->Control(DemigodControl)->HitPoints(200)->Pivot(50)->Radius(341)->Bone(8, BN_ROT_X | BN_ROT_Y | BN_ROT_Z)->Bone(20, BN_ROT_Y);
+	factory.From(MUTANT)->CreatureDefault()->Initialise(InitialiseCrocgod)->Control(CrocgodControl)->HitPoints(15)->Undead()->Pivot(50)->HitEffect(3)->Bone(6, BN_ROT_X | BN_ROT_Y)->Bone(7, BN_ROT_X | BN_ROT_Y);
+	factory.From(TROOPS)->CreatureDefault()->Initialise(InitialiseTroop)->Control(TroopControl)->HitPoints(40)->Pivot(50)->Bone(0, BN_ROT_X | BN_ROT_Y)->Bone(7, BN_ROT_X | BN_ROT_Y);
+	factory.From(SAS)->CreatureDefault()->Initialise(InitialiseSas)->Control(SasControl)->HitPoints(40)->Pivot(50)->Bone(0, BN_ROT_X | BN_ROT_Y)->Bone(7, BN_ROT_X | BN_ROT_Y);
+	factory.From(HARPY)->CreatureDefault()->Initialise(InitialiseHarpy)->Control(HarpyControl)->HitPoints(60)->Pivot(50)->Radius(409);
+	factory.From(WILD_BOAR)->CreatureDefault()->Initialise(InitialiseWildboar)->Control(WildboarControl)->HitPoints(40)->Pivot(50)->Bone(12, BN_ROT_Y | BN_ROT_Z)->Bone(13, BN_ROT_Y | BN_ROT_Z);
+	factory.From(DOG)->CreatureDefault()->Initialise(InitialiseDog)->Control(DogControl)->HitPoints(16)->Pivot(300)->Radius(341)->Bone(0, BN_ROT_Y)->Bone(2, BN_ROT_X | BN_ROT_Y);
+	factory.From(AHMET)->CreatureDefault()->Initialise(InitialiseAhmet)->Control(AhmetControl)->HitPoints(80)->Pivot(300)->Radius(341)->Bone(9, BN_ROT_Y);
+	factory.From(BABOON_NORMAL)->CreatureDefault()->Initialise(InitialiseBaboon)->Control(BaboonControl)->HitPoints(30)->Pivot(200)->Radius(256);
+	factory.From(BABOON_INV)->CreatureDefault()->Initialise(InitialiseBaboon)->Control(BaboonControl)->HitPoints(30)->Pivot(200)->Radius(256)->AnimIndexFromObject(BABOON_NORMAL);
+	factory.From(BABOON_SILENT)->CreatureDefault()->Initialise(InitialiseBaboon)->Control(BaboonControl)->HitPoints(30)->Pivot(200)->Radius(256)->AnimIndexFromObject(BABOON_NORMAL);
 
-	obj = &objects[MOTORBIKE];
-	obj->initialise = InitialiseBike;
-	obj->control = BikeControl;
-	obj->collision = BikeCollision;
-	obj->draw_routine_extra = DrawBikeExtras;
-	obj->save_hitpoints = 1;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-	bones[obj->bone_index + 4] |= 4;
-	bones[obj->bone_index + 12] |= 4;
-	bones[obj->bone_index + 28] |= 4;
-
-	obj = &objects[JEEP];
-	obj->initialise = InitialiseJeep;
-	obj->control = JeepControl;
-	obj->collision = JeepCollision;
-	obj->draw_routine_extra = DrawJeepExtras;
-	obj->save_hitpoints = 1;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-	bones[obj->bone_index + 32] |= 4;
-	bones[obj->bone_index + 36] |= 4;
-	bones[obj->bone_index + 44] |= 4;
-	bones[obj->bone_index + 48] |= 4;
-
-	obj = &objects[SKELETON];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseSkeleton;
-		obj->control = SkeletonControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 15;
-		obj->pivot_length = 50;
-		obj->radius = 128;
-		obj->explodable_meshbits = 0xA00;
-		obj->intelligent = 1;
-		obj->save_mesh = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 2;
-		obj->undead = 1;
-	}
-
-	obj = &objects[VON_CROY];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseVoncroy;
-		obj->control = VoncroyControl;
-
-		if (gfCurrentLevel != 1)
-			obj->control = VoncroyRaceControl;
-
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 0;
-		obj->shadow_size = 128;
-		obj->hit_points = 15;
-		obj->radius = 128;
-		obj->explodable_meshbits = 0x200000;
-		obj->intelligent = 1;
-		obj->save_mesh = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 0;
-		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 80] |= 4;
-		bones[obj->bone_index + 80] |= 8;
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP1].mesh_index + 14];
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP1].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP1].mesh_index + 36];
-	}
-
-	obj = &objects[VON_CROY_MIP];
-	if (obj->loaded)
-	{
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP1].mesh_index + 14];
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP1].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP1].mesh_index + 36];
-	}
-
-	obj = &objects[GUIDE];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseGuide;
-		obj->control = GuideControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = -16384;
-		obj->pivot_length = 0;
-		obj->radius = 128;
-		obj->intelligent = 1;
-		obj->hit_effect = 0;
-		obj->save_flags = 1;
-		obj->save_mesh = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 80] |= 4;
-		bones[obj->bone_index + 80] |= 8;
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP2].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP2].mesh_index + 36];
-		meshes[obj->mesh_index + 43] = meshes[objects[MESHSWAP2].mesh_index + 42];
-	}
-
-	obj = &objects[GUIDE_MIP];
-	if (obj->loaded)
-	{
-		meshes[obj->mesh_index + 31] = meshes[objects[MESHSWAP2].mesh_index + 30];
-		meshes[obj->mesh_index + 37] = meshes[objects[MESHSWAP2].mesh_index + 36];
-		meshes[obj->mesh_index + 43] = meshes[objects[MESHSWAP2].mesh_index + 42];
-	}
-
-	obj = &objects[RAGHEAD];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseRaghead;
-		obj->control = RagheadControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 25;
-		obj->pivot_length = 50;
-		obj->radius = 102;
-		obj->bite_offset = 1;
-		obj->intelligent = 1;
-		obj->save_mesh = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 1;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 88] |= 4;
-		bones[obj->bone_index + 88] |= 8;
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP3].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP3].mesh_index + 14];
-
-		for (int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP3].mesh_index + 2 * i + 22];
-
-		if (objects[SUPER_RAGHEAD].loaded)
-			obj->anim_index = objects[SUPER_RAGHEAD].anim_index;
-	}
-
-	obj = &objects[RAGHEAD_MIP];
-	if (obj->loaded)
-	{
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP3].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP3].mesh_index + 14];
-
-		for (int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP3].mesh_index + 2 * i + 22];
-	}
-
-	obj = &objects[SUPER_RAGHEAD];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseRaghead;
-		obj->control = RagheadControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 35;
-		obj->pivot_length = 50;
-		obj->radius = 102;
-		obj->bite_offset = 1;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_mesh = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 88] |= 4;
-		bones[obj->bone_index + 88] |= 8;
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP2].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP2].mesh_index + 14];
-
-		for (int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP2].mesh_index + 2 * i + 22];
-	}
-
-	obj = &objects[SUPER_RAGHEAD_MIP];
-	if (obj->loaded)
-	{
-		meshes[obj->mesh_index + 9] = meshes[objects[MESHSWAP2].mesh_index + 8];
-		meshes[obj->mesh_index + 15] = meshes[objects[MESHSWAP2].mesh_index + 14];
-
-		for (int i = 0; i < 12; i++)
-			meshes[obj->mesh_index + 2 * i + 23] = meshes[objects[MESHSWAP3].mesh_index + 2 * i + 22];
-	}
-
-	obj = &objects[SCORPION];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseScorpion;
-		obj->control = ScorpionControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 80;
-		obj->pivot_length = 50;
-		obj->radius = 512;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[SMALL_SCORPION];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseSmlscorp;
-		obj->control = SmlscorpControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 8;
-		obj->pivot_length = 20;
-		obj->radius = 128;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[MUMMY];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseMummy;
-		obj->control = MummyControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 15;
-		obj->radius = 170;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 2;
-		obj->undead = 1;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 72] |= 8;
-	}
-
-	obj = &objects[KNIGHTS_TEMPLAR];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseTemplar;
-		obj->control = TemplarControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 15;
-		obj->radius = 128;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 2;
-		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 56] |= 8;
-	}
-
-	obj = &objects[SPHINX];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseSphinx;
-		obj->control = SphinxControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 1000;
-		obj->pivot_length = 500;
-		obj->radius = 512;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 3;
-		obj->undead = 1;
-	}
-
-	obj = &objects[SETHA];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseSeth;
-		obj->control = SethControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 500;
-		obj->pivot_length = 50;
-		obj->radius = 341;
-		obj->intelligent = 1;
-		obj->undead = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[LARA_DOUBLE];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseLaraDouble;
-		obj->control = LaraDoubleControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 1000;
-		obj->pivot_length = 50;
-		obj->radius = 128;
-		obj->intelligent = 1;
-		obj->hit_effect = 3;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[HORSEMAN];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseHorseman;
-		obj->control = HorsemanControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 25;
-		obj->pivot_length = 50;
-		obj->radius = 409;
-		obj->intelligent = 1;
-		obj->hit_effect = 3;
-		obj->undead = 1;
-		obj->save_mesh = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[HAMMERHEAD];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseHammerhead;
-		obj->control = HammerheadControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 45;
-		obj->pivot_length = 300;
-		obj->radius = 341;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->water_creature = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 4] |= 8;
-		bones[obj->bone_index + 8] |= 8;
-		bones[obj->bone_index + 36] |= 8;
-	}
-
-	obj = &objects[CROCODILE];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseCroc;
-		obj->control = CrocControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 36;
-		obj->pivot_length = 300;
-		obj->radius = 409;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->water_creature = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 28] |= 8;
-		bones[obj->bone_index + 36] |= 8;
-		bones[obj->bone_index + 40] |= 8;
-	}
-
-	obj = &objects[DEMIGOD1];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseDemigod;
-		obj->control = DemigodControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 200;
-		obj->radius = 341;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->undead = 1;
-		obj->save_anim = 1;
-		obj->hit_effect = 3;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index + 32] |= 4;
-		bones[obj->bone_index + 32] |= 8;
-		bones[obj->bone_index + 32] |= 16;
-		bones[obj->bone_index + 80] |= 8;
-	}
-
-	obj = &objects[DEMIGOD2];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseDemigod;
-		obj->control = DemigodControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 200;
-		obj->radius = 341;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index + 32] |= 4;
-		bones[obj->bone_index + 32] |= 8;
-		bones[obj->bone_index + 32] |= 16;
-		bones[obj->bone_index + 80] |= 8;
-	}
-
-	obj = &objects[DEMIGOD3];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseDemigod;
-		obj->control = DemigodControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 200;
-		obj->radius = 341;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index + 32] |= 4;
-		bones[obj->bone_index + 32] |= 8;
-		bones[obj->bone_index + 32] |= 16;
-		bones[obj->bone_index + 80] |= 8;
-	}
-
-	obj = &objects[MUTANT];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseCrocgod;
-		obj->control = CrocgodControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 15;
-		obj->radius = 128;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 3;
-		obj->undead = 1;
-		bones[obj->bone_index + 24] |= 4;
-		bones[obj->bone_index + 24] |= 8;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-	}
-
-	obj = &objects[TROOPS];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseTroop;
-		obj->control = TroopControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 40;
-		obj->radius = 102;
-		obj->bite_offset = 0;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index] |= 4;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-	}
-
-	obj = &objects[SAS];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseSas;
-		obj->control = SasControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 40;
-		obj->radius = 102;
-		obj->bite_offset = 0;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index] |= 4;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 28] |= 4;
-		bones[obj->bone_index + 28] |= 8;
-	}
-
-	obj = &objects[HARPY];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseHarpy;
-		obj->control = HarpyControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 60;
-		obj->pivot_length = 50;
-		obj->radius = 409;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[WILD_BOAR];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseWildboar;
-		obj->control = WildboarControl;
-		obj->collision = CreatureCollision;
-		obj->pivot_length = 50;
-		obj->shadow_size = 128;
-		obj->hit_points = 40;
-		obj->radius = 102;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index + 48] |= 8;
-		bones[obj->bone_index + 48] |= 16;
-		bones[obj->bone_index + 52] |= 8;
-		bones[obj->bone_index + 52] |= 16;
-	}
-
-	obj = &objects[DOG];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseDog;
-		obj->control = DogControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 16;
-		obj->pivot_length = 300;
-		obj->radius = 341;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 8] |= 4;
-		bones[obj->bone_index + 8] |= 8;
-	}
-
-	obj = &objects[AHMET];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseAhmet;
-		obj->control = AhmetControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 80;
-		obj->pivot_length = 300;
-		obj->radius = 341;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		bones[obj->bone_index + 36] |= 8;
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		obj = &objects[BABOON_NORMAL + 2 * i];
-		if (obj->loaded)
-		{
-			obj->initialise = InitialiseBaboon;
-			obj->control = BaboonControl;
-			obj->collision = CreatureCollision;
-			obj->shadow_size = 128;
-			obj->hit_points = 30;
-			obj->pivot_length = 200;
-			obj->radius = 256;
-			obj->intelligent = 1;
-			obj->hit_effect = 1;
-			obj->save_flags = 1;
-			obj->save_anim = 1;
-			obj->save_hitpoints = 1;
-			obj->save_position = 1;
-			if (i)
-				obj->anim_index = objects[BABOON_NORMAL].anim_index;
-		}
-	}
-
-	obj = &objects[ENEMY_JEEP];
-	if (obj->loaded)
-	{
-		if (gfLevelFlags & GF_TRAIN)
-		{
-			obj->initialise = InitialiseTrainJeep;
-			obj->control = TrainJeepControl;
-			obj->collision = CreatureCollision;
-			obj->save_flags = 1;
-			obj->save_anim = 1;
-			obj->save_hitpoints = 1;
-			obj->save_position = 1;
-		}
-		else
-		{
-			obj->initialise = InitialiseEnemyJeep;
-			obj->control = EnemyJeepControl;
-			obj->collision = CreatureCollision;
-			obj->shadow_size = 128;
-			obj->hit_points = 40;
-			obj->pivot_length = 500;
-			obj->radius = 512;
-			obj->intelligent = 1;
-			obj->save_flags = 1;
-			obj->save_anim = 1;
-			obj->save_hitpoints = 1;
-			obj->save_position = 1;
-			obj->hit_effect = 2;
-			obj->undead = 1;
-			bones[obj->bone_index + 32] |= 4;
-			bones[obj->bone_index + 36] |= 4;
-			bones[obj->bone_index + 44] |= 4;
-			bones[obj->bone_index + 48] |= 4;
-		}
-	}
-
-	obj = &objects[BAT];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseBat;
-		obj->control = BatControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 5;
-		obj->pivot_length = 10;
-		obj->radius = 102;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[BIG_BEETLE];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseScarab;
-		obj->control = ScarabControl;
-		obj->collision = CreatureCollision;
-		obj->shadow_size = 128;
-		obj->hit_points = 30;
-		obj->pivot_length = 50;
-		obj->radius = 204;
-		obj->intelligent = 1;
-		obj->hit_effect = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[SENTRY_GUN];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseAutogun;
-		obj->control = AutogunControl;
-		obj->collision = CreatureCollision;
-		obj->radius = 204;
-		obj->shadow_size = 128;
-		obj->hit_points = 30;
-		obj->pivot_length = 50;
-		obj->explodable_meshbits = 0x40;
-		obj->intelligent = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_hitpoints = 1;
-		obj->save_position = 1;
-		obj->hit_effect = 3;
-		obj->undead = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 4] |= 4;
-		bones[obj->bone_index + 8] |= 16;
-		bones[obj->bone_index + 12] |= 16;
-	}
-
-	obj = &objects[HORSE];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseHorse;
-		obj->collision = ObjectCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = 0; i < 2; i++)
-	{
-		obj = &objects[SAS_DYING + 2 * i];
-		if (obj->loaded)
-		{
-			obj->initialise = InitialiseInjuredSas;
-			obj->control = InjuredSasControl;
-			obj->collision = ObjectCollision;
-			obj->save_flags = 1;
-			obj->save_anim = 1;
-			obj->save_position = 1;
-		}
-	}
-
-	obj = &objects[JEAN_YVES];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseJeanYves;
-		obj->control = JeanYvesControl;
-		obj->collision = ObjectCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->save_position = 1;
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		obj = &objects[GAME_PIECE1 + i];
-		if (obj->loaded)
-		{
-			obj->initialise = InitialiseSenet;
-			obj->control = SenetControl;
-			obj->collision = ObjectCollision;
-			obj->save_flags = 1;
-			obj->save_hitpoints = 1;
-			obj->save_position = 1;
-		}
-	}
-
-	obj = &objects[ENEMY_PIECE];
-	if (obj->loaded)
-	{
-		obj->collision = ObjectCollision;
-		obj->save_flags = 1;
-		obj->save_position = 1;
-	}
-
-	obj = &objects[WHEEL_OF_FORTUNE];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseGameStix;
-		obj->control = GameStixControl;
-		obj->collision = GameStixCollision;
-		obj->hit_points = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		bones[obj->bone_index] |= 16;
-		bones[obj->bone_index + 4] |= 16;
-		bones[obj->bone_index + 8] |= 16;
-		bones[obj->bone_index + 12] |= 16;
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		obj = &objects[WRAITH1 + i];
-		if (obj->loaded)
-		{
-			obj->initialise = InitialiseWraith;
-			obj->control = WraithControl;
-			obj->draw_routine_extra = DrawWraithTrail;
-			obj->save_flags = 1;
-			obj->save_anim = 1;
-			obj->save_hitpoints = 1;
-			obj->save_position = 1;
-		}
-	}
-
-	obj = &objects[LITTLE_BEETLE];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseScarabGenerator;
-		obj->control = TriggerScarab;
-		obj->draw_routine = 0;
-	}
-
-	obj = &objects[FISH];
-	if (obj->loaded)
-	{
-		obj->initialise = InitialiseLocustEmitter;
-		obj->control = ControlLocustEmitter;
-		obj->draw_routine = 0;
-		obj->save_flags = 1;
-	}
+	if (gfLevelFlags & GF_TRAIN)
+		factory.From(ENEMY_JEEP)->CreatureDefault()->Initialise(InitialiseTrainJeep)->Control(TrainJeepControl);
+	else
+		factory.From(ENEMY_JEEP)->CreatureDefault()->Initialise(InitialiseEnemyJeep)->Control(EnemyJeepControl)->HitPoints(40)->Undead()->HitEffect(2)->Radius(512)->Pivot(500)->Bone(8, BN_ROT_X)->Bone(9, BN_ROT_X)->Bone(11, BN_ROT_X)->Bone(12, BN_ROT_X);
+	
+	factory.From(BAT)->CreatureDefault()->Initialise(InitialiseBat)->Control(BatControl)->HitPoints(5)->Pivot(10);
+	factory.From(BIG_BEETLE)->CreatureDefault()->Initialise(InitialiseScarab)->Control(ScarabControl)->HitPoints(30)->Pivot(50)->Radius(204);
+	factory.From(SENTRY_GUN)->CreatureDefault()->Initialise(InitialiseAutogun)->Control(AutogunControl)->HitPoints(30)->Undead()->Radius(204)->Pivot(50)->NonLot()->HitEffect(3)->ExplosionMesh(6)->Bone(0, BN_ROT_Y)->Bone(1, BN_ROT_X)->Bone(2, BN_ROT_Z)->Bone(3, BN_ROT_Z);
+	factory.From(HORSE)->Initialise(InitialiseHorse)->Collision(ObjectCollision)->Save(false, false, true, true, false);
+	factory.From(SAS_DYING)->Initialise(InitialiseInjuredSas)->Control(InjuredSasControl)->Collision(ObjectCollision)->Save(true, false, true, true, false);
+	factory.From(SAS_DYING_MIP)->Initialise(InitialiseInjuredSas)->Control(InjuredSasControl)->Collision(ObjectCollision)->Save(true, false, true, true, false);
+	factory.From(JEAN_YVES)->Initialise(InitialiseJeanYves)->Control(JeanYvesControl)->Collision(ObjectCollision)->Save(true, false, true, true, false);
+	factory.From(GAME_PIECE1)->Initialise(InitialiseSenet)->Control(SenetControl)->Collision(ObjectCollision)->Save(true, true, true, false, false);
+	factory.From(GAME_PIECE2)->Initialise(InitialiseSenet)->Control(SenetControl)->Collision(ObjectCollision)->Save(true, true, true, false, false);
+	factory.From(GAME_PIECE3)->Initialise(InitialiseSenet)->Control(SenetControl)->Collision(ObjectCollision)->Save(true, true, true, false, false);
+	factory.From(ENEMY_PIECE)->Collision(ObjectCollision)->Save(true, false, true, false, false);
+	factory.From(WHEEL_OF_FORTUNE)->Initialise(InitialiseGameStix)->Control(GameStixControl)->Collision(GameStixCollision)->HitPoints(1)->Save(false, false, true, true, false)->Bone(0, BN_ROT_Z)->Bone(1, BN_ROT_Z)->Bone(2, BN_ROT_Z)->Bone(3, BN_ROT_Z);
+	factory.From(WRAITH1)->Initialise(InitialiseWraith)->Control(WraithControl)->DrawExtra(DrawWraithTrail)->SaveDefault();
+	factory.From(WRAITH2)->Initialise(InitialiseWraith)->Control(WraithControl)->DrawExtra(DrawWraithTrail)->SaveDefault();
+	factory.From(WRAITH3)->Initialise(InitialiseWraith)->Control(WraithControl)->DrawExtra(DrawWraithTrail)->SaveDefault();
+	factory.From(WRAITH4)->Initialise(InitialiseWraith)->Control(WraithControl)->DrawExtra(DrawWraithTrail)->SaveDefault();
+	factory.From(LITTLE_BEETLE)->Initialise(InitialiseScarabGenerator)->Control(TriggerScarab)->Draw(nullptr);
+	factory.From(LOCUST_EMITTER)->Initialise(InitialiseLocustEmitter)->Control(ControlLocustEmitter)->Draw(nullptr)->Save(false, false, true, false, false);
 }
 
 void BuildOutsideTable()
@@ -1846,32 +1053,10 @@ void InitialiseLara()
 
 void InitialiseObjects()
 {
-	OBJECT_INFO* obj;
+	ObjectRegisterFactory factory;
 
 	for (int i = 0; i < NUMBER_OBJECTS; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = 0;
-		obj->collision = 0;
-		obj->control = 0;
-		obj->intelligent = 0;
-		obj->save_position = 0;
-		obj->save_hitpoints = 0;
-		obj->save_flags = 0;
-		obj->save_anim = 0;
-		obj->water_creature = 0;
-		obj->save_mesh = 0;
-		obj->draw_routine = DrawAnimatingItem;
-		obj->ceiling = 0;
-		obj->floor = 0;
-		obj->pivot_length = 0;
-		obj->radius = 10;
-		obj->shadow_size = 0;
-		obj->hit_points = -16384;
-		obj->explodable_meshbits = 0;
-		obj->draw_routine_extra = 0;
-		obj->frame_base = (short*)((long)obj->frame_base + (char*)frames);
-	}
+		factory.From(i)->Draw(DrawAnimatingItem)->HitPoints(NOT_TARGETABLE)->Radius(10)->FrameBase(frames);
 
 	BaddyObjects();
 	ObjectObjects();
@@ -1881,10 +1066,8 @@ void InitialiseObjects()
 
 	for (int i = 0; i < 6; i++)
 		SequenceUsed[i] = 0;
-
 	for (int i = 0; i < 8; i++)
 		LibraryTab[i] = 0;
-
 	NumRPickups = 0;
 	CurrentSequence = 0;
 	SequenceResults[0][1][2] = 0;
@@ -1918,7 +1101,7 @@ void GetAIPickups()
 				{
 					item->ai_bits |= 1 << (aiObj->object_number - AI_GUARD);
 					item->item_flags[3] = aiObj->trigger_flags;
-					aiObj->room_number = 255;
+					aiObj->room_number = NO_ROOM;
 				}
 			}
 		}
@@ -1927,32 +1110,26 @@ void GetAIPickups()
 
 void GetCarriedItems()
 {
-	ITEM_INFO* baddy;
-	ITEM_INFO* pickup;
-	short item_num;
-
 	for (int i = 0; i < level_items; i++)
 	{
-		baddy = &items[i];
+		auto* baddy = &items[i];
 		baddy->carried_item = NO_ITEM;
 
-		if (objects[baddy->object_number].intelligent && baddy->object_number != SCORPION)
+		auto* baddyobj = &objects[baddy->object_number];
+		if (baddyobj->intelligent)
 		{
-			item_num = room[baddy->room_number].item_number;
-
+			short item_num = room[baddy->room_number].item_number;
 			while (item_num != NO_ITEM)
 			{
-				pickup = &items[item_num];
-
-				if (baddy->pos.x_pos == pickup->pos.x_pos && abs(baddy->pos.y_pos - pickup->pos.y_pos) < 256 &&
-					baddy->pos.z_pos == pickup->pos.z_pos && objects[pickup->object_number].collision == PickUpCollision)
+				auto* pickup = &items[item_num];
+				auto* obj = &objects[pickup->object_number];
+				if (baddy->pos.x_pos == pickup->pos.x_pos && abs(baddy->pos.y_pos - pickup->pos.y_pos) < 256 && baddy->pos.z_pos == pickup->pos.z_pos && obj->collision && obj->is_pickup)
 				{
 					pickup->carried_item = baddy->carried_item;
 					baddy->carried_item = item_num;
 					RemoveDrawnItem(item_num);
-					pickup->room_number = 255;
+					pickup->room_number = NO_ROOM;
 				}
-
 				item_num = pickup->next_item;
 			}
 		}

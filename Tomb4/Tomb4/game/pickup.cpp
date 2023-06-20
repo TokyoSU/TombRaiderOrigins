@@ -36,24 +36,20 @@ static PHD_VECTOR PlinthPickUpPosition = { 0, 0, -460 };
 static PHD_VECTOR PickUpPosition = { 0, 0, -100 };
 static PHD_VECTOR PickUpPositionUW = { 0, -200, -350 };
 
-void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void SarcophagusCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* pickup;
-	short pickup_num;
+	auto* item = &items[item_number];
 
-	item = &items[item_number];
-
-	if (input & IN_ACTION && item->status != ITEM_ACTIVE && l->current_anim_state == AS_STOP && l->anim_number == ANIM_BREATH &&
+	if (input & IN_ACTION && item->status != ITEM_ACTIVE && laraitem->current_anim_state == AS_STOP && laraitem->anim_number == ANIM_BREATH &&
 		lara.gun_status == LG_NO_ARMS || lara.IsMoving && lara.GeneralPtr == (void*)item_number)
 	{
-		if (TestLaraPosition(SarcophagusBounds, item, l))
+		if (TestLaraPosition(SarcophagusBounds, item, laraitem))
 		{
-			if (MoveLaraPosition(&SarcophagusPos, item, l))
+			if (MoveLaraPosition(&SarcophagusPos, item, laraitem))
 			{
-				l->anim_number = ANIM_SARCOPHAGUS;
-				l->frame_number = anims[ANIM_SARCOPHAGUS].frame_base;
-				l->current_anim_state = AS_CONTROLLED;
+				laraitem->anim_number = ANIM_SARCOPHAGUS;
+				laraitem->frame_number = anims[ANIM_SARCOPHAGUS].frame_base;
+				laraitem->current_anim_state = AS_CONTROLLED;
 				item->flags |= IFL_CODEBITS;
 				item->status = ITEM_ACTIVE;
 				AddActiveItem(item_number);
@@ -73,25 +69,28 @@ void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			lara.gun_status = LG_NO_ARMS;
 		}
 	}
-	else if (l->anim_number == ANIM_SARCOPHAGUS && l->frame_number == anims[ANIM_SARCOPHAGUS].frame_base + 113)
+	else if (laraitem->anim_number == ANIM_SARCOPHAGUS && laraitem->frame_number == anims[ANIM_SARCOPHAGUS].frame_base + 113)
 	{
-		for (pickup_num = room[item->room_number].item_number; pickup_num != NO_ITEM; pickup_num = pickup->next_item)
+		for (auto pickup_num = room[item->room_number].item_number; pickup_num != NO_ITEM;)
 		{
-			pickup = &items[pickup_num];
-
+			auto* pickup = &items[pickup_num];
 			if (item != pickup && item->pos.x_pos == pickup->pos.x_pos && item->pos.z_pos == pickup->pos.z_pos)
 			{
-				if (objects[pickup->object_number].collision == PickUpCollision)
+				auto& obj = objects[pickup->object_number];
+				if (obj.collision && obj.is_pickup)
 				{
 					AddDisplayPickup(pickup->object_number);
 					pickup->item_flags[3] = 1;
 					pickup->status = ITEM_INVISIBLE;
 				}
 			}
+			pickup_num = pickup->next_item;
 		}
 	}
 	else
-		ObjectCollision(item_number, l, coll);
+	{
+		ObjectCollision(item_number, laraitem, coll);
+	}
 }
 
 void KeyHoleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
@@ -212,17 +211,13 @@ short* FindPlinth(ITEM_INFO* item)
 		return o;
 
 	item_num = r->item_number;
-
-	while (1)
+	while (true)
 	{
 		plinth = &items[item_num];
-
-		if (item != plinth && objects[plinth->object_number].collision != PickUpCollision &&
-			item->pos.x_pos == plinth->pos.x_pos && item->pos.y_pos <= plinth->pos.y_pos && item->pos.z_pos == plinth->pos.z_pos)
+		auto* printobj = &objects[plinth->object_number];
+		if (item != plinth && printobj->collision && !printobj->is_pickup && item->pos.x_pos == plinth->pos.x_pos && item->pos.y_pos <= plinth->pos.y_pos && item->pos.z_pos == plinth->pos.z_pos)
 			break;
-
 		item_num = plinth->next_item;
-
 		if (item_num == NO_ITEM)
 			return 0;
 	}

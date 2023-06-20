@@ -76,6 +76,7 @@
     <ClInclude Include="game\mummy.h" />
     <ClInclude Include="game\newinv.h" />
     <ClInclude Include="game\objects.h" />
+    <ClInclude Include="game\objects_register.h" />
     <ClInclude Include="game\objlight.h" />
     <ClInclude Include="game\people.h" />
     <ClInclude Include="game\pickup.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="game\mummy.cpp" />
     <ClCompile Include="game\newinv.cpp" />
     <ClCompile Include="game\objects.cpp" />
+    <ClCompile Include="game\objects_register.cpp" />
     <ClCompile Include="game\objlight.cpp" />
     <ClCompile Include="game\people.cpp" />
     <ClCompile Include="game\pickup.cpp" />

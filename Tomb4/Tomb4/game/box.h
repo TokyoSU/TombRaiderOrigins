@@ -1,5 +1,6 @@
 #pragma once
 
+constexpr auto NOT_TARGETABLE = -16384; // NOTE: Enemies like baddy can't be targeted by lara anymore.
 
 void CreatureDie(short item_number, long explode);
 void InitialiseCreature(short item_number);
