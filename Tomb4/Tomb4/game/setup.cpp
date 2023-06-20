@@ -68,731 +68,320 @@
 #include "file.h"
 #include "objects_register.h"
 
+ObjectRegisterFactory factory;
+
+static void DrawDummyItem(ITEM_INFO* item)
+{
+}
+
 void ObjectObjects()
 {
-	OBJECT_INFO* obj;
-
-	obj = &objects[CAMERA_TARGET];
-	obj->draw_routine = 0;
-
-	obj = &objects[FLARE_ITEM];
-	obj->initialise = nullptr;
-	obj->control = FlareControl;
-	obj->collision = PickUpCollision;
-	obj->draw_routine = DrawFlareInAir;
-	obj->pivot_length = 256;
-	obj->hit_points = 256;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	for (int i = SMASH_OBJECT1; i <= SMASH_OBJECT8; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseSmashObject;
-		obj->control = SmashObjectControl;
-		obj->collision = ObjectCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	obj = &objects[BRIDGE_FLAT];
-	obj->floor = BridgeFlatFloor;
-	obj->ceiling = BridgeFlatCeiling;
-
-	obj = &objects[BRIDGE_TILT1];
-	obj->floor = BridgeTilt1Floor;
-	obj->ceiling = BridgeTilt1Ceiling;
-
-	obj = &objects[BRIDGE_TILT2];
-	obj->floor = BridgeTilt2Floor;
-	obj->ceiling = BridgeTilt2Ceiling;
-
-	for (int i = SWITCH_TYPE1; i <= SWITCH_TYPE6; i++)
-	{
-		obj = &objects[i];
-		obj->control = SwitchControl;
-		obj->collision = SwitchCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = SEQUENCE_SWITCH1; i <= SEQUENCE_SWITCH3; i++)
-	{
-		obj = &objects[i];
-		obj->control = FullBlockSwitchControl;
-		obj->collision = FullBlockSwitchCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	obj = &objects[UNDERWATER_SWITCH1];
-	obj->control = SwitchControl;
-	obj->collision = SwitchCollision2;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[UNDERWATER_SWITCH2];
-	obj->control = SwitchControl;
-	obj->collision = UnderwaterSwitchCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[TURN_SWITCH];
-	obj->control = TurnSwitchControl;
-	obj->collision = TurnSwitchCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[COG_SWITCH];
-	obj->control = CogSwitchControl;
-	obj->collision = CogSwitchCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[LEVER_SWITCH];
-	obj->control = SwitchControl;
-	obj->collision = RailSwitchCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[JUMP_SWITCH];
-	obj->control = SwitchControl;
-	obj->collision = JumpSwitchCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[CROWBAR_SWITCH];
-	obj->control = SwitchControl;
-	obj->collision = CrowbarSwitchCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[PULLEY];
-	obj->initialise = InitialisePulley;
-	obj->control = SwitchControl;
-	obj->collision = PulleyCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	for (int i = DOOR_TYPE1; i <= DOOR_TYPE8; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseDoor;
-		obj->control = DoorControl;
-		obj->collision = DoorCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	obj = &objects[UNDERWATER_DOOR];
-	obj->initialise = InitialiseDoor;
-	obj->control = PushPullKickDoorControl;
-	obj->collision = UnderwaterDoorCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[DOUBLE_DOORS];
-	obj->initialise = InitialiseDoor;
-	obj->control = PushPullKickDoorControl;
-	obj->collision = DoubleDoorCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[SEQUENCE_DOOR1];
-	obj->initialise = InitialiseDoor;
-	obj->control = SequenceDoorControl;
-	obj->collision = DoorCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	for (int i = PUSHPULL_DOOR1; i <= KICK_DOOR2; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseDoor;
-		obj->control = PushPullKickDoorControl;
-		obj->collision = PushPullKickDoorCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = FLOOR_TRAPDOOR1; i <= FLOOR_TRAPDOOR2; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseTrapDoor;
-		obj->control = TrapDoorControl;
-		obj->collision = FloorTrapDoorCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = CEILING_TRAPDOOR1; i <= CEILING_TRAPDOOR2; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseTrapDoor;
-		obj->control = TrapDoorControl;
-		obj->collision = CeilingTrapDoorCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = TRAPDOOR1; i <= TRAPDOOR3; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseTrapDoor;
-		obj->control = TrapDoorControl;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = PUZZLE_ITEM1; i <= SECRET_MAP; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialisePickUp;
-		obj->control = AnimatingPickUp;
-		obj->collision = PickUpCollision;
-		obj->save_position = 1;
-		obj->save_flags = 1;
-	}
-
-	for (int i = PISTOLS_ITEM; i <= BINOCULARS_ITEM; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialisePickUp;
-		obj->control = AnimatingPickUp;
-		obj->collision = PickUpCollision;
-		obj->save_position = 1;
-		obj->save_flags = 1;
-	}
-
-	obj = &objects[BURNING_TORCH_ITEM];
-	obj->initialise = nullptr;
-	obj->control = FlameTorchControl;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[WATERSKIN1_EMPTY];
-	obj->initialise = InitialisePickUp;
-	obj->control = AnimatingPickUp;
-	obj->collision = PickUpCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[WATERSKIN2_EMPTY];
-	obj->initialise = InitialisePickUp;
-	obj->control = AnimatingPickUp;
-	obj->collision = PickUpCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[CROSSBOW_BOLT];
-	obj->initialise = nullptr;
-	obj->control = ControlCrossbow;
-	obj->collision = nullptr;
-	obj->draw_routine = DrawWeaponMissile;
-
-	obj = &objects[GRENADE];
-	obj->initialise = nullptr;
-	obj->control = ControlGrenade;
-	obj->collision = nullptr;
-	obj->draw_routine = DrawWeaponMissile;
-
-	obj = &objects[FLARE_INV_ITEM];
-	obj->initialise = InitialisePickUp;
-	obj->control = AnimatingPickUp;
-	obj->collision = PickUpCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[COMPASS_ITEM];
-	obj->initialise = InitialisePickUp;
-	obj->control = AnimatingPickUp;
-	obj->collision = PickUpCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	for (int i = KEY_HOLE1; i <= KEY_HOLE12; i++)
-	{
-		obj = &objects[i];
-		obj->collision = KeyHoleCollision;
-		obj->save_flags = 1;
-	}
-
-	for (int i = PUZZLE_HOLE1; i <= PUZZLE_HOLE12; i++)
-	{
-		obj = &objects[i];
-		obj->control = ControlAnimatingSlots;
-		obj->collision = PuzzleHoleCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = PUZZLE_DONE1; i <= PUZZLE_DONE12; i++)
-	{
-		obj = &objects[i];
-		obj->control = ControlAnimatingSlots;
-		obj->collision = PuzzleDoneCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	obj = &objects[SARCOPHAGUS];
-	obj->control = ControlAnimatingSlots;
-	obj->collision = SarcophagusCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	for (int i = ANIMATING1; i <= ANIMATING12; i++)
-	{
-		obj = &objects[i];
-		obj->control = ControlAnimatingSlots;
-		obj->collision = ObjectCollision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	for (int i = ANIMATING13; i <= ANIMATING16_MIP; i++)
-	{
-		obj = &objects[i];
-		obj->control = ControlAnimatingSlots;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		obj->hit_effect = 0;
-	}
-
-	obj = &objects[FIREROPE];
-	obj->control = ControlBurningRope;
-	obj->collision = BurningRopeCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[EXPANDING_PLATFORM];
-	obj->initialise = InitialiseRaisingBlock;
-	obj->control = ControlRaisingBlock;
-	obj->draw_routine = DrawScaledSpike;
-	obj->save_flags = 1;
-
-	obj = &objects[SQUISHY_BLOCK1];
-	obj->control = ControlLRSquishyBlock;
-	obj->collision = ObjectCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[SQUISHY_BLOCK2];
-	obj->control = ControlFallingSquishyBlock;
-	obj->collision = FallingSquishyBlockCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[MAPPER];
-	obj->initialise = InitialiseMapper;
-	obj->control = ControlMapper;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[OBELISK];
-	obj->initialise = InitialiseObelisk;
-	obj->control = ControlObelisk;
-	obj->collision = ObjectCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[ELEMENT_PUZZLE];
-	obj->initialise = InitialiseElementPuzzle;
-	obj->control = ControlElementPuzzle;
-	obj->collision = ElementPuzzleCollision;
-	obj->save_flags = 1;
-	obj->save_mesh = 1;
-
-	obj = &objects[STATUE_PLINTH];
-	obj->initialise = InitialiseStatuePlinth;
-	obj->collision = StatuePlinthCollision;
-	obj->save_flags = 1;
-	obj->save_mesh = 1;
-
-	for (int i = SWITCH_TYPE7; i <= SWITCH_TYPE8; i++)
-	{
-		obj = &objects[i];
-		obj->control = ControlAnimatingSlots;
-		obj->collision = SwitchType78Collision;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	obj = &objects[SWITCH_TYPE7];
-	obj->save_mesh = 1;
-
-	obj = &objects[SCALES];
-	obj->control = ScalesControl;
-	obj->collision = ScalesCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-	obj->hit_effect = 0;
-
-	obj = &objects[TEETH_SPIKES];
-	obj->initialise = InitialiseScaledSpike;
-	obj->control = ControlScaledSpike;
-	obj->draw_routine = DrawScaledSpike;
-	obj->save_flags = 1;
-
-	obj = &objects[JOBY_SPIKES];
-	obj->initialise = InitialiseJobySpike;
-	obj->control = ControlJobySpike;
-	obj->draw_routine = DrawScaledSpike;
-	obj->save_flags = 1;
-
-	obj = &objects[SLICER_DICER];
-	obj->initialise = InitialiseSlicerDicer;
-	obj->control = ControlSlicerDicer;
-	obj->collision = GenericDeadlyBoundingBoxCollision;
-	obj->save_flags = 1;
-
-	obj = &objects[SARCOPHAGUS_CUT];
-	obj->save_mesh = 1;
-
-	obj = &objects[HORUS_STATUE];
-	obj->collision = ObjectCollision;
-	obj->save_mesh = 1;
-
-	for (int i = RAISING_BLOCK1; i <= RAISING_BLOCK2; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseRaisingBlock;
-		obj->control = ControlRaisingBlock;
-		obj->collision = nullptr;
-		obj->draw_routine = DrawScaledSpike;
-		obj->save_flags = 1;
-	}
-
-	for (int i = SMOKE_EMITTER_WHITE; i <= STEAM_EMITTER; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseSmokeEmitter;
-		obj->control = ControlSmokeEmitter;
-		obj->draw_routine = 0;
-		obj->save_flags = 1;
-	}
-
-	for (int i = RED_LIGHT; i <= BLUE_LIGHT; i++)
-	{
-		obj = &objects[i];
-		obj->control = ControlColouredLights;
-		obj->draw_routine = 0;
-		obj->save_flags = 1;
-	}
-
-	obj = &objects[LIGHTNING_CONDUCTOR];
-	obj->initialise = InitialiseLightningConductor;
-	obj->control = ControlLightningConductor;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[BUBBLES];
-	obj->control = ControlEnemyMissile;
-	obj->draw_routine = (void(*)(ITEM_INFO*))1;
-	obj->nmeshes = 0;
-	obj->loaded = 1;
-
-	obj = &objects[WATERFALLMIST];
-	obj->control = WaterFall;
-	obj->draw_routine = 0;
-
-	obj = &objects[AMBER_LIGHT];
-	obj->control = ControlPulseLight;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[WHITE_LIGHT];
-	obj->control = ControlElectricalLight;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[BLINKING_LIGHT];
-	obj->control = ControlBlinker;
-	obj->save_flags = 1;
-
-	obj = &objects[LENS_FLARE];
-	obj->draw_routine = DrawLensFlares;
-
-	for (int i = WATERFALL1; i <= WATERFALL3; i++)
-	{
-		obj = &objects[i];
-		obj->control = ControlWaterfall;
-		obj->save_flags = 1;
-	}
-
-	obj = &objects[CLOCKWORK_BEETLE];
-	obj->initialise = nullptr;
-	obj->control = ControlClockworkBeetle;
-
-	obj = &objects[GOD_HEAD];
-	obj->control = ControlGodHead;
-	obj->draw_routine = DrawGodHead;
-	obj->save_flags = 1;
-
-	obj = &objects[EARTHQUAKE];
-	obj->control = EarthQuake;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[BODY_PART];
-	obj->control = ControlBodyPart;
-	obj->draw_routine = (void(*)(ITEM_INFO*))1;
-	obj->nmeshes = 0;
-	obj->loaded = 1;
+	factory.From(CAMERA_TARGET)->Draw(nullptr);
+	factory.From(FLARE_ITEM)->Control(FlareControl)->Collision(PickUpCollision)->Draw(DrawFlareInAir)->Pivot(256)->HitPoints(256)->Save(true, false, true, false, false);
+	factory.From(SMASH_OBJECT1)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(SMASH_OBJECT2)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(SMASH_OBJECT3)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(SMASH_OBJECT4)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(SMASH_OBJECT5)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(SMASH_OBJECT6)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(SMASH_OBJECT7)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(SMASH_OBJECT8)->Initialise(InitialiseSmashObject)->Collision(ObjectCollision)->Control(SmashObjectControl)->Save(false, false, true, true, false);
+	factory.From(BRIDGE_FLAT)->Floor(BridgeFlatFloor)->Ceiling(BridgeFlatCeiling);
+	factory.From(BRIDGE_TILT1)->Floor(BridgeTilt1Floor)->Ceiling(BridgeTilt1Ceiling);
+	factory.From(BRIDGE_TILT2)->Floor(BridgeTilt2Floor)->Ceiling(BridgeTilt2Ceiling);
+	factory.From(SWITCH_TYPE1)->Control(SwitchControl)->Collision(SwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SWITCH_TYPE2)->Control(SwitchControl)->Collision(SwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SWITCH_TYPE3)->Control(SwitchControl)->Collision(SwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SWITCH_TYPE4)->Control(SwitchControl)->Collision(SwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SWITCH_TYPE5)->Control(SwitchControl)->Collision(SwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SWITCH_TYPE6)->Control(SwitchControl)->Collision(SwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SEQUENCE_SWITCH1)->Control(FullBlockSwitchControl)->Collision(FullBlockSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SEQUENCE_SWITCH2)->Control(FullBlockSwitchControl)->Collision(FullBlockSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(SEQUENCE_SWITCH3)->Control(FullBlockSwitchControl)->Collision(FullBlockSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(UNDERWATER_SWITCH1)->Control(SwitchControl)->Collision(SwitchCollision2)->Save(false, false, true, true, false);
+	factory.From(UNDERWATER_SWITCH2)->Control(SwitchControl)->Collision(UnderwaterSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(TURN_SWITCH)->Control(TurnSwitchControl)->Collision(TurnSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(COG_SWITCH)->Control(CogSwitchControl)->Collision(CogSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(LEVER_SWITCH)->Control(SwitchControl)->Collision(RailSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(JUMP_SWITCH)->Control(SwitchControl)->Collision(JumpSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(CROWBAR_SWITCH)->Control(SwitchControl)->Collision(CrowbarSwitchCollision)->Save(false, false, true, true, false);
+	factory.From(PULLEY)->Initialise(InitialisePulley)->Control(SwitchControl)->Collision(PulleyCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE1)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE2)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE3)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE4)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE5)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE6)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE7)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOOR_TYPE8)->Initialise(InitialiseDoor)->Control(DoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(UNDERWATER_DOOR)->Initialise(InitialiseDoor)->Control(PushPullKickDoorControl)->Collision(UnderwaterDoorCollision)->Save(false, false, true, true, false);
+	factory.From(DOUBLE_DOORS)->Initialise(InitialiseDoor)->Control(PushPullKickDoorControl)->Collision(DoubleDoorCollision)->Save(false, false, true, true, false);
+	factory.From(SEQUENCE_DOOR)->Initialise(InitialiseDoor)->Control(SequenceDoorControl)->Collision(DoorCollision)->Save(false, false, true, true, false);
+	factory.From(PUSHPULL_DOOR1)->Initialise(InitialiseDoor)->Control(PushPullKickDoorControl)->Collision(PushPullKickDoorCollision)->Save(false, false, true, true, false);
+	factory.From(PUSHPULL_DOOR2)->Initialise(InitialiseDoor)->Control(PushPullKickDoorControl)->Collision(PushPullKickDoorCollision)->Save(false, false, true, true, false);
+	factory.From(KICK_DOOR1)->Initialise(InitialiseDoor)->Control(PushPullKickDoorControl)->Collision(PushPullKickDoorCollision)->Save(false, false, true, true, false);
+	factory.From(KICK_DOOR2)->Initialise(InitialiseDoor)->Control(PushPullKickDoorControl)->Collision(PushPullKickDoorCollision)->Save(false, false, true, true, false);
+	factory.From(FLOOR_TRAPDOOR1)->Initialise(InitialiseTrapDoor)->Control(TrapDoorControl)->Collision(FloorTrapDoorCollision)->Save(false, false, true, true, false);
+	factory.From(FLOOR_TRAPDOOR2)->Initialise(InitialiseTrapDoor)->Control(TrapDoorControl)->Collision(FloorTrapDoorCollision)->Save(false, false, true, true, false);
+	factory.From(CEILING_TRAPDOOR1)->Initialise(InitialiseTrapDoor)->Control(TrapDoorControl)->Collision(CeilingTrapDoorCollision)->Save(false, false, true, true, false);
+	factory.From(CEILING_TRAPDOOR2)->Initialise(InitialiseTrapDoor)->Control(TrapDoorControl)->Collision(CeilingTrapDoorCollision)->Save(false, false, true, true, false);
+	factory.From(TRAPDOOR1)->Initialise(InitialiseTrapDoor)->Control(TrapDoorControl)->Save(false, false, true, true, false);
+	factory.From(TRAPDOOR2)->Initialise(InitialiseTrapDoor)->Control(TrapDoorControl)->Save(false, false, true, true, false);
+	factory.From(TRAPDOOR3)->Initialise(InitialiseTrapDoor)->Control(TrapDoorControl)->Save(false, false, true, true, false);
+	factory.From(PUZZLE_ITEM1)->PickupDefault();
+	factory.From(PUZZLE_ITEM2)->PickupDefault();
+	factory.From(PUZZLE_ITEM3)->PickupDefault();
+	factory.From(PUZZLE_ITEM4)->PickupDefault();
+	factory.From(PUZZLE_ITEM5)->PickupDefault();
+	factory.From(PUZZLE_ITEM6)->PickupDefault();
+	factory.From(PUZZLE_ITEM7)->PickupDefault();
+	factory.From(PUZZLE_ITEM8)->PickupDefault();
+	factory.From(PUZZLE_ITEM9)->PickupDefault();
+	factory.From(PUZZLE_ITEM10)->PickupDefault();
+	factory.From(PUZZLE_ITEM11)->PickupDefault();
+	factory.From(PUZZLE_ITEM12)->PickupDefault();
+	factory.From(PUZZLE_ITEM1_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM1_COMBO2)->PickupDefault();
+	factory.From(PUZZLE_ITEM2_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM2_COMBO2)->PickupDefault();
+	factory.From(PUZZLE_ITEM3_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM3_COMBO2)->PickupDefault();
+	factory.From(PUZZLE_ITEM4_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM4_COMBO2)->PickupDefault();
+	factory.From(PUZZLE_ITEM5_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM5_COMBO2)->PickupDefault();
+	factory.From(PUZZLE_ITEM6_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM6_COMBO2)->PickupDefault();
+	factory.From(PUZZLE_ITEM7_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM7_COMBO2)->PickupDefault();
+	factory.From(PUZZLE_ITEM8_COMBO1)->PickupDefault();
+	factory.From(PUZZLE_ITEM8_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM1)->PickupDefault();
+	factory.From(KEY_ITEM2)->PickupDefault();
+	factory.From(KEY_ITEM3)->PickupDefault();
+	factory.From(KEY_ITEM4)->PickupDefault();
+	factory.From(KEY_ITEM5)->PickupDefault();
+	factory.From(KEY_ITEM6)->PickupDefault();
+	factory.From(KEY_ITEM7)->PickupDefault();
+	factory.From(KEY_ITEM8)->PickupDefault();
+	factory.From(KEY_ITEM9)->PickupDefault();
+	factory.From(KEY_ITEM10)->PickupDefault();
+	factory.From(KEY_ITEM11)->PickupDefault();
+	factory.From(KEY_ITEM12)->PickupDefault();
+	factory.From(KEY_ITEM1_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM1_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM2_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM2_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM3_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM3_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM4_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM4_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM5_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM5_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM6_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM6_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM7_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM7_COMBO2)->PickupDefault();
+	factory.From(KEY_ITEM8_COMBO1)->PickupDefault();
+	factory.From(KEY_ITEM8_COMBO2)->PickupDefault();
+	factory.From(PICKUP_ITEM1)->PickupDefault();
+	factory.From(PICKUP_ITEM2)->PickupDefault();
+	factory.From(PICKUP_ITEM3)->PickupDefault();
+	factory.From(PICKUP_ITEM4)->PickupDefault();
+	factory.From(PICKUP_ITEM1_COMBO1)->PickupDefault();
+	factory.From(PICKUP_ITEM1_COMBO2)->PickupDefault();
+	factory.From(PICKUP_ITEM2_COMBO1)->PickupDefault();
+	factory.From(PICKUP_ITEM2_COMBO2)->PickupDefault();
+	factory.From(PICKUP_ITEM3_COMBO1)->PickupDefault();
+	factory.From(PICKUP_ITEM3_COMBO2)->PickupDefault();
+	factory.From(PICKUP_ITEM4_COMBO1)->PickupDefault();
+	factory.From(PICKUP_ITEM4_COMBO2)->PickupDefault();
+	factory.From(EXAMINE1)->PickupDefault();
+	factory.From(EXAMINE2)->PickupDefault();
+	factory.From(EXAMINE3)->PickupDefault();
+	factory.From(CROWBAR_ITEM)->PickupDefault();
+	factory.From(BURNING_TORCH_ITEM)->PickupDefault();
+	factory.From(CLOCKWORK_BEETLE)->PickupDefault();
+	factory.From(CLOCKWORK_BEETLE_COMBO1)->PickupDefault();
+	factory.From(CLOCKWORK_BEETLE_COMBO2)->PickupDefault();
+	factory.From(MINE_DETECTOR)->PickupDefault();
+	factory.From(QUEST_ITEM1)->PickupDefault();
+	factory.From(QUEST_ITEM2)->PickupDefault();
+	factory.From(QUEST_ITEM3)->PickupDefault();
+	factory.From(QUEST_ITEM4)->PickupDefault();
+	factory.From(QUEST_ITEM5)->PickupDefault();
+	factory.From(QUEST_ITEM6)->PickupDefault();
+	factory.From(MAP)->PickupDefault();
+	factory.From(SECRET_MAP)->PickupDefault();
+	factory.From(PISTOLS_ITEM)->PickupDefault();
+	factory.From(PISTOLS_AMMO_ITEM)->PickupDefault();
+	factory.From(UZI_ITEM)->PickupDefault();
+	factory.From(UZI_AMMO_ITEM)->PickupDefault();
+	factory.From(SHOTGUN_ITEM)->PickupDefault();
+	factory.From(SHOTGUN_AMMO1_ITEM)->PickupDefault();
+	factory.From(SHOTGUN_AMMO2_ITEM)->PickupDefault();
+	factory.From(CROSSBOW_ITEM)->PickupDefault();
+	factory.From(CROSSBOW_AMMO1_ITEM)->PickupDefault();
+	factory.From(CROSSBOW_AMMO2_ITEM)->PickupDefault();
+	factory.From(CROSSBOW_AMMO3_ITEM)->PickupDefault();
+	factory.From(GRENADE_GUN_ITEM)->PickupDefault();
+	factory.From(GRENADE_GUN_AMMO1_ITEM)->PickupDefault();
+	factory.From(GRENADE_GUN_AMMO2_ITEM)->PickupDefault();
+	factory.From(GRENADE_GUN_AMMO3_ITEM)->PickupDefault();
+	factory.From(SIXSHOOTER_ITEM)->PickupDefault();
+	factory.From(SIXSHOOTER_AMMO_ITEM)->PickupDefault();
+	factory.From(BIGMEDI_ITEM)->PickupDefault();
+	factory.From(SMALLMEDI_ITEM)->PickupDefault();
+	factory.From(LASERSIGHT_ITEM)->PickupDefault();
+	factory.From(BINOCULARS_ITEM)->PickupDefault();
+	factory.From(FLARE_INV_ITEM)->PickupDefault();
+	factory.From(COMPASS_ITEM)->PickupDefault();
+	factory.From(WATERSKIN1_EMPTY)->PickupDefault();
+	factory.From(WATERSKIN2_EMPTY)->PickupDefault();
+	factory.From(BURNING_TORCH_ITEM)->Control(FlameTorchControl)->Save(true, false, true, false, false);
+	factory.From(CROSSBOW_BOLT)->Control(ControlCrossbow)->Draw(DrawWeaponMissile)->Save(true, false, false, false, false);
+	factory.From(GRENADE)->Control(ControlGrenade)->Draw(DrawWeaponMissile)->Save(true, false, false, false, false);
+	factory.From(KEY_HOLE1)->KeyHoleDefault();
+	factory.From(KEY_HOLE2)->KeyHoleDefault();
+	factory.From(KEY_HOLE3)->KeyHoleDefault();
+	factory.From(KEY_HOLE4)->KeyHoleDefault();
+	factory.From(KEY_HOLE5)->KeyHoleDefault();
+	factory.From(KEY_HOLE6)->KeyHoleDefault();
+	factory.From(KEY_HOLE7)->KeyHoleDefault();
+	factory.From(KEY_HOLE8)->KeyHoleDefault();
+	factory.From(KEY_HOLE9)->KeyHoleDefault();
+	factory.From(KEY_HOLE10)->KeyHoleDefault();
+	factory.From(KEY_HOLE11)->KeyHoleDefault();
+	factory.From(KEY_HOLE12)->KeyHoleDefault();
+	factory.From(PUZZLE_HOLE1)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE2)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE3)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE4)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE5)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE6)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE7)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE8)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE9)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE10)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE11)->PuzzleHoleDefault();
+	factory.From(PUZZLE_HOLE12)->PuzzleHoleDefault();
+	factory.From(PUZZLE_DONE1)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE2)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE3)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE4)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE5)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE6)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE7)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE8)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE9)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE10)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE11)->PuzzleDoneDefault();
+	factory.From(PUZZLE_DONE12)->PuzzleDoneDefault();
+	factory.From(SARCOPHAGUS)->Control(ControlAnimatingSlots)->Collision(SarcophagusCollision)->Save(false, false, true, true, false);
+	factory.From(ANIMATING1)->AnimatingDefault();
+	factory.From(ANIMATING2)->AnimatingDefault();
+	factory.From(ANIMATING3)->AnimatingDefault();
+	factory.From(ANIMATING4)->AnimatingDefault();
+	factory.From(ANIMATING5)->AnimatingDefault();
+	factory.From(ANIMATING6)->AnimatingDefault();
+	factory.From(ANIMATING7)->AnimatingDefault();
+	factory.From(ANIMATING8)->AnimatingDefault();
+	factory.From(ANIMATING9)->AnimatingDefault();
+	factory.From(ANIMATING10)->AnimatingDefault();
+	factory.From(ANIMATING11)->AnimatingDefault();
+	factory.From(ANIMATING12)->AnimatingDefault();
+	factory.From(ANIMATING13)->AnimatingDefault(false);
+	factory.From(ANIMATING14)->AnimatingDefault(false);
+	factory.From(ANIMATING15)->AnimatingDefault(false);
+	factory.From(ANIMATING16)->AnimatingDefault(false);
+	factory.From(FIREROPE)->Control(ControlBurningRope)->Collision(BurningRopeCollision)->Save(false, false, true, true, false);
+	factory.From(EXPANDING_PLATFORM)->Initialise(InitialiseRaisingBlock)->Control(ControlRaisingBlock)->Draw(DrawScaledSpike)->Save(false, false, true, false, false);
+	factory.From(SQUISHY_BLOCK1)->Control(ControlLRSquishyBlock)->Collision(ObjectCollision)->Save(false, false, true, true, false);
+	factory.From(SQUISHY_BLOCK2)->Control(ControlFallingSquishyBlock)->Collision(FallingSquishyBlockCollision)->Save(false, false, true, true, false);
+	factory.From(MAPPER)->Initialise(InitialiseMapper)->Control(ControlMapper)->Save(false, false, true, true, false);
+	factory.From(OBELISK)->Initialise(InitialiseObelisk)->Control(ControlObelisk)->Collision(ObjectCollision)->Save(true, false, true, false, false);
+	factory.From(ELEMENT_PUZZLE)->Initialise(InitialiseElementPuzzle)->Control(ControlElementPuzzle)->Collision(ElementPuzzleCollision)->Save(false, false, true, false, true);
+	factory.From(STATUE_PLINTH)->Initialise(InitialiseStatuePlinth)->Collision(StatuePlinthCollision)->Save(false, false, true, false, true);
+	factory.From(SHOOT_SWITCH1)->Control(ControlAnimatingSlots)->Collision(SwitchType78Collision)->Save(false, false, true, true, true);
+	factory.From(SHOOT_SWITCH2)->Control(ControlAnimatingSlots)->Collision(SwitchType78Collision)->Save(false, false, true, true, false);
+	factory.From(SCALES)->Control(ScalesControl)->Collision(ScalesCollision)->Save(false, false, true, true, false);
+	factory.From(TEETH_SPIKES)->Initialise(InitialiseScaledSpike)->Control(ControlScaledSpike)->Draw(DrawScaledSpike)->Save(false, false, true, false, false);
+	factory.From(JOBY_SPIKES)->Initialise(InitialiseJobySpike)->Control(ControlJobySpike)->Draw(DrawScaledSpike)->Save(false, false, true, false, false);
+	factory.From(SLICER_DICER)->Initialise(InitialiseSlicerDicer)->Control(ControlSlicerDicer)->Collision(GenericDeadlyBoundingBoxCollision)->Save(false, false, true, false, false);
+	factory.From(SARCOPHAGUS_CUT)->Save(false, false, false, false, true);
+	factory.From(HORUS_STATUE)->Collision(ObjectCollision)->Save(false, false, false, false, true);
+	factory.From(RAISING_BLOCK1)->Initialise(InitialiseRaisingBlock)->Control(ControlRaisingBlock)->Draw(DrawScaledSpike)->Save(false, false, true, false, false);
+	factory.From(RAISING_BLOCK2)->Initialise(InitialiseRaisingBlock)->Control(ControlRaisingBlock)->Draw(DrawScaledSpike)->Save(false, false, true, false, false);
+	factory.From(SMOKE_EMITTER_WHITE)->Initialise(InitialiseSmokeEmitter)->Control(ControlSmokeEmitter)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(SMOKE_EMITTER_BLACK)->Initialise(InitialiseSmokeEmitter)->Control(ControlSmokeEmitter)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(STEAM_EMITTER)->Initialise(InitialiseSmokeEmitter)->Control(ControlSmokeEmitter)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(RED_LIGHT)->Control(ControlColouredLights)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(GREEN_LIGHT)->Control(ControlColouredLights)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(BLUE_LIGHT)->Control(ControlColouredLights)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(AMBER_LIGHT)->Control(ControlPulseLight)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(WHITE_LIGHT)->Control(ControlElectricalLight)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(BLINKING_LIGHT)->Control(ControlBlinker)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(LIGHTNING_CONDUCTOR)->Initialise(InitialiseLightningConductor)->Control(ControlLightningConductor)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(BUBBLES)->LoadedByDefault()->Control(ControlEnemyMissile)->Draw(DrawDummyItem)->NoMeshes()->Save(false, false, true, false, false);
+	factory.From(WATERFALLMIST)->Control(WaterFall)->Draw(nullptr);
+	factory.From(LENS_FLARE)->Draw(DrawLensFlares);
+	factory.From(WATERFALL1)->Control(ControlWaterfall)->Save(false, false, true, false, false);
+	factory.From(WATERFALL2)->Control(ControlWaterfall)->Save(false, false, true, false, false);
+	factory.From(WATERFALL3)->Control(ControlWaterfall)->Save(false, false, true, false, false);
+	factory.From(CLOCKWORK_BEETLE)->Control(ControlClockworkBeetle);
+	factory.From(GOD_HEAD)->Control(ControlGodHead)->Draw(DrawGodHead)->Save(false, false, true, false, false);
+	factory.From(EARTHQUAKE)->Control(EarthQuake)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(BODY_PART)->LoadedByDefault()->Control(ControlBodyPart)->Draw(DrawDummyItem)->NoMeshes();
 }
 
 void TrapObjects()
 {
-	OBJECT_INFO* obj;
-
-	obj = &objects[ROLLINGBALL];
-	obj->control = ControlRollingBall;
-	obj->collision = RollingBallCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[CHAIN];
-	obj->control = ControlChain;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[PLOUGH];
-	obj->control = ControlPlough;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-	
-	obj = &objects[STARGATE];
-	obj->control = ControlStargate;
-	obj->collision = StargateCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[HAMMER];
-	obj->control = ControlHammer;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[BURNING_FLOOR];
-	obj->initialise = InitialiseBurningFloor;
-	obj->control = ControlBurningFloor;
-//	obj->collision = empty func here;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[COG];
-	obj->control = ControlAnimatingSlots;
-	obj->collision = CogCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[SPIKEBALL];
-	obj->control = ControlSpikeball;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[TWOBLOCK_PLATFORM];
-	obj->initialise = InitialiseTwoBlockPlatform;
-	obj->control = ControlTwoBlockPlatform;
-	obj->floor = TwoBlockPlatformFloor;
-	obj->ceiling = TwoBlockPlatformCeiling;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-
-	obj = &objects[FLOOR_4BLADE];
-	obj->control = Control4xFloorRoofBlade;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[ROOF_4BLADE];
-	obj->control = Control4xFloorRoofBlade;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[BIRD_BLADE];
-	obj->control = ControlBirdBlade;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[CATWALK_BLADE];
-	obj->control = ControlCatwalkBlade;
-	obj->collision = GenericDeadlyBoundingBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[MOVING_BLADE];
-	obj->control = ControlMovingBlade;
-	obj->collision = GenericDeadlyBoundingBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[PLINTH_BLADE];
-	obj->control = ControlPlinthBlade;
-	obj->collision = GenericDeadlyBoundingBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[SETH_BLADE];
-	obj->initialise = InitialiseSethBlade;
-	obj->control = ControlSethBlade;
-	obj->collision = GenericSphereBoxCollision;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[KILL_ALL_TRIGGERS];
-	obj->control = KillAllCurrentItems;
-	obj->draw_routine = 0;
-	obj->hit_points = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[DEATH_SLIDE];
-	obj->initialise = InitialiseDeathSlide;
-	obj->control = ControlDeathSlide;
-	obj->collision = DeathSlideCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	for (int i = FALLING_BLOCK; i <= FALLING_BLOCK2; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseFallingBlock2;
-		obj->control = FallingBlock;
-		obj->collision = FallingBlockCollision;
-		obj->floor = FallingBlockFloor;
-		obj->ceiling = FallingBlockCeiling;
-		obj->save_position = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-	}
-
-	obj = &objects[FALLING_CEILING];
-	obj->control = FallingCeiling;
-	obj->collision = TrapCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[SMASHABLE_BIKE_WALL];
-	obj->initialise = InitialiseFallingBlock2;
-	obj->control = ControlSmashableBikeWall;
-	obj->collision = ObjectCollision;
-	obj->save_flags = 1;
-
-	obj = &objects[SMASHABLE_BIKE_FLOOR];
-	obj->initialise = InitialiseFallingBlock2;
-	obj->control = ControlFallingBlock2;
-	obj->collision = ObjectCollision;
-	obj->floor = TwoBlockPlatformFloor;
-	obj->ceiling = TwoBlockPlatformCeiling;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	for (int i = PUSHABLE_OBJECT1; i <= PUSHABLE_OBJECT5; i++)
-	{
-		obj = &objects[i];
-		obj->initialise = InitialiseMovingBlock;
-		obj->control = MovableBlock;
-		obj->collision = MovableBlockCollision;
-		obj->save_position = 1;
-		obj->save_flags = 1;
-	}
-
-	obj = &objects[SAS_DRAG_BLOKE];
-	obj->control = ControlAnimatingSlots;
-	obj->collision = DragSASCollision;
-	obj->save_position = 1;
-	obj->save_flags = 1;
-	obj->save_anim = 1;
-
-	obj = &objects[DART];
-	obj->control = DartsControl;
-	obj->collision = ObjectCollision;
-	obj->draw_routine = S_DrawDarts;
-	obj->shadow_size = 128;
-
-	obj = &objects[DART_EMITTER];
-	obj->control = DartEmitterControl;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[HOMING_DART_EMITTER];
-	obj->control = DartEmitterControl;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[FLAME];
-	obj->control = FlameControl;
-	obj->draw_routine = 0;
-
-	obj = &objects[FLAME_EMITTER];
-	obj->initialise = InitialiseFlameEmitter;
-	obj->control = FlameEmitterControl;
-	obj->collision = FireCollision;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[FLAME_EMITTER2];
-	obj->initialise = InitialiseFlameEmitter2;
-	obj->control = FlameEmitter2Control;
-	obj->collision = FireCollision;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[FLAME_EMITTER3];
-	obj->initialise = InitialiseFlameEmitter3;
-	obj->control = FlameEmitter3Control;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
+	factory.From(ROLLINGBALL)->Control(ControlRollingBall)->Collision(RollingBallCollision)->Save(true, false, true, false, false);
+	factory.From(CHAIN)->Control(ControlChain)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(CHAIN)->Control(ControlPlough)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(STARGATE)->Control(ControlStargate)->Collision(StargateCollision)->Save(false, false, true, true, false);
+	factory.From(HAMMER)->Control(ControlHammer)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(BURNING_FLOOR)->Initialise(InitialiseBurningFloor)->Control(ControlHammer)->Save(false, false, true, true, false);
+	factory.From(COG)->Control(ControlAnimatingSlots)->Collision(CogCollision)->Save(false, false, true, true, false);
+	factory.From(SPIKEBALL)->Control(ControlSpikeball)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(TWOBLOCK_PLATFORM)->Initialise(InitialiseTwoBlockPlatform)->Control(ControlTwoBlockPlatform)->Floor(TwoBlockPlatformFloor)->Ceiling(TwoBlockPlatformCeiling)->Save(true, false, true, false, false);
+	factory.From(FLOOR_4BLADE)->Control(Control4xFloorRoofBlade)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(ROOF_4BLADE)->Control(Control4xFloorRoofBlade)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(BIRD_BLADE)->Control(ControlBirdBlade)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(CATWALK_BLADE)->Control(ControlCatwalkBlade)->Collision(GenericDeadlyBoundingBoxCollision)->Save(false, false, true, true, false);
+	factory.From(MOVING_BLADE)->Control(ControlMovingBlade)->Collision(GenericDeadlyBoundingBoxCollision)->Save(false, false, true, true, false);
+	factory.From(PLINTH_BLADE)->Control(ControlPlinthBlade)->Collision(GenericDeadlyBoundingBoxCollision)->Save(false, false, true, true, false);
+	factory.From(SETH_BLADE)->Initialise(InitialiseSethBlade)->Control(ControlSethBlade)->Collision(GenericSphereBoxCollision)->Save(false, false, true, true, false);
+	factory.From(KILL_ALL_TRIGGERS)->Control(KillAllCurrentItems)->Draw(nullptr)->Save(true, false, true, true, false);
+	factory.From(FALLING_BLOCK)->Initialise(InitialiseFallingBlock2)->Control(FallingBlock)->Collision(FallingBlockCollision)->Floor(FallingBlockFloor)->Ceiling(FallingBlockCeiling)->Save(true, false, true, true, false);
+	factory.From(FALLING_BLOCK2)->Initialise(InitialiseFallingBlock2)->Control(FallingBlock)->Collision(FallingBlockCollision)->Floor(FallingBlockFloor)->Ceiling(FallingBlockCeiling)->Save(true, false, true, true, false);
+	factory.From(FALLING_CEILING)->Control(FallingCeiling)->Collision(TrapCollision)->Save(true, false, true, true, false);
+	factory.From(SMASHABLE_BIKE_WALL)->Control(InitialiseFallingBlock2)->Control(ControlSmashableBikeWall)->Collision(ObjectCollision)->Save(false, false, true, false, false);
+	factory.From(SMASHABLE_BIKE_FLOOR)->Control(InitialiseFallingBlock2)->Control(ControlFallingBlock2)->Collision(ObjectCollision)->Floor(TwoBlockPlatformFloor)->Ceiling(TwoBlockPlatformCeiling)->Save(true, false, true, true, false);
+	factory.From(PUSHABLE_OBJECT1)->Initialise(InitialiseMovingBlock)->Control(MovableBlock)->Collision(MovableBlockCollision)->Save(true, false, true, false, false);
+	factory.From(PUSHABLE_OBJECT2)->Initialise(InitialiseMovingBlock)->Control(MovableBlock)->Collision(MovableBlockCollision)->Save(true, false, true, false, false);
+	factory.From(PUSHABLE_OBJECT3)->Initialise(InitialiseMovingBlock)->Control(MovableBlock)->Collision(MovableBlockCollision)->Save(true, false, true, false, false);
+	factory.From(PUSHABLE_OBJECT4)->Initialise(InitialiseMovingBlock)->Control(MovableBlock)->Collision(MovableBlockCollision)->Save(true, false, true, false, false);
+	factory.From(PUSHABLE_OBJECT5)->Initialise(InitialiseMovingBlock)->Control(MovableBlock)->Collision(MovableBlockCollision)->Save(true, false, true, false, false);
+	factory.From(SAS_DRAG_BLOKE)->Control(ControlAnimatingSlots)->Collision(DragSASCollision)->Save(true, false, true, true, false);
+	factory.From(DART)->Control(DartsControl)->Collision(ObjectCollision)->Draw(S_DrawDarts)->Shadow(128)->Save(true, false, true, true, false);
+	factory.From(DART_EMITTER)->Control(DartEmitterControl)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(HOMING_DART_EMITTER)->Control(DartEmitterControl)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(FLAME)->Control(FlameControl)->Draw(nullptr);
+	factory.From(FLAME_EMITTER)->Initialise(InitialiseFlameEmitter)->Control(FlameEmitterControl)->Collision(FireCollision)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(FLAME_EMITTER2)->Initialise(InitialiseFlameEmitter2)->Control(FlameEmitter2Control)->Collision(FireCollision)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(FLAME_EMITTER3)->Initialise(InitialiseFlameEmitter3)->Control(FlameEmitter3Control)->Draw(nullptr)->Save(false, false, true, false, false);
 	init_all_ropes();
-	obj = &objects[ROPE];
-	obj->initialise = InitialiseRope;
-	obj->control = RopeControl;
-	obj->collision = RopeCollision;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[POLEROPE];
-	obj->collision = PoleCollision;
-	obj->save_flags = 1;
-
-	obj = &objects[MINE];
-	obj->initialise = InitialiseMineHelicopter;
-	obj->control = ControlMineHelicopter;
-	obj->collision = MineCollision;
-	obj->hit_effect = 3;
-
-	obj = &objects[SPRINKLER];
-	obj->control = ControlSprinkler;
-	obj->collision = FireCollision;
-	obj->save_flags = 1;
-
-	obj = &objects[TRIGGER_TRIGGERER];
-	obj->initialise = ControlTriggerTriggerer;
-	obj->control = ControlTriggerTriggerer;
-	obj->draw_routine = 0;
-	obj->save_flags = 1;
-
-	obj = &objects[PLANET_EFFECT];
-	obj->initialise = InitialisePlanetEffect;
-	obj->control = ControlPlanetEffect;
-	obj->draw_routine = DrawPlanetEffect;
-	obj->save_flags = 1;
-	obj->save_mesh = 1;
+	factory.From(ROPE)->Initialise(InitialiseRope)->Control(RopeControl)->Collision(RopeCollision)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(POLEROPE)->Collision(PoleCollision)->Save(false, false, true, false, false);
+	factory.From(MINE)->Initialise(InitialiseMineHelicopter)->Control(ControlMineHelicopter)->Collision(MineCollision)->HitEffect(3);
+	factory.From(SPRINKLER)->Control(ControlSprinkler)->Collision(FireCollision)->Save(false, false, true, false, false);
+	factory.From(TRIGGER_TRIGGERER)->Initialise(ControlTriggerTriggerer)->Control(ControlTriggerTriggerer)->Draw(nullptr)->Save(false, false, true, false, false);
+	factory.From(PLANET_EFFECT)->Initialise(InitialisePlanetEffect)->Control(ControlPlanetEffect)->Draw(DrawPlanetEffect)->Save(false, false, true, false, true);
 }
 
 void BaddyObjects()
 {
-	ObjectRegisterFactory factory;
-
 	factory.From(LARA)->Initialise(InitialiseLaraLoad)->Draw(nullptr)->Shadow(160)->HitPoints(LARA_HITPOINTS)->SaveDefault();
 	factory.From(LARA_DOUBLE)->CreatureDefault()->Initialise(InitialiseLaraDouble)->Control(LaraDoubleControl)->HitPoints(LARA_HITPOINTS)->Pivot(50)->HitEffect(3)->NonLot();
 	factory.From(MOTORBIKE)->Initialise(InitialiseBike)->Control(BikeControl)->Collision(BikeCollision)->DrawExtra(DrawBikeExtras)->Bone(1, BN_ROT_X)->Bone(3, BN_ROT_X)->Bone(7, BN_ROT_X)->SaveDefault();
@@ -824,12 +413,10 @@ void BaddyObjects()
 	factory.From(BABOON_NORMAL)->CreatureDefault()->Initialise(InitialiseBaboon)->Control(BaboonControl)->HitPoints(30)->Pivot(200)->Radius(256);
 	factory.From(BABOON_INV)->CreatureDefault()->Initialise(InitialiseBaboon)->Control(BaboonControl)->HitPoints(30)->Pivot(200)->Radius(256)->AnimIndexFromObject(BABOON_NORMAL);
 	factory.From(BABOON_SILENT)->CreatureDefault()->Initialise(InitialiseBaboon)->Control(BaboonControl)->HitPoints(30)->Pivot(200)->Radius(256)->AnimIndexFromObject(BABOON_NORMAL);
-
 	if (gfLevelFlags & GF_TRAIN)
 		factory.From(ENEMY_JEEP)->CreatureDefault()->Initialise(InitialiseTrainJeep)->Control(TrainJeepControl);
 	else
 		factory.From(ENEMY_JEEP)->CreatureDefault()->Initialise(InitialiseEnemyJeep)->Control(EnemyJeepControl)->HitPoints(40)->Undead()->HitEffect(2)->Radius(512)->Pivot(500)->Bone(8, BN_ROT_X)->Bone(9, BN_ROT_X)->Bone(11, BN_ROT_X)->Bone(12, BN_ROT_X);
-	
 	factory.From(BAT)->CreatureDefault()->Initialise(InitialiseBat)->Control(BatControl)->HitPoints(5)->Pivot(10);
 	factory.From(BIG_BEETLE)->CreatureDefault()->Initialise(InitialiseScarab)->Control(ScarabControl)->HitPoints(30)->Pivot(50)->Radius(204);
 	factory.From(SENTRY_GUN)->CreatureDefault()->Initialise(InitialiseAutogun)->Control(AutogunControl)->HitPoints(30)->Undead()->Radius(204)->Pivot(50)->NonLot()->HitEffect(3)->ExplosionMesh(6)->Bone(0, BN_ROT_Y)->Bone(1, BN_ROT_X)->Bone(2, BN_ROT_Z)->Bone(3, BN_ROT_Z);
@@ -1053,8 +640,6 @@ void InitialiseLara()
 
 void InitialiseObjects()
 {
-	ObjectRegisterFactory factory;
-
 	for (int i = 0; i < NUMBER_OBJECTS; i++)
 		factory.From(i)->Draw(DrawAnimatingItem)->HitPoints(NOT_TARGETABLE)->Radius(10)->FrameBase(frames);
 
@@ -1068,6 +653,7 @@ void InitialiseObjects()
 		SequenceUsed[i] = 0;
 	for (int i = 0; i < 8; i++)
 		LibraryTab[i] = 0;
+
 	NumRPickups = 0;
 	CurrentSequence = 0;
 	SequenceResults[0][1][2] = 0;

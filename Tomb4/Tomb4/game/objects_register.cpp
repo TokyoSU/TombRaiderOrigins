@@ -4,12 +4,30 @@
 #include "box.h"
 #include "control.h"
 #include "collide.h"
+#include "pickup.h"
+#include "init.h"
 
 ObjectRegisterFactory* ObjectRegisterFactory::From(int objID)
 {
 	if (objID < 0 || objID >= NUMBER_OBJECTS)
 		return this;
 	obj = &objects[objID];
+	return this;
+}
+
+ObjectRegisterFactory* ObjectRegisterFactory::LoadedByDefault()
+{
+	if (obj == nullptr)
+		return this;
+	obj->loaded = true;
+	return this;
+}
+
+ObjectRegisterFactory* ObjectRegisterFactory::NoMeshes()
+{
+	if (obj == nullptr || !obj->loaded)
+		return this;
+	obj->nmeshes = 0;
 	return this;
 }
 
@@ -246,5 +264,66 @@ ObjectRegisterFactory* ObjectRegisterFactory::InvSwitchMesh(DWORD meshID, OBJECT
 		return this;
 	if (objects[fromObj].loaded)
 		meshes[objects[fromObj].mesh_index + (meshID * 2)] = meshes[obj->mesh_index + (meshID * 2)];
+	return this;
+}
+
+ObjectRegisterFactory* ObjectRegisterFactory::PickupDefault()
+{
+	if (obj == nullptr || !obj->loaded)
+		return this;
+	obj->initialise = InitialisePickUp;
+	obj->control = AnimatingPickUp;
+	obj->collision = PickUpCollision;
+	obj->is_pickup = true;
+	obj->save_flags = true;
+	obj->save_position = true;
+	return this;
+}
+
+ObjectRegisterFactory* ObjectRegisterFactory::KeyHoleDefault()
+{
+	if (obj == nullptr || !obj->loaded)
+		return this;
+	obj->collision = KeyHoleCollision;
+	obj->save_flags = 1;
+	return this;
+}
+
+ObjectRegisterFactory* ObjectRegisterFactory::PuzzleHoleDefault()
+{
+	if (obj == nullptr || !obj->loaded)
+		return this;
+	obj->control = ControlAnimatingSlots;
+	obj->collision = PuzzleHoleCollision;
+	obj->is_puzzlehole = true;
+	obj->save_flags = 1;
+	obj->save_anim = 1;
+	return this;
+}
+
+ObjectRegisterFactory* ObjectRegisterFactory::PuzzleDoneDefault()
+{
+	if (obj == nullptr || !obj->loaded)
+		return this;
+	obj->control = ControlAnimatingSlots;
+	obj->collision = PuzzleDoneCollision;
+	obj->is_puzzlehole = false;
+	obj->save_flags = 1;
+	obj->save_anim = 1;
+	return this;
+}
+
+ObjectRegisterFactory* ObjectRegisterFactory::AnimatingDefault(bool isCollidable)
+{
+	if (obj == nullptr || !obj->loaded)
+		return this;
+	obj->control = ControlAnimatingSlots;
+	if (isCollidable)
+	{
+		obj->collision = ObjectCollision;
+		obj->hit_effect = 2; // Ricochet
+	}
+	obj->save_flags = 1;
+	obj->save_anim = 1;
 	return this;
 }

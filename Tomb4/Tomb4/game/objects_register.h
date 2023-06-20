@@ -7,6 +7,8 @@ public:
 
 public:
 	ObjectRegisterFactory* From(int objID);
+	ObjectRegisterFactory* LoadedByDefault();
+	ObjectRegisterFactory* NoMeshes();
 public:
 	ObjectRegisterFactory* Initialise(Obj_InitialiseFunc func);
 	ObjectRegisterFactory* Control(Obj_ControlFunc func);
@@ -40,6 +42,11 @@ public:
 	ObjectRegisterFactory* Bone(DWORD boneID, DWORD flags = BN_NONE);// Use BONE_FLAGS
 	ObjectRegisterFactory* MeshFrom(DWORD meshID, OBJECTS_TYPES fromObj);
 	ObjectRegisterFactory* InvSwitchMesh(DWORD meshID, OBJECTS_TYPES fromObj);
+	ObjectRegisterFactory* PickupDefault();
+	ObjectRegisterFactory* KeyHoleDefault();
+	ObjectRegisterFactory* PuzzleHoleDefault();
+	ObjectRegisterFactory* PuzzleDoneDefault();
+	ObjectRegisterFactory* AnimatingDefault(bool isCollidable = true);
 private:
 	OBJECT_INFO* obj = nullptr;
 };

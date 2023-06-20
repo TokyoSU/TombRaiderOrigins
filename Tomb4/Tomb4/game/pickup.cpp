@@ -175,8 +175,9 @@ void PuzzleDone(ITEM_INFO* item, short item_number)
 
 void AnimatingPickUp(short item_number)
 {
-	if ((items[item_number].trigger_flags & 0x3F) == 2)
-		AnimateItem(&items[item_number]);
+	auto* item = &items[item_number];
+	if ((item->trigger_flags & 63) == 2)
+		AnimateItem(item);
 }
 
 short* FindPlinth(ITEM_INFO* item)

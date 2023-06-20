@@ -2606,7 +2606,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 				{
 					shotitem = &items[item_no];
 
-					if (shotitem->object_number != SWITCH_TYPE7 && shotitem->object_number != SWITCH_TYPE8)
+					if (shotitem->object_number != SHOOT_SWITCH1 && shotitem->object_number != SHOOT_SWITCH2)
 					{
 						if (objects[shotitem->object_number].explodable_meshbits & ShatterItem.Bit && LaserSight)
 						{
@@ -2638,7 +2638,7 @@ long GetTargetOnLOS(GAME_VECTOR* src, GAME_VECTOR* dest, long DrawTarget, long f
 					{
 						if (ShatterItem.Bit == 1 << (objects[shotitem->object_number].nmeshes - 1) && !(shotitem->flags & IFL_SWITCH_ONESHOT))
 						{
-							if (shotitem->object_number == SWITCH_TYPE7)
+							if (shotitem->object_number == SHOOT_SWITCH1)
 								ExplodeItemNode(shotitem, objects[shotitem->object_number].nmeshes - 1, 0, 64);
 
 							if (shotitem->flags & IFL_CODEBITS && (shotitem->flags & IFL_CODEBITS) != IFL_CODEBITS)

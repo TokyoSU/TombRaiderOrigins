@@ -621,8 +621,8 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 				}
 			}
 
-			if (target->object_number == SWITCH_TYPE7)
-				ExplodeItemNode(target, objects[SWITCH_TYPE7].nmeshes - 1, 0, 64);
+			if (target->object_number == SHOOT_SWITCH1)
+				ExplodeItemNode(target, objects[SHOOT_SWITCH1].nmeshes - 1, 0, 64);
 
 			AddActiveItem(target - items);
 			target->flags |= IFL_CODEBITS | IFL_SWITCH_ONESHOT;
@@ -865,12 +865,12 @@ void ControlCrossbow(short item_number)
 						SmashObject(target - items);
 						KillItem(target - items);
 					}
-					else if (target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8)
+					else if (target->object_number == SHOOT_SWITCH1 || target->object_number == SHOOT_SWITCH2)
 						CrossbowHitSwitchType78(item, target, 0);
 					else if (objects[target->object_number].intelligent)
 						DoGrenadeDamageOnBaddie(target, item);
 				}
-				else if (target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8 || target->object_number == SKELETON)
+				else if (target->object_number == SHOOT_SWITCH1 || target->object_number == SHOOT_SWITCH2 || target->object_number == SKELETON)
 					CrossbowHitSwitchType78(item, target, 1);
 				else if (objects[target->object_number].intelligent)
 				{
@@ -1177,7 +1177,7 @@ void ControlGrenade(short item_number)
 						SmashObject(target - items);
 						KillItem(target - items);
 					}
-					else if ((target->object_number == SWITCH_TYPE7 || target->object_number == SWITCH_TYPE8) && !(target->flags & IFL_SWITCH_ONESHOT))
+					else if ((target->object_number == SHOOT_SWITCH1 || target->object_number == SHOOT_SWITCH2) && !(target->flags & IFL_SWITCH_ONESHOT))
 					{
 						if (!(target->flags & IFL_CODEBITS) || (target->flags & IFL_CODEBITS) == IFL_CODEBITS)
 						{
@@ -1198,8 +1198,8 @@ void ControlGrenade(short item_number)
 							TestTriggers(trigger_index, 1, target->flags & IFL_CODEBITS);
 						}
 
-						if (target->object_number == SWITCH_TYPE7)
-							ExplodeItemNode(target, objects[SWITCH_TYPE7].nmeshes - 1, 0, 64);
+						if (target->object_number == SHOOT_SWITCH1)
+							ExplodeItemNode(target, objects[SHOOT_SWITCH1].nmeshes - 1, 0, 64);
 
 						AddActiveItem(target - items);
 						target->status = ITEM_ACTIVE;
