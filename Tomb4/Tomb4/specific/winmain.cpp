@@ -65,7 +65,7 @@ void WinProcessCommandLine(LPSTR cmd)
 	Log(2, "WinProcessCommandLine");
 
 	num = sizeof(commandlines) / sizeof(commandlines[0]);
-	
+
 	for (int i = 0; i < num; i++)
 	{
 		command = &commandlines[i];

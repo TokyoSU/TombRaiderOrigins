@@ -1,6 +1,5 @@
 #pragma once
 
-
 void LaraCheatyBits();
 void InitialiseLaraLoad(short item_number);
 void InitialiseLaraAnims(ITEM_INFO* item);

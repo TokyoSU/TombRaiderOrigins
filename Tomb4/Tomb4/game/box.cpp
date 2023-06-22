@@ -181,7 +181,7 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 		state = lara_item->current_anim_state;
 
 		if (state == AS_DUCK || state == AS_DUCKROLL || state == AS_ALL4S || state == AS_CRAWL ||
-			state == AS_ALL4TURNL|| state == AS_ALL4TURNR || state == AS_DUCKROTL || state == AS_DUCKROTR)
+			state == AS_ALL4TURNL || state == AS_ALL4TURNR || state == AS_DUCKROTL || state == AS_DUCKROTR)
 			y -= 384;
 	}
 
@@ -279,7 +279,6 @@ long SearchLOT(LOT_INFO* LOT, long expansion)
 				LOT->node[LOT->tail].next_expansion = (short)box_number;
 				LOT->tail = (short)box_number;
 			}
-
 		} while (!done);
 
 		LOT->head = node->next_expansion;
@@ -591,8 +590,7 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
 
 		if (box_number != 2047 && boxes[box_number].overlap_index & LOT->block_mask)
 			break;
-	}
-	while (box_number != 2047);
+	} while (box_number != 2047);
 
 	if (!(prime_free & 16))
 	{
@@ -731,7 +729,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	CREATURE_INFO* creature;
 	ITEM_INFO* enemy;
 	LOT_INFO* LOT;
-	mood_type mood;
+	MOOD_TYPES mood;
 
 	creature = (CREATURE_INFO*)item->data;
 
@@ -849,7 +847,7 @@ long CreatureCreature(short item_number)
 	x = item->pos.x_pos;
 	z = item->pos.z_pos;
 	yrot = item->pos.y_rot;
-	rad = objects[item->object_number].radius;
+	rad = objects[item->object_number].r;
 
 	for (item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item->next_item)
 	{
@@ -861,7 +859,7 @@ long CreatureCreature(short item_number)
 			dz = abs(item->pos.z_pos - z);
 			dist = dx > dz ? dx + (dz >> 1) : dz + (dx >> 1);
 
-			if (dist < rad + objects[item->object_number].radius)
+			if (dist < rad + objects[item->object_number].r)
 				return short(phd_atan(item->pos.z_pos - z, item->pos.x_pos - x) - yrot);
 		}
 	}
@@ -974,7 +972,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 	z = item->pos.z_pos;
 	wx = x & 0x3FF;
 	wz = z & 0x3FF;
-	rad = objects[item->object_number].radius;
+	rad = objects[item->object_number].r;
 	xShift = 0;
 	zShift = 0;
 
@@ -1033,7 +1031,6 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 			}
 			else
 				xShift = rad - wx;
-
 		}
 		else if (wx > 1024 - rad)
 		{
@@ -1222,7 +1219,7 @@ short CreatureTurn(ITEM_INFO* item, short maximum_turn)
 	short angle;
 
 	creature = (CREATURE_INFO*)item->data;
-	
+
 	if (!creature || !maximum_turn)
 		return 0;
 

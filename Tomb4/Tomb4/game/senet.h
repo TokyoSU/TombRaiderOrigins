@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitialiseSenet(short item_number);
 void MakeMove(long piece, long displacement);
 void SenetControl(short item_number);

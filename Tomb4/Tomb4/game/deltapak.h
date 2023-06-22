@@ -1,6 +1,5 @@
 #pragma once
 
-
 void handle_cutseq_triggering(long name);
 void do_new_cutscene_camera();
 void InitPackNodes(NODELOADHEADER* lnode, PACKNODE* pnode, char* packed, long numnodes);

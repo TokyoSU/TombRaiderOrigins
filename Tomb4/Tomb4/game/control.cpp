@@ -503,7 +503,7 @@ long ControlPhase(long nframes, long demo_mode)
 		UpdatePulseColour();
 		SoundEffects();
 		health_bar_timer--;
-		
+
 		if (!gfGameMode)
 		{
 			GameTimer++;
@@ -580,7 +580,7 @@ void AddRoomFlipItems(ROOM_INFO* r)
 {
 	ITEM_INFO* item;
 
-	for (short item_num = r->item_number; item_num != NO_ITEM; item_num =item->next_item)
+	for (short item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item)
 	{
 		item = &items[item_num];
 
@@ -1258,7 +1258,6 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number)
 
 		*room_number = door;
 		r = &room[door];
-
 	} while (door != 255);
 
 	if (y < GetMaximumFloor(floor, x, z))
@@ -1276,7 +1275,6 @@ FLOOR_INFO* GetFloor(long x, long y, long z, short* room_number)
 
 				if (y >= GetMinimumCeiling(floor, x, z))
 					break;
-
 			} while (floor->sky_room != 255);
 		}
 	}
@@ -1347,7 +1345,6 @@ long GetWaterHeight(long x, long y, long z, short room_number)
 			room_number = data;
 			r = &room[data];
 		}
-
 	} while (data != 255);
 
 	if (r->flags & ROOM_UNDERWATER)
@@ -1485,7 +1482,6 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z)
 
 				if (objects[item->object_number].floor && !(item->flags & 0x8000))
 					objects[item->object_number].floor(item, x, y, z, &height);
-
 			} while (!(trigger & 0x8000));
 
 			break;
@@ -1559,7 +1555,6 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z)
 				}
 				else
 				{
-
 					hadj = (type >> 10) & 0x1F;
 
 					if ((type >> 10) & 0x10)
@@ -1594,7 +1589,6 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z)
 			Log(0, "GetHeight(): Unknown type");
 			break;
 		}
-
 	} while (!(type & 0x8000));
 
 	return height;
@@ -1786,7 +1780,6 @@ long GetCeiling(FLOOR_INFO* floor, long x, long y, long z)
 						if (objects[item->object_number].ceiling && !(item->flags & 0x8000))
 							objects[item->object_number].ceiling(item, x, y, z, &height);
 					}
-
 				} while (!(trigger & 0x8000));
 				break;
 
@@ -1963,7 +1956,6 @@ void RefreshCamera(short type, short* data)
 			if (camera.type != LOOK_CAMERA && camera.type != COMBAT_CAMERA || camera.number == NO_ITEM || camera.fixed[camera.number].flags & 1)
 				camera.item = &items[value];
 		}
-
 	} while (!(trigger & 0x8000));
 
 	if (camera.item)

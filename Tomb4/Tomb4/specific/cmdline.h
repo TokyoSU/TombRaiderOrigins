@@ -1,6 +1,5 @@
 #pragma once
 
-
 void CLSetup(char* cmd);
 void CLNoFMV(char* cmd);
 void InitDSDevice(HWND dlg, HWND hwnd);

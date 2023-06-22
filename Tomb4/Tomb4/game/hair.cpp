@@ -23,7 +23,7 @@ void InitialiseHair()
 	OBJECT_INFO* obj;
 	HAIR_STRUCT* hptr;
 	long* bone;
-	
+
 	for (int i = 0; i < 2; i++)
 	{
 		obj = &objects[HAIR];

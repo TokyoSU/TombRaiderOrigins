@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "draw.h"
 #include "3dmath.h"
+#include "d3dmatrix.h"
 #include "output.h"
 #include "lighting.h"
 #include "deltapak.h"
@@ -24,6 +25,7 @@
 #include "camera.h"
 #include "effects.h"
 #include "footprnt.h"
+#include "drawroom.h"
 #include "lara.h"
 #include "gameflow.h"
 
@@ -178,7 +180,7 @@ void gar_RotYXZsuperpack(short** pprot, long skip)
 		phd_RotYXZpack((prot[0] << 16) + prot[1]);
 		++*pprot;
 		break;
-		
+
 	case 1:
 		phd_RotX(short((prot[0] & 0xFFF) << 4));
 		break;
@@ -292,7 +294,8 @@ void S_InsertRoom(short room_number)
 	phd_right = r->right;
 	phd_top = r->top;
 	phd_bottom = r->bottom;
-	_InsertRoom(r);
+	SetD3DViewMatrix();
+	InsertRoom(r);
 }
 
 void CalculateObjectLighting(ITEM_INFO* item, short* frame)
@@ -568,7 +571,7 @@ static void DoMirrorStuff()
 
 			if (lara.gun_type == WEAPON_CROSSBOW)
 			{
-				lara.left_arm.anim_number = objects[CROSSBOW_ANIM].anim_index + 2;			
+				lara.left_arm.anim_number = objects[CROSSBOW_ANIM].anim_index + 2;
 				lara.right_arm.anim_number = objects[CROSSBOW_ANIM].anim_index + 2;
 				lara.left_arm.frame_number = 0;
 				lara.right_arm.frame_number = 0;
@@ -584,7 +587,7 @@ static void DoMirrorStuff()
 			lara.mesh_ptrs[LM_RHAND] = meshes[objects[MESHSWAP2].mesh_index + 2 * LM_RHAND];
 		}
 	}
-	
+
 	Draw_Mirror_Lara();
 
 	if (BinocularRange)
@@ -1029,7 +1032,7 @@ void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom)
 
 	if (r->left <= actualRoom->test_left && r->right >= actualRoom->test_right && r->top <= actualRoom->test_top && r->bottom >= actualRoom->test_bottom)
 		return;
-	
+
 	tL = (float)actualRoom->test_right;
 	tR = (float)actualRoom->test_left;
 	tB = (float)actualRoom->test_top;
@@ -1182,7 +1185,7 @@ void DrawEffect(short fx_num)
 		if (mMXPtr->m23 > f_mznear && mMXPtr->m23 < f_mzfar)
 		{
 			phd_RotYXZ(fx->pos.y_rot, fx->pos.x_rot, fx->pos.z_rot);
-			
+
 			if (obj->nmeshes)
 				meshp = meshes[obj->mesh_index];
 			else

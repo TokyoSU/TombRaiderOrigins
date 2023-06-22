@@ -44,7 +44,7 @@ void TriggerWraithFlame(long x, long y, long z, short xv, short yv, short zv, lo
 {
 	SPARKS* sptr;
 	uchar col;
-	
+
 	sptr = &spark[GetFreeSpark()];
 	sptr->On = 1;
 

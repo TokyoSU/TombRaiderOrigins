@@ -1,6 +1,5 @@
 #pragma once
 
-
 void OpenStreamFile(char* name);
 void GetADPCMData();
 void ACMSetVolume();

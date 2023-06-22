@@ -72,13 +72,13 @@ enum DX_FLAGS
 
 enum carried_weapon_flags
 {
-	W_NONE =		0x0,
-	W_PRESENT =		0x1,
-	W_FLASHLIGHT =	0x2,	//speculation, actually unused
-	W_LASERSIGHT =	0x4,
-	W_AMMO1 =		0x8,
-	W_AMMO2 =		0x10,
-	W_AMMO3 =		0x20
+	W_NONE = 0x0,
+	W_PRESENT = 0x1,
+	W_FLASHLIGHT = 0x2,	//speculation, actually unused
+	W_LASERSIGHT = 0x4,
+	W_AMMO1 = 0x8,
+	W_AMMO2 = 0x10,
+	W_AMMO3 = 0x20
 };
 
 enum anim_commands
@@ -94,11 +94,11 @@ enum anim_commands
 
 enum ai_bits
 {
-	GUARD =		1 << 0,
-	AMBUSH =	1 << 1,
-	PATROL1 =	1 << 2,
-	MODIFY =	1 << 3,
-	FOLLOW =	1 << 4
+	GUARD = 1 << 0,
+	AMBUSH = 1 << 1,
+	PATROL1 = 1 << 2,
+	MODIFY = 1 << 3,
+	FOLLOW = 1 << 4
 };
 
 enum languages
@@ -115,19 +115,19 @@ enum languages
 
 enum font_flags
 {
-	FF_SMALL =		0x1000,
-	FF_BLINK =		0x2000,
-	FF_RJUSTIFY =	0x4000,
-	FF_CENTER =		0x8000
+	FF_SMALL = 0x1000,
+	FF_BLINK = 0x2000,
+	FF_RJUSTIFY = 0x4000,
+	FF_CENTER = 0x8000
 };
 
 enum room_flags
 {
-	ROOM_UNDERWATER =	0x1,
-	ROOM_OUTSIDE =		0x8,
-	ROOM_DYNAMIC_LIT =	0x10,
-	ROOM_NOT_INSIDE =	0x20,
-	ROOM_INSIDE =		0x40,
+	ROOM_UNDERWATER = 0x1,
+	ROOM_OUTSIDE = 0x8,
+	ROOM_DYNAMIC_LIT = 0x10,
+	ROOM_NOT_INSIDE = 0x20,
+	ROOM_INSIDE = 0x40,
 	ROOM_NO_LENSFLARE = 0x80
 };
 
@@ -141,20 +141,20 @@ enum quadrant_names
 
 enum collision_types
 {
-	CT_NONE =			0x0,
-	CT_FRONT =			0x1,
-	CT_LEFT =			0x2,
-	CT_RIGHT =			0x4,
-	CT_TOP =			0x8,
-	CT_TOP_FRONT =		0x10,
-	CT_CLAMP =			0x20
+	CT_NONE = 0x0,
+	CT_FRONT = 0x1,
+	CT_LEFT = 0x2,
+	CT_RIGHT = 0x4,
+	CT_TOP = 0x8,
+	CT_TOP_FRONT = 0x10,
+	CT_CLAMP = 0x20
 };
 
 enum sfx_types
 {
-	SFX_LANDANDWATER =	0,
-	SFX_LANDONLY =		0x4000,
-	SFX_WATERONLY =		0x8000
+	SFX_LANDANDWATER = 0,
+	SFX_LANDONLY = 0x4000,
+	SFX_WATERONLY = 0x8000
 };
 
 enum target_type
@@ -164,7 +164,7 @@ enum target_type
 	SECONDARY_TARGET
 };
 
-enum mood_type
+enum MOOD_TYPES
 {
 	BORED_MOOD,
 	ATTACK_MOOD,
@@ -172,7 +172,7 @@ enum mood_type
 	STALK_MOOD,
 };
 
-enum zone_type
+enum ZONE_TYPES
 {
 	SKELLY_ZONE,
 	BASIC_ZONE,
@@ -323,52 +323,52 @@ enum trigobj_types
 
 enum input_buttons
 {
-	IN_NONE =				0x0,
-	IN_FORWARD =			0x1,
-	IN_BACK =				0x2,
-	IN_LEFT =				0x4,
-	IN_RIGHT =				0x8,
-	IN_JUMP =				0x10,
-	IN_DRAW =				0x20,
-	IN_ACTION =				0x40,
-	IN_WALK =				0x80,
-	IN_OPTION =				0x100,
-	IN_LOOK =				0x200,
-	IN_LSTEP =				0x400,
-	IN_RSTEP =				0x800,
-	IN_ROLL =				0x1000,
-	IN_PAUSE =				0x2000,
-	IN_A =					0x4000,
-	IN_B =					0x8000,
-	IN_CHEAT =				0x10000,
-	IN_D =					0x20000,
-	IN_C =					0x30000,
-	IN_E =					0x40000,
-	IN_FLARE =				0x80000,
-	IN_SELECT =				0x100000,
-	IN_DESELECT =			0x200000,
-	IN_SAVE =				0x400000,
-	IN_LOAD =				0x800000,
-	IN_STEPSHIFT =			0x1000000,
-	IN_LOOKLEFT =			0x2000000,
-	IN_LOOKRIGHT =			0x4000000,
-	IN_LOOKFORWARD =		0x8000000,
-	IN_LOOKBACK =			0x10000000,
-	IN_DUCK =				0x20000000,
-	IN_SPRINT =				0x40000000,
-	IN_TARGET =				0x80000000,
-	IN_ALL =				0xFFFFFFFF
+	IN_NONE = 0x0,
+	IN_FORWARD = 0x1,
+	IN_BACK = 0x2,
+	IN_LEFT = 0x4,
+	IN_RIGHT = 0x8,
+	IN_JUMP = 0x10,
+	IN_DRAW = 0x20,
+	IN_ACTION = 0x40,
+	IN_WALK = 0x80,
+	IN_OPTION = 0x100,
+	IN_LOOK = 0x200,
+	IN_LSTEP = 0x400,
+	IN_RSTEP = 0x800,
+	IN_ROLL = 0x1000,
+	IN_PAUSE = 0x2000,
+	IN_A = 0x4000,
+	IN_B = 0x8000,
+	IN_CHEAT = 0x10000,
+	IN_D = 0x20000,
+	IN_C = 0x30000,
+	IN_E = 0x40000,
+	IN_FLARE = 0x80000,
+	IN_SELECT = 0x100000,
+	IN_DESELECT = 0x200000,
+	IN_SAVE = 0x400000,
+	IN_LOAD = 0x800000,
+	IN_STEPSHIFT = 0x1000000,
+	IN_LOOKLEFT = 0x2000000,
+	IN_LOOKRIGHT = 0x4000000,
+	IN_LOOKFORWARD = 0x8000000,
+	IN_LOOKBACK = 0x10000000,
+	IN_DUCK = 0x20000000,
+	IN_SPRINT = 0x40000000,
+	IN_TARGET = 0x80000000,
+	IN_ALL = 0xFFFFFFFF
 };
 
 enum ITEM_FLAGS
 {
-	IFL_TRIGGERED =				0x20,
-	IFL_SWITCH_ONESHOT =		0x40,	//oneshot for switch items
-	IFL_ANTITRIGGER_ONESHOT =	0x80,	//oneshot for antitriggers
-	IFL_INVISIBLE =				0x100,	//also used as oneshot for everything else
-	IFL_CODEBITS =				0x3E00,
-	IFL_REVERSE =				0x4000,
-	IFL_CLEARBODY =				0x8000
+	IFL_TRIGGERED = 0x20,
+	IFL_SWITCH_ONESHOT = 0x40,	//oneshot for switch items
+	IFL_ANTITRIGGER_ONESHOT = 0x80,	//oneshot for antitriggers
+	IFL_INVISIBLE = 0x100,	//also used as oneshot for everything else
+	IFL_CODEBITS = 0x3E00,
+	IFL_REVERSE = 0x4000,
+	IFL_CLEARBODY = 0x8000
 };
 
 enum lara_gun_status
@@ -402,22 +402,22 @@ enum LightTypes
 
 enum gf_level_options
 {
-	GF_YOUNGLARA =		0x1,
-	GF_WEATHER =		0x2,
-	GF_HORIZON =		0x4,
-	GF_LAYER1 =			0x8,
-	GF_LAYER2 =			0x10,
-	GF_STARFIELD =		0x20,
-	GF_LIGHTNING =		0x40,
-	GF_TRAIN =			0x80,
-	GF_PULSE =			0x100,
-	GF_HORIZONCOLADD =	0x200,
-	GF_RESETHUB =		0x400,
-	GF_LENSFLARE =		0x800,
-	GF_TIMER =			0x1000,
-	GF_MIRROR =			0x2000,
-	GF_REMOVEAMULET =	0x4000,
-	GF_NOLEVEL =		0x8000
+	GF_YOUNGLARA = 0x1,
+	GF_WEATHER = 0x2,
+	GF_HORIZON = 0x4,
+	GF_LAYER1 = 0x8,
+	GF_LAYER2 = 0x10,
+	GF_STARFIELD = 0x20,
+	GF_LIGHTNING = 0x40,
+	GF_TRAIN = 0x80,
+	GF_PULSE = 0x100,
+	GF_HORIZONCOLADD = 0x200,
+	GF_RESETHUB = 0x400,
+	GF_LENSFLARE = 0x800,
+	GF_TIMER = 0x1000,
+	GF_MIRROR = 0x2000,
+	GF_REMOVEAMULET = 0x4000,
+	GF_NOLEVEL = 0x8000
 };
 
 enum BONE_FLAGS
@@ -941,7 +941,7 @@ struct LOT_INFO
 	ushort is_jumping : 1;
 	ushort is_monkeying : 1;
 	PHD_VECTOR target;
-	zone_type zone;
+	ZONE_TYPES zone;
 };
 
 struct CREATURE_INFO
@@ -957,7 +957,7 @@ struct CREATURE_INFO
 	ushort patrol2 : 1;
 	ushort jump_ahead : 1;
 	ushort monkey_ahead : 1;
-	mood_type mood;
+	MOOD_TYPES mood;
 	ITEM_INFO* enemy;
 	ITEM_INFO ai_target;
 	short pad;
@@ -1169,6 +1169,20 @@ struct CAMERA_INFO
 	PHD_VECTOR mike_pos;
 };
 
+struct FACE4
+{
+	ushort vertices[4];
+	ushort texture;
+	ushort flags;
+};
+
+struct FACE3
+{
+	ushort vertices[3];
+	ushort texture;
+	ushort flags;
+};
+
 struct COLL_INFO
 {
 	long mid_floor;
@@ -1189,7 +1203,7 @@ struct COLL_INFO
 	long right_floor2;
 	long right_ceiling2;
 	long right_type2;
-	long radius;
+	long r;
 	long bad_pos;
 	long bad_neg;
 	long bad_ceiling;
@@ -1238,7 +1252,7 @@ struct OBJECT_INFO
 	short anim_index;
 	short hit_points;
 	short pivot_length;
-	short radius;
+	short r;
 	short shadow_size;
 	short bite_offset;
 	bool loaded;
@@ -1383,7 +1397,7 @@ struct ROOM_INFO
 	long nVerts;
 	long nWaterVerts;
 	long nShoreVerts;
-	LPDIRECT3DVERTEXBUFFER SourceVB;
+	LPDIRECT3DVERTEXBUFFER vb;
 	short* FaceData;
 	float posx;
 	float posy;
@@ -1714,12 +1728,12 @@ struct MESH_DATA
 	short nVerts;
 	short nNorms;
 	short ngt4;
-	short* gt4;
+	FACE4* gt4;
 	short ngt3;
-	short* gt3;
+	FACE3* gt3;
 	long* prelight;
-	LPDIRECT3DVERTEXBUFFER SourceVB;
-	D3DVECTOR* Normals;
+	LPDIRECT3DVERTEXBUFFER vb;
+	D3DVECTOR* normals;
 };
 
 struct TEXTURESTRUCT
@@ -2315,7 +2329,7 @@ struct SAMPLE_INFO
 {
 	short number;
 	uchar volume;
-	uchar radius;
+	uchar r;
 	uchar randomness;
 	char pitch;
 	short flags;

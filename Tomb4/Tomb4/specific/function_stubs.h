@@ -1,6 +1,5 @@
 #pragma once
 
-
 long GetRandomControl();
 void SeedRandomControl(long seed);
 long GetRandomDraw();

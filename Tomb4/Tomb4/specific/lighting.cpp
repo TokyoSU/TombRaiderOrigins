@@ -541,7 +541,7 @@ void ResetLighting()
 {
 	D3DMATRIX view;
 	D3DMATRIX cam;
-	
+
 	ambientR = 0;
 	ambientG = 0;
 	ambientB = 0;

@@ -15,7 +15,6 @@
 
 #define PRINT_HEIGHT_CORRECTION 128 // The maximum difference between the footprint and the floor
 
-
 static char footsounds[14] = { 0, 5, 3, 2, 1, 9, 9, 4, 6, 5, 3, 9, 4, 6 };
 
 FOOTPRINT FootPrint[32];
@@ -65,7 +64,7 @@ void S_DrawFootPrints()
 	float u1, v1, u2, v2;
 	long x, z, x1, y1, z1, x2, y2, z2, x3, y3, z3, col;
 	short room_number;
-	
+
 	v = MyVertexBuffer;
 
 	for (int i = 0; i < 32; i++)

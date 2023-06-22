@@ -329,7 +329,7 @@ void UpdateScarabs()
 				fx->fallspeed = 0;
 				fx->flags = 1;
 			}
-			
+
 			if (fx->fallspeed < 500)
 				fx->pos.x_rot = -64 * fx->fallspeed;
 			else

@@ -385,7 +385,7 @@ long phd_TranslateRel(long x, long y, long z)
 	phd_mxptr->m03 += x * phd_mxptr->m00 + y * phd_mxptr->m01 + z * phd_mxptr->m02;
 	phd_mxptr->m13 += x * phd_mxptr->m10 + y * phd_mxptr->m11 + z * phd_mxptr->m12;
 	phd_mxptr->m23 += x * phd_mxptr->m20 + y * phd_mxptr->m21 + z * phd_mxptr->m22;
-	
+
 	mTranslateRel(x, y, z);
 	return 1;
 }
@@ -788,7 +788,6 @@ ulong phd_sqrt(ulong num)
 		}
 
 		base >>= 2;
-
 	} while (base);
 
 	return result;

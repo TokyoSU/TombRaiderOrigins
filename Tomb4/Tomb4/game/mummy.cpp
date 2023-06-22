@@ -134,7 +134,7 @@ void MummyControl(short item_number)
 				torso_x = 0;
 				torso_y = 0;
 				item->goal_anim_state = 1;
-				
+
 				if (item->trigger_flags > -100 && item->trigger_flags < 0)
 					item->trigger_flags++;
 			}
@@ -219,7 +219,7 @@ void MummyControl(short item_number)
 			torso_y = 0;
 			mummy->maximum_turn = 0;
 			item->hit_points = 0;
-			
+
 			if (info.distance < 0x100000 || !(GetRandomControl() & 0x7F))
 			{
 				item->goal_anim_state = 9;

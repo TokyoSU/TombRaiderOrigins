@@ -1,6 +1,5 @@
 #pragma once
 
-
 void SetFogColor(long r, long g, long b);
 void HWInitialise();
 bool _NVisible(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v2);
@@ -17,8 +16,8 @@ extern void (*AddQuadZBuffer)(D3DTLVERTEX* v, short v0, short v1, short v2, shor
 extern void (*AddTriZBuffer)(D3DTLVERTEX* v, short v0, short v1, short v2, TEXTURESTRUCT* tex, long double_sided);
 extern void (*AddLineSorted)(D3DTLVERTEX* v0, D3DTLVERTEX* v1, short drawtype);
 extern bool (*IsVisible)(D3DTLVERTEX* v0, D3DTLVERTEX* v1, D3DTLVERTEX* v2);
-extern HRESULT (*_BeginScene)();
-extern HRESULT (*_EndScene)();
+extern HRESULT(*_BeginScene)();
+extern HRESULT(*_EndScene)();
 
 extern D3DTLVERTEX MyVertexBuffer[0x2000];
 extern long CurrentFog;

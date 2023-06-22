@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitialiseBike(short item_number);
 void DrawBikeExtras(ITEM_INFO* item);
 void TriggerBikeBeam(ITEM_INFO* item);

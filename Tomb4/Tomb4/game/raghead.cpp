@@ -434,7 +434,7 @@ void RagheadControl(short item_number)
 				item->required_anim_state = 27;
 			}
 			else if (item->meshswap_meshbits == 0x7FC010 && item->item_flags[2] < 1)
-					item->goal_anim_state = 11;
+				item->goal_anim_state = 11;
 			else if (raghead->monkey_ahead)
 			{
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);

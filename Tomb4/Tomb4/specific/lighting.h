@@ -1,6 +1,5 @@
 #pragma once
 
-
 void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r);
 void InitItemDynamicLighting(ITEM_INFO* item);
 void SetupDynamicLight(DYNAMIC* light, ITEM_INFO* item);

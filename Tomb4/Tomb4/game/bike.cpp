@@ -574,7 +574,7 @@ void BikeStart(ITEM_INFO* item, ITEM_INFO* l)
 	l->frame_number = anims[l->anim_number].frame_base;
 	l->gravity_status = 0;
 	item->anim_number = l->anim_number + objects[MOTORBIKE].anim_index - objects[VEHICLE_EXTRA].anim_index;
-	item->frame_number= l->frame_number + anims[item->anim_number].frame_base - anims[l->anim_number].frame_base;
+	item->frame_number = l->frame_number + anims[item->anim_number].frame_base - anims[l->anim_number].frame_base;
 	item->flags |= IFL_TRIGGERED;
 	item->hit_points = 1;
 	bike->unused1 = 0;
@@ -657,7 +657,7 @@ static long BikeCheckGetOff()
 			item->flags |= IFL_INVISIBLE;
 			return 0;
 		}
-		
+
 		if (state == 19)
 		{
 			lara_item->goal_anim_state = AS_DEATH;

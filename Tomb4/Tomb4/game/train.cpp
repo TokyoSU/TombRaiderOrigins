@@ -63,7 +63,7 @@ void DrawTrainObjects()
 	long x, x2;
 
 	trainmappos = (trainmappos + (gfUVRotate << 5)) % 0x60000;
-	obj= &dels_handy_train_map[96 - ((trainmappos / 6144 - lara_item->pos.x_pos / 6144) & 0x1F)];
+	obj = &dels_handy_train_map[96 - ((trainmappos / 6144 - lara_item->pos.x_pos / 6144) & 0x1F)];
 	x = trainmappos % 6144 - 24576;
 	phd_PushMatrix();
 	phd_TranslateAbs(lara_item->pos.x_pos - lara_item->pos.x_pos % 6144, 256, 47168);

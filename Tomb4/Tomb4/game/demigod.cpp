@@ -385,8 +385,8 @@ void DemigodControl(short item_number)
 				if (info.distance < 0x900000)
 				{
 					if (info.bite ||
-					((lara_item->current_anim_state >= AS_CLIMBSTNC && lara_item->current_anim_state <= AS_CLIMBDOWN ||
-						lara_item->current_anim_state == AS_HANG) && !lara.location && lara_item->room_number > 114))
+						((lara_item->current_anim_state >= AS_CLIMBSTNC && lara_item->current_anim_state <= AS_CLIMBDOWN ||
+							lara_item->current_anim_state == AS_HANG) && !lara.location && lara_item->room_number > 114))
 					{
 						item->goal_anim_state = 13;
 						break;
@@ -587,8 +587,8 @@ void DemigodControl(short item_number)
 				item->pos.y_rot += 1274;
 
 			if (info.distance < 0x900000 && info.bite ||
-			((lara_item->current_anim_state >= AS_CLIMBSTNC && lara_item->current_anim_state <= AS_CLIMBDOWN ||
-				lara_item->current_anim_state == AS_HANG) && !lara.location && lara_item->room_number > 114))
+				((lara_item->current_anim_state >= AS_CLIMBSTNC && lara_item->current_anim_state <= AS_CLIMBDOWN ||
+					lara_item->current_anim_state == AS_HANG) && !lara.location && lara_item->room_number > 114))
 				item->goal_anim_state = 14;
 			else
 				item->goal_anim_state = 0;

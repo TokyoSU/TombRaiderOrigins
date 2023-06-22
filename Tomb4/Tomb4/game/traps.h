@@ -1,6 +1,5 @@
 #pragma once
 
-
 extern short SPxzoffs[8];
 extern short SPyoffs[8];
 

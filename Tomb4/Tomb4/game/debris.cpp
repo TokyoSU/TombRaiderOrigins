@@ -245,7 +245,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 
 	mesh = (MESH_DATA*)meshp;
 	DebrisMesh = mesh;
-	mesh->SourceVB->Lock(DDLOCK_READONLY, (LPVOID*)&vtx, 0);
+	mesh->vb->Lock(DDLOCK_READONLY, (LPVOID*)&vtx, 0);
 	nVtx = mesh->nVerts;
 	nTris = mesh->ngt3;
 	nQuads = mesh->ngt4;
@@ -276,7 +276,7 @@ void ShatterObject(SHATTER_ITEM* shatter_item, MESH_INFO* StaticMesh, short Num,
 		offsets += 3;
 	}
 
-	mesh->SourceVB->Unlock();
+	mesh->vb->Unlock();
 	VPos.x = pos.x / lp;
 	VPos.y = pos.y / lp;
 	VPos.z = pos.z / lp;

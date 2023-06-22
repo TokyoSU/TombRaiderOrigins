@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitInterpolate(long frac, long rate);
 void phd_PopMatrix_I();
 void phd_PushMatrix_I();

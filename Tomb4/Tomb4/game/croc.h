@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitialiseCroc(short item_number);
 void CrocControl(short item_number);
 long GetFreeLocust();

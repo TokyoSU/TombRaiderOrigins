@@ -1,6 +1,5 @@
 #pragma once
 
-
 void DoGameflow();
 void DoLevel(uchar Name, uchar Audio);
 void DoTitle(uchar Name, uchar Audio);

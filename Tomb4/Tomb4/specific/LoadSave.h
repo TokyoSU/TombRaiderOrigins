@@ -1,6 +1,5 @@
 #pragma once
 
-
 void DoOptions();
 void DisplayStatsUCunt();
 long S_DisplayPauseMenu(long reset);

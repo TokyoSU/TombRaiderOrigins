@@ -1,6 +1,5 @@
 #pragma once
 
-
 void AddFootPrint(ITEM_INFO* item);
 void S_DrawFootPrints();
 

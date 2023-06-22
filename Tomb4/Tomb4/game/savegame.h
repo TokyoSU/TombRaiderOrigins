@@ -1,6 +1,5 @@
 #pragma once
 
-
 long CheckSumValid(char* buffer);
 void sgInitialiseHub(long dont_save_lara);
 void SaveLaraData();

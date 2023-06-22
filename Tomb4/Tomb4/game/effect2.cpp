@@ -173,7 +173,7 @@ void ControlSmokeEmitter(short item_number)
 		sptr->sR = 0;
 		sptr->sG = 0;
 		sptr->sB = 0;
-		
+
 		if (item->object_number == SMOKE_EMITTER_BLACK)
 		{
 			sptr->dR = 96;
@@ -1000,7 +1000,7 @@ void ControlColouredLights(short item_number)
 		{ 255, 0, 0 },		//RED_LIGHT
 		{ 0, 255, 0 },		//GREEN_LIGHT
 		{ 0, 0, 255 },		//BLUE_LIGHT
-		{ 255, 192, 0 },	//unused 
+		{ 255, 192, 0 },	//unused
 		{ 224, 224, 255 }	//unused
 	};
 
@@ -1581,8 +1581,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extras, long dynamic, l
 
 		z = 2 * gfMirrorZPlane - z;
 		mirror--;
-	}
-	while (mirror >= 0);
+	} while (mirror >= 0);
 }
 
 void TriggerFireFlame(long x, long y, long z, long body_part, long type)

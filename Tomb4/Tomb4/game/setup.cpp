@@ -618,7 +618,7 @@ void InitialiseLara()
 		gun = WEAPON_NONE;
 	else
 		gun = WEAPON_PISTOLS;
-	
+
 	lara.last_gun_type = gun;
 	lara.gun_type = gun;
 	lara.request_gun_type = gun;

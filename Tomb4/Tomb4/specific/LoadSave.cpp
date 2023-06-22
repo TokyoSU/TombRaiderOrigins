@@ -807,7 +807,7 @@ void FreeMonoScreen()
 	MonoScreenOn = 0;
 }
 
-void RGBM_Mono(uchar * r, uchar * g, uchar * b)
+void RGBM_Mono(uchar* r, uchar* g, uchar* b)
 {
 	uchar c;
 
@@ -824,7 +824,7 @@ static void BitMaskGetNumberOfBits(ulong bitMask, ulong& bitDepth, ulong& bitOff
 {
 	long i;
 
-	if (!bitMask) 
+	if (!bitMask)
 	{
 		bitOffset = 0;
 		bitDepth = 0;
@@ -875,7 +875,7 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 	srcLine = (uchar*)src->lpSurface + srcY * src->lPitch + srcX * srcBpp;
 	dstLine = (uchar*)dst->lpSurface + dstY * dst->lPitch + dstX * dstBpp;
 
-	for (ulong j = 0; j < height; j++) 
+	for (ulong j = 0; j < height; j++)
 	{
 		srcPtr = srcLine;
 		dstPtr = dstLine;
@@ -888,7 +888,7 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 			g = (color & srcMask.dwGBitMask) >> srcMask.dwGBitOffset;
 			b = (color & srcMask.dwBBitMask) >> srcMask.dwBBitOffset;
 
-			if (srcMask.dwRBitDepth < dstMask.dwRBitDepth) 
+			if (srcMask.dwRBitDepth < dstMask.dwRBitDepth)
 			{
 				high = dstMask.dwRBitDepth - srcMask.dwRBitDepth;
 				low = (srcMask.dwRBitDepth > high) ? srcMask.dwRBitDepth - high : 0;
@@ -906,7 +906,7 @@ static void CustomBlt(LPDDSURFACEDESCX dst, ulong dstX, ulong dstY, LPDDSURFACED
 			else if (srcMask.dwGBitDepth > dstMask.dwGBitDepth)
 				g >>= srcMask.dwGBitDepth - dstMask.dwGBitDepth;
 
-			if (srcMask.dwBBitDepth < dstMask.dwBBitDepth) 
+			if (srcMask.dwBBitDepth < dstMask.dwBBitDepth)
 			{
 				high = dstMask.dwBBitDepth - srcMask.dwBBitDepth;
 				low = (srcMask.dwBBitDepth > high) ? srcMask.dwBBitDepth - high : 0;
@@ -1021,7 +1021,6 @@ long S_PauseMenu()
 			ret = fade;
 			break;
 		}
-
 	} while (!MainThread.ended);
 
 	TIME_Init();

@@ -1,6 +1,5 @@
 #pragma once
 
-
 D3DMATRIX* D3DIdentityMatrix(D3DMATRIX* mx);
 void SetD3DMatrix(D3DMATRIX* mx, MATRIX_FLT* imx);
 void SetD3DViewMatrix();

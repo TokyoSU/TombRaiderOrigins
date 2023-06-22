@@ -52,28 +52,28 @@ static long ShadowTable[NUM_TRIS * 3] =	//num of triangles * 3 points
 
 static char flare_table[121] =
 {
-//	r, g, b, size, XY?, sprite
-	96, 80, 0, 6, 0, 31,
-	48, 32, 32, 10, -6, 31,
-	32, 24, 24, 18, -1, 31,
-	80, 104, 64, 5, -3, 30,
-	64, 64, 64, 20, 0, 32,
-	96, 56, 56, 14, 0, 11,
-	80, 40, 32, 9, 0, 29,
-	16, 24, 40, 2, 5, 31,
-	8, 8, 24, 7, 8, 31,
-	8, 16, 32, 4, 10, 31,
-	48, 24, 0, 2, 13, 31,
-	40, 96, 72, 1, 16, 11,
-	40, 96, 72, 3, 20, 11,
-	32, 16, 0, 6, 22, 31,
-	32, 16, 0, 9, 23, 30,
-	32, 16, 0, 3, 24, 31,
-	32, 48, 24, 4, 26, 31,
-	8, 40, 112, 3, 27, 11,
-	8, 16, 0, 10, 29, 30,
-	16, 16, 24, 17, 31, 29,
-	-1
+	//	r, g, b, size, XY?, sprite
+		96, 80, 0, 6, 0, 31,
+		48, 32, 32, 10, -6, 31,
+		32, 24, 24, 18, -1, 31,
+		80, 104, 64, 5, -3, 30,
+		64, 64, 64, 20, 0, 32,
+		96, 56, 56, 14, 0, 11,
+		80, 40, 32, 9, 0, 29,
+		16, 24, 40, 2, 5, 31,
+		8, 8, 24, 7, 8, 31,
+		8, 16, 32, 4, 10, 31,
+		48, 24, 0, 2, 13, 31,
+		40, 96, 72, 1, 16, 11,
+		40, 96, 72, 3, 20, 11,
+		32, 16, 0, 6, 22, 31,
+		32, 16, 0, 9, 23, 30,
+		32, 16, 0, 3, 24, 31,
+		32, 48, 24, 4, 26, 31,
+		8, 40, 112, 3, 27, 11,
+		8, 16, 0, 10, 29, 30,
+		16, 16, 24, 17, 31, 29,
+		-1
 };
 
 static uchar TargetGraphColTab[48] =
@@ -411,7 +411,7 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
 			x4 = sXYZ[p + 3];
 			y4 = sXYZ[p + 4];
 			z4 = sXYZ[p + 5];
-			
+
 			setXYZ4(v, x1, y1, z1, x2, y2, z2, x4, y4, z4, x3, y3, z3, clipflags);
 
 			for (int k = 0; k < 4; k++)
@@ -623,7 +623,7 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 	if (sptr->Flags & 8)
 	{
 		z1 = zptr[0];
-		
+
 		if (z1 <= 0)
 			return;
 
@@ -721,10 +721,10 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 			if (sptr->TransType == 3)
 				tex.drawtype = 5;
 			else
-			if (sptr->TransType)
-				tex.drawtype = 2;
-			else
-				tex.drawtype = 1;
+				if (sptr->TransType)
+					tex.drawtype = 2;
+				else
+					tex.drawtype = 1;
 
 			tex.tpage = sprite->tpage;
 			tex.u1 = sprite->x1;
@@ -762,7 +762,7 @@ void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr)
 
 		c1 = RGBA(cR, cG, cB, 0xFF);
 		c2 = RGBA(cR >> 1, cG >> 1, cB >> 1, 0xFF);
-		
+
 		if (ClipLine(x1, y1, z1, x2, y2, z2, phd_winxmin, phd_winymin, phd_winxmax, phd_winymax))
 		{
 			v[0].sx = (float)x1;
@@ -2188,7 +2188,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj)
 		pos.x = x - lara_item->pos.x_pos;
 		pos.y = y - lara_item->pos.y_pos;
 		pos.z = z - lara_item->pos.z_pos;
-		
+
 		while (pos.x > 0x7F00 || pos.x < -0x7F00 || pos.y > 0x7F00 || pos.y < -0x7F00 || pos.z > 0x7F00 || pos.z < -0x7F00)
 		{
 			pos.x >>= 1;
@@ -2286,7 +2286,7 @@ void InitTarget_2()
 		return;
 
 	targetMeshP = (MESH_DATA*)meshes[obj->mesh_index];
-	targetMeshP->SourceVB->Lock(DDLOCK_READONLY, (void**)&v, 0);
+	targetMeshP->vb->Lock(DDLOCK_READONLY, (void**)&v, 0);
 
 	for (int i = 0; i < targetMeshP->nVerts; i++)
 	{
@@ -2298,7 +2298,7 @@ void InitTarget_2()
 		v[i].specular = 0xFF000000;
 	}
 
-	targetMeshP->SourceVB->Unlock();
+	targetMeshP->vb->Unlock();
 }
 
 void InitBinoculars()
@@ -2312,7 +2312,7 @@ void InitBinoculars()
 		return;
 
 	binocsMeshP = (MESH_DATA*)meshes[obj->mesh_index];
-	binocsMeshP->SourceVB->Lock(DDLOCK_READONLY, (void**)&v, 0);
+	binocsMeshP->vb->Lock(DDLOCK_READONLY, (void**)&v, 0);
 
 	for (int i = 0; i < binocsMeshP->nVerts; i++)
 	{
@@ -2324,7 +2324,7 @@ void InitBinoculars()
 		v[i].specular = 0xFF000000;
 	}
 
-	binocsMeshP->SourceVB->Unlock();
+	binocsMeshP->vb->Unlock();
 }
 
 void DrawBinoculars()
@@ -2333,10 +2333,8 @@ void DrawBinoculars()
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT* tex;
 	D3DTLVERTEX* vtx;
-	short* clip;
-	short* quad;
-	short* tri;
 	ushort drawbak;
+	short* clip;
 	short clipdistance;
 
 	vtx = MyVertexBuffer;
@@ -2346,7 +2344,7 @@ void DrawBinoculars()
 	else
 		mesh = binocsMeshP;
 
-	mesh->SourceVB->Lock(DDLOCK_READONLY, (void**)&v, 0);
+	mesh->vb->Lock(DDLOCK_READONLY, (void**)&v, 0);
 	clip = clipflags;
 
 	for (int i = 0; i < mesh->nVerts; i++)
@@ -2369,86 +2367,86 @@ void DrawBinoculars()
 		*clip++ = clipdistance;
 	}
 
-	mesh->SourceVB->Unlock();
-	quad = mesh->gt4;
-	tri = mesh->gt3;
+	mesh->vb->Unlock();
 
+	auto* quad = mesh->gt4;
+	auto* tri = mesh->gt3;
 	if (LaserSight)
 	{
-		for (int i = 0; i < mesh->ngt4; i++, quad += 6)
+		for (int i = 0; i < mesh->ngt4; i++, quad++)
 		{
-			tex = &textinfo[quad[4] & 0x7FFF];
+			tex = &textinfo[quad->texture];
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if (quad[5] & 1)
+			if (quad->flags & 1)
 			{
-				vtx[quad[0]].color = 0xFF000000;
-				vtx[quad[1]].color = 0xFF000000;
-				vtx[quad[2]].color = 0;
-				vtx[quad[3]].color = 0;
+				vtx[quad->vertices[0]].color = 0xFF000000;
+				vtx[quad->vertices[1]].color = 0xFF000000;
+				vtx[quad->vertices[2]].color = 0;
+				vtx[quad->vertices[3]].color = 0;
 				tex->drawtype = 3;
 			}
 
-			AddQuadSorted(vtx, quad[0], quad[1], quad[2], quad[3], tex, 1);
+			AddQuadSorted(vtx, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], tex, 1);
 			tex->drawtype = drawbak;
 		}
 
-		for (int i = 0, j = 0; i < mesh->ngt3; i++, tri += 5)
+		for (int i = 0, j = 0; i < mesh->ngt3; i++, tri++)
 		{
-			tex = &textinfo[tri[3] & 0x7FFF];
+			tex = &textinfo[tri->texture];
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if (tri[4] & 1)
+			if (tri->flags & 1)
 			{
-				vtx[tri[0]].color = TargetGraphColTab[j] << 24;
-				vtx[tri[1]].color = TargetGraphColTab[j + 1] << 24;
-				vtx[tri[2]].color = TargetGraphColTab[j + 2] << 24;
+				vtx[tri->vertices[0]].color = TargetGraphColTab[j] << 24;
+				vtx[tri->vertices[1]].color = TargetGraphColTab[j + 1] << 24;
+				vtx[tri->vertices[2]].color = TargetGraphColTab[j + 2] << 24;
 				tex->drawtype = 3;
 				j += 3;
 			}
 
-			AddTriSorted(vtx, tri[0], tri[1], tri[2], tex, 1);
+			AddTriSorted(vtx, tri->vertices[0], tri->vertices[1], tri->vertices[2], tex, 1);
 			tex->drawtype = drawbak;
 		}
 	}
 	else
 	{
-		for (int i = 0; i < mesh->ngt4; i++, quad += 6)
+		for (int i = 0; i < mesh->ngt4; i++, quad++)
 		{
-			tex = &textinfo[quad[4] & 0x7FFF];
+			tex = &textinfo[quad->texture];
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if (quad[5] & 1)
+			if (quad->flags & 1)
 			{
-				vtx[quad[0]].color = 0xFF000000;
-				vtx[quad[1]].color = 0xFF000000;
-				vtx[quad[2]].color = 0;
-				vtx[quad[3]].color = 0;
+				vtx[quad->vertices[0]].color = 0xFF000000;
+				vtx[quad->vertices[1]].color = 0xFF000000;
+				vtx[quad->vertices[2]].color = 0;
+				vtx[quad->vertices[3]].color = 0;
 				tex->drawtype = 3;
 			}
 
-			AddQuadSorted(vtx, quad[0], quad[1], quad[2], quad[3], tex, 1);
+			AddQuadSorted(vtx, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], tex, 1);
 			tex->drawtype = drawbak;
 		}
 
-		for (int i = 0; i < mesh->ngt3; i++, tri += 5)
+		for (int i = 0; i < mesh->ngt3; i++, tri++)
 		{
-			tex = &textinfo[tri[3] & 0x7FFF];
+			tex = &textinfo[tri->texture];
 			drawbak = tex->drawtype;
 			tex->drawtype = 0;
 
-			if (tri[4] & 1)
+			if (tri->flags & 1)
 			{
-				vtx[tri[0]].color = 0;
-				vtx[tri[1]].color = 0xFF000000;
-				vtx[tri[2]].color = 0;
+				vtx[tri->vertices[0]].color = 0;
+				vtx[tri->vertices[1]].color = 0xFF000000;
+				vtx[tri->vertices[2]].color = 0;
 				tex->drawtype = 3;
 			}
 
-			AddTriSorted(vtx, tri[0], tri[1], tri[2], tex, 1);
+			AddTriSorted(vtx, tri->vertices[0], tri->vertices[1], tri->vertices[2], tex, 1);
 			tex->drawtype = drawbak;
 		}
 	}
@@ -2956,7 +2954,7 @@ void DrawTrainFloorStrip(long x, long z, TEXTURESTRUCT* tex, long y_and_flags)
 	offsets[0].y = ((y_and_flags >> 16) & 0xFF) << 4;
 	offsets[1].y = ((y_and_flags >> 8) & 0xFF) << 4;
 	offsets[2].y = (y_and_flags & 0xFF) << 4;
-	
+
 	offsets[0].x = x;
 	offsets[1].x = x;
 	offsets[2].x = x;
@@ -3150,7 +3148,7 @@ void S_DrawSplashes()	//	(also draws ripples and underwater blood (which is a ri
 				r = splash->life << 1;
 				g = splash->life << 1;
 				b = splash->life << 1;
-				
+
 				if (r > 255)
 					r = 255;
 
@@ -3478,7 +3476,6 @@ void S_DrawFireSparks(long size, long life)
 		XY[0] = long(pos.x * perspz + f_centerx);
 		XY[1] = long(pos.y * perspz + f_centery);
 		Z[0] = (long)pos.z;
-
 
 		if (Z[0] <= 0 || Z[0] >= 0x5000)
 			continue;

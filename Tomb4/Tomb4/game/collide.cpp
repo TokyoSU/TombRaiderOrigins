@@ -220,7 +220,7 @@ void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INF
 
 	item = &items[item_number];
 
-	if (item->status != ITEM_INVISIBLE && item->item_flags[3] && TestBoundsCollide(item, l, coll->radius))
+	if (item->status != ITEM_INVISIBLE && item->item_flags[3] && TestBoundsCollide(item, l, coll->r))
 	{
 		dx = lara_item->pos.x_pos;
 		dy = lara_item->pos.y_pos;
@@ -255,7 +255,7 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (item->status != ITEM_INVISIBLE && TestBoundsCollide(item, l, coll->radius))
+	if (item->status != ITEM_INVISIBLE && TestBoundsCollide(item, l, coll->r))
 	{
 		TouchBits = TestCollision(item, l);
 
@@ -324,7 +324,7 @@ void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l))
+	if (TestBoundsCollide(item, l, coll->r) && TestCollision(item, l))
 	{
 		if (lara.water_status != LW_UNDERWATER && lara.water_status != LW_SURFACE)
 		{
@@ -452,12 +452,12 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	short nearby_rooms[22];
 
 	coll->hit_static = 0;
-	lxmin = x - coll->radius;
-	lxmax = x + coll->radius;
+	lxmin = x - coll->r;
+	lxmax = x + coll->r;
 	lymin = y - hite;
 	lymax = y;
-	lzmin = z - coll->radius;
-	lzmax = z + coll->radius;
+	lzmin = z - coll->r;
+	lzmax = z + coll->r;
 	num_nearby_rooms = 1;
 	nearby_rooms[0] = room_number;
 	door = room[room_number].door;
@@ -644,7 +644,7 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 					pos.z_pos = mesh->z;
 					pos.y_rot = mesh->y_rot;
 
-					if (TestBoundsCollideStatic(bounds, &pos, coll->radius))
+					if (TestBoundsCollideStatic(bounds, &pos, coll->r))
 						ItemPushLaraStatic(l, bounds, &pos, coll);
 				}
 			}
@@ -661,7 +661,7 @@ void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
+	if (TestBoundsCollide(item, l, coll->r) && TestCollision(item, l) && coll->enable_baddie_push)
 		ItemPushLara(item, l, coll, 0, 1);
 }
 
@@ -671,7 +671,7 @@ void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l) && coll->enable_baddie_push)
+	if (TestBoundsCollide(item, l, coll->r) && TestCollision(item, l) && coll->enable_baddie_push)
 		ItemPushLara(item, l, coll, 0, 0);
 }
 
@@ -683,7 +683,7 @@ void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	if (item->status == ITEM_ACTIVE)
 	{
-		if (!TestBoundsCollide(item, l, coll->radius))
+		if (!TestBoundsCollide(item, l, coll->r))
 			return;
 	}
 	else if (item->status == ITEM_INVISIBLE)
@@ -718,10 +718,10 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 
 	if (BigPush & 1)
 	{
-		xmin -= coll->radius;
-		xmax += coll->radius;
-		zmin -= coll->radius;
-		zmax += coll->radius;
+		xmin -= coll->r;
+		xmax += coll->r;
+		zmin -= coll->r;
+		zmax += coll->r;
 	}
 
 	if (abs(dx) > 4608 || abs(dz) > 4608 || x <= xmin || x >= xmax || z <= zmin || z >= zmax)
@@ -846,10 +846,10 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 	c = phd_cos(pos->y_rot);
 	x = (dx * c - dz * s) >> W2V_SHIFT;
 	z = (dx * s + dz * c) >> W2V_SHIFT;
-	xmin = bounds[0] - coll->radius;
-	xmax = bounds[1] + coll->radius;
-	zmin = bounds[4] - coll->radius;
-	zmax = bounds[5] + coll->radius;
+	xmin = bounds[0] - coll->r;
+	xmax = bounds[1] + coll->r;
+	zmin = bounds[4] - coll->r;
+	zmax = bounds[5] + coll->r;
 
 	if (abs(dx) > 4608 || abs(dz) > 4608 || x <= xmin || x >= xmax || z <= zmin || z >= zmax)
 		return 0;
@@ -1114,7 +1114,7 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	if (item->status == ITEM_INVISIBLE)
 		return;
 
-	if (!TestBoundsCollide(item, l, coll->radius))
+	if (!TestBoundsCollide(item, l, coll->r))
 		return;
 
 	bounds = StarGateBounds;
@@ -1128,7 +1128,7 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		GlobalCollisionBounds[4] = bounds[4];
 		GlobalCollisionBounds[5] = bounds[5];
 
-		if (TestBoundsCollide2(item, l, coll->radius))
+		if (TestBoundsCollide2(item, l, coll->r))
 			ItemPushLara(item, l, coll, 0, 2);
 
 		bounds += 6;
@@ -1193,7 +1193,7 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	if (item->status == ITEM_INVISIBLE)
 		return;
 
-	if (!TestBoundsCollide(item, l, coll->radius))
+	if (!TestBoundsCollide(item, l, coll->r))
 		return;
 
 	if (TriggerActive(item))
@@ -1254,39 +1254,39 @@ void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number
 	switch (coll->quadrant)
 	{
 	case NORTH:
-		xfront = (coll->radius * phd_sin(coll->facing)) >> W2V_SHIFT;
-		zfront = coll->radius;
-		xright = coll->radius;
-		zright = coll->radius;
-		zleft = coll->radius;
-		xleft = -coll->radius;
+		xfront = (coll->r * phd_sin(coll->facing)) >> W2V_SHIFT;
+		zfront = coll->r;
+		xright = coll->r;
+		zright = coll->r;
+		zleft = coll->r;
+		xleft = -coll->r;
 		break;
 
 	case EAST:
-		xfront = coll->radius;
-		zfront = (coll->radius * phd_cos(coll->facing)) >> W2V_SHIFT;
-		xright = coll->radius;
-		zright = -coll->radius;
-		zleft = coll->radius;
-		xleft = coll->radius;
+		xfront = coll->r;
+		zfront = (coll->r * phd_cos(coll->facing)) >> W2V_SHIFT;
+		xright = coll->r;
+		zright = -coll->r;
+		zleft = coll->r;
+		xleft = coll->r;
 		break;
 
 	case SOUTH:
-		xfront = (coll->radius * phd_sin(coll->facing)) >> W2V_SHIFT;
-		zfront = -coll->radius;
-		xright = -coll->radius;
-		zright = -coll->radius;
-		zleft = -coll->radius;
-		xleft = coll->radius;
+		xfront = (coll->r * phd_sin(coll->facing)) >> W2V_SHIFT;
+		zfront = -coll->r;
+		xright = -coll->r;
+		zright = -coll->r;
+		zleft = -coll->r;
+		xleft = coll->r;
 		break;
 
 	case WEST:
-		xfront = -coll->radius;
-		zfront = (coll->radius * phd_cos(coll->facing)) >> W2V_SHIFT;
-		xright = -coll->radius;
-		zright = coll->radius;
-		zleft = -coll->radius;
-		xleft = -coll->radius;
+		xfront = -coll->r;
+		zfront = (coll->r * phd_cos(coll->facing)) >> W2V_SHIFT;
+		xright = -coll->r;
+		zright = coll->r;
+		zleft = -coll->r;
+		xleft = -coll->r;
 		break;
 
 	default:

@@ -432,7 +432,6 @@ void AhmetControl(short item_number)
 
 		case 6:
 			ahmet->maximum_turn = 0;
-			
 
 			if (item->anim_number == objects[AHMET].anim_index + 7)
 			{

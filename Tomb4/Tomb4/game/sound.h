@@ -1,6 +1,5 @@
 #pragma once
 
-
 void GetPanVolume(SoundSlot* slot);
 void StopSoundEffect(long sfx);
 void SOUND_Init();
@@ -15,10 +14,10 @@ extern long sound_active;
 
 enum sfx_options
 {
-	SFX_DEFAULT =	0,
-	SFX_WATER =		1,
-	SFX_ALWAYS =	2,
-	SFX_SETPITCH =	4
+	SFX_DEFAULT = 0,
+	SFX_WATER = 1,
+	SFX_ALWAYS = 2,
+	SFX_SETPITCH = 4
 };
 
 enum sound_effect_names

@@ -102,7 +102,7 @@ void ControlClockworkBeetle(short item_number)
 			item->status = ITEM_INVISIBLE;
 			return;
 		}
-			
+
 		if (frame < base + 104)
 		{
 			pos.x = 0;

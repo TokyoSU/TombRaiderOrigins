@@ -90,7 +90,7 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll)
 	coll->old.x = item->pos.x_pos;
 	coll->old.y = item->pos.y_pos;
 	coll->old.z = item->pos.z_pos;
-	coll->radius = lara.water_status == LW_FLYCHEAT ? 100 : 300;
+	coll->r = lara.water_status == LW_FLYCHEAT ? 100 : 300;
 	coll->trigger = 0;
 	coll->slopes_are_walls = 0;
 	coll->slopes_are_pits = 0;
@@ -339,7 +339,6 @@ long GetWaterDepth(long x, long y, long z, short room_number)
 			room_number = door;
 			r = &room[door];
 		}
-
 	} while (door != 255);
 
 	if (r->flags & ROOM_UNDERWATER)

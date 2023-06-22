@@ -1,6 +1,5 @@
 #pragma once
 
-
 long Key(long number);
 long S_UpdateInput();
 long ReadJoystick(long& x, long& y);

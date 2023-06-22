@@ -410,7 +410,7 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angl
 
 	if (!*ammo)
 		return 0;
-	
+
 	if (*ammo != -1)
 		--*ammo;
 

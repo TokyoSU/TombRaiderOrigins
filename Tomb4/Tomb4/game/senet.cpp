@@ -282,7 +282,7 @@ void GameStixControl(short item_number)
 			piece->pos.z_pos += 128;
 		else
 			piece->pos.z_pos -= 128;
-		
+
 		room_number = piece->room_number;
 		GetFloor(piece->pos.x_pos, piece->pos.y_pos - 32, piece->pos.z_pos, &room_number);
 

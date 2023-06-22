@@ -105,7 +105,7 @@ void DrawLara(ITEM_INFO* item, bool isMirror)
 	short* rot;
 	long top, bottom, left, right, dx, dy, dz, dist, xRot;
 	static long a = 255;
-	
+
 	top = phd_top;
 	bottom = phd_bottom;
 	left = phd_left;
@@ -846,11 +846,11 @@ void Rich_CalcLaraMatrices_Interpolated(short* frame1, short* frame2, long frac,
 		rot = &lara.right_arm.frame_base[(anims[lara.right_arm.anim_number].interpolation >> 8) * (lara.right_arm.frame_number - anims[lara.right_arm.anim_number].frame_base) + 9];
 		gar_RotYXZsuperpack(&rot, 8);
 		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
-		
+
 		phd_TranslateRel(bone[33], bone[34], bone[35]);
 		gar_RotYXZsuperpack(&rot, 0);
 		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));
-		
+
 		phd_TranslateRel(bone[37], bone[38], bone[39]);
 		gar_RotYXZsuperpack(&rot, 0);
 		memcpy(matrix++, mMXPtr, sizeof(MATRIX_FLT));

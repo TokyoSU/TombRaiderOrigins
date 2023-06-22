@@ -302,7 +302,7 @@ void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 			item->pos.y_rot = y_rot;
 			return;
 		}
-		
+
 		if (GLOBAL_inventoryitemchosen == PUZZLE_ITEM5)
 		{
 			l->anim_number = ANIM_PLINTHHI;

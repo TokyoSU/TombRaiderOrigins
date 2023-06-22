@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitialiseNewWeapon();
 void LaraTargetInfo(WEAPON_INFO* winfo);
 short* get_current_ammo_pointer(long weapon_type);

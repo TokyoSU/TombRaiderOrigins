@@ -70,7 +70,6 @@ char tsv_buffer[16384];
 
 static PHD_VECTOR NodeVectors[16];
 
-
 LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation, long rgb, uchar flags, uchar size, uchar segments)
 {
 	LIGHTNING_STRUCT* lptr;
@@ -358,7 +357,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	{
 		sptr->Size = size >> 1;
 		sptr->sSize = size >> 1;
-		sptr->dSize = (size + 4)<<1;
+		sptr->dSize = (size + 4) << 1;
 	}
 	else
 	{
@@ -384,7 +383,7 @@ void LaraBubbles(ITEM_INFO* item)
 	{
 		CreateBubble((PHD_3DPOS*)&pos, item->room_number, 8, 7);
 
-		if (gfLevelFlags & GF_MIRROR  && item->room_number == gfMirrorRoom)
+		if (gfLevelFlags & GF_MIRROR && item->room_number == gfMirrorRoom)
 		{
 			pos.z = 2 * gfMirrorZPlane - pos.z;
 			CreateBubble((PHD_3DPOS*)&pos, item->room_number, 8, 7);
@@ -593,7 +592,7 @@ void keep_those_fires_burning()
 			sptr->Yvel = -16 - (GetRandomControl() & 0xF);
 			sptr->Zvel = (GetRandomControl() & 0xFF) - 128;
 			sptr->Friction = 4;
-			
+
 			if (GetRandomControl() & 1)
 			{
 				sptr->Flags = 16;
@@ -929,7 +928,7 @@ void TriggerShatterSmoke(long x, long y, long z)
 	sptr->Yvel = 2 * (GetRandomControl() & 0x1FF) - 512;
 	sptr->Zvel = 2 * (GetRandomControl() & 0x1FF) - 512;
 	sptr->Friction = 7;
-	
+
 	if (GetRandomControl() & 1)
 	{
 		sptr->Flags = 16;
@@ -1571,7 +1570,7 @@ void UpdateBubbles()
 		bubble->pos.x += (3 * phd_sin(bubble->pad << 8)) >> W2V_SHIFT;
 		bubble->pos.y -= bubble->speed >> 8;
 		bubble->pos.z += phd_cos(bubble->pad << 8) >> W2V_SHIFT;
-		
+
 		room_number = bubble->room_number;
 		floor = GetFloor(bubble->pos.x, bubble->pos.y, bubble->pos.z, &room_number);
 		h = GetHeight(floor, bubble->pos.x, bubble->pos.y, bubble->pos.z);
@@ -1611,7 +1610,7 @@ long GetFreeDrip()
 {
 	DRIP_STRUCT* drip;
 	long min_life, min_life_num, free;
-	
+
 	free = next_drip;
 	drip = &Drips[next_drip];
 	min_life = 4095;

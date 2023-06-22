@@ -490,7 +490,6 @@ long DXCreateViewport(LPDIRECT3DX d3d, LPDIRECT3DDEVICEX device, long w, long h,
 
 	Log(2, "DXCreateViewport");
 
-
 	if (DXAttempt(d3d->CreateViewport(viewport, 0)) != DD_OK)
 		return 0;
 

@@ -1,6 +1,5 @@
 #pragma once
 
-
 void DrawTrainObjects();
 void DrawTrainFloor();
 void InitialiseTrainJeep(short item_number);

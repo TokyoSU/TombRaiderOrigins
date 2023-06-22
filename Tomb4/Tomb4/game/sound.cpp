@@ -14,16 +14,16 @@ long sound_active = 0;
 
 void GetPanVolume(SoundSlot* slot)
 {
-	long dx, dy, dz, radius, distance, nPan, nVolume;
+	long dx, dy, dz, r, distance, nPan, nVolume;
 
 	if (slot->distance || slot->pos.x || slot->pos.y || slot->pos.z)
 	{
 		dx = slot->pos.x - camera.pos.x;
 		dy = slot->pos.y - camera.pos.y;
 		dz = slot->pos.z - camera.pos.z;
-		radius = sample_infos[slot->nSampleInfo].radius << 10;
+		r = sample_infos[slot->nSampleInfo].r << 10;
 
-		if (dx < -radius || dx > radius || dy < -radius || dy > radius || dz < -radius || dz > radius)
+		if (dx < -r || dx > r || dy < -r || dy > r || dz < -r || dz > r)
 		{
 			slot->distance = 0;
 			slot->nPan = 0;
@@ -33,7 +33,7 @@ void GetPanVolume(SoundSlot* slot)
 		{
 			distance = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
-			if (distance <= SQUARE(radius))
+			if (distance <= SQUARE(r))
 			{
 				if (distance >= 0x100000)
 					distance = phd_sqrt(distance) - 1024;
@@ -44,7 +44,7 @@ void GetPanVolume(SoundSlot* slot)
 				nVolume = slot->OrigVolume;
 
 				if (distance)
-					nVolume = (nVolume * (4096 - (phd_sin((distance << 14) / radius) >> 2))) >> 12;
+					nVolume = (nVolume * (4096 - (phd_sin((distance << 14) / r) >> 2))) >> 12;
 
 				if (nVolume > 0)
 				{
@@ -116,7 +116,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 {
 	SAMPLE_INFO* info;
 	PHD_3DPOS pos2;
-	long lut, radius, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
+	long lut, r, pan, dx, dy, dz, distance, volume, OrigVolume, pitch, rnd, sample, flag, vol, slot;
 
 	if (sfx == SFX_LARA_NO)
 	{
@@ -161,7 +161,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 			return 0;
 	}
 
-	radius = (info->radius + 1) << 10;
+	r = (info->r + 1) << 10;
 	pan = 0;
 
 	if (pos)
@@ -170,12 +170,12 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		dy = pos->y_pos - camera.pos.y;
 		dz = pos->z_pos - camera.pos.z;
 
-		if (dx < -radius || dx > radius || dy < -radius || dy > radius || dz < -radius || dz > radius)
+		if (dx < -r || dx > r || dy < -r || dy > r || dz < -r || dz > r)
 			return 0;
 
 		distance = SQUARE(dx) + SQUARE(dy) + SQUARE(dz);
 
-		if (distance > SQUARE(radius))
+		if (distance > SQUARE(r))
 			return 0;
 
 		if (distance >= 0x100000)
@@ -203,7 +203,7 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 	OrigVolume = volume;
 
 	if (distance)
-		volume = (volume * (4096 - (phd_sin((distance << 14) / radius) >> 2))) >> 12;
+		volume = (volume * (4096 - (phd_sin((distance << 14) / r) >> 2))) >> 12;
 
 	if (volume <= 0)
 		return 0;
@@ -351,8 +351,8 @@ long SoundEffect(long sfx, PHD_3DPOS* pos, long flags)
 		return 0;
 	}
 
-//	if (sample >= 0)
-		//empty func call here
+	//	if (sample >= 0)
+			//empty func call here
 
 	info->number = -1;
 	return 0;

@@ -1,6 +1,5 @@
 #pragma once
 
-
 long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace);
 long TestCollision(ITEM_INFO* item, ITEM_INFO* l);
 void InitInterpolate2(long frac, long rate);

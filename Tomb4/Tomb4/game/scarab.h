@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitialiseScarab(short item_number);
 void ScarabControl(short item_number);
 long GetFreeScarab();

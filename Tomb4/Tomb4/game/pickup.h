@@ -1,6 +1,5 @@
 #pragma once
 
-
 void SarcophagusCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void KeyHoleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 void PuzzleDoneCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll);

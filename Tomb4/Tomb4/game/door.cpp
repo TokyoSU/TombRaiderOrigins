@@ -230,7 +230,7 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 		item->pos.y_rot ^= 0x8000;
 	}
 
-	if (TestBoundsCollide(item, l, coll->radius))
+	if (TestBoundsCollide(item, l, coll->r))
 	{
 		if (TestCollision(item, l))
 		{

@@ -351,7 +351,6 @@ void OptomiseSkinningData()
 	long c, lp, lp1, numvertsj, numvertstocalc, padval, numtris, numquads;
 	uchar RemapTable[32];
 
-
 	object = &objects[LARA_SKIN_JOINTS];
 	meshpp = &meshes[object->mesh_index + 1];
 

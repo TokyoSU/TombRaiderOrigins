@@ -1,6 +1,5 @@
 #pragma once
 
-
 void ProcessRoomDynamics(ROOM_INFO* r);
 void ProcessRoomVertices(ROOM_INFO* r);
 void ProcessRoomData(ROOM_INFO* r);

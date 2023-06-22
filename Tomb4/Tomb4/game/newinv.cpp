@@ -152,7 +152,7 @@ INVOBJ inventry_objects_list[NUM_INVOBJ] =
 	{QUEST_ITEM4, 0, 0x500, 0x4000, 0, 0xC000, 2, TXT_QuestItem4, -1},
 	{QUEST_ITEM5, 0, 0x300, 0, 0, 0x2000, 2, TXT_QuestItem5, -1},
 	{QUEST_ITEM6, 0, 0x300, 0x8000, 0, 0x2000, 2, TXT_QuestItem6, -1},
-	
+
 	//the rest
 	{BURNING_TORCH_ITEM, 14, 0x4B0, 0, 0x4000, 0, 2, TXT_Load, -1},
 	{CROWBAR_ITEM, 4, 0x76C, 0, 0x4000, 0, 2, TXT_Crowbar, -1},
@@ -1610,7 +1610,7 @@ long convert_obj_to_invobj(short obj)
 		if (inventry_objects_list[i].object_number == obj)
 			return i;
 	}
-		
+
 	return INV_MEMCARD_LOAD_ITEM;
 }
 
@@ -2364,7 +2364,7 @@ void handle_inventry_menu()
 			num++;
 		}
 	}
-	
+
 	ypos = phd_centery - font_height;
 
 	if (num == 1)
@@ -2550,7 +2550,7 @@ void draw_current_object_list(long ringnum)
 			}
 		}
 	}
-	else 
+	else
 	{
 		if (normal_ring_fade_dir == 1)
 		{

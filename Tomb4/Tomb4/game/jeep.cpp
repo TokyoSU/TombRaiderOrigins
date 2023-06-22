@@ -76,7 +76,7 @@ static long GetOnJeep(short item_number, COLL_INFO* coll)
 				room_number = item->room_number;
 				floor = GetFloor(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, &room_number);
 				h = GetHeight(floor, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
-				
+
 				if (h >= NO_HEIGHT + 512)	//mmmm
 				{
 					ang = short(phd_atan(item->pos.z_pos - lara_item->pos.z_pos, item->pos.x_pos - lara_item->pos.x_pos) - item->pos.y_rot);
@@ -92,7 +92,7 @@ static long GetOnJeep(short item_number, COLL_INFO* coll)
 								GLOBAL_inventoryitemchosen = NO_ITEM;
 								return 1;
 							}
-							
+
 							if (have_i_got_object(PUZZLE_ITEM1))
 								GLOBAL_enterinventory = PUZZLE_ITEM1;
 						}
@@ -1100,7 +1100,7 @@ void JeepBaddieCollision(ITEM_INFO* item)
 				if (collided->object_number == ENEMY_JEEP)
 				{
 					mycoll.coll_type = 0;
-					mycoll.radius = 400;
+					mycoll.r = 400;
 					mycoll.enable_baddie_push = 1;
 					mycoll.enable_spaz = 0;
 					ObjectCollision(item_number, item, &mycoll);
@@ -1697,7 +1697,7 @@ void JeepFireGrenade(ITEM_INFO* item)
 		InitialiseItem(item_number);
 		grenade->pos.x_rot = item->pos.x_rot;
 		grenade->pos.z_rot = 0;
-		grenade->pos.y_rot= item->pos.y_rot + 0x8000;
+		grenade->pos.y_rot = item->pos.y_rot + 0x8000;
 		grenade->pos.x_pos = item->pos.x_pos + (1024 * phd_sin(grenade->pos.y_rot) >> W2V_SHIFT);
 		grenade->pos.y_pos = item->pos.y_pos - 768;
 		grenade->pos.z_pos = item->pos.z_pos + (1024 * phd_cos(grenade->pos.y_rot) >> W2V_SHIFT);
@@ -1760,7 +1760,7 @@ void EnemyJeepControl(short item_number)
 	room_number = item->room_number;
 	floor = GetFloor(x, y, z, &room_number);
 	h1 = GetHeight(floor, x, y, z);
-	
+
 	if (abs(y - h1) > 768)
 	{
 		item->pos.x_pos += Zoffset >> 6;
@@ -1849,7 +1849,7 @@ void EnemyJeepControl(short item_number)
 			item->goal_anim_state = 1;
 
 		break;
-		
+
 	case 1:
 		jeep->maximum_turn = item->item_flags[0] >> 4;
 		item->item_flags[0] += 37;		//34 in debug exe

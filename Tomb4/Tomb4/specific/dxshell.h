@@ -1,6 +1,5 @@
 #pragma once
 
-
 void DXBitMask2ShiftCnt(ulong mask, uchar* shift, uchar* count);
 void DXReadKeyboard(char* KeyMap);
 long DXAttempt(HRESULT r);

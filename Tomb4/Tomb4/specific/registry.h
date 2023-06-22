@@ -1,6 +1,5 @@
 #pragma once
 
-
 bool REG_OpenKey(LPCSTR lpSubKey);
 bool OpenRegistry(LPCSTR SubKeyName);
 void REG_CloseKey();

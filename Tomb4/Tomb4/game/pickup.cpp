@@ -691,7 +691,7 @@ void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 					item->pos.y_rot = yrot;
 					return;
 				}
-				
+
 				if (puzzle != hole)
 				{
 					item->pos.y_rot = yrot;

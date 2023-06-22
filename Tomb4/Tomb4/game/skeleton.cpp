@@ -214,7 +214,7 @@ void SkeletonControl(short item_number)
 		larainfo.distance = SQUARE(dx) + SQUARE(dz);
 	}
 
-//	larainfo.ahead = larainfo.angle > -0x4000 && larainfo.angle < 0x4000;	//Keep uninitialized
+	//	larainfo.ahead = larainfo.angle > -0x4000 && larainfo.angle < 0x4000;	//Keep uninitialized
 	GetCreatureMood(item, &info, 1);
 
 	if (!(item->mesh_bits & 0x200))

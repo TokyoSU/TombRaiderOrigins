@@ -510,9 +510,9 @@ void HorsemanControl(short item_number)
 		}
 
 		if (item->item_flags[1])
-			objects[HORSEMAN].radius = 409;
+			objects[HORSEMAN].r = 409;
 		else
-			objects[HORSEMAN].radius = 170;
+			objects[HORSEMAN].r = 170;
 
 		CreatureAnimation(item_number, angle, 0);
 	}

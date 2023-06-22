@@ -200,7 +200,6 @@ void DrawSortList()
 
 			if (pSort->polytype == 4)
 				App.dx.lpD3DDevice->SetRenderState(D3DRENDERSTATE_TEXTUREPERSPECTIVE, 1);
-
 		}
 	}
 	else
@@ -1194,7 +1193,6 @@ void DoSort(long left, long right, SORTLIST** list)
 			l++;
 			r--;
 		}
-
 	} while (l <= r);
 
 	if (r > left)

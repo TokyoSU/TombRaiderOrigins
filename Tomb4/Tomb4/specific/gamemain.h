@@ -1,6 +1,5 @@
 #pragma once
 
-
 void GameClose();
 unsigned int CALLBACK GameMain(void* ptr);
 ushort GetRandom(WATERTAB* wt, long lp);

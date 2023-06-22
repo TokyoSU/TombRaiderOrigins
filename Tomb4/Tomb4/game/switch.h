@@ -1,6 +1,5 @@
 #pragma once
 
-
 void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
 long SwitchTrigger(short item_number, short timer);
 long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch);

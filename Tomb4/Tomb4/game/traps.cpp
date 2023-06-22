@@ -657,11 +657,11 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void FallingSquishyBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 {
-	ITEM_INFO * item;
+	ITEM_INFO* item;
 
 	item = &items[item_number];
 
-	if (TestBoundsCollide(item, l, coll->radius) && TestCollision(item, l))
+	if (TestBoundsCollide(item, l, coll->r) && TestCollision(item, l))
 	{
 		if (item->frame_number - anims[item->anim_number].frame_base <= 8)
 		{
@@ -1084,7 +1084,7 @@ void ControlChain(short item_number)
 	ITEM_INFO* item;
 
 	item = &items[item_number];
-	
+
 	if (item->trigger_flags)
 	{
 		item->item_flags[2] = 1;
@@ -1979,7 +1979,7 @@ void RollingBallCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 	item = &items[item_number];
 
-	if (!TestBoundsCollide(item, l, coll->radius) || !TestCollision(item, l))
+	if (!TestBoundsCollide(item, l, coll->r) || !TestCollision(item, l))
 		return;
 
 	if (TriggerActive(item) && (item->item_flags[0] || item->fallspeed))

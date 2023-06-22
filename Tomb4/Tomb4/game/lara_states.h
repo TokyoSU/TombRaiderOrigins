@@ -124,7 +124,6 @@ enum lara_anim_state
 	NUM_LARA_STATES
 };
 
-
 enum lara_anim
 {
 	ANIM_RUN = 0,

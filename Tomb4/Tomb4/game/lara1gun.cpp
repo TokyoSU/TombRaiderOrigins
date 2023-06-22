@@ -234,8 +234,8 @@ void FireShotgun()
 			for (int i = 0; i < 7; i++)
 				TriggerGunSmoke(pos.x, pos.y, pos.z, pos2.x - pos.x, pos2.y - pos.y, pos2.z - pos.z, 1, SmokeWeapon, 32);
 
-		//	for (int i = 0; i < 12; i++)
-				//empty func call here
+			//	for (int i = 0; i < 12; i++)
+					//empty func call here
 		}
 
 		lara.right_arm.flash_gun = weapons[WEAPON_SHOTGUN].flash_time;
@@ -752,7 +752,7 @@ void undraw_shotgun(long weapon_type)
 	}
 	else if (item->current_anim_state == 3 &&
 		anims[item->anim_number].frame_base == item->frame_number - (weapon_type == WEAPON_GRENADE ? 16 : 21))
-			undraw_shotgun_meshes(weapon_type);
+		undraw_shotgun_meshes(weapon_type);
 
 	lara.right_arm.frame_base = anims[item->anim_number].frame_ptr;
 	lara.left_arm.frame_base = lara.right_arm.frame_base;
@@ -1089,7 +1089,7 @@ void ControlGrenade(short item_number)
 	item->pos.x_pos += xv;
 	item->pos.y_pos += yv;
 	item->pos.z_pos += zv;
-	
+
 	if (item->item_flags[0] == 4)
 	{
 		room_number = item->room_number;

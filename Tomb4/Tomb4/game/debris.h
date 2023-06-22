@@ -1,6 +1,5 @@
 #pragma once
 
-
 void UpdateDebris();
 void TriggerDebris(GAME_VECTOR* pos, void* TextInfo, short* Offsets, long* Vels, short rgb);
 long GetFreeDebris();

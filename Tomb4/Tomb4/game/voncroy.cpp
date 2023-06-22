@@ -628,7 +628,7 @@ void VoncroyRaceControl(short item_number)
 				item->goal_anim_state = 2;
 		}
 		else if (oEnemy != lara_item || info.distance > 0x64000)
-				item->goal_anim_state = 2;
+			item->goal_anim_state = 2;
 
 		break;
 
@@ -710,7 +710,7 @@ void VoncroyRaceControl(short item_number)
 			}
 		}
 		else if (info.distance < 0x64000 && oEnemy->flags != 32 && oEnemy->flags != 40)
-				item->goal_anim_state = 1;
+			item->goal_anim_state = 1;
 
 		break;
 
@@ -726,7 +726,7 @@ void VoncroyRaceControl(short item_number)
 			if (c == h - 1536)
 				item->goal_anim_state = 1;
 		}
-		else 
+		else
 			item->goal_anim_state = 5;
 
 		break;
@@ -1404,7 +1404,7 @@ void VoncroyControl(short item_number)
 			}
 		}
 		else if (VonCroyAI.distance < 0x64000 && enemy->flags != 32 && enemy->flags != 40)
-				item->goal_anim_state = 1;
+			item->goal_anim_state = 1;
 
 		break;
 
@@ -1464,7 +1464,7 @@ void VoncroyControl(short item_number)
 			{
 				VonCroy->maximum_turn = 0;
 				item->anim_number = objects[VON_CROY].anim_index + 22;
-				item->frame_number= anims[item->anim_number].frame_base;
+				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 15;
 				item->goal_anim_state = 16;
 				VonCroy->LOT.is_jumping = 1;

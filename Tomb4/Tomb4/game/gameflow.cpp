@@ -434,11 +434,7 @@ void DoGameflow()
 
 void DoLevel(uchar Name, uchar Audio)
 {
-	long gamestatus;
-
-	gamestatus = 0;
 	SetFade(255, 0);
-
 	if (gfGameMode != 4)
 	{
 		savegame.Level.Timer = 0;
@@ -552,8 +548,8 @@ void DoLevel(uchar Name, uchar Audio)
 			break;
 		}
 
+		long gamestatus = 0;
 		gfStatus = ControlPhase(nFrames, 0);
-
 		if (gfStatus && !gamestatus)
 		{
 			if (lara_item->hit_points < 0)
@@ -569,7 +565,6 @@ void DoLevel(uchar Name, uchar Audio)
 		if (gamestatus)
 		{
 			gfStatus = 0;
-
 			if (DoFade == 2)
 				gfStatus = gamestatus;
 		}
@@ -604,7 +599,7 @@ void DoLevel(uchar Name, uchar Audio)
 	lara.examine1 = 0;
 	lara.examine2 = 0;
 	lara.examine3 = 0;
-	RenderLoadPic(0);
+	S_DrawLoadPic();
 
 	if (gfStatus == 3)
 	{
@@ -852,6 +847,7 @@ long TitleOptions()
 void DoTitle(uchar Name, uchar Audio)
 {
 	SetFade(255, 0);
+
 	num_fmvs = 0;
 	fmv_to_play[1] = 0;
 	fmv_to_play[0] = 0;
@@ -880,7 +876,6 @@ void DoTitle(uchar Name, uchar Audio)
 	SetFogColor(gfFog.r, gfFog.g, gfFog.b);
 	ClearFXFogBulbs();
 	InitialisePickUpDisplay();
-	//empty func call here
 	SOUND_Stop();
 	S_CDPlay(Audio, 1);
 	IsAtmospherePlaying = 0;
@@ -917,7 +912,7 @@ void DoTitle(uchar Name, uchar Audio)
 	while (!gfStatus)
 	{
 		S_InitialisePolyList();
-		gfStatus = TitleOptions();	//originally inlined
+		gfStatus = TitleOptions();	// originally inlined
 
 		if (gfStatus)
 			break;
@@ -938,7 +933,7 @@ void DoTitle(uchar Name, uchar Audio)
 #endif
 
 	if (gfStatus != 4)
-		RenderLoadPic(0);
+		S_DrawLoadPic();
 
 	input = 0;
 }

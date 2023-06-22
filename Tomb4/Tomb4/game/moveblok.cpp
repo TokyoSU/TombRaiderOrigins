@@ -355,7 +355,6 @@ void MovableBlock(short item_number)
 			break;
 		}
 
-
 		if (lara_item->frame_number == anims[lara_item->anim_number].frame_end - 1)
 		{
 			if (input & IN_ACTION)

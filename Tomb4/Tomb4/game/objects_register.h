@@ -21,7 +21,7 @@ public:
 	ObjectRegisterFactory* FrameBase(short* frame);
 	ObjectRegisterFactory* AnimIndexFromObject(OBJECTS_TYPES objID);
 	ObjectRegisterFactory* HitPoints(short hitPoints);
-	ObjectRegisterFactory* Radius(short radius);
+	ObjectRegisterFactory* Radius(short r);
 	ObjectRegisterFactory* Pivot(short pivot);
 	ObjectRegisterFactory* Shadow(short shadow);
 	ObjectRegisterFactory* HitEffect(int hitEffect);

@@ -203,7 +203,7 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll)
 	coll->old.x = item->pos.x_pos;
 	coll->old.y = item->pos.y_pos;
 	coll->old.z = item->pos.z_pos;
-	coll->radius = 100;
+	coll->r = 100;
 	coll->trigger = 0;
 	coll->slopes_are_walls = 0;
 	coll->slopes_are_pits = 0;

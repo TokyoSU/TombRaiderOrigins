@@ -41,7 +41,7 @@ void ProcessRoomDynamics(ROOM_INFO* r)
 	ROOM_DYNAMIC* l;
 	DYNAMIC* d;
 	float falloff;
-	
+
 	nRoomDynamics = 0;
 	l = RoomDynamics;
 
@@ -298,7 +298,7 @@ void ProcessRoomData(ROOM_INFO* r)
 	if (!r->nVerts)
 	{
 		r->num_lights = 0;
-		r->SourceVB = 0;
+		r->vb = 0;
 		return;
 	}
 
@@ -399,8 +399,8 @@ void ProcessRoomData(ROOM_INFO* r)
 	vb.dwSize = sizeof(D3DVERTEXBUFFERDESC);
 	vb.dwCaps = 0;
 	vb.dwFVF = D3DFVF_VERTEX;
-	DXAttempt(App.dx.lpD3D->CreateVertexBuffer(&vb, &r->SourceVB, D3DDP_DONOTCLIP, 0));
-	r->SourceVB->Lock(DDLOCK_WRITEONLY, (void**)&vptr, 0);
+	DXAttempt(App.dx.lpD3D->CreateVertexBuffer(&vb, &r->vb, D3DDP_DONOTCLIP, 0));
+	r->vb->Lock(DDLOCK_WRITEONLY, (void**)&vptr, 0);
 	r->posx = (float)r->x;
 	r->posy = (float)r->y;
 	r->posz = (float)r->z;
@@ -426,7 +426,7 @@ void ProcessRoomData(ROOM_INFO* r)
 		data_ptr += 6;
 	}
 
-	r->SourceVB->Unlock();
+	r->vb->Unlock();
 	free(prelight);
 	r->pclight = 0;
 
@@ -512,12 +512,12 @@ void ProcessRoomData(ROOM_INFO* r)
 		}
 	}
 
-	r->SourceVB->Optimize(App.dx._lpD3DDevice, 0);
+	r->vb->Optimize(App.dx._lpD3DDevice, 0);
 }
 
 void InsertRoom(ROOM_INFO* r)
 {
-	TEXTURESTRUCT* pTex; 
+	TEXTURESTRUCT* pTex;
 	short* data;
 	short numQuads, numTris;
 	bool doublesided;
@@ -585,13 +585,15 @@ void ProcessMeshData(long num_meshes)
 	short* last_mesh_ptr;
 	long lp;
 	short c;
+	const int gt3Size = 5;
+	const int gt4Size = 6;
 
 	Log(2, "ProcessMeshData %d", num_meshes);
 	num_level_meshes = num_meshes;
 	mesh_vtxbuf = (MESH_DATA**)game_malloc(4 * num_meshes);
 	mesh_base = (short*)malloc_ptr;
-	last_mesh_ptr = 0;
 	mesh = (MESH_DATA*)num_meshes;
+	last_mesh_ptr = 0;
 
 	for (int i = 0; i < num_meshes; i++)
 	{
@@ -628,8 +630,8 @@ void ProcessMeshData(long num_meshes)
 				buf.dwSize = sizeof(D3DVERTEXBUFFERDESC);
 				buf.dwCaps = 0;
 				buf.dwFVF = D3DFVF_TEX1 | D3DFVF_NORMAL | D3DFVF_XYZ;
-				DXAttempt(App.dx.lpD3D->CreateVertexBuffer(&buf, &mesh->SourceVB, 0, 0));
-				mesh->SourceVB->Lock(DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0);
+				DXAttempt(App.dx.lpD3D->CreateVertexBuffer(&buf, &mesh->vb, 0, 0));
+				mesh->vb->Lock(DDLOCK_WRITEONLY, (LPVOID*)&vtx, 0);
 
 				for (int j = 0; j < mesh->nVerts; j++)
 				{
@@ -647,7 +649,7 @@ void ProcessMeshData(long num_meshes)
 
 				if (mesh->nNorms > 0)
 				{
-					mesh->Normals = (D3DVECTOR*)game_malloc(mesh->nNorms * sizeof(D3DVECTOR));
+					mesh->normals = (D3DVECTOR*)game_malloc(mesh->nNorms * sizeof(D3DVECTOR));
 
 					for (int j = 0; j < mesh->nVerts; j++)
 					{
@@ -656,16 +658,16 @@ void ProcessMeshData(long num_meshes)
 						vtx[j].nz = mesh_ptr[2];
 						mesh_ptr += 3;
 						D3DNormalise((D3DVECTOR*)&vtx[j].nx);
-						mesh->Normals[j].x = vtx[j].nx;
-						mesh->Normals[j].y = vtx[j].ny;
-						mesh->Normals[j].z = vtx[j].nz;
+						mesh->normals[j].x = vtx[j].nx;
+						mesh->normals[j].y = vtx[j].ny;
+						mesh->normals[j].z = vtx[j].nz;
 					}
 
 					mesh->prelight = 0;
 				}
 				else
 				{
-					mesh->Normals = 0;
+					mesh->normals = 0;
 					mesh->prelight = (long*)game_malloc(4 * mesh->nVerts);
 
 					for (int j = 0; j < mesh->nVerts; j++)
@@ -676,21 +678,31 @@ void ProcessMeshData(long num_meshes)
 					}
 				}
 
-				mesh->SourceVB->Unlock();
+				mesh->vb->Unlock();
 			}
 			else
+			{
 				mesh_ptr += 6 * lp + 1;
+			}
 
 			mesh->ngt4 = mesh_ptr[0];
 			mesh_ptr++;
 
 			if (mesh->ngt4)
 			{
-				mesh->gt4 = (short*)game_malloc(12 * mesh->ngt4);
-				lp = 6 * mesh->ngt4;
-
-				for (int j = 0; j < lp; j++)
-					mesh->gt4[j] = mesh_ptr[j];
+				mesh->gt4 = (FACE4*)game_malloc(sizeof(FACE4) * mesh->ngt4);
+				lp = gt4Size * mesh->ngt4;
+				int count = 0;
+				for (int j = 0; j < mesh->ngt4; j++)
+				{
+					mesh->gt4[j].vertices[0] = mesh_ptr[count + 0];
+					mesh->gt4[j].vertices[1] = mesh_ptr[count + 1];
+					mesh->gt4[j].vertices[2] = mesh_ptr[count + 2];
+					mesh->gt4[j].vertices[3] = mesh_ptr[count + 3];
+					mesh->gt4[j].texture = mesh_ptr[count + 4] & 0x7FFF;
+					mesh->gt4[j].flags = mesh_ptr[count + 5];
+					count += gt4Size;
+				}
 
 				mesh_ptr += lp;
 			}
@@ -700,11 +712,18 @@ void ProcessMeshData(long num_meshes)
 
 			if (mesh->ngt3)
 			{
-				mesh->gt3 = (short*)game_malloc(10 * mesh->ngt3);
-				lp = 5 * mesh->ngt3;
-
-				for (int j = 0; j < lp; j++)
-					mesh->gt3[j] = mesh_ptr[j];
+				mesh->gt3 = (FACE3*)game_malloc(sizeof(FACE3) * mesh->ngt3);
+				lp = gt3Size * mesh->ngt3;
+				int count = 0;
+				for (int j = 0; j < mesh->ngt3; j++)
+				{
+					mesh->gt3[j].vertices[0] = mesh_ptr[count + 0];
+					mesh->gt3[j].vertices[1] = mesh_ptr[count + 1];
+					mesh->gt3[j].vertices[2] = mesh_ptr[count + 2];
+					mesh->gt3[j].texture = mesh_ptr[count + 3] & 0x7FFF;
+					mesh->gt3[j].flags = mesh_ptr[count + 4];
+					count += gt3Size;
+				}
 			}
 		}
 	}

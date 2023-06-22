@@ -477,7 +477,7 @@ void SethControl(short item_number)
 				else
 				{
 					item->ai_bits = AMBUSH;
-					seth->hurt_by_lara = 1;	
+					seth->hurt_by_lara = 1;
 					item->goal_anim_state = 2;
 				}
 			}
@@ -523,7 +523,7 @@ void SethControl(short item_number)
 			seth->maximum_turn = 1274;
 
 			if (info.ahead && info.distance < 0x1000000 || can_jump || seth->reached_goal)
-				item->goal_anim_state = 1; 
+				item->goal_anim_state = 1;
 			else if (info.distance > 0x900000)
 				item->goal_anim_state = 3;
 
@@ -616,7 +616,7 @@ void SethControl(short item_number)
 
 		case 15:
 			seth->target.y = lara_item->pos.y_pos;
-			
+
 		case 11:
 		case 12:
 		case 13:

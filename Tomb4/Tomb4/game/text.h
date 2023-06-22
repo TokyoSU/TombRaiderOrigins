@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitFont();
 void UpdatePulseColour();
 long GetStringLength(const char* string, long* top, long* bottom);

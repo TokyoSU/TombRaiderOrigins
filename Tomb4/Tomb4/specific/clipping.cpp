@@ -132,7 +132,7 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 	sa2 = float(CLRA(v2->specular));
 
 	nPoints = 0;
-	
+
 	for (int i = 0; i < n; i++)
 	{
 		v1 = v2;
@@ -219,7 +219,6 @@ long XYUVGClipper(long n, D3DTLBUMPVERTEX* in)
 			output[nPoints].sy = clipper * (v1->sy - v2->sy) + v2->sy;
 			nPoints++;
 		}
-
 
 		if (v2->sx < f_left)
 		{

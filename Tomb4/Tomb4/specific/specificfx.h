@@ -1,6 +1,5 @@
 #pragma once
 
-
 void DrawTrainStrips();
 void S_PrintShadow(short size, short* box, ITEM_INFO* item);
 void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr);

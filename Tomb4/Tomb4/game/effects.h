@@ -1,6 +1,5 @@
 #pragma once
 
-
 void SetFog(ITEM_INFO* item);
 void finish_level_effect(ITEM_INFO* item);
 void turn180_effect(ITEM_INFO* item);
@@ -16,6 +15,7 @@ void LaraLocation(ITEM_INFO* item);
 void LaraLocationPad(ITEM_INFO* item);
 void GhostTrap(ITEM_INFO* item);
 void KillActiveBaddies(ITEM_INFO* item);
+void KillActiveBaddies(bool removeAll);
 void lara_hands_free(ITEM_INFO* item);
 void draw_right_gun(ITEM_INFO* item);
 void draw_left_gun(ITEM_INFO* item);

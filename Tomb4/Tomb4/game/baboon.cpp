@@ -353,7 +353,7 @@ void BaboonControl(short item_number)
 					head = info.angle;
 
 				baboon->maximum_turn = 0;
-				
+
 				if (abs(info.angle) < 1274)
 					item->pos.y_rot += info.angle;
 				else if (info.angle < 0)
@@ -439,7 +439,6 @@ void ReTriggerBaboon(short item_number)
 
 		FindCrowbarSwitch(item, 0);
 	}
-
 }
 
 void ExplodeBaboon(ITEM_INFO* item)

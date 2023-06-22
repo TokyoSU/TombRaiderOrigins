@@ -61,16 +61,16 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh)
 		DistanceFogStart = tomb4.distance_fog * 1024.0F;
 
 	num = 255.0F / DistanceFogStart;
-	mesh->SourceVB->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
+	mesh->vb->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
 
 	for (int i = 0; i < mesh->nVerts; i++)
 	{
 		vtx.x = *v++;
 		vtx.y = *v++;
 		vtx.z = *v++;
-		n.x = mesh->Normals[i].x;
-		n.y = mesh->Normals[i].y;
-		n.z = mesh->Normals[i].z;
+		n.x = mesh->normals[i].x;
+		n.y = mesh->normals[i].y;
+		n.z = mesh->normals[i].z;
 		v += 5;
 
 		vPos.x = vtx.x * D3DMView._11 + vtx.y * D3DMView._21 + vtx.z * D3DMView._31 + D3DMView._41;
@@ -147,7 +147,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh)
 			cG = ambientG;
 			cB = ambientB;
 		}
-		
+
 		if (vPos.z > DistanceFogStart)
 		{
 			val = (vPos.z - DistanceFogStart) * num;
@@ -247,7 +247,7 @@ void ProcessObjectMeshVertices(MESH_DATA* mesh)
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
 	}
 
-	mesh->SourceVB->Unlock();
+	mesh->vb->Unlock();
 }
 
 void ProcessStaticMeshVertices(MESH_DATA* mesh)
@@ -275,7 +275,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 	pR = (StaticMeshShade & 0x1F) << 3;
 	pG = ((StaticMeshShade >> 5) & 0x1F) << 3;
 	pB = ((StaticMeshShade >> 10) & 0x1F) << 3;
-	mesh->SourceVB->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
+	mesh->vb->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
 
 	for (int i = 0; i < mesh->nVerts; i++)
 	{
@@ -371,7 +371,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 			sB = (cB - 128) >> 1;
 			cB = 255;
 		}
-		
+
 		clipFlag = 0;
 
 		if (vPos.z < f_mznear)
@@ -434,7 +434,7 @@ void ProcessStaticMeshVertices(MESH_DATA* mesh)
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
 	}
 
-	mesh->SourceVB->Unlock();
+	mesh->vb->Unlock();
 }
 
 void ProcessTrainMeshVertices(MESH_DATA* mesh)
@@ -453,7 +453,7 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh)
 	DistanceFogStart = 17.0F * 1024.0F;	//does not listen to custom distance fog
 	DistanceFogEnd = 25.0F * 1024.0F;
 	num = 255.0F / DistanceFogStart;
-	mesh->SourceVB->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
+	mesh->vb->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
 
 	for (int i = 0; i < mesh->nVerts; i++)
 	{
@@ -504,7 +504,7 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh)
 				sR = (long)fR;
 				sG = (long)fG;
 				sB = (long)fB;
-				
+
 				if (sR > dR) sR = dR;
 				if (sG > dG) sG = dG;
 				if (sB > dB) sB = dB;
@@ -517,7 +517,7 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh)
 				cB -= (long)val;
 			}
 		}
-		
+
 		clipFlag = 0;
 
 		if (vPos.z < f_mznear)
@@ -563,7 +563,7 @@ void ProcessTrainMeshVertices(MESH_DATA* mesh)
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, sA);
 	}
 
-	mesh->SourceVB->Unlock();
+	mesh->vb->Unlock();
 }
 
 void ProcessPickupMeshVertices(MESH_DATA* mesh)
@@ -577,7 +577,7 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh)
 	short clipFlag;
 
 	clip = clipflags;
-	mesh->SourceVB->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
+	mesh->vb->Lock(DDLOCK_READONLY, (LPVOID*)&v, 0);
 
 	for (int i = 0; i < mesh->nVerts; i++)
 	{
@@ -661,7 +661,7 @@ void ProcessPickupMeshVertices(MESH_DATA* mesh)
 		MyVertexBuffer[i].specular = RGBA(sR, sG, sB, 0xFF);
 	}
 
-	mesh->SourceVB->Unlock();
+	mesh->vb->Unlock();
 }
 
 static void RGB_M(ulong& c, long m)	//Original was a macro.
@@ -682,8 +682,6 @@ void phd_PutPolygons(short* objptr, long clip)
 	TEXTURESTRUCT* pTex;
 	D3DVECTOR normals[4];
 	TEXTURESTRUCT envmap_texture;
-	short* quad;
-	short* tri;
 	long clrbak[4];
 	long spcbak[4];
 	long num;
@@ -728,26 +726,25 @@ void phd_PutPolygons(short* objptr, long clip)
 			ProcessObjectMeshVertices(mesh);
 	}
 
-	quad = mesh->gt4;
-
-	for (int i = 0; i < mesh->ngt4; i++, quad += 6)
+	auto* quad = mesh->gt4;
+	for (int i = 0; i < mesh->ngt4; i++, quad++)
 	{
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = &textinfo[quad->texture];
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if (quad[5] & 1)
+		if (quad->flags & 1)
 			pTex->drawtype = 2;
 
-		if (quad[5] & 2)
+		if (quad->flags & 2)
 		{
 			envmap = 1;
-			num = (quad[5] >> 2) & 0x1F;
+			num = (quad->flags >> 2) & 0x1F;
 			num <<= 3;
-			normals[0] = mesh->Normals[quad[0]];
-			normals[1] = mesh->Normals[quad[1]];
-			normals[2] = mesh->Normals[quad[2]];
-			normals[3] = mesh->Normals[quad[3]];
+			normals[0] = mesh->normals[quad->vertices[0]];
+			normals[1] = mesh->normals[quad->vertices[1]];
+			normals[2] = mesh->normals[quad->vertices[2]];
+			normals[3] = mesh->normals[quad->vertices[3]];
 			D3DTransform(&normals[0], &D3DMView);
 			D3DTransform(&normals[1], &D3DMView);
 			D3DTransform(&normals[2], &D3DMView);
@@ -776,67 +773,66 @@ void phd_PutPolygons(short* objptr, long clip)
 		if (GlobalAlpha == 0xFF000000)
 		{
 			if (!pTex->drawtype)
-				AddQuadZBuffer(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+				AddQuadZBuffer(MyVertexBuffer, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], pTex, 0);
 			else if (pTex->drawtype <= 2)
-				AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+				AddQuadSorted(MyVertexBuffer, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], pTex, 0);
 
 			if (envmap)
 			{
-				clrbak[0] = MyVertexBuffer[quad[0]].color;
-				clrbak[1] = MyVertexBuffer[quad[1]].color;
-				clrbak[2] = MyVertexBuffer[quad[2]].color;
-				clrbak[3] = MyVertexBuffer[quad[3]].color;
-				spcbak[0] = MyVertexBuffer[quad[0]].specular;
-				spcbak[1] = MyVertexBuffer[quad[1]].specular;
-				spcbak[2] = MyVertexBuffer[quad[2]].specular;
-				spcbak[3] = MyVertexBuffer[quad[3]].specular;
-				RGB_M(MyVertexBuffer[quad[0]].color, num);
-				RGB_M(MyVertexBuffer[quad[1]].color, num);
-				RGB_M(MyVertexBuffer[quad[2]].color, num);
-				RGB_M(MyVertexBuffer[quad[3]].color, num);
-				RGB_M(MyVertexBuffer[quad[0]].specular, num);
-				RGB_M(MyVertexBuffer[quad[1]].specular, num);
-				RGB_M(MyVertexBuffer[quad[2]].specular, num);
-				RGB_M(MyVertexBuffer[quad[3]].specular, num);
-				AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], &envmap_texture, 0);
-				MyVertexBuffer[quad[0]].color = clrbak[0];
-				MyVertexBuffer[quad[1]].color = clrbak[1];
-				MyVertexBuffer[quad[2]].color = clrbak[2];
-				MyVertexBuffer[quad[3]].color = clrbak[3];
-				MyVertexBuffer[quad[0]].specular = spcbak[0];
-				MyVertexBuffer[quad[1]].specular = spcbak[1];
-				MyVertexBuffer[quad[2]].specular = spcbak[2];
-				MyVertexBuffer[quad[3]].specular = spcbak[3];
+				clrbak[0] = MyVertexBuffer[quad->vertices[0]].color;
+				clrbak[1] = MyVertexBuffer[quad->vertices[1]].color;
+				clrbak[2] = MyVertexBuffer[quad->vertices[2]].color;
+				clrbak[3] = MyVertexBuffer[quad->vertices[3]].color;
+				spcbak[0] = MyVertexBuffer[quad->vertices[0]].specular;
+				spcbak[1] = MyVertexBuffer[quad->vertices[1]].specular;
+				spcbak[2] = MyVertexBuffer[quad->vertices[2]].specular;
+				spcbak[3] = MyVertexBuffer[quad->vertices[3]].specular;
+				RGB_M(MyVertexBuffer[quad->vertices[0]].color, num);
+				RGB_M(MyVertexBuffer[quad->vertices[1]].color, num);
+				RGB_M(MyVertexBuffer[quad->vertices[2]].color, num);
+				RGB_M(MyVertexBuffer[quad->vertices[3]].color, num);
+				RGB_M(MyVertexBuffer[quad->vertices[0]].specular, num);
+				RGB_M(MyVertexBuffer[quad->vertices[1]].specular, num);
+				RGB_M(MyVertexBuffer[quad->vertices[2]].specular, num);
+				RGB_M(MyVertexBuffer[quad->vertices[3]].specular, num);
+				AddQuadSorted(MyVertexBuffer, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], &envmap_texture, 0);
+				MyVertexBuffer[quad->vertices[0]].color = clrbak[0];
+				MyVertexBuffer[quad->vertices[1]].color = clrbak[1];
+				MyVertexBuffer[quad->vertices[2]].color = clrbak[2];
+				MyVertexBuffer[quad->vertices[3]].color = clrbak[3];
+				MyVertexBuffer[quad->vertices[0]].specular = spcbak[0];
+				MyVertexBuffer[quad->vertices[1]].specular = spcbak[1];
+				MyVertexBuffer[quad->vertices[2]].specular = spcbak[2];
+				MyVertexBuffer[quad->vertices[3]].specular = spcbak[3];
 			}
 		}
 		else
 		{
 			pTex->drawtype = 7;
-			AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+			AddQuadSorted(MyVertexBuffer, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], pTex, 0);
 		}
 
 		pTex->drawtype = drawbak;
 	}
 
-	tri = mesh->gt3;
-
-	for (int i = 0; i < mesh->ngt3; i++, tri += 5)
+	auto* tri = mesh->gt3;
+	for (int i = 0; i < mesh->ngt3; i++, tri++)
 	{
-		pTex = &textinfo[tri[3] & 0x7FFF];
+		pTex = &textinfo[tri->texture];
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if (tri[4] & 1)
+		if (tri->flags & 1)
 			pTex->drawtype = 2;
 
-		if (tri[4] & 2)
+		if (tri->flags & 2)
 		{
 			envmap = 1;
-			num = (tri[4] >> 2) & 0x1F;
+			num = (tri->flags >> 2) & 0x1F;
 			num <<= 3;
-			normals[0] = mesh->Normals[tri[0]];
-			normals[1] = mesh->Normals[tri[1]];
-			normals[2] = mesh->Normals[tri[2]];
+			normals[0] = mesh->normals[tri->vertices[0]];
+			normals[1] = mesh->normals[tri->vertices[1]];
+			normals[2] = mesh->normals[tri->vertices[2]];
 			D3DTransform(&normals[0], &D3DMView);
 			D3DTransform(&normals[1], &D3DMView);
 			D3DTransform(&normals[2], &D3DMView);
@@ -861,38 +857,38 @@ void phd_PutPolygons(short* objptr, long clip)
 
 		if (GlobalAlpha == 0xFF000000)
 		{
-			if (!pTex->drawtype)
-				AddTriZBuffer(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
+			if (pTex->drawtype == 0)
+				AddTriZBuffer(MyVertexBuffer, tri->vertices[0], tri->vertices[1], tri->vertices[2], pTex, 0);
 			else if (pTex->drawtype <= 2)
-				AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
+				AddTriSorted(MyVertexBuffer, tri->vertices[0], tri->vertices[1], tri->vertices[2], pTex, 0);
 
 			if (envmap)
 			{
-				clrbak[0] = MyVertexBuffer[tri[0]].color;
-				clrbak[1] = MyVertexBuffer[tri[1]].color;
-				clrbak[2] = MyVertexBuffer[tri[2]].color;
-				spcbak[0] = MyVertexBuffer[tri[0]].specular;
-				spcbak[1] = MyVertexBuffer[tri[1]].specular;
-				spcbak[2] = MyVertexBuffer[tri[2]].specular;
-				RGB_M(MyVertexBuffer[tri[0]].color, num);
-				RGB_M(MyVertexBuffer[tri[1]].color, num);
-				RGB_M(MyVertexBuffer[tri[2]].color, num);
-				RGB_M(MyVertexBuffer[tri[0]].specular, num);
-				RGB_M(MyVertexBuffer[tri[1]].specular, num);
-				RGB_M(MyVertexBuffer[tri[2]].specular, num);
-				AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], &envmap_texture, 0);
-				MyVertexBuffer[tri[0]].color = clrbak[0];
-				MyVertexBuffer[tri[1]].color = clrbak[1];
-				MyVertexBuffer[tri[2]].color = clrbak[2];
-				MyVertexBuffer[tri[0]].specular = spcbak[0];
-				MyVertexBuffer[tri[1]].specular = spcbak[1];
-				MyVertexBuffer[tri[2]].specular = spcbak[2];
+				clrbak[0] = MyVertexBuffer[tri->vertices[0]].color;
+				clrbak[1] = MyVertexBuffer[tri->vertices[1]].color;
+				clrbak[2] = MyVertexBuffer[tri->vertices[2]].color;
+				spcbak[0] = MyVertexBuffer[tri->vertices[0]].specular;
+				spcbak[1] = MyVertexBuffer[tri->vertices[1]].specular;
+				spcbak[2] = MyVertexBuffer[tri->vertices[2]].specular;
+				RGB_M(MyVertexBuffer[tri->vertices[0]].color, num);
+				RGB_M(MyVertexBuffer[tri->vertices[1]].color, num);
+				RGB_M(MyVertexBuffer[tri->vertices[2]].color, num);
+				RGB_M(MyVertexBuffer[tri->vertices[0]].specular, num);
+				RGB_M(MyVertexBuffer[tri->vertices[1]].specular, num);
+				RGB_M(MyVertexBuffer[tri->vertices[2]].specular, num);
+				AddTriSorted(MyVertexBuffer, tri->vertices[0], tri->vertices[1], tri->vertices[2], &envmap_texture, 0);
+				MyVertexBuffer[tri->vertices[0]].color = clrbak[0];
+				MyVertexBuffer[tri->vertices[1]].color = clrbak[1];
+				MyVertexBuffer[tri->vertices[2]].color = clrbak[2];
+				MyVertexBuffer[tri->vertices[0]].specular = spcbak[0];
+				MyVertexBuffer[tri->vertices[1]].specular = spcbak[1];
+				MyVertexBuffer[tri->vertices[2]].specular = spcbak[2];
 			}
 		}
 		else
 		{
-			pTex->drawtype = 7;
-			AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
+			pTex->drawtype = 7; // TODO: Get what drawtype is it !
+			AddTriSorted(MyVertexBuffer, tri->vertices[0], tri->vertices[1], tri->vertices[2], pTex, 0);
 		}
 
 		pTex->drawtype = drawbak;
@@ -904,8 +900,6 @@ void phd_PutPolygons_train(short* objptr, long x)
 	MESH_DATA* mesh;
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT* pTex;
-	short* quad;
-	short* tri;
 	ushort drawbak;
 
 	if (!objptr)
@@ -927,51 +921,42 @@ void phd_PutPolygons_train(short* objptr, long x)
 	ambientG = 0xFF;
 	ambientB = 0xFF;
 	ProcessTrainMeshVertices(mesh);
-	quad = mesh->gt4;
 
-	for (int i = 0; i < mesh->ngt4; i++, quad += 6)
+	auto* quad = mesh->gt4;
+	for (int i = 0; i < mesh->ngt4; i++, quad++)
 	{
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = &textinfo[quad->texture];
 		drawbak = pTex->drawtype;
 
-		if (quad[5] & 1)
+		if (quad->flags & 1)
 			pTex->drawtype = 2;
 
 		if (!pTex->drawtype)
-			AddQuadZBuffer(v, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+			AddQuadZBuffer(v, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], pTex, 0);
 		else if (pTex->drawtype <= 2)
-			AddQuadSorted(v, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+			AddQuadSorted(v, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], pTex, 0);
 
 		pTex->drawtype = drawbak;
 	}
 
-	tri = mesh->gt3;
-
-	for (int i = 0; i < mesh->ngt3; i++, tri += 5)
+	auto* tri = mesh->gt3;
+	for (int i = 0; i < mesh->ngt3; i++, tri++)
 	{
-		pTex = &textinfo[tri[3] & 0x7FFF];
-
-		drawbak = pTex->drawtype;
-
-		if (tri[4] & 1)
+		pTex = &textinfo[tri->texture];
+		if (tri->flags & 1)
 			pTex->drawtype = 2;
 
-		if (!pTex->drawtype)
-			AddTriZBuffer(v, tri[0], tri[1], tri[2], pTex, 0);
-		else if (pTex->drawtype <= 2)
-			AddTriSorted(v, tri[0], tri[1], tri[2], pTex, 0);
+		if (pTex->drawtype == 0) // OPAQUE ?
+			AddTriZBuffer(v, tri->vertices[0], tri->vertices[1], tri->vertices[2], pTex, 0);
+		else if (pTex->drawtype <= 2) // ALPHA_TEST = 1 ? what is 2 maybe SEMI-TRANSPARENT+ALPHA ?
+			AddTriSorted(v, tri->vertices[0], tri->vertices[1], tri->vertices[2], pTex, 0);
 	}
 }
 
-void _InsertRoom(ROOM_INFO* r)
+void S_DrawLoadPic()
 {
-	SetD3DViewMatrix();
-	InsertRoom(r);
-}
-
-void RenderLoadPic(long unused)
-{
-	short poisoned;
+	if (gfLoadRoom == 255)
+		return;
 
 	camera.pos.y = gfLoadCam.y;
 	camera.pos.x = gfLoadCam.x;
@@ -985,14 +970,13 @@ void RenderLoadPic(long unused)
 	camera.pos.room_number = gfLoadRoom;
 	camera.underwater = room[gfLoadRoom].flags & ROOM_UNDERWATER;
 
-	if (gfLoadRoom == 255)
-		return;
-
-	KillActiveBaddies((ITEM_INFO*)0xABCDEF);
+	KillActiveBaddies(false);
 	SetFade(255, 0);
-	poisoned = lara.poisoned;
+
+	short poisoned = lara.poisoned;
 	FadeScreenHeight = 0;
 	lara.poisoned = 0;
+
 	GlobalFogOff = 1;
 	BinocularRange = 0;
 
@@ -1008,16 +992,13 @@ void RenderLoadPic(long unused)
 		if (tomb4.loadingtxt && !tomb4.tr5_loadbar)
 		{
 			if (tomb4.bar_mode == 2 || tomb4.bar_mode == 3)
-				PrintString(phd_centerx, long(float((480 - (font_height >> 1)) * float(phd_winymax / 480.0F))) - (font_height >> 1),
-					5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
+				PrintString(phd_centerx, long(float((480 - (font_height >> 1)) * float(phd_winymax / 480.0F))) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 			else
-				PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1),
-					5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
+				PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 		}
 
 		S_OutputPolyList();
 		S_DumpScreen();
-
 	} while (DoFade != 2);
 
 	phd_LookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.target.x, camera.target.y, camera.target.z, 0);
@@ -1027,36 +1008,28 @@ void RenderLoadPic(long unused)
 	if (tomb4.loadingtxt && !tomb4.tr5_loadbar)
 	{
 		if (tomb4.bar_mode == 2 || tomb4.bar_mode == 3)
-			PrintString(phd_centerx, long(float((480 - (font_height >> 1)) * float(phd_winymax / 480.0F))) - (font_height >> 1),
-				5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
+			PrintString(phd_centerx, long(float((480 - (font_height >> 1)) * float(phd_winymax / 480.0F))) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 		else
-			PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1),
-				5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
+			PrintString(phd_centerx, long(float(phd_winymax / 480.0F) + (phd_winymax - font_height)) - (font_height >> 1), 5, SCRIPT_TEXT(TXT_LOADING2), FF_CENTER);
 	}
 
 	S_OutputPolyList();
 	S_DumpScreen();
+
 	lara.poisoned = poisoned;
 	GlobalFogOff = 0;
 }
 
 void S_InitialisePolyList()
 {
-	D3DRECT rect;
-	long col;
-
+	D3DRECT rect{};
 	rect.x1 = App.dx.rViewport.left;
 	rect.y1 = App.dx.rViewport.top;
 	rect.x2 = App.dx.rViewport.left + App.dx.rViewport.right;
 	rect.y2 = App.dx.rViewport.top + App.dx.rViewport.bottom;
 
-	if (gfLevelFlags & GF_TRAIN)
-		col = 0xD2B163;
-	else
-		col = 0;
-	
 	if (App.dx.Flags & DXF_HWR)
-		DXAttempt(App.dx.lpViewport->Clear2(1, &rect, D3DCLEAR_TARGET, col, 1.0F, 0));
+		DXAttempt(App.dx.lpViewport->Clear2(1, &rect, D3DCLEAR_TARGET, (gfLevelFlags & GF_TRAIN) ? RGB_MAKE(0xD2, 0xB1, 0x63) : RGB_MAKE(0, 0, 0), 1.0F, 0));
 
 	_BeginScene();
 	InitBuckets();
@@ -1070,8 +1043,6 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color)
 	TEXTURESTRUCT* pTex;
 	D3DVECTOR normals[4];
 	TEXTURESTRUCT envmap_texture;
-	short* quad;
-	short* tri;
 	float fcx, fcy;
 	long clrbak[4];
 	long spcbak[4];
@@ -1102,26 +1073,26 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color)
 
 	f_centerx = fcx;
 	f_centery = fcy;
-	quad = mesh->gt4;
-
-	for (int i = 0; i < mesh->ngt4; i++, quad += 6)
+	
+	auto* quad = mesh->gt4;
+	for (int i = 0; i < mesh->ngt4; i++, quad++)
 	{
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = &textinfo[quad->texture];
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if (quad[5] & 1)
+		if (quad->flags & 1)
 			pTex->drawtype = 2;
 
-		if (quad[5] & 2)
+		if (quad->flags & 2)
 		{
 			envmap = 1;
-			num = (quad[5] >> 2) & 0x1F;
+			num = (quad->flags >> 2) & 0x1F;
 			num <<= 3;
-			normals[0] = mesh->Normals[quad[0]];
-			normals[1] = mesh->Normals[quad[1]];
-			normals[2] = mesh->Normals[quad[2]];
-			normals[3] = mesh->Normals[quad[3]];
+			normals[0] = mesh->normals[quad->vertices[0]];
+			normals[1] = mesh->normals[quad->vertices[1]];
+			normals[2] = mesh->normals[quad->vertices[2]];
+			normals[3] = mesh->normals[quad->vertices[3]];
 			D3DTransform(&normals[0], &D3DMView);
 			D3DTransform(&normals[1], &D3DMView);
 			D3DTransform(&normals[2], &D3DMView);
@@ -1150,59 +1121,58 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color)
 		if (GlobalAlpha != 0xFF000000)
 			pTex->drawtype = 3;
 
-		AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+		AddQuadSorted(MyVertexBuffer, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], pTex, 0);
 
 		if (envmap)
 		{
-			clrbak[0] = MyVertexBuffer[quad[0]].color;
-			clrbak[1] = MyVertexBuffer[quad[1]].color;
-			clrbak[2] = MyVertexBuffer[quad[2]].color;
-			clrbak[3] = MyVertexBuffer[quad[3]].color;
-			spcbak[0] = MyVertexBuffer[quad[0]].specular;
-			spcbak[1] = MyVertexBuffer[quad[1]].specular;
-			spcbak[2] = MyVertexBuffer[quad[2]].specular;
-			spcbak[3] = MyVertexBuffer[quad[3]].specular;
-			RGB_M(MyVertexBuffer[quad[0]].color, num);
-			RGB_M(MyVertexBuffer[quad[1]].color, num);
-			RGB_M(MyVertexBuffer[quad[2]].color, num);
-			RGB_M(MyVertexBuffer[quad[3]].color, num);
-			RGB_M(MyVertexBuffer[quad[0]].specular, num);
-			RGB_M(MyVertexBuffer[quad[1]].specular, num);
-			RGB_M(MyVertexBuffer[quad[2]].specular, num);
-			RGB_M(MyVertexBuffer[quad[3]].specular, num);
-			AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], &envmap_texture, 0);
-			MyVertexBuffer[quad[0]].color = clrbak[0];
-			MyVertexBuffer[quad[1]].color = clrbak[1];
-			MyVertexBuffer[quad[2]].color = clrbak[2];
-			MyVertexBuffer[quad[3]].color = clrbak[3];
-			MyVertexBuffer[quad[0]].specular = spcbak[0];
-			MyVertexBuffer[quad[1]].specular = spcbak[1];
-			MyVertexBuffer[quad[2]].specular = spcbak[2];
-			MyVertexBuffer[quad[3]].specular = spcbak[3];
+			clrbak[0] = MyVertexBuffer[quad->vertices[0]].color;
+			clrbak[1] = MyVertexBuffer[quad->vertices[1]].color;
+			clrbak[2] = MyVertexBuffer[quad->vertices[2]].color;
+			clrbak[3] = MyVertexBuffer[quad->vertices[3]].color;
+			spcbak[0] = MyVertexBuffer[quad->vertices[0]].specular;
+			spcbak[1] = MyVertexBuffer[quad->vertices[1]].specular;
+			spcbak[2] = MyVertexBuffer[quad->vertices[2]].specular;
+			spcbak[3] = MyVertexBuffer[quad->vertices[3]].specular;
+			RGB_M(MyVertexBuffer[quad->vertices[0]].color, num);
+			RGB_M(MyVertexBuffer[quad->vertices[1]].color, num);
+			RGB_M(MyVertexBuffer[quad->vertices[2]].color, num);
+			RGB_M(MyVertexBuffer[quad->vertices[3]].color, num);
+			RGB_M(MyVertexBuffer[quad->vertices[0]].specular, num);
+			RGB_M(MyVertexBuffer[quad->vertices[1]].specular, num);
+			RGB_M(MyVertexBuffer[quad->vertices[2]].specular, num);
+			RGB_M(MyVertexBuffer[quad->vertices[3]].specular, num);
+			AddQuadSorted(MyVertexBuffer, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], &envmap_texture, 0);
+			MyVertexBuffer[quad->vertices[0]].color = clrbak[0];
+			MyVertexBuffer[quad->vertices[1]].color = clrbak[1];
+			MyVertexBuffer[quad->vertices[2]].color = clrbak[2];
+			MyVertexBuffer[quad->vertices[3]].color = clrbak[3];
+			MyVertexBuffer[quad->vertices[0]].specular = spcbak[0];
+			MyVertexBuffer[quad->vertices[1]].specular = spcbak[1];
+			MyVertexBuffer[quad->vertices[2]].specular = spcbak[2];
+			MyVertexBuffer[quad->vertices[3]].specular = spcbak[3];
 		}
 
 		pTex->drawtype = drawbak;
 	}
 
-	tri = mesh->gt3;
-
-	for (int i = 0; i < mesh->ngt3; i++, tri += 5)
+	auto* tri = mesh->gt3;
+	for (int i = 0; i < mesh->ngt3; i++, tri++)
 	{
-		pTex = &textinfo[tri[3] & 0x7FFF];
+		pTex = &textinfo[tri->texture];
 		envmap = 0;
 		drawbak = pTex->drawtype;
 
-		if (tri[4] & 1)
+		if (tri->flags & 1)
 			pTex->drawtype = 2;
 
-		if (tri[4] & 2)
+		if (tri->flags & 2)
 		{
 			envmap = 1;
-			num = (tri[4] >> 2) & 0x1F;
+			num = (tri->flags >> 2) & 0x1F;
 			num <<= 3;
-			normals[0] = mesh->Normals[tri[0]];
-			normals[1] = mesh->Normals[tri[1]];
-			normals[2] = mesh->Normals[tri[2]];
+			normals[0] = mesh->normals[tri->vertices[0]];
+			normals[1] = mesh->normals[tri->vertices[1]];
+			normals[2] = mesh->normals[tri->vertices[2]];
 			D3DTransform(&normals[0], &D3DMView);
 			D3DTransform(&normals[1], &D3DMView);
 			D3DTransform(&normals[2], &D3DMView);
@@ -1227,30 +1197,30 @@ void phd_PutPolygonsPickup(short* objptr, float x, float y, long color)
 
 		if (GlobalAlpha != 0xFF000000)
 			pTex->drawtype = 3;
-		
-		AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
+
+		AddTriSorted(MyVertexBuffer, tri->vertices[0], tri->vertices[1], tri->vertices[2], pTex, 0);
 
 		if (envmap)
 		{
-			clrbak[0] = MyVertexBuffer[tri[0]].color;
-			clrbak[1] = MyVertexBuffer[tri[1]].color;
-			clrbak[2] = MyVertexBuffer[tri[2]].color;
-			spcbak[0] = MyVertexBuffer[tri[0]].specular;
-			spcbak[1] = MyVertexBuffer[tri[1]].specular;
-			spcbak[2] = MyVertexBuffer[tri[2]].specular;
-			RGB_M(MyVertexBuffer[tri[0]].color, num);
-			RGB_M(MyVertexBuffer[tri[1]].color, num);
-			RGB_M(MyVertexBuffer[tri[2]].color, num);
-			RGB_M(MyVertexBuffer[tri[0]].specular, num);
-			RGB_M(MyVertexBuffer[tri[1]].specular, num);
-			RGB_M(MyVertexBuffer[tri[2]].specular, num);
-			AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], &envmap_texture, 0);
-			MyVertexBuffer[tri[0]].color = clrbak[0];
-			MyVertexBuffer[tri[1]].color = clrbak[1];
-			MyVertexBuffer[tri[2]].color = clrbak[2];
-			MyVertexBuffer[tri[0]].specular = spcbak[0];
-			MyVertexBuffer[tri[1]].specular = spcbak[1];
-			MyVertexBuffer[tri[2]].specular = spcbak[2];
+			clrbak[0] = MyVertexBuffer[tri->vertices[0]].color;
+			clrbak[1] = MyVertexBuffer[tri->vertices[1]].color;
+			clrbak[2] = MyVertexBuffer[tri->vertices[2]].color;
+			spcbak[0] = MyVertexBuffer[tri->vertices[0]].specular;
+			spcbak[1] = MyVertexBuffer[tri->vertices[1]].specular;
+			spcbak[2] = MyVertexBuffer[tri->vertices[2]].specular;
+			RGB_M(MyVertexBuffer[tri->vertices[0]].color, num);
+			RGB_M(MyVertexBuffer[tri->vertices[1]].color, num);
+			RGB_M(MyVertexBuffer[tri->vertices[2]].color, num);
+			RGB_M(MyVertexBuffer[tri->vertices[0]].specular, num);
+			RGB_M(MyVertexBuffer[tri->vertices[1]].specular, num);
+			RGB_M(MyVertexBuffer[tri->vertices[2]].specular, num);
+			AddTriSorted(MyVertexBuffer, tri->vertices[0], tri->vertices[1], tri->vertices[2], &envmap_texture, 0);
+			MyVertexBuffer[tri->vertices[0]].color = clrbak[0];
+			MyVertexBuffer[tri->vertices[1]].color = clrbak[1];
+			MyVertexBuffer[tri->vertices[2]].color = clrbak[2];
+			MyVertexBuffer[tri->vertices[0]].specular = spcbak[0];
+			MyVertexBuffer[tri->vertices[1]].specular = spcbak[1];
+			MyVertexBuffer[tri->vertices[2]].specular = spcbak[2];
 		}
 
 		pTex->drawtype = drawbak;
@@ -1261,8 +1231,8 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus)
 {
 	TEXTURESTRUCT* pTex;
 	MESH_DATA* mesh;
-	short* quad;
-	short* tri;
+	FACE4* quad;
+	FACE3* tri;
 	ushort drawbak;
 
 	mesh = (MESH_DATA*)objptr;
@@ -1276,68 +1246,71 @@ void phd_PutPolygonSkyMesh(short* objptr, long clipstatus)
 	clip_left = f_left;
 	clip_right = f_right;
 	ProcessObjectMeshVertices(mesh);
-	quad = mesh->gt4;
 
-	for (int i = 0; i < mesh->ngt4; i++, quad += 6)
+	quad = mesh->gt4;
+	for (int i = 0; i < mesh->ngt4; i++, quad++)
 	{
-		pTex = &textinfo[quad[4] & 0x7FFF];
+		pTex = &textinfo[quad->texture];
 		drawbak = pTex->drawtype;
 
-		if (quad[5] & 1)
+		if (quad->flags & 1)
 		{
 			if (gfLevelFlags & GF_HORIZONCOLADD)
+			{
 				pTex->drawtype = 2;
+			}
 			else
 			{
 				if (App.dx.lpZBuffer)
 				{
-					MyVertexBuffer[quad[0]].color = 0;
-					MyVertexBuffer[quad[1]].color = 0;
-					MyVertexBuffer[quad[2]].color = 0xFF000000;
-					MyVertexBuffer[quad[3]].color = 0xFF000000;
+					MyVertexBuffer[quad->vertices[0]].color = 0;
+					MyVertexBuffer[quad->vertices[1]].color = 0;
+					MyVertexBuffer[quad->vertices[2]].color = 0xFF000000;
+					MyVertexBuffer[quad->vertices[3]].color = 0xFF000000;
 					pTex->drawtype = 3;
 				}
 				else
 				{
-					MyVertexBuffer[quad[0]].color = 0;
-					MyVertexBuffer[quad[1]].color = 0;
-					MyVertexBuffer[quad[2]].color = 0;
-					MyVertexBuffer[quad[3]].color = 0;
+					MyVertexBuffer[quad->vertices[0]].color = 0;
+					MyVertexBuffer[quad->vertices[1]].color = 0;
+					MyVertexBuffer[quad->vertices[2]].color = 0;
+					MyVertexBuffer[quad->vertices[3]].color = 0;
 					pTex->drawtype = 0;
 				}
 			}
 		}
 		else
-			pTex->drawtype = 4;
-
-		if (gfLevelFlags & GF_TRAIN || gfCurrentLevel == 5 || gfCurrentLevel == 6)
 		{
-			MyVertexBuffer[quad[0]].color = 0xFFFFFFFF;
-			MyVertexBuffer[quad[1]].color = 0xFFFFFFFF;
-			MyVertexBuffer[quad[2]].color = 0xFFFFFFFF;
-			MyVertexBuffer[quad[3]].color = 0xFFFFFFFF;
+			pTex->drawtype = 4;
+		}
+
+		if (gfLevelFlags & GF_TRAIN)
+		{
+			MyVertexBuffer[quad->vertices[0]].color = 0xFFFFFFFF;
+			MyVertexBuffer[quad->vertices[1]].color = 0xFFFFFFFF;
+			MyVertexBuffer[quad->vertices[2]].color = 0xFFFFFFFF;
+			MyVertexBuffer[quad->vertices[3]].color = 0xFFFFFFFF;
 
 			if (i < 16)
 			{
-				MyVertexBuffer[quad[0]].specular = 0x7F000000;
-				MyVertexBuffer[quad[1]].specular = 0x7F000000;
-				MyVertexBuffer[quad[2]].specular = 0;
-				MyVertexBuffer[quad[3]].specular = 0;
+				MyVertexBuffer[quad->vertices[0]].specular = 0x7F000000;
+				MyVertexBuffer[quad->vertices[1]].specular = 0x7F000000;
+				MyVertexBuffer[quad->vertices[2]].specular = 0;
+				MyVertexBuffer[quad->vertices[3]].specular = 0;
 			}
 		}
 
-		AddQuadSorted(MyVertexBuffer, quad[0], quad[1], quad[2], quad[3], pTex, 0);
+		AddQuadSorted(MyVertexBuffer, quad->vertices[0], quad->vertices[1], quad->vertices[2], quad->vertices[3], pTex, 0);
 		pTex->drawtype = drawbak;
 	}
 
 	tri = mesh->gt3;
-
-	for (int i = 0; i < mesh->ngt3; i++, tri += 5)
+	for (int i = 0; i < mesh->ngt3; i++, tri++)
 	{
-		pTex = &textinfo[tri[3] & 0x7FFF];
+		pTex = &textinfo[tri->texture];
 		drawbak = pTex->drawtype;
 		pTex->drawtype = 4;
-		AddTriSorted(MyVertexBuffer, tri[0], tri[1], tri[2], pTex, 0);
+		AddTriSorted(MyVertexBuffer, tri->vertices[0], tri->vertices[1], tri->vertices[2], pTex, 0);
 		pTex->drawtype = drawbak;
 	}
 }
@@ -1508,7 +1481,7 @@ HRESULT DDCopyBitmap(LPDIRECTDRAWSURFACEX surf, HBITMAP hbm, long x, long y, lon
 	return result;
 }
 
-HRESULT _LoadBitmap(LPDIRECTDRAWSURFACEX surf, LPCSTR name)
+HRESULT DDLoadBitmap(LPDIRECTDRAWSURFACEX surf, LPCSTR name)
 {
 	HBITMAP hBitmap;
 	HRESULT result;
@@ -1539,48 +1512,48 @@ void do_boot_screen(long language)
 
 	switch (language)
 	{
-		case ENGLISH:
-		case DUTCH:
-			_LoadBitmap(App.dx.lpBackBuffer, "uk.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "uk.bmp");
-			break;
+	case ENGLISH:
+	case DUTCH:
+		DDLoadBitmap(App.dx.lpBackBuffer, "uk.bmp");
+		S_DumpScreen();
+		DDLoadBitmap(App.dx.lpBackBuffer, "uk.bmp");
+		break;
 
-		case FRENCH:
-			_LoadBitmap(App.dx.lpBackBuffer, "france.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "france.bmp");
-			break;
+	case FRENCH:
+		DDLoadBitmap(App.dx.lpBackBuffer, "france.bmp");
+		S_DumpScreen();
+		DDLoadBitmap(App.dx.lpBackBuffer, "france.bmp");
+		break;
 
-		case GERMAN:
-			_LoadBitmap(App.dx.lpBackBuffer, "germany.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "germany.bmp");
-			break;
+	case GERMAN:
+		DDLoadBitmap(App.dx.lpBackBuffer, "germany.bmp");
+		S_DumpScreen();
+		DDLoadBitmap(App.dx.lpBackBuffer, "germany.bmp");
+		break;
 
-		case ITALIAN:
-			_LoadBitmap(App.dx.lpBackBuffer, "italy.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "italy.bmp");
-			break;
+	case ITALIAN:
+		DDLoadBitmap(App.dx.lpBackBuffer, "italy.bmp");
+		S_DumpScreen();
+		DDLoadBitmap(App.dx.lpBackBuffer, "italy.bmp");
+		break;
 
-		case SPANISH:
-			_LoadBitmap(App.dx.lpBackBuffer, "spain.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "spain.bmp");
-			break;
+	case SPANISH:
+		DDLoadBitmap(App.dx.lpBackBuffer, "spain.bmp");
+		S_DumpScreen();
+		DDLoadBitmap(App.dx.lpBackBuffer, "spain.bmp");
+		break;
 
-		case US:
-			_LoadBitmap(App.dx.lpBackBuffer, "usa.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "usa.bmp");
-			break;
+	case US:
+		DDLoadBitmap(App.dx.lpBackBuffer, "usa.bmp");
+		S_DumpScreen();
+		DDLoadBitmap(App.dx.lpBackBuffer, "usa.bmp");
+		break;
 
-		case JAPAN:
-			_LoadBitmap(App.dx.lpBackBuffer, "japan.bmp");
-			S_DumpScreen();
-			_LoadBitmap(App.dx.lpBackBuffer, "japan.bmp");
-			break;
+	case JAPAN:
+		DDLoadBitmap(App.dx.lpBackBuffer, "japan.bmp");
+		S_DumpScreen();
+		DDLoadBitmap(App.dx.lpBackBuffer, "japan.bmp");
+		break;
 	}
 
 #ifdef TIMES_LEVEL
@@ -1824,7 +1797,7 @@ long GetRenderScale(long unit)	//User selected scale
 {
 	long w, h, x, y;
 
-	w = long(640.0F /  tomb4.GUI_Scale);
+	w = long(640.0F / tomb4.GUI_Scale);
 	h = long(480.0F / tomb4.GUI_Scale);
 	x = (phd_winwidth > w) ? MulDiv(phd_winwidth, unit, w) : unit;
 	y = (phd_winheight > h) ? MulDiv(phd_winheight, unit, h) : unit;

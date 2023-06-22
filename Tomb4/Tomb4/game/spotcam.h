@@ -1,6 +1,5 @@
 #pragma once
 
-
 void SetSplineData(long num, long cam);
 void InitialiseSpotCam(short Sequence);
 void InitSpotCamSequences();

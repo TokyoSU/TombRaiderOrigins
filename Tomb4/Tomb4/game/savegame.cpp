@@ -1107,7 +1107,7 @@ void RestoreLevelData(long FullSave)
 		if (objects[LITTLE_BEETLE].loaded)
 		{
 			ReadSG(&byte, sizeof(char));
-			
+
 			for (int i = 0; i < byte; i++)
 			{
 				ReadSG(&sword, sizeof(short));

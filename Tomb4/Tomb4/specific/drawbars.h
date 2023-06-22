@@ -1,6 +1,5 @@
 #pragma once
 
-
 void S_DrawHealthBar(long pos);
 void S_DrawAirBar(long pos);
 void S_DrawDashBar(long pos);

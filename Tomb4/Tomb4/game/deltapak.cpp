@@ -212,7 +212,7 @@ void handle_cutseq_triggering(long name)
 				SetScreenFadeIn(16);
 				Load_and_Init_Cutseq(goin);
 				cutseq_trig = 2;
-					
+
 				if (cutseq_control_routines[goin].init_func)
 					cutseq_control_routines[goin].init_func();
 
@@ -908,14 +908,12 @@ void tenth_cutseq_end()
 
 void eleventh_cutseq_init()
 {
-	ITEM_INFO* item;
-
-	item = find_a_fucking_item(ANIMATING5);
+	ITEM_INFO* item = find_a_fucking_item(ANIMATING5);
 	old_status_flags[numnailed] = item->status;
 	item->status = ITEM_INVISIBLE;
 	item->flags &= ~IFL_CODEBITS;
 	numnailed++;
-	KillActiveBaddies(0);
+	KillActiveBaddies(true);
 	cutseq_kill_item(MOTORBIKE);
 	cutseq_kill_item(ANIMATING4);
 	cutseq_kill_item(ANIMATING1);
@@ -965,7 +963,7 @@ void eleventh_cutseq_control()
 					b = GetRandomControl() & 0x3F;
 					TriggerDynamic(58672 - (GetRandomControl() & 0xFFF), -2816, 57865, 24, r, g, b);
 				}
-					
+
 				r = (GetRandomControl() & 0x3F) + 192;
 				g = (GetRandomControl() & 0x1F) + 128;
 				b = GetRandomControl() & 0x3F;
@@ -1113,7 +1111,6 @@ void sixteen_control()
 
 		if (frame == 1300 || frame == 2820)
 			cutseq_meshbits[1] |= 0x80000000;
-
 
 		if (frame == 2401)
 			cutseq_meshbits[1] &= ~0x80000000;
@@ -1521,7 +1518,7 @@ long Load_and_Init_Cutseq(long num)
 		actor = &GLOBAL_cutme->actor_data[i];
 		Log(5, "Actor %d --- offset=%d,slot=%d,nodes=%d\n", i, actor->offset, actor->objslot, actor->nodes);
 	}
-		
+
 	init_cutseq_actors(packed, 0);
 	return 0;
 }

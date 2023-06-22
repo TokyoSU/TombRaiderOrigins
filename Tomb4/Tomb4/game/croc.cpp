@@ -265,7 +265,7 @@ void CrocControl(short item_number)
 	}
 
 	CreatureAnimation(item_number, angle, 0);
-	
+
 	if (item->current_anim_state == 8)
 		s = (1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
 	else

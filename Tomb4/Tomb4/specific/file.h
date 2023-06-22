@@ -1,6 +1,5 @@
 #pragma once
 
-
 unsigned int __stdcall LoadLevel(void* name);
 long S_LoadLevelFile(long num);
 void FreeLevel();

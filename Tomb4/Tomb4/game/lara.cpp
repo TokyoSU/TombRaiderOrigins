@@ -327,7 +327,7 @@ static void TiltHer(ITEM_INFO* item, long rad, long height)
 		room_number = item->room_number;
 		floor = GetFloor(wx, yT, wz, &room_number);
 		wy[i] = GetHeight(floor, wx, yT, wz);
-    
+
 		if (abs(y - wy[i]) > rad / 2)
 			wy[i] = (long)(plane.x * wx + plane.y * wz + plane.z);
 	}
@@ -371,7 +371,6 @@ static void TiltHer(ITEM_INFO* item, long rad, long height)
 
 void lara_void_func(ITEM_INFO* item, COLL_INFO* coll)
 {
-
 }
 
 void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll)
@@ -382,7 +381,7 @@ void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll)
 	coll->old_anim_state = item->current_anim_state;
 	coll->old_anim_number = item->anim_number;
 	coll->old_frame_number = item->frame_number;
-	coll->radius = 100;
+	coll->r = 100;
 	coll->trigger = 0;
 	coll->slopes_are_walls = 0;
 	coll->slopes_are_pits = 0;
@@ -993,7 +992,7 @@ void lara_col_all4s(ITEM_INFO* item, COLL_INFO* coll)
 
 	lara.move_angle = item->pos.y_rot;
 	coll->facing = item->pos.y_rot;
-	coll->radius = 200;
+	coll->r = 200;
 	coll->bad_pos = 255;
 	coll->bad_neg = -255;
 	coll->bad_ceiling = 400;
@@ -1148,7 +1147,7 @@ void lara_col_crawl(ITEM_INFO* item, COLL_INFO* coll)
 	item->gravity_status = 0;
 	item->fallspeed = 0;
 	lara.move_angle = item->pos.y_rot;
-	coll->radius = 200;
+	coll->r = 200;
 	coll->bad_pos = 255;
 	coll->bad_neg = -255;
 	coll->bad_ceiling = 400;
@@ -1280,7 +1279,7 @@ void lara_col_crawlb(ITEM_INFO* item, COLL_INFO* coll)
 {
 	item->gravity_status = 0;
 	item->fallspeed = 0;
-	coll->radius = 250;
+	coll->r = 250;
 	coll->bad_pos = 255;
 	coll->bad_neg = -255;
 	coll->bad_ceiling = 400;
@@ -1642,7 +1641,7 @@ void lara_col_hang2(ITEM_INFO* item, COLL_INFO* coll)
 		coll->slopes_are_walls = 0;
 		lara.move_angle = item->pos.y_rot;
 		coll->facing = lara.move_angle;
-		coll->radius = 100;
+		coll->r = 100;
 		GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
 
 		if (input & IN_FORWARD && coll->coll_type != CT_FRONT && abs(coll->mid_ceiling - coll->front_ceiling) < 50)
@@ -1732,7 +1731,7 @@ void lara_col_monkeyswing(ITEM_INFO* item, COLL_INFO* coll)
 		MonkeySwingFall(item);
 		return;
 	}
-	
+
 	coll->bad_pos = -NO_HEIGHT;
 	coll->bad_neg = NO_HEIGHT;
 	coll->bad_ceiling = 0;
@@ -1740,7 +1739,7 @@ void lara_col_monkeyswing(ITEM_INFO* item, COLL_INFO* coll)
 	coll->enable_spaz = 0;
 	coll->enable_baddie_push = 0;
 	coll->facing = lara.move_angle;
-	coll->radius = 100;
+	coll->r = 100;
 	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
 
 	if (coll->coll_type == CT_FRONT || abs(coll->mid_ceiling - coll->front_ceiling) > 50)
@@ -1877,7 +1876,7 @@ void lara_col_hangturnlr(ITEM_INFO* item, COLL_INFO* coll)
 		coll->bad_ceiling = 0;
 		lara.move_angle = item->pos.y_rot;
 		coll->facing = item->pos.y_rot;
-		coll->radius = 100;
+		coll->r = 100;
 		coll->slopes_are_walls = 1;
 		GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
 		MonkeySwingSnap(item, coll);
@@ -1912,7 +1911,7 @@ void lara_as_hangleft(ITEM_INFO* item, COLL_INFO* coll)
 void lara_col_hangleft(ITEM_INFO* item, COLL_INFO* coll)
 {
 	lara.move_angle = item->pos.y_rot - 16384;
-	coll->radius = 102;
+	coll->r = 102;
 	LaraHangTest(item, coll);
 	lara.move_angle = item->pos.y_rot - 16384;
 }
@@ -1931,7 +1930,7 @@ void lara_as_hangright(ITEM_INFO* item, COLL_INFO* coll)
 void lara_col_hangright(ITEM_INFO* item, COLL_INFO* coll)
 {
 	lara.move_angle = item->pos.y_rot + 16384;
-	coll->radius = 102;
+	coll->r = 102;
 	LaraHangTest(item, coll);
 	lara.move_angle = item->pos.y_rot + 16384;
 }
@@ -2426,7 +2425,7 @@ void lara_col_roll2(ITEM_INFO* item, COLL_INFO* coll)
 
 	if (TestLaraSlide(item, coll))
 		return;
-	
+
 	if (coll->mid_floor > 200)
 	{
 		item->fallspeed = 0;
@@ -3336,7 +3335,7 @@ void lara_col_death(ITEM_INFO* item, COLL_INFO* coll)
 	coll->bad_pos = 384;
 	coll->bad_neg = -384;
 	coll->bad_ceiling = 0;
-	coll->radius = 400;
+	coll->r = 400;
 	GetLaraCollisionInfo(item, coll);
 	ShiftItem(item, coll);
 	item->hit_points = -1;
@@ -3467,12 +3466,12 @@ void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll)
 				coll->bad_pos = -NO_HEIGHT;
 				coll->bad_neg = -384;
 				coll->bad_ceiling = 0;
-				coll->radius = 102;
+				coll->r = 102;
 				coll->slopes_are_walls = 1;
 				GetLaraCollisionInfo(item, coll);
 
 				if (!TestLaraVault(item, coll))
-					coll->radius = 100;
+					coll->r = 100;
 			}
 			else
 				lara_as_wade(item, coll);
@@ -3506,13 +3505,13 @@ void lara_as_stop(ITEM_INFO* item, COLL_INFO* coll)
 			coll->bad_pos = -NO_HEIGHT;
 			coll->bad_neg = -384;
 			coll->bad_ceiling = 0;
-			coll->radius = 102;
+			coll->r = 102;
 			coll->slopes_are_walls = 1;
 			GetLaraCollisionInfo(item, coll);
 
 			if (!TestLaraVault(item, coll))
 			{
-				coll->radius = 100;
+				coll->r = 100;
 				item->goal_anim_state = AS_STOP;
 			}
 		}
@@ -3883,7 +3882,7 @@ void lara_col_reach(ITEM_INFO* item, COLL_INFO* coll)
 							break;
 						}
 					}
-						
+
 					item->pos.y_rot = angle;
 					item->gravity_status = 1;
 					item->speed = 2;
@@ -3939,7 +3938,7 @@ void lara_col_polestat(ITEM_INFO* item, COLL_INFO* coll)
 	coll->bad_ceiling = 192;
 	lara.move_angle = item->pos.y_rot;
 	coll->facing = lara.move_angle;
-	coll->radius = 100;
+	coll->r = 100;
 	coll->slopes_are_walls = 1;
 	GetLaraCollisionInfo(item, coll);
 
@@ -4043,7 +4042,7 @@ void lara_col_poledown(ITEM_INFO* item, COLL_INFO* coll)
 	lara.move_angle = item->pos.y_rot;
 	coll->slopes_are_walls = 1;
 	coll->facing = lara.move_angle;
-	coll->radius = 100;
+	coll->r = 100;
 	GetLaraCollisionInfo(item, coll);
 
 	if (coll->mid_floor < 0)
@@ -4658,11 +4657,11 @@ long LaraTestHangOnClimbWall(ITEM_INFO* item, COLL_INFO* coll)
 			return 0;
 	}
 
-	if (!LaraTestClimbPos(item, coll->radius, coll->radius, bounds[2], bounds[3] - bounds[2], &shift) ||
-		!LaraTestClimbPos(item, coll->radius, -coll->radius, bounds[2], bounds[3] - bounds[2], &shift))
+	if (!LaraTestClimbPos(item, coll->r, coll->r, bounds[2], bounds[3] - bounds[2], &shift) ||
+		!LaraTestClimbPos(item, coll->r, -coll->r, bounds[2], bounds[3] - bounds[2], &shift))
 		return 0;
 
-	result = LaraTestClimbPos(item, coll->radius, 0, bounds[2], bounds[3] - bounds[2], &shift);
+	result = LaraTestClimbPos(item, coll->r, 0, bounds[2], bounds[3] - bounds[2], &shift);
 
 	if (!result)
 		return 0;
@@ -5156,7 +5155,7 @@ short TestMonkeyLeft(ITEM_INFO* item, COLL_INFO* coll)
 	coll->bad_ceiling = 0;
 	lara.move_angle = item->pos.y_rot - 0x4000;
 	coll->facing = lara.move_angle;
-	coll->radius = 100;
+	coll->r = 100;
 	coll->slopes_are_walls = 0;
 	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
 
@@ -5186,7 +5185,7 @@ short TestMonkeyRight(ITEM_INFO* item, COLL_INFO* coll)
 	coll->bad_ceiling = 0;
 	lara.move_angle = item->pos.y_rot + 0x4000;
 	coll->facing = lara.move_angle;
-	coll->radius = 100;
+	coll->r = 100;
 	coll->slopes_are_walls = 0;
 	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 600);
 
@@ -5425,10 +5424,10 @@ long LaraTestClimbStance(ITEM_INFO* item, COLL_INFO* coll)
 {
 	long shift_r, shift_l;
 
-	if (LaraTestClimbPos(item, coll->radius, coll->radius + 120, -700, 512, &shift_r) != 1)
+	if (LaraTestClimbPos(item, coll->r, coll->r + 120, -700, 512, &shift_r) != 1)
 		return 0;
 
-	if (LaraTestClimbPos(item, coll->radius, -120 - coll->radius, -700, 512, &shift_l) != 1)
+	if (LaraTestClimbPos(item, coll->r, -120 - coll->r, -700, 512, &shift_l) != 1)
 		return 0;
 
 	if (shift_r)

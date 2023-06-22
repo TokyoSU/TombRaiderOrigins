@@ -141,10 +141,9 @@ unsigned int __stdcall LoadLevel(void* name)
 		for (int i = 0; i < 3; i++)
 		{
 			obj = &objects[WATERFALL1 + i];
-
 			if (obj->loaded)
 			{
-				tex = &textinfo[mesh_vtxbuf[obj->mesh_index]->gt4[4] & 0x7FFF];
+				tex = &textinfo[mesh_vtxbuf[obj->mesh_index]->gt4[4].texture];
 				AnimatingWaterfalls[i] = tex;
 				AnimatingWaterfallsV[i] = (long)tex->v1;
 			}
@@ -196,23 +195,23 @@ void FreeLevel()
 		vbuf = &mesh_vtxbuf[i];
 		mesh = *vbuf;
 
-		if (mesh->SourceVB)
+		if (mesh->vb)
 		{
-			Log(4, "Released %s @ %x - RefCnt = %d", "Mesh VB", mesh->SourceVB, mesh->SourceVB->Release());
-			mesh->SourceVB = 0;
+			Log(4, "Released %s @ %x - RefCnt = %d", "Mesh VB", mesh->vb, mesh->vb->Release());
+			mesh->vb = 0;
 		}
 	}
-	
+
 	if (room)
 	{
 		for (int i = 0; i < number_rooms; i++)
 		{
 			r = &room[i];
 
-			if (r->SourceVB)
+			if (r->vb)
 			{
-				Log(4, "Released %s @ %x - RefCnt = %d", "Source VB", r->SourceVB, r->SourceVB->Release());
-				r->SourceVB = 0;
+				Log(4, "Released %s @ %x - RefCnt = %d", "Source VB", r->vb, r->vb->Release());
+				r->vb = 0;
 			}
 			else
 				Log(1, "%s Attempt To Release NULL Ptr", "Source VB");
@@ -756,7 +755,7 @@ bool LoadObjects()
 	memcpy(meshes, FileData, size * sizeof(short*));
 	FileData += size * sizeof(short*);
 
-	for (int i=0;i<size;i++)
+	for (int i = 0; i < size; i++)
 		meshes[i] = mesh_base + (long)meshes[i] / 2;
 
 	num_meshes = size;

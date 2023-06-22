@@ -102,10 +102,10 @@ ObjectRegisterFactory* ObjectRegisterFactory::HitPoints(short hitPoints)
 	return this;
 }
 
-ObjectRegisterFactory* ObjectRegisterFactory::Radius(short radius)
+ObjectRegisterFactory* ObjectRegisterFactory::Radius(short r)
 {
 	if (obj && obj->loaded)
-		obj->radius = radius;
+		obj->r = r;
 	return this;
 }
 

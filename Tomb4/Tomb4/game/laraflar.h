@@ -1,6 +1,5 @@
 #pragma once
 
-
 void DrawFlareInAir(ITEM_INFO* item);
 void draw_flare_meshes();
 void undraw_flare_meshes();

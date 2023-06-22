@@ -1,6 +1,5 @@
 #pragma once
 
-
 void InitialiseBaboon(short item_number);
 void BaboonControl(short item_number);
 void FindCrowbarSwitch(ITEM_INFO* item, short switch_index);

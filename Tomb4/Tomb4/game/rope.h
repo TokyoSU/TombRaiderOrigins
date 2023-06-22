@@ -1,6 +1,5 @@
 #pragma once
 
-
 void DrawRopeList();
 void ProjectRopePoints(ROPE_STRUCT* Rope);
 PHD_VECTOR* Normalise(PHD_VECTOR* v);

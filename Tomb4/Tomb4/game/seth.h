@@ -1,6 +1,5 @@
 #pragma once
 
-
 void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv);
 void TriggerSethMissile(PHD_3DPOS* pos, short room_number, short type);
 void TriggerSethSparks(long x, long y, long z, short xv, short yv, short zv);
