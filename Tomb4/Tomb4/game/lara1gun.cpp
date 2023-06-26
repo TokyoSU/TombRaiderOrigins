@@ -24,7 +24,7 @@
 #include "savegame.h"
 #include "gameflow.h"
 
-void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item)
+void DoGrenadeDamageOnBaddie(ItemInfo* baddie, ItemInfo* item)
 {
 	if (baddie->flags & 0x8000)
 		return;
@@ -63,8 +63,8 @@ void DoGrenadeDamageOnBaddie(ITEM_INFO* baddie, ITEM_INFO* item)
 
 void FireCrossbow(PHD_3DPOS* pos)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	PHD_VECTOR vec;
 	short* ammo;
 	long h;
@@ -247,7 +247,7 @@ void FireShotgun()
 
 void FireGrenade()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
 	short* ammo;
@@ -332,7 +332,7 @@ void FireGrenade()
 
 void AnimateShotgun(long weapon_type)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 	static long m16_firing = 0;
 	static long harpoon_fired = 0;
@@ -517,7 +517,7 @@ void RifleHandler(long weapon_type)
 	}
 }
 
-void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLastNode)
+void CrossbowHitSwitchType78(ItemInfo* item, ItemInfo* target, long MustHitLastNode)
 {
 	SPHERE* ptr1;
 	long dx, dy, dz, num1, cs, cd, speed;
@@ -631,7 +631,7 @@ void CrossbowHitSwitchType78(ITEM_INFO* item, ITEM_INFO* target, long MustHitLas
 	}
 }
 
-void TriggerUnderwaterExplosion(ITEM_INFO* item, long vehicle)
+void TriggerUnderwaterExplosion(ItemInfo* item, long vehicle)
 {
 	long x, y, z, wh;
 
@@ -685,7 +685,7 @@ void TriggerUnderwaterExplosion(ITEM_INFO* item, long vehicle)
 
 void draw_shotgun(long weapon_type)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	if (lara.weapon_item == NO_ITEM)
 	{
@@ -728,7 +728,7 @@ void draw_shotgun(long weapon_type)
 
 void undraw_shotgun(long weapon_type)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[lara.weapon_item];
 
@@ -764,12 +764,12 @@ void undraw_shotgun(long weapon_type)
 
 void ControlCrossbow(short item_number)
 {
-	ITEM_INFO** itemlist;
+	ItemInfo** itemlist;
 	MESH_INFO** meshlist;
-	ITEM_INFO* item;
-	ITEM_INFO* target;
+	ItemInfo* item;
+	ItemInfo* target;
 	MESH_INFO* mesh;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	ROOM_INFO* r;
 	PHD_VECTOR oldPos;
 	long abovewater, exploded, collided, rad, j;
@@ -837,7 +837,7 @@ void ControlCrossbow(short item_number)
 
 	for (int i = 0; i < 2; i++)
 	{
-		itemlist = (ITEM_INFO**)&tsv_buffer[0x2000];
+		itemlist = (ItemInfo**)&tsv_buffer[0x2000];
 		meshlist = (MESH_INFO**)&tsv_buffer[0x3000];
 		GetCollidedObjects(item, rad, 1, itemlist, meshlist, 1);
 
@@ -946,13 +946,13 @@ void ControlCrossbow(short item_number)
 
 void ControlGrenade(short item_number)
 {
-	ITEM_INFO** itemlist;
+	ItemInfo** itemlist;
 	MESH_INFO** meshlist;
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	ITEM_INFO* target;
+	ItemInfo* item;
+	ItemInfo* item2;
+	ItemInfo* target;
 	MESH_INFO* mesh;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR oldPos;
 	PHD_VECTOR pos;
 	long abovewater, xv, yv, zv, exploded, rad, j;
@@ -1156,7 +1156,7 @@ void ControlGrenade(short item_number)
 	{
 		for (int i = 0; i < 2; i++)
 		{
-			itemlist = (ITEM_INFO**)&tsv_buffer[0x2000];
+			itemlist = (ItemInfo**)&tsv_buffer[0x2000];
 			meshlist = (MESH_INFO**)&tsv_buffer[0x3000];
 			GetCollidedObjects(item, rad, 1, itemlist, meshlist, 1);
 

@@ -7,7 +7,7 @@
 
 void InitialiseJeanYves(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->goal_anim_state = 1;
@@ -18,7 +18,7 @@ void InitialiseJeanYves(short item_number)
 
 void JeanYvesControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short random;
 
 	item = &items[item_number];

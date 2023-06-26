@@ -28,7 +28,7 @@ static PHD_VECTOR GameStixPos = { 0, 0, -100 };
 
 void InitialiseSenet(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short lp;
 
 	if (senet_item[0])
@@ -120,7 +120,7 @@ void MakeMove(long piece, long displacement)
 
 void SenetControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -164,14 +164,14 @@ long CheckSenetWinner(long ourPiece)
 
 void InitialiseGameStix(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->data = item->item_flags;
 	item->trigger_flags = NO_ITEM;
 }
 
-void ThrowSticks(ITEM_INFO* item)
+void ThrowSticks(ItemInfo* item)
 {
 	long lp;
 	char rnd;
@@ -199,9 +199,9 @@ void ThrowSticks(ITEM_INFO* item)
 
 void GameStixControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	ITEM_INFO* piece;
+	ItemInfo* item;
+	ItemInfo* item2;
+	ItemInfo* piece;
 	long piece_num, num, x, z, change;
 	short room_number;
 
@@ -407,9 +407,9 @@ void GameStixControl(short item_number)
 	}
 }
 
-void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void GameStixCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -444,7 +444,7 @@ void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-void ShockwaveExplosion(ITEM_INFO* item, ulong col, long speed)
+void ShockwaveExplosion(ItemInfo* item, ulong col, long speed)
 {
 	PHD_VECTOR pos;
 	long InnerOuter;
@@ -468,7 +468,7 @@ void ShockwaveExplosion(ITEM_INFO* item, ulong col, long speed)
 
 void ControlGodHead(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -513,7 +513,7 @@ void ControlGodHead(short item_number)
 	}
 }
 
-void DrawGodHead(ITEM_INFO* item)
+void DrawGodHead(ItemInfo* item)
 {
 	ROOM_INFO* r;
 	PHD_VECTOR scalar;

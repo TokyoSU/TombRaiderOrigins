@@ -12,11 +12,11 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO templar_hit{ 0, 0, 0, 11 };
+static BiteInfo templar_hit{ 0, 0, 0, 11 };
 
 void InitialiseTemplar(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -29,13 +29,13 @@ void InitialiseTemplar(short item_number)
 
 void TemplarControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* knight;
+	ItemInfo* item;
+	CreatureInfo* knight;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR pos;
-	AI_INFO info;
+	AIInfo info;
 	short anim, head, torso_x, torso_y, angle;
 
 	if (!CreatureActive(item_number))
@@ -53,7 +53,7 @@ void TemplarControl(short item_number)
 		TriggerFlareSparks(pos.x, pos.y, pos.z, (GetRandomControl() & 0x1FF) - 256, -128 - (GetRandomControl() & 0x7F), (GetRandomControl() & 0x1FF) - 256, 0);
 	}
 
-	knight = (CREATURE_INFO*)item->data;
+	knight = (CreatureInfo*)item->data;
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;

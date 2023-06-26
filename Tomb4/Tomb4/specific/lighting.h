@@ -1,18 +1,18 @@
 #pragma once
 
 void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r);
-void InitItemDynamicLighting(ITEM_INFO* item);
-void SetupDynamicLight(DYNAMIC* light, ITEM_INFO* item);
-void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient);
+void InitItemDynamicLighting(ItemInfo* item);
+void SetupDynamicLight(DYNAMIC* light, ItemInfo* item);
+void SetupLight(PCLIGHT* light, ItemInfo* item, long* ambient);
 void mApplyMatrix(MATRIX_FLT* matrix, FVECTOR* start, FVECTOR* dest);
 void mApplyTransposeMatrix(MATRIX_FLT* matrix, FVECTOR* start, FVECTOR* dest);
-void CreateLightList(ITEM_INFO* item);
+void CreateLightList(ItemInfo* item);
 void FadeLightList(PCLIGHT* lights, long nLights);
-void InitObjectLighting(ITEM_INFO* item);
-void CalcAmbientLight(ITEM_INFO* item);
+void InitObjectLighting(ItemInfo* item);
+void CalcAmbientLight(ItemInfo* item);
 void ResetLighting();
 
-extern ITEM_INFO* current_item;
+extern ItemInfo* current_item;
 extern long StaticMeshShade;
 extern long ambientR, ambientG, ambientB;
 

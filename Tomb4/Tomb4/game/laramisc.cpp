@@ -109,7 +109,7 @@ void LaraCheatyBits()
 #endif
 }
 
-void LaraCheat(ITEM_INFO* item, COLL_INFO* coll)
+void LaraCheat(ItemInfo* item, COLL_INFO* coll)
 {
 	lara_item->hit_points = 1000;
 	LaraUnderWater(item, coll);
@@ -137,7 +137,7 @@ void InitialiseLaraLoad(short item_number)
 	lara_item = &items[item_number];
 }
 
-void InitialiseLaraAnims(ITEM_INFO* item)
+void InitialiseLaraAnims(ItemInfo* item)
 {
 	if (room[item->room_number].flags & ROOM_UNDERWATER)
 	{
@@ -181,7 +181,7 @@ void LaraInitialiseMeshes()
 	lara.left_arm.lock = 0;
 }
 
-void AnimateLara(ITEM_INFO* item)
+void AnimateLara(ItemInfo* item)
 {
 	ANIM_STRUCT* anim;
 	short* cmd;
@@ -326,7 +326,7 @@ void AnimateLara(ITEM_INFO* item)
 
 void LaraControl(short item_number)
 {
-	ITEM_INFO* l;
+	ItemInfo* l;
 	long oldx, oldy, oldz;
 	long wh, wd, hfw, room_water_state;
 

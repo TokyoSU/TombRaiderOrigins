@@ -54,7 +54,7 @@ void HairControl(long in_cutscene, long pigtail, short* cutscenething)
 {
 	OBJECT_INFO* obj;
 	HAIR_STRUCT* hair;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR pos;
 	SPHERE sphere[6];
 	long* bone;

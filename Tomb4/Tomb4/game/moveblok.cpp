@@ -24,7 +24,7 @@ static PHD_VECTOR MovingBlockPos = { 0, 0, 0 };
 
 static void ClearMovableBlockSplitters(long x, long y, long z, short room_number)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	short room_num, height;
 
 	floor = GetFloor(x, y, z, &room_number);
@@ -69,17 +69,17 @@ static void ClearMovableBlockSplitters(long x, long y, long z, short room_number
 
 void InitialiseMovingBlock(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	ClearMovableBlockSplitters(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number);
 }
 
-static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
+static long TestBlockPush(ItemInfo* item, long height, ushort quadrant)
 {
-	ITEM_INFO** itemlist;
-	ITEM_INFO* collided;
-	FLOOR_INFO* floor;
+	ItemInfo** itemlist;
+	ItemInfo* collided;
+	FloorInfo* floor;
 	ROOM_INFO* r;
 	long x, y, z, rx, rz;
 	short room_number;
@@ -87,7 +87,7 @@ static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
 	x = item->pos.x_pos;
 	y = item->pos.y_pos;
 	z = item->pos.z_pos;
-	itemlist = (ITEM_INFO**)&tsv_buffer[0];
+	itemlist = (ItemInfo**)&tsv_buffer[0];
 
 	switch (quadrant)
 	{
@@ -155,16 +155,16 @@ static long TestBlockPush(ITEM_INFO* item, long height, ushort quadrant)
 	return 1;
 }
 
-static long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
+static long TestBlockPull(ItemInfo* item, long height, ushort quadrant)
 {
-	ITEM_INFO** itemlist;
-	ITEM_INFO* collided;
-	FLOOR_INFO* floor;
+	ItemInfo** itemlist;
+	ItemInfo* collided;
+	FloorInfo* floor;
 	ROOM_INFO* r;
 	long x, y, z, destx, destz, rx, rz, ignore;
 	short room_number;
 
-	itemlist = (ITEM_INFO**)&tsv_buffer[0];
+	itemlist = (ItemInfo**)&tsv_buffer[0];
 	destx = 0;
 	destz = 0;
 
@@ -285,7 +285,7 @@ static long TestBlockPull(ITEM_INFO* item, long height, ushort quadrant)
 
 void MovableBlock(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 	long offset;
 	ushort quadrant;
@@ -460,9 +460,9 @@ void MovableBlock(short item_number)
 	}
 }
 
-void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)
+void MovableBlockCollision(short item_number, ItemInfo* laraitem, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 	short* bounds;
 	short room_number, yrot, quadrant;
@@ -520,7 +520,7 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 			item->pos.y_rot = yrot;
 		}
 	}
-	else if (laraitem->current_anim_state == AS_PPREADY && laraitem->frame_number == anims[ANIM_PPREADY].frame_base + 19 && (ITEM_INFO*)lara.CornerX == item)
+	else if (laraitem->current_anim_state == AS_PPREADY && laraitem->frame_number == anims[ANIM_PPREADY].frame_base + 19 && (ItemInfo*)lara.CornerX == item)
 	{
 		pos.x = 0;
 		pos.y = 0;
@@ -562,8 +562,8 @@ void MovableBlockCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* co
 
 void InitialisePlanetEffect(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	char* pifl;
 	uchar others[4];
 
@@ -611,8 +611,8 @@ void InitialisePlanetEffect(short item_number)
 
 void ControlPlanetEffect(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
 	char* pifl;
@@ -680,7 +680,7 @@ void ControlPlanetEffect(short item_number)
 	}
 }
 
-void DrawPlanetEffect(ITEM_INFO* item)
+void DrawPlanetEffect(ItemInfo* item)
 {
 	OBJECT_INFO* obj;
 	short** meshpp;

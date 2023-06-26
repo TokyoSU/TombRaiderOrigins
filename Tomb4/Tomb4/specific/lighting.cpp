@@ -14,7 +14,7 @@
 #include "winmain.h"
 #include "lara.h"
 
-ITEM_INFO* current_item;
+ItemInfo* current_item;
 long StaticMeshShade;
 long ambientR, ambientG, ambientB;
 
@@ -24,7 +24,7 @@ POINTLIGHT_STRUCT PointLights[64];
 POINTLIGHT_STRUCT SpotLights[64];
 long nSunLights, nPointLights, nSpotLights, nShadowLights, nTotalLights;
 
-static ITEM_INFO StaticMeshLightItem;
+static ItemInfo StaticMeshLightItem;
 static long SetupLight_thing;
 
 void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r)
@@ -38,7 +38,7 @@ void S_CalculateStaticMeshLight(long x, long y, long z, long shade, ROOM_INFO* r
 	current_item = &StaticMeshLightItem;
 }
 
-void InitItemDynamicLighting(ITEM_INFO* item)
+void InitItemDynamicLighting(ItemInfo* item)
 {
 	DYNAMIC* dptr;
 
@@ -55,7 +55,7 @@ void InitItemDynamicLighting(ITEM_INFO* item)
 	ambientB = CLRB(item->il.ambient);
 }
 
-void SetupDynamicLight(DYNAMIC* light, ITEM_INFO* item)
+void SetupDynamicLight(DYNAMIC* light, ItemInfo* item)
 {
 	POINTLIGHT_STRUCT* point;
 	float x, y, z, falloff, dist, val;
@@ -82,7 +82,7 @@ void SetupDynamicLight(DYNAMIC* light, ITEM_INFO* item)
 	}
 }
 
-void SetupLight(PCLIGHT* light, ITEM_INFO* item, long* ambient)
+void SetupLight(PCLIGHT* light, ItemInfo* item, long* ambient)
 {
 	SUNLIGHT_STRUCT* sun;
 	POINTLIGHT_STRUCT* point;
@@ -240,7 +240,7 @@ void mApplyTransposeMatrix(MATRIX_FLT* matrix, FVECTOR* start, FVECTOR* dest)
 	dest->z = start->x * matrix->m02 + start->y * matrix->m12 + start->z * matrix->m22;
 }
 
-void CreateLightList(ITEM_INFO* item)
+void CreateLightList(ItemInfo* item)
 {
 	ROOM_INFO* r;
 	PCLIGHT* current_lights;
@@ -443,7 +443,7 @@ void FadeLightList(PCLIGHT* lights, long nLights)
 	}
 }
 
-void InitObjectLighting(ITEM_INFO* item)
+void InitObjectLighting(ItemInfo* item)
 {
 	PCLIGHT* light;
 	long node_ambient, r, g, b;
@@ -493,7 +493,7 @@ void InitObjectLighting(ITEM_INFO* item)
 	ambientB = CLRB(node_ambient);
 }
 
-void CalcAmbientLight(ITEM_INFO* item)
+void CalcAmbientLight(ItemInfo* item)
 {
 	ROOM_INFO* r;
 	short room_number;

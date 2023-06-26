@@ -120,7 +120,7 @@ LIGHTNING_STRUCT* TriggerLightning(PHD_VECTOR* s, PHD_VECTOR* d, char variation,
 
 long ExplodingDeath2(short item_number, long mesh_bits, short Flags)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	OBJECT_INFO* obj;
 	FX_INFO* fx;
 	long* bone;
@@ -369,7 +369,7 @@ void TriggerGunSmoke(long x, long y, long z, long xVel, long yVel, long zVel, lo
 	sptr->mirror = gfLevelFlags & GF_MIRROR && lara_item->room_number == gfMirrorRoom;
 }
 
-void LaraBubbles(ITEM_INFO* item)
+void LaraBubbles(ItemInfo* item)
 {
 	PHD_VECTOR pos;
 
@@ -395,7 +395,7 @@ void LaraBubbles(ITEM_INFO* item)
 void UpdateDrips()
 {
 	DRIP_STRUCT* drip;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long h;
 
 	for (int i = 0; i < 32; i++)
@@ -951,7 +951,7 @@ void TriggerShatterSmoke(long x, long y, long z)
 	sptr->Size = sptr->dSize >> 3;
 }
 
-void DrawLensFlares(ITEM_INFO* item)
+void DrawLensFlares(ItemInfo* item)
 {
 	GAME_VECTOR sun;
 
@@ -962,7 +962,7 @@ void DrawLensFlares(ITEM_INFO* item)
 	SetUpLensFlare(0, 0, 0, &sun);
 }
 
-void DrawWeaponMissile(ITEM_INFO* item)
+void DrawWeaponMissile(ItemInfo* item)
 {
 	phd_PushMatrix();
 	phd_TranslateAbs(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos);
@@ -1123,7 +1123,7 @@ void TriggerGunShell(short leftright, short objnum, long weapon)
 void UpdateGunShells()
 {
 	GUNSHELL_STRUCT* shell;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long ox, oy, oz, c, h;
 	short oroom;
 
@@ -1554,7 +1554,7 @@ void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long biggest)
 void UpdateBubbles()
 {
 	BUBBLE_STRUCT* bubble;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long h, c;
 	short room_number;
 
@@ -2029,7 +2029,7 @@ void S_DrawSparks()
 {
 	SPARKS* sptr;
 	FX_INFO* fx;
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 	FVECTOR fPos;
 	long* XY;

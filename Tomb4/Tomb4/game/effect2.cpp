@@ -39,7 +39,7 @@ static long next_spark = 0;
 
 void ControlSmokeEmitter(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	SPARKS* sptr;
 	PHD_3DPOS pos;
 	long size, dx, dz, normal;
@@ -549,7 +549,7 @@ void ClearDynamics()
 void ControlEnemyMissile(short fx_number)
 {
 	FX_INFO* fx;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long speed, ox, oy, oz, h, c;
 	short room_number, max_speed, max_turn;
 	short angles[2];
@@ -993,7 +993,7 @@ void TriggerExplosionBubble(long x, long y, long z, short room_number)
 
 void ControlColouredLights(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long objnum;
 	uchar colours[5][3] =
 	{
@@ -1017,7 +1017,7 @@ void DetatchSpark(long num, long type)
 {
 	SPARKS* sptr;
 	FX_INFO* fx;
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	for (int i = 0; i < 256; i++)
 	{
@@ -1767,7 +1767,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 	}
 }
 
-void TriggerSuperJetFlame(ITEM_INFO* item, long yvel, long deadly)
+void TriggerSuperJetFlame(ItemInfo* item, long yvel, long deadly)
 {
 	SPARKS* sptr;
 	long dx, dy, dz;

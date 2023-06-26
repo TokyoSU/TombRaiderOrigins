@@ -26,14 +26,14 @@
 #include "newinv.h"
 #include "savegame.h"
 
-static ITEM_INFO* GlobalBikeItem;
+static ItemInfo* GlobalBikeItem;
 static long bikefspeed = 0;
 static short broomies[22];
 static char dont_exit_bike = 0;
 
 void InitialiseBike(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	BIKEINFO* bike;
 
 	item = &items[item_number];
@@ -54,7 +54,7 @@ void InitialiseBike(short item_number)
 	GlobalBikeItem = item;
 }
 
-void DrawBikeExtras(ITEM_INFO* item)
+void DrawBikeExtras(ItemInfo* item)
 {
 	if (lara.vehicle != NO_ITEM)
 		DrawBikeSpeedo(phd_winwidth - 64, phd_winheight - 16, ((BIKEINFO*)item->data)->velocity, 0x8000, 0xC000, 32, 0);
@@ -62,7 +62,7 @@ void DrawBikeExtras(ITEM_INFO* item)
 	DrawBikeBeam(GlobalBikeItem);
 }
 
-void TriggerBikeBeam(ITEM_INFO* item)
+void TriggerBikeBeam(ItemInfo* item)
 {
 	BIKEINFO* bike;
 	PHD_VECTOR s;
@@ -88,7 +88,7 @@ void TriggerBikeBeam(ITEM_INFO* item)
 
 long GetOnBike(short item_number, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long dx, dz;
 	short room_number, rot;
 
@@ -125,7 +125,7 @@ long GetOnBike(short item_number, COLL_INFO* coll)
 	return 1;
 }
 
-void DrawBikeBeam(ITEM_INFO* item)
+void DrawBikeBeam(ItemInfo* item)
 {
 	BIKEINFO* bike;
 	OBJECT_INFO* obj;
@@ -304,8 +304,8 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 
 static long CanGetOff(short num)	//always called with num = 1
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	long x, y, z, h, c;
 	short yrot, room_number;
 
@@ -349,7 +349,7 @@ static long CanGetOff(short num)	//always called with num = 1
 	return 1;
 }
 
-void BikeExplode(ITEM_INFO* item)
+void BikeExplode(ItemInfo* item)
 {
 	if (room[item->room_number].flags & ROOM_UNDERWATER)
 		TriggerUnderwaterExplosion(item, 1);
@@ -369,7 +369,7 @@ void BikeExplode(ITEM_INFO* item)
 	lara.vehicle = NO_ITEM;
 }
 
-void AnimateBike(ITEM_INFO* item, long hitWall, long killed)
+void AnimateBike(ItemInfo* item, long hitWall, long killed)
 {
 	BIKEINFO* bike;
 	short state, dmg;
@@ -561,7 +561,7 @@ void AnimateBike(ITEM_INFO* item, long hitWall, long killed)
 	}
 }
 
-void BikeStart(ITEM_INFO* item, ITEM_INFO* l)
+void BikeStart(ItemInfo* item, ItemInfo* l)
 {
 	BIKEINFO* bike;
 
@@ -580,9 +580,9 @@ void BikeStart(ITEM_INFO* item, ITEM_INFO* l)
 	bike->unused1 = 0;
 }
 
-long TestHeight(ITEM_INFO* item, long z, long x, PHD_VECTOR* pos)
+long TestHeight(ItemInfo* item, long z, long x, PHD_VECTOR* pos)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long sx, sz, sy, cy, c, h;
 	short room_number;
 
@@ -610,7 +610,7 @@ long TestHeight(ITEM_INFO* item, long z, long x, PHD_VECTOR* pos)
 
 static long BikeCheckGetOff()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	BIKEINFO* bike;
 	PHD_VECTOR pos;
 	short state;
@@ -713,9 +713,9 @@ static long DoDynamics(long height, long fallspeed, long* ypos, long zero)
 	return fallspeed;
 }
 
-void BikeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void BikeCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	BIKEINFO* bike;
 	short angle;
 
@@ -782,9 +782,9 @@ void BikeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-long BikeBaddieCollision(ITEM_INFO* bike)
+long BikeBaddieCollision(ItemInfo* bike)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	OBJECT_INFO* obj;
 	short* doors;
 	long j, dx, dy, dz;
@@ -954,7 +954,7 @@ void BikeCollideStaticObjects(long x, long y, long z, short room_number, long he
 	}
 }
 
-static long UserControl(ITEM_INFO* item, long height, long* pitch)
+static long UserControl(ItemInfo* item, long height, long* pitch)
 {
 	BIKEINFO* bike;
 	PHD_VECTOR pos;
@@ -1134,10 +1134,10 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch)
 	return 0;
 }
 
-long BikeDynamics(ITEM_INFO* item)
+long BikeDynamics(ItemInfo* item)
 {
 	BIKEINFO* bike;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR pos, newPos;
 	PHD_VECTOR flPos, frPos, blPos, brPos, fmPos, flPos2, frPos2, blPos2, brPos2, fmPos2;
 	long front_left, front_right, back_left, back_right, front_mid, front_left2, front_right2, back_left2, back_right2, front_mid2;
@@ -1372,9 +1372,9 @@ long BikeDynamics(ITEM_INFO* item)
 
 void BikeControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	BIKEINFO* bike;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR flPos, frPos, fmPos;
 	PHD_VECTOR pos;
 	long front_left, front_right, front_mid;

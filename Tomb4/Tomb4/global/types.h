@@ -870,7 +870,7 @@ struct ITEM_LIGHT
 	void* pPrevLights;
 };
 
-struct ITEM_INFO
+struct ItemInfo
 {
 	long floor;
 	ulong touch_bits;
@@ -944,7 +944,7 @@ struct LOT_INFO
 	ZONE_TYPES zone;
 };
 
-struct CREATURE_INFO
+struct CreatureInfo
 {
 	short joint_rotation[4];
 	short maximum_turn;
@@ -958,12 +958,21 @@ struct CREATURE_INFO
 	ushort jump_ahead : 1;
 	ushort monkey_ahead : 1;
 	MOOD_TYPES mood;
-	ITEM_INFO* enemy;
-	ITEM_INFO ai_target;
+	ItemInfo* enemy;
+	ItemInfo ai_target;
 	short pad;
 	short item_num;
 	PHD_VECTOR target;
 	LOT_INFO LOT;
+
+	void DamageTarget(int damage)
+	{
+		if (enemy && enemy->hit_points > 0)
+		{
+			enemy->hit_points -= damage;
+			enemy->hit_status = 1;
+		}
+	}
 };
 
 struct FX_INFO
@@ -1045,7 +1054,7 @@ struct LARA_INFO
 	FX_INFO* spaz_effect;
 	long mesh_effects;
 	short* mesh_ptrs[15];
-	ITEM_INFO* target;
+	ItemInfo* target;
 	short target_angles[2];
 	short turn_rate;
 	short move_angle;
@@ -1059,7 +1068,7 @@ struct LARA_INFO
 	LARA_ARM right_arm;
 	ushort holster_l;
 	ushort holster_r;
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 	long CornerX;
 	long CornerZ;
 	char RopeSegment;
@@ -1162,8 +1171,8 @@ struct CAMERA_INFO
 	short last;
 	short timer;
 	short speed;
-	ITEM_INFO* item;
-	ITEM_INFO* last_item;
+	ItemInfo* item;
+	ItemInfo* last_item;
 	OBJECT_VECTOR* fixed;
 	long mike_at_lara;
 	PHD_VECTOR mike_pos;
@@ -1229,12 +1238,12 @@ struct COLL_INFO
 };
 
 typedef std::function<void(short item_number)> Obj_InitialiseFunc;
-typedef std::function<void(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)> Obj_CollisionFunc;
+typedef std::function<void(short item_number, ItemInfo* laraitem, COLL_INFO* coll)> Obj_CollisionFunc;
 typedef std::function<void(short item_number)> Obj_ControlFunc;
-typedef std::function<void(ITEM_INFO* item, long x, long y, long z, long* height)> Obj_FloorFunc;
-typedef std::function<void(ITEM_INFO* item, long x, long y, long z, long* height)> Obj_CeilingFunc;
-typedef std::function<void(ITEM_INFO* item)> Obj_DrawRoutineFunc;
-typedef std::function<void(ITEM_INFO* item)> Obj_DrawRoutineExtraFunc;
+typedef std::function<void(ItemInfo* item, long x, long y, long z, long* height)> Obj_FloorFunc;
+typedef std::function<void(ItemInfo* item, long x, long y, long z, long* height)> Obj_CeilingFunc;
+typedef std::function<void(ItemInfo* item)> Obj_DrawRoutineFunc;
+typedef std::function<void(ItemInfo* item)> Obj_DrawRoutineExtraFunc;
 
 struct OBJECT_INFO
 {
@@ -1272,7 +1281,7 @@ struct OBJECT_INFO
 	DWORD explodable_meshbits;
 };
 
-struct FLOOR_INFO
+struct FloorInfo
 {
 	ushort index;
 	ushort fx : 4;
@@ -1365,7 +1374,7 @@ struct ROOM_INFO
 {
 	short* data;
 	short* door;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	LIGHTINFO* light;
 	MESH_INFO* mesh;
 	long x;
@@ -1450,6 +1459,14 @@ struct PENDULUM
 	PHD_VECTOR Velocity;
 	long node;
 	ROPE_STRUCT* Rope;
+};
+
+struct RotateBasedOnSlope
+{
+	short x_rot = 0;
+	short z_rot = 0;
+	RotateBasedOnSlope() = default;
+	RotateBasedOnSlope(const short& xrot, const short& zrot) : x_rot(xrot), z_rot(zrot) {}
 };
 
 struct STATS
@@ -1964,7 +1981,7 @@ struct GUNSHELL_STRUCT
 	short object_number;
 };
 
-struct BITE_INFO
+struct BiteInfo
 {
 	long x;
 	long y;
@@ -2032,7 +2049,7 @@ struct DRIP_STRUCT
 	uchar Pad;
 };
 
-struct AI_INFO
+struct AIInfo
 {
 	short zone_number;
 	short enemy_zone;
@@ -2125,8 +2142,8 @@ struct LOCUST_STRUCT
 
 struct DOORPOS_DATA
 {
-	FLOOR_INFO* floor;
-	FLOOR_INFO data;
+	FloorInfo* floor;
+	FloorInfo data;
 	short block;
 };
 

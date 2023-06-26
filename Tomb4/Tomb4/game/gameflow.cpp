@@ -453,7 +453,6 @@ void DoLevel(uchar Name, uchar Audio)
 	ClearFXFogBulbs();
 	InitSpotCamSequences();
 	InitialisePickUpDisplay();
-	//empty func call here
 	SOUND_Stop();
 	bDisableLaraControl = 0;
 

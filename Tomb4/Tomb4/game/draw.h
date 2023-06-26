@@ -15,9 +15,9 @@ void phd_PutPolygons_I(short* ptr, long clip);
 void mInterpolateMatrix();
 void mInterpolateArmMatrix(MATRIX_FLT* mx);
 void S_InsertRoom(short room_number);
-void CalculateObjectLighting(ITEM_INFO* item, short* frame);
+void CalculateObjectLighting(ItemInfo* item, short* frame);
 void CalculateObjectLightingLara();
-void DrawAnimatingItem(ITEM_INFO* item);
+void DrawAnimatingItem(ItemInfo* item);
 void DrawRooms(short CurrentRoom);
 void RenderIt(short CurrentRoom);
 long DrawPhaseGame();
@@ -25,12 +25,12 @@ void GetRoomBounds();
 void SetRoomBounds(short* door, long rn, ROOM_INFO* actualRoom);
 void DrawEffect(short fx_num);
 void PrintObjects(short room_number);
-long GetFrames(ITEM_INFO* item, short* frm[], long* rate);
-short* GetBoundsAccurate(ITEM_INFO* item);
-short* GetBestFrame(ITEM_INFO* item);
+long GetFrames(ItemInfo* item, short* frm[], long* rate);
+short* GetBoundsAccurate(ItemInfo* item);
+short* GetBestFrame(ItemInfo* item);
 void UpdateSkyLightning();
 void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds);
-void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds);
+void calc_animating_item_clip_window(ItemInfo* item, short* bounds);
 
 extern STATIC_INFO static_objects[];
 

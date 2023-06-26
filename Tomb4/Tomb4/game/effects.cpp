@@ -61,7 +61,7 @@ long FogTableColor[28] =
 	RGBONLY(255,174,0)
 };
 
-void(*effect_routines[47])(ITEM_INFO* item) =
+void(*effect_routines[47])(ItemInfo* item) =
 {
 	turn180_effect,
 	floor_shake_effect,
@@ -112,7 +112,7 @@ void(*effect_routines[47])(ITEM_INFO* item) =
 	KillActiveBaddies,
 };
 
-void SetFog(ITEM_INFO* item)
+void SetFog(ItemInfo* item)
 {
 	GlobalFogOff = 0;
 
@@ -135,18 +135,18 @@ void SetFog(ITEM_INFO* item)
 	flipeffect = -1;
 }
 
-void finish_level_effect(ITEM_INFO* item)
+void finish_level_effect(ItemInfo* item)
 {
 	gfLevelComplete = gfCurrentLevel + 1;
 }
 
-void turn180_effect(ITEM_INFO* item)
+void turn180_effect(ItemInfo* item)
 {
 	item->pos.y_rot += 0x8000;
 	item->pos.x_rot = -item->pos.x_rot;
 }
 
-void floor_shake_effect(ITEM_INFO* item)
+void floor_shake_effect(ItemInfo* item)
 {
 	long dx, dy, dz, dist;
 
@@ -161,15 +161,15 @@ void floor_shake_effect(ITEM_INFO* item)
 	}
 }
 
-void SoundFlipEffect(ITEM_INFO* item)
+void SoundFlipEffect(ItemInfo* item)
 {
 	SoundEffect(TriggerTimer, 0, SFX_DEFAULT);
 	flipeffect = -1;
 }
 
-void RubbleFX(ITEM_INFO* item)
+void RubbleFX(ItemInfo* item)
 {
-	ITEM_INFO* eq;
+	ItemInfo* eq;
 
 	eq = find_a_fucking_item(EARTHQUAKE);
 
@@ -185,23 +185,23 @@ void RubbleFX(ITEM_INFO* item)
 	flipeffect = -1;
 }
 
-void PoseidonSFX(ITEM_INFO* item)
+void PoseidonSFX(ItemInfo* item)
 {
 	SoundEffect(SFX_WATER_FLUSHES, 0, SFX_DEFAULT);
 	flipeffect = -1;
 }
 
-void ActivateCamera(ITEM_INFO* item)
+void ActivateCamera(ItemInfo* item)
 {
 	KeyTriggerActive = 2;
 }
 
-void ActivateKey(ITEM_INFO* item)
+void ActivateKey(ItemInfo* item)
 {
 	KeyTriggerActive = 1;
 }
 
-void SwapCrowbar(ITEM_INFO* item)
+void SwapCrowbar(ItemInfo* item)
 {
 	short* tmp;
 
@@ -213,14 +213,14 @@ void SwapCrowbar(ITEM_INFO* item)
 		lara.mesh_ptrs[LM_RHAND] = tmp;
 }
 
-void ExplosionFX(ITEM_INFO* item)
+void ExplosionFX(ItemInfo* item)
 {
 	SoundEffect(SFX_EXPLOSION1, 0, SFX_DEFAULT);
 	camera.bounce = -75;
 	flipeffect = -1;
 }
 
-void LaraLocation(ITEM_INFO* item)
+void LaraLocation(ItemInfo* item)
 {
 	lara.location = TriggerTimer;
 
@@ -230,16 +230,16 @@ void LaraLocation(ITEM_INFO* item)
 	flipeffect = -1;
 }
 
-void LaraLocationPad(ITEM_INFO* item)
+void LaraLocationPad(ItemInfo* item)
 {
 	flipeffect = -1;
 	lara.locationPad = TriggerTimer;
 	lara.location = TriggerTimer;
 }
 
-void GhostTrap(ITEM_INFO* item)
+void GhostTrap(ItemInfo* item)
 {
-	ITEM_INFO* wraith;
+	ItemInfo* wraith;
 	short nex;
 
 	nex = next_item_active;
@@ -262,7 +262,7 @@ void GhostTrap(ITEM_INFO* item)
 	flipeffect = -1;
 }
 
-void KillActiveBaddies(ITEM_INFO* item)
+void KillActiveBaddies(ItemInfo* item)
 {
 	for (short item_num = next_item_active; item_num != NO_ITEM;)
 	{
@@ -304,12 +304,12 @@ void KillActiveBaddies(bool removeAll)
 	flipeffect = -1;
 }
 
-void lara_hands_free(ITEM_INFO* item)
+void lara_hands_free(ItemInfo* item)
 {
 	lara.gun_status = LG_NO_ARMS;
 }
 
-void draw_right_gun(ITEM_INFO* item)
+void draw_right_gun(ItemInfo* item)
 {
 	short* tmp;
 
@@ -322,7 +322,7 @@ void draw_right_gun(ITEM_INFO* item)
 	meshes[objects[PISTOLS_ANIM].mesh_index + LM_RHAND * 2] = tmp;
 }
 
-void draw_left_gun(ITEM_INFO* item)
+void draw_left_gun(ItemInfo* item)
 {
 	short* tmp;
 
@@ -335,17 +335,17 @@ void draw_left_gun(ITEM_INFO* item)
 	meshes[objects[PISTOLS_ANIM].mesh_index + LM_LHAND * 2] = tmp;
 }
 
-void shoot_right_gun(ITEM_INFO* item)
+void shoot_right_gun(ItemInfo* item)
 {
 	lara.right_arm.flash_gun = 3;
 }
 
-void shoot_left_gun(ITEM_INFO* item)
+void shoot_left_gun(ItemInfo* item)
 {
 	lara.left_arm.flash_gun = 3;
 }
 
-void swap_meshes_with_meshswap1(ITEM_INFO* item)
+void swap_meshes_with_meshswap1(ItemInfo* item)
 {
 	OBJECT_INFO* obj;
 	short* tmp;
@@ -360,7 +360,7 @@ void swap_meshes_with_meshswap1(ITEM_INFO* item)
 	}
 }
 
-void swap_meshes_with_meshswap2(ITEM_INFO* item)
+void swap_meshes_with_meshswap2(ItemInfo* item)
 {
 	OBJECT_INFO* obj;
 	short* tmp;
@@ -375,7 +375,7 @@ void swap_meshes_with_meshswap2(ITEM_INFO* item)
 	}
 }
 
-void swap_meshes_with_meshswap3(ITEM_INFO* item)
+void swap_meshes_with_meshswap3(ItemInfo* item)
 {
 	OBJECT_INFO* obj;
 	short* tmp;
@@ -394,43 +394,43 @@ void swap_meshes_with_meshswap3(ITEM_INFO* item)
 	}
 }
 
-void invisibility_on(ITEM_INFO* item)
+void invisibility_on(ItemInfo* item)
 {
 	item->status = ITEM_INVISIBLE;
 }
 
-void invisibility_off(ITEM_INFO* item)
+void invisibility_off(ItemInfo* item)
 {
 	item->status = ITEM_ACTIVE;
 }
 
-void reset_hair(ITEM_INFO* item)
+void reset_hair(ItemInfo* item)
 {
 	InitialiseHair();
 }
 
-void ClearScarabsPatch(ITEM_INFO* item)
+void ClearScarabsPatch(ItemInfo* item)
 {
 	ClearScarabs();
 }
 
-void MeshSwapToPour(ITEM_INFO* item)
+void MeshSwapToPour(ItemInfo* item)
 {
 	lara.mesh_ptrs[LM_LHAND] = meshes[objects[item->item_flags[2]].mesh_index + LM_LHAND * 2];
 }
 
-void MeshSwapFromPour(ITEM_INFO* item)
+void MeshSwapFromPour(ItemInfo* item)
 {
 	lara.mesh_ptrs[LM_LHAND] = meshes[objects[LARA_SKIN].mesh_index + LM_LHAND * 2];
 }
 
-void void_effect(ITEM_INFO* item)
+void void_effect(ItemInfo* item)
 {
 }
 
 void WaterFall(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long dx, dy, dz;
 
 	item = &items[item_number];
@@ -453,7 +453,7 @@ void WaterFall(short item_number)
 	}
 }
 
-void WadeSplash(ITEM_INFO* item, long water, long depth)
+void WadeSplash(ItemInfo* item, long water, long depth)
 {
 	short* bounds;
 	short room_number;
@@ -497,7 +497,7 @@ void WadeSplash(ITEM_INFO* item, long water, long depth)
 	}
 }
 
-void Splash(ITEM_INFO* item)
+void Splash(ItemInfo* item)
 {
 	short room_number;
 

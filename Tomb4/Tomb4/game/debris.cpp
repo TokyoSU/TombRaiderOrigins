@@ -20,7 +20,7 @@ static long DebrisMeshFlags;
 void UpdateDebris()
 {
 	DEBRIS_STRUCT* dptr;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long height, ceiling;
 
 	for (int i = 0; i < 256; i++)

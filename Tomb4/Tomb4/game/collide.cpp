@@ -23,7 +23,7 @@ static short StarGateBounds[24] =
 
 short GlobalCollisionBounds[6];
 
-void ShiftItem(ITEM_INFO* item, COLL_INFO* coll)
+void ShiftItem(ItemInfo* item, COLL_INFO* coll)
 {
 	item->pos.x_pos += coll->shift.x;
 	item->pos.y_pos += coll->shift.y;
@@ -33,11 +33,11 @@ void ShiftItem(ITEM_INFO* item, COLL_INFO* coll)
 	coll->shift.x = 0;
 }
 
-long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO** StoredItems, MESH_INFO** StoredStatics, long StoreLara)
+long GetCollidedObjects(ItemInfo* item, long rad, long noInvisible, ItemInfo** StoredItems, MESH_INFO** StoredStatics, long StoreLara)
 {
 	MESH_INFO* mesh;
 	ROOM_INFO* r;
-	ITEM_INFO* item2;
+	ItemInfo* item2;
 	short* doors;
 	short* bounds;
 	long j, sy, cy, dx, dy, dz, num;
@@ -213,9 +213,9 @@ long GetCollidedObjects(ITEM_INFO* item, long rad, long noInvisible, ITEM_INFO**
 	return items_count | statics_count;
 }
 
-void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void GenericDeadlyBoundingBoxCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long dx, dy, dz;
 
 	item = &items[item_number];
@@ -246,9 +246,9 @@ void GenericDeadlyBoundingBoxCollision(short item_number, ITEM_INFO* l, COLL_INF
 	}
 }
 
-void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void GenericSphereBoxCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	SPHERE* sptr;
 	long TouchBits, DeadlyBits, dx, dy, dz;
 	short y_rot;
@@ -316,9 +316,9 @@ void GenericSphereBoxCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void CreatureCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void CreatureCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* bounds;
 	long x, z, rx, rz, c, s;
 
@@ -371,7 +371,7 @@ long FindGridShift(long src, long dst)
 		return -1 - src;
 }
 
-short GetTiltType(FLOOR_INFO* floor, long x, long y, long z)
+short GetTiltType(FloorInfo* floor, long x, long y, long z)
 {
 	ROOM_INFO* r;
 	short* data;
@@ -537,9 +537,9 @@ long CollideStaticObjects(COLL_INFO* coll, long x, long y, long z, short room_nu
 	return 0;
 }
 
-void UpdateLaraRoom(ITEM_INFO* item, long height)
+void UpdateLaraRoom(ItemInfo* item, long height)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long x, y, z;
 	short room_number;
 
@@ -554,10 +554,10 @@ void UpdateLaraRoom(ITEM_INFO* item, long height)
 		ItemNewRoom(lara.item_number, room_number);
 }
 
-void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
+void LaraBaddieCollision(ItemInfo* l, COLL_INFO* coll)
 {
 	ROOM_INFO* r;
-	ITEM_INFO* item;
+	ItemInfo* item;
 	MESH_INFO* mesh;
 	PHD_3DPOS pos;
 	short* door;
@@ -655,9 +655,9 @@ void LaraBaddieCollision(ITEM_INFO* l, COLL_INFO* coll)
 		lara.hit_frame = 0;
 }
 
-void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void ObjectCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -665,9 +665,9 @@ void ObjectCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ItemPushLara(item, l, coll, 0, 1);
 }
 
-void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void ObjectCollisionNoBigPush(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -675,9 +675,9 @@ void ObjectCollisionNoBigPush(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ItemPushLara(item, l, coll, 0, 0);
 }
 
-void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void TrapCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -692,7 +692,7 @@ void TrapCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	ObjectCollision(item_number, l, coll);
 }
 
-long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, long BigPush)
+long ItemPushLara(ItemInfo* item, ItemInfo* l, COLL_INFO* coll, long spaz, long BigPush)
 {
 	short* bounds;
 	long dx, dz, s, c, x, z;
@@ -791,7 +791,7 @@ long ItemPushLara(ITEM_INFO* item, ITEM_INFO* l, COLL_INFO* coll, long spaz, lon
 	return 1;
 }
 
-long TestBoundsCollide(ITEM_INFO* item, ITEM_INFO* l, long rad)
+long TestBoundsCollide(ItemInfo* item, ItemInfo* l, long rad)
 {
 	short* bounds;
 	short* lbounds;
@@ -834,7 +834,7 @@ long TestBoundsCollideStatic(short* bounds, PHD_3DPOS* pos, long rad)
 	return x >= bounds[0] - rad && x <= rad + bounds[1] && z >= bounds[4] - rad && z <= rad + bounds[5];
 }
 
-long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* coll)
+long ItemPushLaraStatic(ItemInfo* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* coll)
 {
 	long dx, dz, s, c, x, z;
 	long xmin, xmax, zmin, zmax, left, top, right, bottom;
@@ -900,7 +900,7 @@ long ItemPushLaraStatic(ITEM_INFO* l, short* bounds, PHD_3DPOS* pos, COLL_INFO* 
 	return 1;
 }
 
-long TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l)
+long TestLaraPosition(short* bounds, ItemInfo* item, ItemInfo* l)
 {
 	PHD_VECTOR pos;
 	long x, y, z;
@@ -928,7 +928,7 @@ long TestLaraPosition(short* bounds, ITEM_INFO* item, ITEM_INFO* l)
 	return x >= bounds[0] && x <= bounds[1] && y >= bounds[2] && y <= bounds[3] && z >= bounds[4] && z <= bounds[5];
 }
 
-void AlignLaraPosition(PHD_VECTOR* pos, ITEM_INFO* item, ITEM_INFO* l)
+void AlignLaraPosition(PHD_VECTOR* pos, ItemInfo* item, ItemInfo* l)
 {
 	long x, y, z;
 
@@ -1043,7 +1043,7 @@ long Move3DPosTo3DPos(PHD_3DPOS* pos, PHD_3DPOS* dest, long speed, short rotatio
 	return pos->x_pos == dest->x_pos && pos->y_pos == dest->y_pos && pos->z_pos == dest->z_pos && pos->x_rot == dest->x_rot && pos->y_rot == dest->y_rot && pos->z_rot == dest->z_rot;
 }
 
-long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l)
+long MoveLaraPosition(PHD_VECTOR* v, ItemInfo* item, ItemInfo* l)
 {
 	PHD_3DPOS pos;
 	long height;
@@ -1082,7 +1082,7 @@ long MoveLaraPosition(PHD_VECTOR* v, ITEM_INFO* item, ITEM_INFO* l)
 	return Move3DPosTo3DPos(&l->pos, &pos, 12, 364);
 }
 
-long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad)
+long TestBoundsCollide2(ItemInfo* item, ItemInfo* l, long rad)
 {
 	short* bounds;
 	long s, c, dx, dz, x, z;
@@ -1102,9 +1102,9 @@ long TestBoundsCollide2(ITEM_INFO* item, ITEM_INFO* l, long rad)
 	return x >= GlobalCollisionBounds[0] - rad && x <= rad + GlobalCollisionBounds[1] && z >= GlobalCollisionBounds[4] - rad && z <= rad + GlobalCollisionBounds[5];
 }
 
-void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void StargateCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	SPHERE* sphere;
 	short* bounds;
 	long touchedBits, hurtfulBits, x, y, z;
@@ -1183,9 +1183,9 @@ void StargateCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void CogCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long x, y, z;
 
 	item = &items[item_number];
@@ -1210,7 +1210,7 @@ void CogCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void GetCollisionInfo(COLL_INFO* coll, long x, long y, long z, short room_number, long hite)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	static long xfront, zfront;
 	long yT, h, c, tx, tz;
 	long fspeed, ang, xright, xleft, zright, zleft, xright2, xleft2, zright2, zleft2;

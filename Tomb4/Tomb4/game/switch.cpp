@@ -50,9 +50,9 @@ uchar Sequences[3];
 uchar SequenceUsed[6];
 uchar SequenceResults[3][3][3];
 
-void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void FullBlockSwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -95,7 +95,7 @@ void FullBlockSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 long SwitchTrigger(short item_number, short timer)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -131,9 +131,9 @@ long SwitchTrigger(short item_number, short timer)
 	return 0;
 }
 
-long GetSwitchTrigger(ITEM_INFO* item, short* ItemNos, long AttatchedToSwitch)
+long GetSwitchTrigger(ItemInfo* item, short* ItemNos, long AttatchedToSwitch)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	short* data;
 	long num;
 
@@ -178,7 +178,7 @@ void TestTriggersAtXYZ(long x, long y, long z, short room_number, short heavy, s
 
 void SwitchControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->flags |= IFL_CODEBITS;
@@ -196,9 +196,9 @@ void SwitchControl(short item_number)
 	AnimateItem(item);
 }
 
-void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void SwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* bounds;
 
 	item = &items[item_number];
@@ -293,9 +293,9 @@ void SwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-void SwitchCollision2(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void SwitchCollision2(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -325,13 +325,13 @@ void SwitchCollision2(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void SwitchType78Collision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void SwitchType78Collision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
 }
 
-void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void UnderwaterSwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long flag;
 
 	item = &items[item_number];
@@ -382,9 +382,9 @@ void UnderwaterSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void PulleyCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short roty;
 
 	item = &items[item_number];
@@ -443,8 +443,8 @@ void PulleyCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void TurnSwitchControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* l;
+	ItemInfo* item;
+	ItemInfo* l;
 
 	item = &items[item_number];
 	l = lara_item;
@@ -511,9 +511,9 @@ void TurnSwitchControl(short item_number)
 	}
 }
 
-void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void TurnSwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long flag;
 	short Triggers[8];
 
@@ -615,9 +615,9 @@ void TurnSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void RailSwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long flag;
 
 	flag = 0;
@@ -690,9 +690,9 @@ void RailSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-void JumpSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void JumpSwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -715,9 +715,9 @@ void JumpSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void CrowbarSwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long flag;
 
 	flag = 0;
@@ -822,7 +822,7 @@ void CrowbarSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void FullBlockSwitchControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -854,7 +854,7 @@ void FullBlockSwitchControl(short item_number)
 
 void CogSwitchControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	AnimateItem(item);
@@ -869,7 +869,7 @@ void CogSwitchControl(short item_number)
 
 		if (lara_item->anim_number == ANIM_COGSWITCHL && lara_item->frame_number == anims[ANIM_COGSWITCHL].frame_base + 10)
 		{
-			item = (ITEM_INFO*)lara.GeneralPtr;
+			item = (ItemInfo*)lara.GeneralPtr;
 			item->item_flags[0] = 40;
 		}
 	}
@@ -886,10 +886,10 @@ void CogSwitchControl(short item_number)
 	}
 }
 
-void CogSwitchCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void CogSwitchCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* door_item;
+	ItemInfo* item;
+	ItemInfo* door_item;
 	DOOR_DATA* door;
 	short* data;
 

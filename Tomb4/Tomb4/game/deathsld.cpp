@@ -17,7 +17,7 @@ static PHD_VECTOR DeathSlidePosition = { 0, 0, 371 };
 
 void InitialiseDeathSlide(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	GAME_VECTOR* old;
 
 	item = &items[item_number];
@@ -29,9 +29,9 @@ void InitialiseDeathSlide(short item_number)
 	old->room_number = item->room_number;
 }
 
-void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void DeathSlideCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	if (input & IN_ACTION && !l->gravity_status && lara.gun_status == LG_NO_ARMS && l->current_anim_state == AS_STOP)
 	{
@@ -59,8 +59,8 @@ void DeathSlideCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void ControlDeathSlide(short item_number)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	GAME_VECTOR* old;
 	long x, y, z, h, c;
 	short room_number;

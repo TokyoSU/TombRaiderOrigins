@@ -10,7 +10,7 @@
 static short LeftIntRightExtTab[4] = { 2048, 256, 512, 1024 };
 static short LeftExtRightIntTab[4] = { 512, 1024, 2048, 256 };
 
-void lara_as_climbstnc(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_climbstnc(ItemInfo* item, COLL_INFO* coll)
 {
 	lara.IsClimbing = 1;
 	coll->enable_spaz = 0;
@@ -41,7 +41,7 @@ void lara_as_climbstnc(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_as_climbleft(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_climbleft(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->enable_baddie_push = 0;
 	coll->enable_spaz = 0;
@@ -52,7 +52,7 @@ void lara_as_climbleft(ITEM_INFO* item, COLL_INFO* coll)
 		item->goal_anim_state = AS_CLIMBSTNC;
 }
 
-void lara_col_climbleft(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_climbleft(ItemInfo* item, COLL_INFO* coll)
 {
 	long shift, res;
 
@@ -64,7 +64,7 @@ void lara_col_climbleft(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_as_climbright(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_climbright(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->enable_baddie_push = 0;
 	coll->enable_spaz = 0;
@@ -75,7 +75,7 @@ void lara_as_climbright(ITEM_INFO* item, COLL_INFO* coll)
 		item->goal_anim_state = AS_CLIMBSTNC;
 }
 
-void lara_col_climbright(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_climbright(ItemInfo* item, COLL_INFO* coll)
 {
 	long shift, res;
 
@@ -87,21 +87,21 @@ void lara_col_climbright(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_as_climbing(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_climbing(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->enable_baddie_push = 0;
 	coll->enable_spaz = 0;
 	camera.target_elevation = 5460;
 }
 
-void lara_as_climbdown(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_climbdown(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->enable_baddie_push = 0;
 	coll->enable_spaz = 0;
 	camera.target_elevation = -8190;
 }
 
-void lara_as_climbend(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_climbend(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->enable_baddie_push = 0;
 	coll->enable_spaz = 0;
@@ -109,7 +109,7 @@ void lara_as_climbend(ITEM_INFO* item, COLL_INFO* coll)
 	camera.target_angle = -8190;
 }
 
-void lara_col_climbstnc(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_climbstnc(ItemInfo* item, COLL_INFO* coll)
 {
 	long result_r, result_l, shift_r, shift_l, ledge_r, ledge_l;
 
@@ -190,7 +190,7 @@ void lara_col_climbstnc(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_col_climbing(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_climbing(ItemInfo* item, COLL_INFO* coll)
 {
 	long frame, yshift, result_r, result_l, shift_r, shift_l, ledge_r, ledge_l;
 
@@ -244,7 +244,7 @@ void lara_col_climbing(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_climbdown(ItemInfo* item, COLL_INFO* coll)
 {
 	long frame, yshift, result_r, result_l, shift_r, shift_l;
 
@@ -302,7 +302,7 @@ void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll)
 
 short GetClimbTrigger(long x, long y, long z, short room_number)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	short* data;
 
 	floor = GetFloor(x, y, z, &room_number);
@@ -329,7 +329,7 @@ short GetClimbTrigger(long x, long y, long z, short room_number)
 
 long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_height, short item_room, long* shift)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long hang, h, c;
 	short room_number;
 
@@ -456,7 +456,7 @@ long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_h
 	return 1;
 }
 
-long LaraTestClimbPos(ITEM_INFO* item, long front, long right, long origin, long height, long* shift)
+long LaraTestClimbPos(ItemInfo* item, long front, long right, long origin, long height, long* shift)
 {
 	long angle, x, z, xfront, zfront;
 
@@ -494,9 +494,9 @@ long LaraTestClimbPos(ITEM_INFO* item, long front, long right, long origin, long
 	return LaraTestClimb(x, origin + item->pos.y_pos, z, xfront, zfront, height, item->room_number, shift);
 }
 
-long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, long* ledge)
+long LaraTestClimbUpPos(ItemInfo* item, long front, long right, long* shift, long* ledge)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long angle, x, y, z, xfront, zfront, h, c;
 	short room_number;
 
@@ -585,9 +585,9 @@ long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, lo
 	return 0;
 }
 
-long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll)
+long LaraCheckForLetGo(ItemInfo* item, COLL_INFO* coll)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	short room_number;
 
 	item->fallspeed = 0;
@@ -617,7 +617,7 @@ long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll)
 	return 0;
 }
 
-long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
+long LaraClimbLeftCornerTest(ItemInfo* item, COLL_INFO* coll)
 {
 	long flag, oldX, oldZ, x, z, shift;
 	short oldY, angle;
@@ -714,7 +714,7 @@ long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	return flag;
 }
 
-long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
+long LaraClimbRightCornerTest(ItemInfo* item, COLL_INFO* coll)
 {
 	long flag, oldX, oldZ, x, z, shift;
 	short oldY, angle;
@@ -809,7 +809,7 @@ long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll)
 	return flag;
 }
 
-void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long shift)
+void LaraDoClimbLeftRight(ItemInfo* item, COLL_INFO* coll, long result, long shift)
 {
 	long flag;
 

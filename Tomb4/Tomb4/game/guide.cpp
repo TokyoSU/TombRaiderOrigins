@@ -15,12 +15,12 @@
 #include "lara.h"
 #include "control.h"
 
-static BITE_INFO guide_hit = { 0, 20, 200, 18 };
-static BITE_INFO guide_lighter = { 30, 80, 50, 15 };
+static BiteInfo guide_hit = { 0, 20, 200, 18 };
+static BiteInfo guide_lighter = { 30, 80, 50, 15 };
 
 void InitialiseGuide(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -40,13 +40,13 @@ void InitialiseGuide(short item_number)
 
 void GuideControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* target;
-	ITEM_INFO* candidate;
-	ITEM_INFO* enemy;
-	CREATURE_INFO* guide;
+	ItemInfo* item;
+	ItemInfo* target;
+	ItemInfo* candidate;
+	ItemInfo* enemy;
+	CreatureInfo* guide;
 	PHD_VECTOR pos;
-	AI_INFO info;
+	AIInfo info;
 	long rnd, r, g, b, x, y, z, iAhead, iDistance, dist, bestdist;
 	short got_torch, tilt, head, torso_x, torso_y, iAngle, xAngle, angle, dy, candidate_num, frame;
 
@@ -54,7 +54,7 @@ void GuideControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	guide = (CREATURE_INFO*)item->data;
+	guide = (CreatureInfo*)item->data;
 	got_torch = 0;		//JUST grabbed the torch
 	tilt = 0;
 	head = 0;

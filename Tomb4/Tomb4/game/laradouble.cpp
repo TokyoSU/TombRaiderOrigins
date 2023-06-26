@@ -15,7 +15,7 @@ void LaraDoubleControl(short item_number)
 	if (!CreatureActive(item_number))
 		return;
 
-	ITEM_INFO* item = &items[item_number];
+	ItemInfo* item = &items[item_number];
 	if (item->hit_status)
 	{
 		lara_item->hit_points += item->hit_points - LARA_HITPOINTS;

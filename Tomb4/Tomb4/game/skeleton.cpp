@@ -17,12 +17,12 @@
 #include "lara.h"
 #include "savegame.h"
 
-static BITE_INFO skelly_hit = { 180, 0, 0, 16 };
+static BiteInfo skelly_hit = { 180, 0, 0, 16 };
 
-void TriggerRiseEffect(ITEM_INFO* item)
+void TriggerRiseEffect(ItemInfo* item)
 {
 	FX_INFO* fx;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	SPARKS* sptr;
 	short fx_number, room_number;
 
@@ -86,7 +86,7 @@ void TriggerRiseEffect(ITEM_INFO* item)
 
 void InitialiseSkeleton(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -122,14 +122,14 @@ void InitialiseSkeleton(short item_number)
 
 void SkeletonControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
-	CREATURE_INFO* skelly;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	ItemInfo* enemy;
+	CreatureInfo* skelly;
+	FloorInfo* floor;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
-	AI_INFO info;
-	AI_INFO larainfo;
+	AIInfo info;
+	AIInfo larainfo;
 	PHD_VECTOR pos;
 	long x, y, z, Xoffset, Zoffset, nearheight, midheight, farheight, jump_ahead, long_jump_ahead;
 	long dx, dz, jump_left, jump_right, h1, h2, h;
@@ -140,7 +140,7 @@ void SkeletonControl(short item_number)
 
 	angle = 0;
 	item = &items[item_number];
-	skelly = (CREATURE_INFO*)item->data;
+	skelly = (CreatureInfo*)item->data;
 
 	Xoffset = 870 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	Zoffset = 870 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;

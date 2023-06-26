@@ -28,7 +28,7 @@ long ExplodeFX(FX_INFO* fx, long NoXZVel, short Num)
 void ControlBodyPart(short fx_number)
 {
 	FX_INFO* fx;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long height, ceiling, ox, oy, oz;
 	short room_number;
 

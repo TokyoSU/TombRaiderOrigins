@@ -169,7 +169,7 @@ void TriggerHammerSmoke(long x, long y, long z, long num)
 
 void DoDemigodEffects(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_3DPOS pos;
 	PHD_VECTOR pos1;
 	PHD_VECTOR pos2;
@@ -231,8 +231,8 @@ void DoDemigodEffects(short item_number)
 
 void InitialiseDemigod(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -252,12 +252,12 @@ void InitialiseDemigod(short item_number)
 
 void DemigodControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	CREATURE_INFO* god;
+	ItemInfo* item;
+	ItemInfo* item2;
+	CreatureInfo* god;
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
-	AI_INFO info;
+	FloorInfo* floor;
+	AIInfo info;
 	PHD_VECTOR pos;
 	short* zone;
 	long dx, dz, h;
@@ -280,7 +280,7 @@ void DemigodControl(short item_number)
 	if (!CreatureActive(item_number))
 		return;
 
-	god = (CREATURE_INFO*)item->data;
+	god = (CreatureInfo*)item->data;
 	objnum = item->object_number;
 	angle = 0;
 	head = 0;

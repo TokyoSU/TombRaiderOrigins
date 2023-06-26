@@ -20,7 +20,7 @@
 #include "tomb4fx.h"
 
 static short FireBounds[12] = { 0, 0, 0, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
-static ITEM_INFO* TorchItem = 0;
+static ItemInfo* TorchItem = 0;
 
 void TriggerTorchFlame(short item_number, long node)
 {
@@ -65,9 +65,9 @@ void TriggerTorchFlame(short item_number, long node)
 	SoundEffect(SFX_LOOP_FOR_SMALL_FIRES, &items[item_number].pos, SFX_DEFAULT);
 }
 
-void FireCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void FireCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short rot;
 
 	item = &items[item_number];
@@ -276,9 +276,9 @@ void GetFlameTorch()
 
 void FlameTorchControl(short item_number)
 {
-	ITEM_INFO** itemlist;
+	ItemInfo** itemlist;
 	MESH_INFO** meshlist;
-	ITEM_INFO* item;
+	ItemInfo* item;
 	STATIC_INFO* sinfo;
 	PHD_3DPOS pos;
 	long x, y, z, xv, yv, zv;
@@ -315,7 +315,7 @@ void FlameTorchControl(short item_number)
 	yv = item->fallspeed;
 	item->pos.y_pos += yv;
 	DoProperDetection(item_number, x, y, z, xv, yv, zv);
-	itemlist = (ITEM_INFO**)&tsv_buffer[0];
+	itemlist = (ItemInfo**)&tsv_buffer[0];
 	meshlist = (MESH_INFO**)&tsv_buffer[1024];
 
 	if (GetCollidedObjects(item, 0, 1, itemlist, meshlist, 0))

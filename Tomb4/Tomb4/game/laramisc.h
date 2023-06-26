@@ -2,9 +2,9 @@
 
 void LaraCheatyBits();
 void InitialiseLaraLoad(short item_number);
-void InitialiseLaraAnims(ITEM_INFO* item);
+void InitialiseLaraAnims(ItemInfo* item);
 void LaraInitialiseMeshes();
-void AnimateLara(ITEM_INFO* item);
+void AnimateLara(ItemInfo* item);
 void LaraControl(short item_number);
 
 extern COLL_INFO mycoll;

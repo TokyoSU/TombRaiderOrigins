@@ -18,11 +18,11 @@
 
 static short DragSASBounds[12] = { -256, 256, -100, 100, -512, -460, -1820, 1820, -5460, 5460, 0, 0 };
 static PHD_VECTOR DragSASPos = { 0, 0, -460 };
-static BITE_INFO sas_fire = { 0, 300, 64, 7 };
+static BiteInfo sas_fire = { 0, 300, 64, 7 };
 
 void InitialiseInjuredSas(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -44,7 +44,7 @@ void InitialiseInjuredSas(short item_number)
 
 void InjuredSasControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -61,9 +61,9 @@ void InjuredSasControl(short item_number)
 	AnimateItem(item);
 }
 
-void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void DragSASCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long x, z;
 
 	item = &items[item_number];
@@ -111,10 +111,10 @@ void DragSASCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot)
+static void SasFireGrenade(ItemInfo* sas, short xrot, short yrot)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	PHD_VECTOR pos;
 	PHD_VECTOR oPos;
 	long h;
@@ -178,7 +178,7 @@ static void SasFireGrenade(ITEM_INFO* sas, short xrot, short yrot)
 
 void InitialiseSas(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -190,9 +190,9 @@ void InitialiseSas(short item_number)
 
 void SasControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* sas;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* sas;
+	AIInfo info;
 	PHD_VECTOR pos;
 	long iDistance, dx, dz;
 	short angle, tilt, head, torso_x, torso_y, iAngle, xrot, yrot;
@@ -201,7 +201,7 @@ void SasControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	sas = (CREATURE_INFO*)item->data;
+	sas = (CreatureInfo*)item->data;
 	angle = 0;
 	tilt = 0;
 	head = 0;

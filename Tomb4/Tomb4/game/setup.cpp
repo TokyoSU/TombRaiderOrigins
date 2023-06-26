@@ -70,7 +70,7 @@
 
 ObjectRegisterFactory factory;
 
-static void DrawDummyItem(ITEM_INFO* item)
+static void DrawDummyItem(ItemInfo* item)
 {
 }
 
@@ -666,7 +666,7 @@ void InitialiseObjects()
 
 void GetAIPickups()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	AIOBJECT* aiObj;
 	short aiObjNum;
 

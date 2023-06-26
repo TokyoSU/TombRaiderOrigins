@@ -95,7 +95,7 @@ static uchar SkinUseMatrix[NUM_LARA_MESHES][2] =
 
 static long in_joints;
 
-void DrawLara(ITEM_INFO* item, bool isMirror)
+void DrawLara(ItemInfo* item, bool isMirror)
 {
 	OBJECT_INFO* obj;
 	FVECTOR v0;

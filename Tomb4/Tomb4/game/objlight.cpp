@@ -12,7 +12,7 @@
 
 void ControlPulseLight(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long sin, r, g, b;
 
 	item = &items[item_number];
@@ -61,7 +61,7 @@ void ControlPulseLight(short item_number)
 
 void ControlElectricalLight(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long shade, r, g, b;
 
 	item = &items[item_number];
@@ -112,7 +112,7 @@ void ControlElectricalLight(short item_number)
 
 void ControlBlinker(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 
 	item = &items[item_number];

@@ -10,10 +10,10 @@
 #include "3dmath.h"
 #include "lara.h"
 
-ITEM_INFO* TriggerClockworkBeetle(long flag)
+ItemInfo* TriggerClockworkBeetle(long flag)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	long dx, dy, dz;
 	short item_number;
 
@@ -82,9 +82,9 @@ ITEM_INFO* TriggerClockworkBeetle(long flag)
 
 void ControlClockworkBeetle(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	ItemInfo* item2;
+	FloorInfo* floor;
 	PHD_VECTOR pos;
 	long bounce, h, x, z, dx, dy, dz;
 	short frame, base, room_number, rotY, angle;

@@ -7,16 +7,16 @@
 #include "lara.h"
 #include "control.h"
 
-CREATURE_INFO* baddie_slots;
+CreatureInfo* baddie_slots;
 
 static long slots_used = 0;
 
 void InitialiseLOTarray(long allocmem)
 {
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 
 	if (allocmem)
-		baddie_slots = (CREATURE_INFO*)game_malloc(5 * sizeof(CREATURE_INFO));
+		baddie_slots = (CreatureInfo*)game_malloc(5 * sizeof(CreatureInfo));
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -32,11 +32,11 @@ void InitialiseLOTarray(long allocmem)
 
 void DisableBaddieAI(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
+	ItemInfo* item;
+	CreatureInfo* creature;
 
 	item = &items[item_number];
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 	item->data = 0;
 
 	if (creature)
@@ -66,16 +66,16 @@ void ClearLOT(LOT_INFO* lot)
 	}
 }
 
-void CreateZone(ITEM_INFO* item)
+void CreateZone(ItemInfo* item)
 {
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 	ROOM_INFO* r;
 	BOX_NODE* node;
 	short* zone;
 	short* flip;
 	short zone_number, flip_number;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 	r = &room[item->room_number];
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> 10) + r->x_size * ((item->pos.x_pos - r->x) >> 10)].box;
 
@@ -117,8 +117,8 @@ void CreateZone(ITEM_INFO* item)
 
 void InitialiseSlot(short item_number, long slot)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
+	ItemInfo* item;
+	CreatureInfo* creature;
 
 	creature = &baddie_slots[slot];
 	item = &items[item_number];
@@ -223,8 +223,8 @@ void InitialiseSlot(short item_number, long slot)
 
 long EnableBaddieAI(short item_number, long Always)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
+	ItemInfo* item;
+	CreatureInfo* creature;
 	long x, y, z, slot, worstslot, dist, worstdist;
 
 	item = &items[item_number];

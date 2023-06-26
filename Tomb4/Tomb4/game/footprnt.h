@@ -1,6 +1,6 @@
 #pragma once
 
-void AddFootPrint(ITEM_INFO* item);
+void AddFootPrint(ItemInfo* item);
 void S_DrawFootPrints();
 
 extern FOOTPRINT FootPrint[];

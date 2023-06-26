@@ -12,11 +12,11 @@
 #include "effects.h"
 #include "lara.h"
 
-static BITE_INFO baboon_hit = { 10, 10, 11, 4 };
+static BiteInfo baboon_hit = { 10, 10, 11, 4 };
 
 void InitialiseBaboon(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -33,10 +33,10 @@ void InitialiseBaboon(short item_number)
 
 void BaboonControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	CREATURE_INFO* baboon;
-	AI_INFO info;
+	ItemInfo* item;
+	ItemInfo* item2;
+	CreatureInfo* baboon;
+	AIInfo info;
 	long distance, dx, dz;
 	short tilt, head, angle, room_number;
 
@@ -46,7 +46,7 @@ void BaboonControl(short item_number)
 		angle = 0;
 		head = 0;
 		item = &items[item_number];
-		baboon = (CREATURE_INFO*)item->data;
+		baboon = (CreatureInfo*)item->data;
 
 		if (!item->item_flags[2])
 			FindCrowbarSwitch(item, 1);
@@ -391,9 +391,9 @@ void BaboonControl(short item_number)
 	}
 }
 
-void FindCrowbarSwitch(ITEM_INFO* item, short switch_index)
+void FindCrowbarSwitch(ItemInfo* item, short switch_index)
 {
-	ITEM_INFO* item2;
+	ItemInfo* item2;
 	short item_num;
 
 	for (item_num = room[item->room_number].item_number; item_num != NO_ITEM; item_num = item2->next_item)
@@ -409,7 +409,7 @@ void FindCrowbarSwitch(ITEM_INFO* item, short switch_index)
 
 void ReTriggerBaboon(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	ExplodeBaboon(item);
@@ -441,7 +441,7 @@ void ReTriggerBaboon(short item_number)
 	}
 }
 
-void ExplodeBaboon(ITEM_INFO* item)
+void ExplodeBaboon(ItemInfo* item)
 {
 	item->pos.y_pos -= 128;
 	TriggerShockwave((PHD_VECTOR*)&item->pos, 0x2000280, -48, 0x28802000, 0);

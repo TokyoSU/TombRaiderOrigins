@@ -15,12 +15,12 @@
 #include "lara.h"
 #include "gameflow.h"
 
-static BITE_INFO raghead_fire = { 0, -16, 200, 11 };
-static BITE_INFO raghead_blade = { 0, 0, 0, 15 };
+static BiteInfo raghead_fire = { 0, -16, 200, 11 };
+static BiteInfo raghead_blade = { 0, 0, 0, 15 };
 
 void InitialiseRaghead(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short obj_num, flag;
 
 	item = &items[item_number];
@@ -101,14 +101,14 @@ void InitialiseRaghead(short item_number)
 
 void RagheadControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* target;
-	ITEM_INFO* enemy;
-	CREATURE_INFO* raghead;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	ItemInfo* target;
+	ItemInfo* enemy;
+	CreatureInfo* raghead;
+	FloorInfo* floor;
 	PHD_VECTOR pos;
-	AI_INFO info;
-	AI_INFO larainfo;
+	AIInfo info;
+	AIInfo larainfo;
 	long x, y, z, Xoffset, Zoffset, nearheight, midheight, farheight, jump_ahead, long_jump_ahead;
 	long dx, dz, h1, h2, can_jump, can_roll, h, c;
 	short obj_num, angle, tilt, head, torso_x, torso_y, room_number, target_num, state;
@@ -117,7 +117,7 @@ void RagheadControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	raghead = (CREATURE_INFO*)item->data;
+	raghead = (CreatureInfo*)item->data;
 
 	if (objects[SUPER_RAGHEAD].loaded)
 		obj_num = SUPER_RAGHEAD;

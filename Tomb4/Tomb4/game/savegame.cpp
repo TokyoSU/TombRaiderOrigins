@@ -74,7 +74,7 @@ void sgInitialiseHub(long dont_save_lara)
 
 void SaveLaraData()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	for (int i = 0; i < 15; i++)
 		lara.mesh_ptrs[i] = (short*)((long)lara.mesh_ptrs[i] - (long)mesh_base);
@@ -134,7 +134,7 @@ void SaveHubData(long index)
 
 void RestoreLaraData(long FullSave)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	if (!FullSave)
 		savegame.Lara.item_number = lara.item_number;
@@ -191,8 +191,8 @@ void RestoreLaraData(long FullSave)
 void sgRestoreLevel()
 {
 	AIOBJECT* lsp;
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 
 	if (OpenSaveGame(gfCurrentLevel, 0) >= 0)
 		RestoreLevelData(0);
@@ -352,11 +352,11 @@ long OpenSaveGame(uchar current_level, long saving)
 
 void SaveLevelData(long FullSave)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* r;
 	OBJECT_INFO* obj;
 	MESH_INFO* mesh;
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 	ulong flags;
 	long k, flare_age;
 	ushort packed;
@@ -594,11 +594,11 @@ void SaveLevelData(long FullSave)
 
 					if (flags & 0x80000000)
 					{
-						creature = (CREATURE_INFO*)item->data;
+						creature = (CreatureInfo*)item->data;
 
-						creature->enemy = (ITEM_INFO*)((long)creature->enemy - (long)malloc_buffer);
+						creature->enemy = (ItemInfo*)((long)creature->enemy - (long)malloc_buffer);
 						WriteSG(item->data, 22);
-						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
+						creature->enemy = (ItemInfo*)((long)creature->enemy + (long)malloc_buffer);
 
 						WriteSG(&creature->ai_target.object_number, sizeof(short));
 						WriteSG(&creature->ai_target.room_number, sizeof(short));
@@ -789,9 +789,9 @@ void SaveLevelData(long FullSave)
 void RestoreLevelData(long FullSave)
 {
 	ROOM_INFO* r;
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	CreatureInfo* creature;
+	FloorInfo* floor;
 	OBJECT_INFO* obj;
 	MESH_INFO* mesh;
 	ulong flags;
@@ -1000,12 +1000,12 @@ void RestoreLevelData(long FullSave)
 				if (flags & 0x80000000)
 				{
 					EnableBaddieAI(i, 1);
-					creature = (CREATURE_INFO*)item->data;
+					creature = (CreatureInfo*)item->data;
 
 					if (creature)
 					{
 						ReadSG(creature, 22);
-						creature->enemy = (ITEM_INFO*)((long)creature->enemy + (long)malloc_buffer);
+						creature->enemy = (ItemInfo*)((long)creature->enemy + (long)malloc_buffer);
 
 						ReadSG(&creature->ai_target.object_number, sizeof(short));
 						ReadSG(&creature->ai_target.room_number, sizeof(short));

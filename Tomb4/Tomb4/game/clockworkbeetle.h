@@ -1,4 +1,4 @@
 #pragma once
 
-ITEM_INFO* TriggerClockworkBeetle(long flag);
+ItemInfo* TriggerClockworkBeetle(long flag);
 void ControlClockworkBeetle(short item_number);

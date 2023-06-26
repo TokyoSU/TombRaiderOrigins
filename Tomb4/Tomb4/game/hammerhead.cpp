@@ -7,11 +7,11 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO hammerhead_bite = { 0, 0, 0, 12 };
+static BiteInfo hammerhead_bite = { 0, 0, 0, 12 };
 
 void InitialiseHammerhead(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -23,16 +23,16 @@ void InitialiseHammerhead(short item_number)
 
 void HammerheadControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* shark;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* shark;
+	AIInfo info;
 	short angle;
 
 	if (!CreatureActive(item_number))
 		return;
 
 	item = &items[item_number];
-	shark = (CREATURE_INFO*)item->data;
+	shark = (CreatureInfo*)item->data;
 
 	if (item->hit_points <= 0)
 	{

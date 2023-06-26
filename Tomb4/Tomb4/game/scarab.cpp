@@ -10,7 +10,7 @@
 #include "effect2.h"
 #include "lara.h"
 
-static BITE_INFO beetle_bite = { 0, 0, 0, 12 };
+static BiteInfo beetle_bite = { 0, 0, 0, 12 };
 
 SCARAB_STRUCT Scarabs[128];
 
@@ -18,7 +18,7 @@ static long next_scarab = 0;
 
 void InitialiseScarab(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -30,9 +30,9 @@ void InitialiseScarab(short item_number)
 
 void ScarabControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* beetle;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* beetle;
+	AIInfo info;
 	short angle;
 
 	if (!CreatureActive(item_number))
@@ -40,7 +40,7 @@ void ScarabControl(short item_number)
 
 	angle = 0;
 	item = &items[item_number];
-	beetle = (CREATURE_INFO*)item->data;
+	beetle = (CreatureInfo*)item->data;
 
 	if (item->hit_points <= 0)
 	{
@@ -215,7 +215,7 @@ void ClearScarabs()
 void TriggerScarab(short item_number)
 {
 	SCARAB_STRUCT* fx;
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short fx_num;
 
 	item = &items[item_number];
@@ -260,7 +260,7 @@ void TriggerScarab(short item_number)
 void UpdateScarabs()
 {
 	SCARAB_STRUCT* fx;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long h, dx, dy, dz, oldx, oldy, oldz;
 	short angle;
 
@@ -365,7 +365,7 @@ void DrawScarabs()
 
 void InitialiseScarabGenerator(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short flag;
 
 	item = &items[item_number];

@@ -117,7 +117,7 @@ static long FadeStep;
 static long FadeCnt;
 static long FadeEnd;
 
-static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
+static void S_PrintCircleShadow(short size, short* box, ItemInfo* item)
 {
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT Tex;
@@ -276,7 +276,7 @@ static void S_PrintCircleShadow(short size, short* box, ITEM_INFO* item)
 	}
 }
 
-static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
+static void S_PrintSpriteShadow(short size, short* box, ItemInfo* item)
 {
 	SPRITESTRUCT* sprite;
 	D3DTLVERTEX* v;
@@ -437,7 +437,7 @@ static void S_PrintSpriteShadow(short size, short* box, ITEM_INFO* item)
 	}
 }
 
-void S_PrintShadow(short size, short* box, ITEM_INFO* item)
+void S_PrintShadow(short size, short* box, ItemInfo* item)
 {
 	D3DTLVERTEX* v;
 	TEXTURESTRUCT Tex;
@@ -1267,7 +1267,7 @@ void DrawFlash()
 	DrawPsxTile(0, phd_winwidth | (phd_winheight << 16), RGBA(r, g, b, 0xFF), 2, 0);
 }
 
-void S_DrawDarts(ITEM_INFO* item)
+void S_DrawDarts(ItemInfo* item)
 {
 	D3DTLVERTEX* v;
 	float fx, fy, fz;
@@ -2452,7 +2452,7 @@ void DrawBinoculars()
 	}
 }
 
-void DrawWraithTrail(ITEM_INFO* item)
+void DrawWraithTrail(ItemInfo* item)
 {
 	D3DTLVERTEX* v;
 	WRAITH_STRUCT* wraith;

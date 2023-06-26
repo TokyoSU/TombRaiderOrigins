@@ -18,12 +18,12 @@
 
 LOCUST_STRUCT Locusts[64];
 
-static BITE_INFO croc_bite = { 0, -100, 500, 9 };
+static BiteInfo croc_bite = { 0, -100, 500, 9 };
 static long next_locust = 0;
 
 void InitialiseCroc(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -46,10 +46,10 @@ void InitialiseCroc(short item_number)
 
 void CrocControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* croc;
-	FLOOR_INFO* floor;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* croc;
+	FloorInfo* floor;
+	AIInfo info;
 	long s, c, x, z, h, h2;
 	short room_number, angle, rot, roll;
 
@@ -57,7 +57,7 @@ void CrocControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	croc = (CREATURE_INFO*)item->data;
+	croc = (CreatureInfo*)item->data;
 	angle = 0;
 	rot = 0;
 	s = (1024 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
@@ -344,7 +344,7 @@ long GetFreeLocust()
 	return NO_ITEM;
 }
 
-void TriggerLocust(ITEM_INFO* item)
+void TriggerLocust(ItemInfo* item)
 {
 	LOCUST_STRUCT* fx;
 	PHD_VECTOR vec;
@@ -394,7 +394,7 @@ void TriggerLocust(ITEM_INFO* item)
 
 void InitialiseLocustEmitter(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -410,7 +410,7 @@ void InitialiseLocustEmitter(short item_number)
 
 void ControlLocustEmitter(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -653,7 +653,7 @@ void TriggerCrocgodMissileFlame(short fx_number, long xv, long yv, long zv)
 
 void InitialiseCrocgod(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -665,9 +665,9 @@ void InitialiseCrocgod(short item_number)
 
 void CrocgodControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* crocgod;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* crocgod;
+	AIInfo info;
 	PHD_3DPOS mPos;
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
@@ -681,7 +681,7 @@ void CrocgodControl(short item_number)
 	torso = 0;
 	neck = 0;
 	item = &items[item_number];
-	crocgod = (CREATURE_INFO*)item->data;
+	crocgod = (CreatureInfo*)item->data;
 
 	if (item->hit_points <= 0)
 		item->hit_points = 0;

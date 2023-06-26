@@ -27,7 +27,7 @@ static short UnderwaterDoorBounds[12] = { -256, 256, -1024, 0, -1024, 0, -14560,
 
 void ShutThatDoor(DOORPOS_DATA* d)
 {
-	CREATURE_INFO* cinfo;
+	CreatureInfo* cinfo;
 
 	if (d->floor)
 	{
@@ -53,7 +53,7 @@ void ShutThatDoor(DOORPOS_DATA* d)
 
 void OpenThatDoor(DOORPOS_DATA* d)
 {
-	CREATURE_INFO* cinfo;
+	CreatureInfo* cinfo;
 
 	if (d->floor)
 	{
@@ -74,7 +74,7 @@ void OpenThatDoor(DOORPOS_DATA* d)
 
 void DoorControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	DOOR_DATA* door;
 	short* bounds;
 
@@ -160,9 +160,9 @@ void DoorControl(short item_number)
 	}
 }
 
-void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
+void DoorCollision(short item_num, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_num];
 
@@ -247,7 +247,7 @@ void DoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 
 void PushPullKickDoorControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	DOOR_DATA* door;
 
 	item = &items[item_number];
@@ -265,9 +265,9 @@ void PushPullKickDoorControl(short item_number)
 	AnimateItem(item);
 }
 
-void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
+void PushPullKickDoorCollision(short item_num, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long pull, goin;
 
 	item = &items[item_num];
@@ -350,9 +350,9 @@ void PushPullKickDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 		DoorCollision(item_num, l, coll);
 }
 
-void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
+void DoubleDoorCollision(short item_num, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_num];
 
@@ -390,9 +390,9 @@ void DoubleDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void UnderwaterDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
+void UnderwaterDoorCollision(short item_num, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_num];
 
@@ -433,7 +433,7 @@ void UnderwaterDoorCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 
 void SequenceDoorControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	DOOR_DATA* door;
 
 	item = &items[item_number];

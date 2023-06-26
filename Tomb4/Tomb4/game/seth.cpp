@@ -14,8 +14,8 @@
 #include "lara_states.h"
 #include "lara.h"
 
-static BITE_INFO left_hand = { 0, 220, 50, 17 };
-static BITE_INFO right_hand = { 0, 220, 50, 13 };
+static BiteInfo left_hand = { 0, 220, 50, 17 };
+static BiteInfo right_hand = { 0, 220, 50, 13 };
 
 void TriggerSethMissileFlame(short fx_number, long xv, long yv, long zv)
 {
@@ -186,7 +186,7 @@ void TriggerSethFlame(short item_number, uchar NodeNumber, short size)
 
 void DoSethEffects(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR r, l;
 	PHD_VECTOR vec;
 	PHD_3DPOS pos;
@@ -384,7 +384,7 @@ void DoSethEffects(short item_number)
 
 void InitialiseSeth(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -396,10 +396,10 @@ void InitialiseSeth(short item_number)
 
 void SethControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* seth;
-	FLOOR_INFO* floor;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* seth;
+	FloorInfo* floor;
+	AIInfo info;
 	long x, y, z, Xoffset, Zoffset, c, h, nearheight, midheight, farheight, can_jump;
 	short angle, room_number, hp;
 
@@ -407,7 +407,7 @@ void SethControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	seth = (CREATURE_INFO*)item->data;
+	seth = (CreatureInfo*)item->data;
 
 	angle = 0;
 	Xoffset = 870 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;

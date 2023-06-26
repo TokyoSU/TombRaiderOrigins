@@ -7,7 +7,7 @@ enum CalcMatrixFlag
 	CM_Mirror = 2
 };
 
-void DrawLara(ITEM_INFO* item, bool isMirror);
+void DrawLara(ItemInfo* item, bool isMirror);
 void GetLaraJointPos(PHD_VECTOR* pos, long node);
 void SetLaraUnderwaterNodes();
 void Rich_CalcLaraMatrices_Normal(short* frame, long* bone, CalcMatrixFlag flag);

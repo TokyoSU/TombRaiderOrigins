@@ -146,8 +146,8 @@ void DrawTrainFloor()
 
 void InitialiseTrainJeep(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 
 	item = &items[item_number];
 	item->item_flags[0] = -80;
@@ -168,8 +168,8 @@ void InitialiseTrainJeep(short item_number)
 
 void TrainJeepControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	short room_number;
 
 	item = &items[item_number];

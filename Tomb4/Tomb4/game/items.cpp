@@ -15,7 +15,7 @@ static short next_item_free;
 
 void InitialiseItemArray(short num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[level_items];
 	next_item_free = (short)level_items;
@@ -33,7 +33,7 @@ void InitialiseItemArray(short num)
 
 void KillItem(short item_num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short linknum;
 
 	if (InItemControlLoop)
@@ -110,9 +110,9 @@ short CreateItem()
 
 void InitialiseItem(short item_num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 
 	item = &items[item_num];
 	item->anim_number = objects[item->object_number].anim_index;
@@ -217,7 +217,7 @@ void RemoveActiveItem(short item_num)
 
 void RemoveDrawnItem(short item_num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short linknum;
 
 	item = &items[item_num];
@@ -240,7 +240,7 @@ void RemoveDrawnItem(short item_num)
 
 void AddActiveItem(short item_num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_num];
 	item->flags |= IFL_TRIGGERED;
@@ -260,7 +260,7 @@ void AddActiveItem(short item_num)
 
 void ItemNewRoom(short item_num, short room_num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* r;
 	short linknum;
 

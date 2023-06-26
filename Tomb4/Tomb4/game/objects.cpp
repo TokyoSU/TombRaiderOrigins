@@ -33,8 +33,8 @@ static PHD_VECTOR PolePosR = { 0, 0, 0 };
 
 void ControlMapper(short item_number)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	SPARKS* sptr;
 	PHD_VECTOR pos;
 	long rg, h;
@@ -96,7 +96,7 @@ void ControlMapper(short item_number)
 
 void ControlLightningConductor(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 	PHD_VECTOR pos2;
 	short r, g, b, room_number;
@@ -192,7 +192,7 @@ void ControlLightningConductor(short item_number)
 	}
 }
 
-void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height)
+void BridgeFlatFloor(ItemInfo* item, long x, long y, long z, long* height)
 {
 	if (item->pos.y_pos >= y)
 	{
@@ -202,13 +202,13 @@ void BridgeFlatFloor(ITEM_INFO* item, long x, long y, long z, long* height)
 	}
 }
 
-void BridgeFlatCeiling(ITEM_INFO* item, long x, long y, long z, long* height)
+void BridgeFlatCeiling(ItemInfo* item, long x, long y, long z, long* height)
 {
 	if (item->pos.y_pos < y)
 		*height = item->pos.y_pos + 256;
 }
 
-long GetOffset(ITEM_INFO* item, long x, long z)
+long GetOffset(ItemInfo* item, long x, long z)
 {
 	if (!item->pos.y_rot)
 		return ~x & 0x3FF;
@@ -220,7 +220,7 @@ long GetOffset(ITEM_INFO* item, long x, long z)
 		return ~z & 0x3FF;
 }
 
-void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height)
+void BridgeTilt1Floor(ItemInfo* item, long x, long y, long z, long* height)
 {
 	long level;
 
@@ -234,7 +234,7 @@ void BridgeTilt1Floor(ITEM_INFO* item, long x, long y, long z, long* height)
 	}
 }
 
-void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height)
+void BridgeTilt1Ceiling(ItemInfo* item, long x, long y, long z, long* height)
 {
 	long level;
 
@@ -244,7 +244,7 @@ void BridgeTilt1Ceiling(ITEM_INFO* item, long x, long y, long z, long* height)
 		*height = level + 256;
 }
 
-void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height)
+void BridgeTilt2Floor(ItemInfo* item, long x, long y, long z, long* height)
 {
 	long level;
 
@@ -258,7 +258,7 @@ void BridgeTilt2Floor(ITEM_INFO* item, long x, long y, long z, long* height)
 	}
 }
 
-void BridgeTilt2Ceiling(ITEM_INFO* item, long x, long y, long z, long* height)
+void BridgeTilt2Ceiling(ItemInfo* item, long x, long y, long z, long* height)
 {
 	long level;
 
@@ -268,10 +268,10 @@ void BridgeTilt2Ceiling(ITEM_INFO* item, long x, long y, long z, long* height)
 		*height = level + 256;
 }
 
-void StatuePlinthCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void StatuePlinthCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	short* bounds;
 	short room_number, y_rot;
 
@@ -399,7 +399,7 @@ void TriggerRopeFlame(PHD_VECTOR* pos)
 
 void ControlBurningRope(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	SPHERE* sphere;
 	PHD_VECTOR pos;
 	long passes;
@@ -496,9 +496,9 @@ void ControlBurningRope(short item_number)
 	DebrisFlags = 0;
 }
 
-void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void BurningRopeCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	SPHERE* sphere;
 	PHD_VECTOR pos;
 	long nSpheres, dx, dy, dz;
@@ -550,7 +550,7 @@ void BurningRopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void ControlWaterfall(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -604,7 +604,7 @@ void AnimateWaterfalls()
 
 void ControlTriggerTriggerer(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* data;
 
 	item = &items[item_number];
@@ -647,9 +647,9 @@ void ControlTriggerTriggerer(short item_number)
 	}
 }
 
-void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
+void PoleCollision(short item_num, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short roty;
 
 	item = &items[item_num];
@@ -722,7 +722,7 @@ void PoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
 
 void ControlAnimatingSlots(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 
 	item = &items[item_number];
@@ -750,7 +750,7 @@ void ControlAnimatingSlots(short item_number)
 
 void SmashObjectControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long speed;
 
 	item = &items[item_number];
@@ -772,7 +772,7 @@ void SmashObjectControl(short item_number)
 
 void SmashObject(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* r;
 	BOX_INFO* box;
 	long sector;
@@ -800,7 +800,7 @@ void SmashObject(short item_number)
 
 void EarthQuake(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long pitch;
 	short earth_item;
 

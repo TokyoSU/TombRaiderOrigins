@@ -17,7 +17,7 @@
 #include "draw.h"
 #include "tomb4fx.h"
 
-void DrawFlareInAir(ITEM_INFO* item)
+void DrawFlareInAir(ItemInfo* item)
 {
 	short* bounds;
 
@@ -145,10 +145,10 @@ void DoFlareInHand(long flare_age)
 
 void CreateFlare(short object, long thrown)
 {
-	ITEM_INFO** itemlist;
+	ItemInfo** itemlist;
 	MESH_INFO** meshlist;
-	ITEM_INFO* flare;
-	FLOOR_INFO* floor;
+	ItemInfo* flare;
+	FloorInfo* floor;
 	PHD_VECTOR pos;
 	long collided;
 	short flare_item, room_number;
@@ -172,7 +172,7 @@ void CreateFlare(short object, long thrown)
 
 		room_number = lara_item->room_number;
 		floor = GetFloor(pos.x, pos.y, pos.z, &room_number);
-		itemlist = (ITEM_INFO**)&tsv_buffer[0];
+		itemlist = (ItemInfo**)&tsv_buffer[0];
 		meshlist = (MESH_INFO**)&tsv_buffer[1024];
 
 		if (GetCollidedObjects(flare, 0, 1, itemlist, meshlist, 0) || pos.y > GetHeight(floor, pos.x, pos.y, pos.z))
@@ -410,7 +410,7 @@ void undraw_flare()
 
 void FlareControl(short item_number)
 {
-	ITEM_INFO* flare;
+	ItemInfo* flare;
 	long x, y, z, xv, yv, zv, flare_age;
 
 	flare = &items[item_number];

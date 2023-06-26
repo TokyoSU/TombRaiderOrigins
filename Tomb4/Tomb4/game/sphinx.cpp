@@ -10,11 +10,11 @@
 #include "effects.h"
 #include "lara.h"
 
-static BITE_INFO sphinx_bite = { 0, 0, 0, 6 };
+static BiteInfo sphinx_bite = { 0, 0, 0, 6 };
 
 void InitialiseSphinx(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -26,12 +26,12 @@ void InitialiseSphinx(short item_number)
 
 void SphinxControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* sphinx;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	CreatureInfo* sphinx;
+	FloorInfo* floor;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
-	AI_INFO info;
+	AIInfo info;
 	long s, c, x, z, h1, h2;
 	short room_number, angle;
 
@@ -39,7 +39,7 @@ void SphinxControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	sphinx = (CREATURE_INFO*)item->data;
+	sphinx = (CreatureInfo*)item->data;
 	s = 614 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	c = 614 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 	x = item->pos.x_pos + s;

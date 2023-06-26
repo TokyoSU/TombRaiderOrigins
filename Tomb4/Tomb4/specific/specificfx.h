@@ -1,7 +1,7 @@
 #pragma once
 
 void DrawTrainStrips();
-void S_PrintShadow(short size, short* box, ITEM_INFO* item);
+void S_PrintShadow(short size, short* box, ItemInfo* item);
 void S_DrawDrawSparks(SPARKS* sptr, long smallest_size, long* xyptr, long* zptr);
 void DrawBikeSpeedo(long ux, long uy, long vel, long maxVel, long turboVel, long size, long unk);
 void Draw2DSprite(long x, long y, long slot, long unused, long unused2);
@@ -10,7 +10,7 @@ void DrawDebris();
 void DoScreenFade();
 void DrawPsxTile(long x_y, long height_width, long color, long u0, long u1);
 void DrawFlash();
-void S_DrawDarts(ITEM_INFO* item);
+void S_DrawDarts(ItemInfo* item);
 void ClipCheckPoint(D3DTLVERTEX* v, float x, float y, float z, short* clip);
 void DrawFlatSky(ulong color, long zpos, long ypos, long drawtype);
 void OutputSky();
@@ -27,7 +27,7 @@ void SetUpLensFlare(long x, long y, long z, GAME_VECTOR* lfobj);
 void InitTarget_2();
 void InitBinoculars();
 void DrawBinoculars();
-void DrawWraithTrail(ITEM_INFO* item);
+void DrawWraithTrail(ItemInfo* item);
 void DrawDrips();
 void DrawBubbles();
 void DrawShockwaves();

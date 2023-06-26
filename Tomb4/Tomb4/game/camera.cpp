@@ -66,7 +66,7 @@ void InitialiseCamera()
 
 void MoveCamera(GAME_VECTOR* ideal, long speed)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	GAME_VECTOR temp1;
 	GAME_VECTOR temp2;
 	long height, ceiling, shake, rndval, wx, wy, wz, dx, dy, dz;
@@ -228,7 +228,7 @@ void MoveCamera(GAME_VECTOR* ideal, long speed)
 
 long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long x, y, z, h, c, cdiff, hdiff, dx, dy, dz, clipped, nc, i;
 	short room_number, room_number2;
 
@@ -313,7 +313,7 @@ long mgLOS(GAME_VECTOR* start, GAME_VECTOR* target, long push)
 
 long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long wx, wy, wz, h, c;
 	short room_number;
 
@@ -400,7 +400,7 @@ long CameraCollisionBounds(GAME_VECTOR* ideal, long push, long yfirst)
 
 void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long brightness)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long x, y, z, sx, sy, sz, dx, dy, dz, falloff, counter, h, c, j;
 	long offs[5];
 	short room_number;
@@ -491,9 +491,9 @@ void LaraTorch(PHD_VECTOR* Soffset, PHD_VECTOR* Eoffset, short yrot, long bright
 	}
 }
 
-void ChaseCamera(ITEM_INFO* item)
+void ChaseCamera(ItemInfo* item)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	GAME_VECTOR ideal;
 	GAME_VECTOR ideals[5];
 	GAME_VECTOR temp[2];
@@ -632,9 +632,9 @@ void ChaseCamera(ITEM_INFO* item)
 	MoveCamera(&ideal, camera.speed);
 }
 
-void CombatCamera(ITEM_INFO* item)
+void CombatCamera(ItemInfo* item)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	GAME_VECTOR ideal;
 	GAME_VECTOR ideals[9];
 	GAME_VECTOR temp[2];
@@ -789,13 +789,13 @@ void CombatCamera(ITEM_INFO* item)
 	MoveCamera(&ideal, camera.speed);
 }
 
-void LookCamera(ITEM_INFO* item)
+void LookCamera(ItemInfo* item)
 {
 	GAME_VECTOR ideal;
 	PHD_VECTOR pos1;
 	PHD_VECTOR pos2;
 	PHD_VECTOR pos3;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long shake, dx, dy, dz, wx, wy, wz, h, c, rndval, lp;
 	short room_number, room_number2, hxrot, txrot, hyrot, tyrot;
 
@@ -1066,9 +1066,9 @@ void FixedCamera()
 	}
 }
 
-void BinocularCamera(ITEM_INFO* item)
+void BinocularCamera(ItemInfo* item)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR pos1;
 	PHD_VECTOR pos3;
 	PHD_VECTOR Soffset;
@@ -1246,7 +1246,7 @@ void BinocularCamera(ITEM_INFO* item)
 
 void CalculateCamera()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* bounds;
 	long shift, fixed_camera, y, dx, dz;
 	short gotit, change, tilt;

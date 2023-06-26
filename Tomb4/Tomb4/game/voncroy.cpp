@@ -19,7 +19,7 @@
 #include "savegame.h"
 #include "file.h"
 
-static BITE_INFO voncroy_hit = { 0, 35, 130, 18 };
+static BiteInfo voncroy_hit = { 0, 35, 130, 18 };
 
 static uchar VonCroyCutIndices[68] =	//indices in VonCroyCutscenes depending on lara.locationPad
 {
@@ -60,7 +60,7 @@ static PHD_VECTOR actualCameraTarget;
 static long actualFOV;
 static long actualRoomNumber;
 
-void SetCutSceneCamera(ITEM_INFO* item)
+void SetCutSceneCamera(ItemInfo* item)
 {
 	VonCroyCutData* cut;
 	long f;
@@ -147,7 +147,7 @@ void ClearCutSceneCamera()
 	AlterFOV((short)actualFOV);
 }
 
-void GetAIEnemy(CREATURE_INFO* info, long tfl)
+void GetAIEnemy(CreatureInfo* info, long tfl)
 {
 	AIOBJECT* ai;
 
@@ -177,9 +177,9 @@ void GetAIEnemy(CREATURE_INFO* info, long tfl)
 	}
 }
 
-void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
+void DoVonCroyCutscene(ItemInfo* item, CreatureInfo* info)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long h;
 	short ang, room_number;
 
@@ -358,7 +358,7 @@ void DoVonCroyCutscene(ITEM_INFO* item, CREATURE_INFO* info)
 
 void InitialiseVoncroy(short item_number)
 {
-	ITEM_INFO* item = &items[item_number];
+	ItemInfo* item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = objects[VON_CROY].anim_index + 11;
 	item->frame_number = anims[item->anim_number].frame_base;
@@ -370,11 +370,11 @@ void InitialiseVoncroy(short item_number)
 
 void VoncroyRaceControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* oEnemy;
-	CREATURE_INFO* VonCroy;
-	FLOOR_INFO* floor;
-	AI_INFO info;
+	ItemInfo* item;
+	ItemInfo* oEnemy;
+	CreatureInfo* VonCroy;
+	FloorInfo* floor;
+	AIInfo info;
 	long Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, distance, ahead, iAngle, h, c;
 	short tilt, angle, torso_x, torso_y, head, room_number, jump_ahead, long_jump_ahead, ifl3;
 	static short* meshpp = meshes[objects[VON_CROY].mesh_index + 42];
@@ -384,7 +384,7 @@ void VoncroyRaceControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	VonCroy = (CREATURE_INFO*)item->data;
+	VonCroy = (CreatureInfo*)item->data;
 	tilt = 0;
 	angle = 0;
 	head = 0;
@@ -935,15 +935,15 @@ void VoncroyRaceControl(short item_number)
 
 void VoncroyControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
-	ITEM_INFO* target;
-	ITEM_INFO* candidate;
-	CREATURE_INFO* VonCroy;
-	CREATURE_INFO* baddie;
-	FLOOR_INFO* floor;
-	static AI_INFO VonCroyAI;
-	static AI_INFO VonCroyLaraAI;
+	ItemInfo* item;
+	ItemInfo* enemy;
+	ItemInfo* target;
+	ItemInfo* candidate;
+	CreatureInfo* VonCroy;
+	CreatureInfo* baddie;
+	FloorInfo* floor;
+	static AIInfo VonCroyAI;
+	static AIInfo VonCroyLaraAI;
 	long Xoffset, Zoffset, x, y, z, nearheight, midheight, farheight, dx, dz, dist, max_dist, h, c;
 	short tilt, angle, torso_x, torso_y, head, room_number, jump_ahead, long_jump_ahead, ifl3;
 
@@ -951,7 +951,7 @@ void VoncroyControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	VonCroy = (CREATURE_INFO*)item->data;
+	VonCroy = (CreatureInfo*)item->data;
 
 	tilt = 0;
 	angle = 0;

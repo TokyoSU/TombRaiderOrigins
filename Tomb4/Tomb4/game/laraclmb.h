@@ -1,21 +1,21 @@
 #pragma once
 
-void lara_as_climbstnc(ITEM_INFO* item, COLL_INFO* coll);
-void lara_as_climbleft(ITEM_INFO* item, COLL_INFO* coll);
-void lara_col_climbleft(ITEM_INFO* item, COLL_INFO* coll);
-void lara_as_climbright(ITEM_INFO* item, COLL_INFO* coll);
-void lara_col_climbright(ITEM_INFO* item, COLL_INFO* coll);
-void lara_as_climbing(ITEM_INFO* item, COLL_INFO* coll);
-void lara_as_climbdown(ITEM_INFO* item, COLL_INFO* coll);
-void lara_as_climbend(ITEM_INFO* item, COLL_INFO* coll);
-void lara_col_climbstnc(ITEM_INFO* item, COLL_INFO* coll);
-void lara_col_climbing(ITEM_INFO* item, COLL_INFO* coll);
-void lara_col_climbdown(ITEM_INFO* item, COLL_INFO* coll);
+void lara_as_climbstnc(ItemInfo* item, COLL_INFO* coll);
+void lara_as_climbleft(ItemInfo* item, COLL_INFO* coll);
+void lara_col_climbleft(ItemInfo* item, COLL_INFO* coll);
+void lara_as_climbright(ItemInfo* item, COLL_INFO* coll);
+void lara_col_climbright(ItemInfo* item, COLL_INFO* coll);
+void lara_as_climbing(ItemInfo* item, COLL_INFO* coll);
+void lara_as_climbdown(ItemInfo* item, COLL_INFO* coll);
+void lara_as_climbend(ItemInfo* item, COLL_INFO* coll);
+void lara_col_climbstnc(ItemInfo* item, COLL_INFO* coll);
+void lara_col_climbing(ItemInfo* item, COLL_INFO* coll);
+void lara_col_climbdown(ItemInfo* item, COLL_INFO* coll);
 short GetClimbTrigger(long x, long y, long z, short room_number);
 long LaraTestClimb(long x, long y, long z, long xfront, long zfront, long item_height, short item_room, long* shift);
-long LaraTestClimbPos(ITEM_INFO* item, long front, long right, long origin, long height, long* shift);
-long LaraTestClimbUpPos(ITEM_INFO* item, long front, long right, long* shift, long* ledge);
-long LaraCheckForLetGo(ITEM_INFO* item, COLL_INFO* coll);
-long LaraClimbLeftCornerTest(ITEM_INFO* item, COLL_INFO* coll);
-long LaraClimbRightCornerTest(ITEM_INFO* item, COLL_INFO* coll);
-void LaraDoClimbLeftRight(ITEM_INFO* item, COLL_INFO* coll, long result, long shift);
+long LaraTestClimbPos(ItemInfo* item, long front, long right, long origin, long height, long* shift);
+long LaraTestClimbUpPos(ItemInfo* item, long front, long right, long* shift, long* ledge);
+long LaraCheckForLetGo(ItemInfo* item, COLL_INFO* coll);
+long LaraClimbLeftCornerTest(ItemInfo* item, COLL_INFO* coll);
+long LaraClimbRightCornerTest(ItemInfo* item, COLL_INFO* coll);
+void LaraDoClimbLeftRight(ItemInfo* item, COLL_INFO* coll, long result, long shift);

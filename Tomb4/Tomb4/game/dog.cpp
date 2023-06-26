@@ -8,12 +8,12 @@
 #include "lara.h"
 #include "control.h"
 
-static BITE_INFO dog_bite = { 0, 0, 100, 3 };
+static BiteInfo dog_bite = { 0, 0, 100, 3 };
 static char DeathAnims[4] = { 20, 21, 22, 21 };
 
 void InitialiseDog(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -32,9 +32,9 @@ void InitialiseDog(short item_number)
 
 void DogControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* dog;
-	AI_INFO info, lara_info;
+	ItemInfo* item;
+	CreatureInfo* dog;
+	AIInfo info, lara_info;
 	long lara_dx, lara_dz;
 	short angle, head, head_x, torso_y, random, frame;
 
@@ -46,7 +46,7 @@ void DogControl(short item_number)
 	head = 0;
 	torso_y = 0;
 	item = &items[item_number];
-	dog = (CREATURE_INFO*)item->data;
+	dog = (CreatureInfo*)item->data;
 
 	if (item->hit_points <= 0)
 	{

@@ -16,9 +16,9 @@
 
 short ElementPuzzleBounds[12] = { 0, 0, -64, 0, 0, 0, -1820, 1820, -5460, 5460, -1820, 1820 };
 
-void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void ElementPuzzleCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* bounds;
 	long y;
 	short mesh, rotY;
@@ -117,7 +117,7 @@ void ElementPuzzleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void InitialiseElementPuzzle(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -133,8 +133,8 @@ void InitialiseElementPuzzle(short item_number)
 
 void ControlElementPuzzle(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	long r, g, numTriggers;
 	short itemNos[8];
 	short fade, itemNum;

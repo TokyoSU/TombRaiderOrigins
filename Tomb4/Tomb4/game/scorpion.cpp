@@ -12,93 +12,35 @@
 #include "deltapak.h"
 #include "gameflow.h"
 
-static BITE_INFO stinger{ 0, 0, 0, 8 };		//for the big one
-static BITE_INFO pincer{ 0, 0, 0, 23 };
+static BiteInfo stinger{ 0, 0, 0, 8 };		// for the big one
+static BiteInfo pincer{ 0, 0, 0, 23 };
 
-static BITE_INFO s_stinger{ 0, 0, 0, 8 };	//for the smol one
-static BITE_INFO s_pincer{ 0, 0, 0, 23 };
+static BiteInfo s_stinger{ 0, 0, 0, 8 };	// for the small one
+static BiteInfo s_pincer{ 0, 0, 0, 23 };
 
 void InitialiseScorpion(short item_number)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
+	ItemInfo* item = &items[item_number];
 	InitialiseCreature(item_number);
-
 	if (item->trigger_flags == 1)
-	{
-		item->anim_number = objects[SCORPION].anim_index + 7;
-		item->current_anim_state = 8;
-		item->goal_anim_state = 8;
-	}
+		SetAnimation(item, 7);
 	else
-	{
-		item->anim_number = objects[SCORPION].anim_index + 2;
-		item->current_anim_state = 1;
-		item->goal_anim_state = 1;
-	}
-
-	item->frame_number = anims[item->anim_number].frame_base;
+		SetAnimation(item, 2);
 }
 
 void ScorpionControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
-	FLOOR_INFO* floor;
-	CREATURE_INFO* scorpion;
-	AI_INFO info;
-	long s, c, x, z, h, h2, dist, bestdist;
-	short angle, room_number, xrot, zrot, target_num, hp;
+	AIInfo info;
+	long s, c, dist, bestdist;
+	short target_num, hp;
 
 	if (!CreatureActive(item_number))
 		return;
 
-	angle = 0;
-	item = &items[item_number];
-	scorpion = (CREATURE_INFO*)item->data;
-	s = (682 * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
-	c = (682 * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
-
-	x = item->pos.x_pos + s;
-	z = item->pos.z_pos + c;
-	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z);
-
-	if (abs(item->pos.y_pos - h) > 512)
-		h = item->pos.y_pos;
-
-	x = item->pos.x_pos - s;
-	z = item->pos.z_pos - c;
-	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z);
-
-	if (abs(item->pos.y_pos - h2) > 512)
-		h2 = item->pos.y_pos;
-
-	xrot = (short)phd_atan(1364, h2 - h);
-
-	x = item->pos.x_pos - c;
-	z = item->pos.z_pos + s;
-	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h = GetHeight(floor, x, item->pos.y_pos, z);
-
-	if (abs(item->pos.y_pos - h) > 512)
-		h = item->pos.y_pos;
-
-	x = item->pos.x_pos + c;
-	z = item->pos.z_pos - s;
-	room_number = item->room_number;
-	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
-	h2 = GetHeight(floor, x, item->pos.y_pos, z);
-
-	if (abs(item->pos.y_pos - h2) > 512)
-		h2 = item->pos.y_pos;
-
-	zrot = (short)phd_atan(1364, h2 - h);
+	auto* item = &items[item_number];
+	auto* creature = (CreatureInfo*)item->data;
+	short angle = 0;
+	auto slope = RotateItemBasedOnSlope_Begin(item, creature, 684);
 
 	if (item->hit_points <= 0)
 	{
@@ -114,12 +56,11 @@ void ScorpionControl(short item_number)
 				item->frame_number = anims[item->anim_number].frame_base;
 				item->current_anim_state = 6;
 				item->status = ITEM_INVISIBLE;
-				scorpion->maximum_turn = 0;
+				creature->maximum_turn = 0;
 
-				for (target_num = room[item->room_number].item_number; target_num != NO_ITEM; target_num = enemy->next_item)
+				for (target_num = room[item->room_number].item_number; target_num != NO_ITEM; target_num = creature->enemy->next_item)
 				{
-					enemy = &items[target_num];
-
+					auto* enemy = &items[target_num];
 					if (enemy->object_number == TROOPS && enemy->trigger_flags == 1)
 					{
 						DisableBaddieAI(target_num);
@@ -157,14 +98,18 @@ void ScorpionControl(short item_number)
 	else
 	{
 		if (item->ai_bits)
-			GetAITarget(scorpion);
+		{
+			GetAITarget(creature);
+		}
 		else
 		{
-			if (scorpion->hurt_by_lara && item->current_anim_state != 8)
-				scorpion->enemy = lara_item;
+			if (creature->hurt_by_lara && item->current_anim_state != 8)
+			{
+				creature->enemy = lara_item;
+			}
 			else
 			{
-				scorpion->enemy = 0;
+				creature->enemy = nullptr;
 				bestdist = 0x7FFFFFFF;
 
 				for (int i = 0; i < 5; i++)
@@ -173,17 +118,15 @@ void ScorpionControl(short item_number)
 
 					if (target_num != NO_ITEM && target_num != item_number)
 					{
-						enemy = &items[target_num];
-
-						if (enemy->object_number != LARA && enemy->object_number != SCORPION && (enemy != lara_item || scorpion->hurt_by_lara))
+						auto* enemy = &items[target_num];
+						if (enemy->object_number != LARA && enemy->object_number != SCORPION && (enemy != lara_item || creature->hurt_by_lara))
 						{
 							s = enemy->pos.x_pos - item->pos.x_pos;
 							c = enemy->pos.z_pos - item->pos.z_pos;
 							dist = SQUARE(s) + SQUARE(c);
-
 							if (dist < bestdist)
 							{
-								scorpion->enemy = enemy;
+								creature->enemy = enemy;
 								bestdist = dist;
 							}
 						}
@@ -193,28 +136,22 @@ void ScorpionControl(short item_number)
 		}
 
 		CreatureAIInfo(item, &info);
-		enemy = scorpion->enemy;
-
-		if (enemy != lara_item)
-			phd_atan(lara_item->pos.z_pos - item->pos.z_pos, lara_item->pos.x_pos - item->pos.x_pos);
-
 		GetCreatureMood(item, &info, 1);
 		CreatureMood(item, &info, 1);
-		angle = CreatureTurn(item, scorpion->maximum_turn);
+		angle = CreatureTurn(item, creature->maximum_turn);
 
 		switch (item->current_anim_state)
 		{
 		case 1:
-			scorpion->maximum_turn = 0;
-			scorpion->flags = 0;
+			creature->maximum_turn = 0;
+			creature->flags = 0;
 
 			if (info.distance > 0x1C6E39)
 				item->goal_anim_state = 2;
 			else if (info.bite)
 			{
-				scorpion->maximum_turn = 364;
-
-				if (GetRandomControl() & 1 || enemy->object_number == TROOPS && enemy->hit_points <= 15)
+				creature->maximum_turn = 364;
+				if ((GetRandomControl() & 1) || (creature->enemy->object_number == TROOPS && creature->enemy->hit_points <= 15))
 					item->goal_anim_state = 4;
 				else
 					item->goal_anim_state = 5;
@@ -225,7 +162,7 @@ void ScorpionControl(short item_number)
 			break;
 
 		case 2:
-			scorpion->maximum_turn = 364;
+			creature->maximum_turn = 364;
 
 			if (info.distance < 0x1C6E39)
 				item->goal_anim_state = 1;
@@ -235,7 +172,7 @@ void ScorpionControl(short item_number)
 			break;
 
 		case 3:
-			scorpion->maximum_turn = 546;
+			creature->maximum_turn = 546;
 
 			if (info.distance < 0x1C6E39)
 				item->goal_anim_state = 1;
@@ -253,24 +190,20 @@ void ScorpionControl(short item_number)
 			else
 				item->pos.y_rot += 364;
 
-			if (!scorpion->flags && enemy && enemy != lara_item && info.distance < 0x1C6E39)
+			if (!creature->flags && creature->enemy && creature->enemy != lara_item && info.distance < 0x1C6E39)
 			{
-				enemy->hit_points -= 15;
-
-				if (enemy->hit_points <= 0)
+				creature->DamageTarget(15);
+				if (creature->enemy->hit_points <= 0)
 				{
 					item->goal_anim_state = 7;
-					scorpion->maximum_turn = 0;
+					creature->maximum_turn = 0;
 				}
-
-				enemy->hit_status = 1;
-				scorpion->flags = 1;
+				creature->flags = 1;
 				CreatureEffectT(item, &stinger, 10, item->pos.y_rot + 0x8000, DoBloodSplat);
 			}
-			else if (!scorpion->flags && item->touch_bits & 0x1B00100)
+			else if (!creature->flags && item->touch_bits & 0x1B00100)
 			{
-				lara_item->hit_points -= 120;
-				lara_item->hit_status = 1;
+				creature->DamageTarget(120);
 
 				if (item->current_anim_state == 5)
 				{
@@ -278,14 +211,16 @@ void ScorpionControl(short item_number)
 					CreatureEffectT(item, &stinger, 10, item->pos.y_rot + 0x8000, DoBloodSplat);
 				}
 				else
+				{
+					item->poisoned += 2048;
 					CreatureEffectT(item, &pincer, 10, item->pos.y_rot + 0x8000, DoBloodSplat);
+				}
 
-				scorpion->flags = 1;
-
+				creature->flags = 1;
 				if (hp && lara_item->hit_points <= 0)
 				{
 					CreatureKill(item, 6, 7, 442);
-					scorpion->maximum_turn = 0;
+					creature->maximum_turn = 0;
 					return;
 				}
 			}
@@ -293,57 +228,39 @@ void ScorpionControl(short item_number)
 			break;
 
 		case 8:
-			scorpion->maximum_turn = 0;
+			creature->maximum_turn = 0;
 
 			if (item->frame_number == anims[item->anim_number].frame_end)
 				item->trigger_flags++;
 
-			if (enemy && enemy->hit_points <= 0 || item->trigger_flags > 6)
+			if ((creature->enemy && creature->enemy->hit_points <= 0) || item->trigger_flags > 6)
 			{
 				item->goal_anim_state = 7;
-				enemy->hit_points = 0;
+				creature->enemy->hit_points = 0;
 			}
 
 			break;
 		}
 	}
 
-	if (abs(xrot - item->pos.x_rot) < 256)
-		item->pos.x_rot = xrot;
-	else if (xrot > item->pos.x_rot)
-		item->pos.x_rot += 256;
-	else if (xrot < item->pos.x_rot)
-		item->pos.x_rot -= 256;
-
-	if (abs(zrot - item->pos.z_rot) < 256)
-		item->pos.z_rot = zrot;
-	else if (zrot > item->pos.z_rot)
-		item->pos.z_rot += 256;
-	else if (zrot < item->pos.z_rot)
-		item->pos.z_rot -= 256;
-
+	RotateItemBasedOnSlope_End(item, slope);
 	if (!cutseq_num)
 		CreatureAnimation(item_number, angle, 0);
 }
 
 void InitialiseSmallScorpion(short item_number)
 {
-	ITEM_INFO* item;
-
-	item = &items[item_number];
+	ItemInfo* item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[SMALL_SCORPION].anim_index + 2;
-	item->frame_number = anims[item->anim_number].frame_base;
-	item->current_anim_state = 1;
-	item->goal_anim_state = 1;
+	SetAnimation(item, 2);
 }
 
 void SmallScorpionControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
-	CREATURE_INFO* scorpion;
-	AI_INFO info;
+	ItemInfo* item;
+	ItemInfo* enemy;
+	CreatureInfo* scorpion;
+	AIInfo info;
 	short angle;
 
 	if (!CreatureActive(item_number))
@@ -351,7 +268,7 @@ void SmallScorpionControl(short item_number)
 
 	angle = 0;
 	item = &items[item_number];
-	scorpion = (CREATURE_INFO*)item->data;
+	scorpion = (CreatureInfo*)item->data;
 
 	if (item->hit_points <= 0)
 	{

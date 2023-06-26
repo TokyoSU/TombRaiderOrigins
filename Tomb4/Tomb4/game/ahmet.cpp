@@ -20,13 +20,13 @@
 #include "lara.h"
 
 short ScalesBounds[12] = { -1408, -640, 0, 0, -512, 512, -1820, 1820, -5460, 5460, -1820, 1820 };
-static BITE_INFO ahmet_bite = { 0, 0, 0, 11 };
-static BITE_INFO ahmet_left_claw = { 0, 0, 0, 16 };
-static BITE_INFO ahmet_right_claw = { 0, 0, 0, 22 };
+static BiteInfo ahmet_bite = { 0, 0, 0, 11 };
+static BiteInfo ahmet_left_claw = { 0, 0, 0, 16 };
+static BiteInfo ahmet_right_claw = { 0, 0, 0, 22 };
 
-void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void ScalesCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	DRIP_STRUCT* drip;
 	PHD_VECTOR pos;
 	short roty;
@@ -111,7 +111,7 @@ void ScalesCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 long ReTriggerAhmet(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -149,9 +149,9 @@ long ReTriggerAhmet(short item_number)
 
 void ScalesControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	ItemInfo* item2;
+	FloorInfo* floor;
 	long flags, numTriggers;
 	short itemNos[8];
 	short room_number;
@@ -205,7 +205,7 @@ void ScalesControl(short item_number)
 	AnimateItem(item);
 }
 
-void ExplodeAhmet(ITEM_INFO* item)
+void ExplodeAhmet(ItemInfo* item)
 {
 	SPHERE* sphere;
 	long spheres;
@@ -225,7 +225,7 @@ void ExplodeAhmet(ITEM_INFO* item)
 
 void InitialiseAhmet(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -240,12 +240,12 @@ void InitialiseAhmet(short item_number)
 
 void AhmetControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
-	CREATURE_INFO* ahmet;
-	FLOOR_INFO* floor;
-	AI_INFO info;
-	AI_INFO larainfo;
+	ItemInfo* item;
+	ItemInfo* enemy;
+	CreatureInfo* ahmet;
+	FloorInfo* floor;
+	AIInfo info;
+	AIInfo larainfo;
 	long dx, dz;
 	short angle, head, room_number, frame, base;
 
@@ -260,7 +260,7 @@ void AhmetControl(short item_number)
 		return;
 	}
 
-	ahmet = (CREATURE_INFO*)item->data;
+	ahmet = (CreatureInfo*)item->data;
 	angle = 0;
 	head = 0;
 

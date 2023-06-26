@@ -108,10 +108,10 @@ long GLOBAL_playing_cutseq = 0;
 long GLOBAL_cutseq_frame;
 
 static NEW_CUTSCENE* GLOBAL_cutme;
-static ITEM_INFO* horus_item_thing;
+static ItemInfo* horus_item_thing;
 static PACKNODE* camera_pnodes;
 static PACKNODE* actor_pnodes[10];
-static ITEM_INFO duff_item[10];
+static ItemInfo duff_item[10];
 static char* GLOBAL_resident_depack_buffers;	//not really used
 static camera_type GLOBAL_oldcamtype;
 static ulong cutseq_meshbits[10];
@@ -630,7 +630,7 @@ void DrawCutSeqActors()
 	phd_PopMatrix();
 }
 
-void CalcActorLighting(ITEM_INFO* item, OBJECT_INFO* obj, short* rot)
+void CalcActorLighting(ItemInfo* item, OBJECT_INFO* obj, short* rot)
 {
 	PHD_VECTOR pos;
 
@@ -650,7 +650,7 @@ void CalcActorLighting(ITEM_INFO* item, OBJECT_INFO* obj, short* rot)
 	CreateLightList(item);
 }
 
-void GetJointAbsPositionCutSeq(ITEM_INFO* item, OBJECT_INFO* obj, short* rot, PHD_VECTOR* pos)
+void GetJointAbsPositionCutSeq(ItemInfo* item, OBJECT_INFO* obj, short* rot, PHD_VECTOR* pos)
 {
 	short* rot2;
 
@@ -908,7 +908,7 @@ void tenth_cutseq_end()
 
 void eleventh_cutseq_init()
 {
-	ITEM_INFO* item = find_a_fucking_item(ANIMATING5);
+	ItemInfo* item = find_a_fucking_item(ANIMATING5);
 	old_status_flags[numnailed] = item->status;
 	item->status = ITEM_INVISIBLE;
 	item->flags &= ~IFL_CODEBITS;
@@ -1004,7 +1004,7 @@ void fourteen_end()
 
 void fourteen_control()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	if (GLOBAL_cutseq_frame == 393)
 	{
@@ -1310,7 +1310,7 @@ void twentyfive_control()
 
 void twentyfive_end()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = find_a_fucking_item(ANIMATING5);
 	item->flags |= IFL_CODEBITS;
@@ -1321,7 +1321,7 @@ void twentyfive_end()
 
 void twentyfive_init()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = find_a_fucking_item(ANIMATING5);
 	old_status_flags[numnailed] = item->status;
@@ -1338,7 +1338,7 @@ void twentysix_control()
 
 void twentyseven_init()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = find_a_fucking_item(ANIMATING4);
 	item->flags &= ~IFL_CODEBITS;
@@ -1354,7 +1354,7 @@ void twentyseven_control()
 
 void twentyseven_end()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = find_a_fucking_item(ANIMATING5);
 	item->status = ITEM_ACTIVE;
@@ -1456,7 +1456,7 @@ void deal_with_pistols()
 
 void cutseq_kill_item(long num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	for (int i = 0; i < level_items; i++)
 	{
@@ -1471,9 +1471,9 @@ void cutseq_kill_item(long num)
 	}
 }
 
-ITEM_INFO* cutseq_restore_item(long num)
+ItemInfo* cutseq_restore_item(long num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	for (int i = 0; i < level_items; i++)
 	{
@@ -1525,7 +1525,7 @@ long Load_and_Init_Cutseq(long num)
 
 void init_cutseq_actors(char* data, long resident)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	char* packed;
 	char* resident_addr;
 	long pda_nodes, offset;
@@ -1551,7 +1551,7 @@ void init_cutseq_actors(char* data, long resident)
 			actor_pnodes[i] = (PACKNODE*)cutseq_malloc((pda_nodes + 1) * sizeof(PACKNODE));
 
 		InitPackNodes((NODELOADHEADER*)packed, actor_pnodes[i], packed, pda_nodes + 1);
-		memset(item, 0, sizeof(ITEM_INFO));
+		memset(item, 0, sizeof(ItemInfo));
 		item->il.ambient = lara_item->il.ambient;
 		item->il.fcnt = -1;
 		item->il.room_number = -1;
@@ -1623,7 +1623,7 @@ void DelsHandyTeleportLara(long x, long y, long z, long yrot)
 
 void nail_intelligent_object(short num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	for (int i = 0; i < level_items; i++)
 	{
@@ -1702,7 +1702,7 @@ void handle_actor_chatting(long speechslot, long node, long slot, long objslot, 
 
 void trigger_item_in_room(long room_number, long object_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short item_number;
 
 	for (item_number = room[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item)
@@ -1723,7 +1723,7 @@ void trigger_item_in_room(long room_number, long object_number)
 
 void untrigger_item_in_room(long room_number, long object_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short item_number;
 
 	for (item_number = room[room_number].item_number; item_number != NO_ITEM; item_number = item->next_item)
@@ -1739,9 +1739,9 @@ void untrigger_item_in_room(long room_number, long object_number)
 	}
 }
 
-ITEM_INFO* find_a_fucking_item(long object_number)
+ItemInfo* find_a_fucking_item(long object_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	for (int i = 0; i < level_items; i++)
 	{
@@ -1793,7 +1793,7 @@ void special3_control()
 
 void special1_init()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	for (int i = 0; i < level_items; i++)
 	{

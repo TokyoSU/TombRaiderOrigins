@@ -35,7 +35,7 @@ static char dont_exit_jeep = 0;
 
 void InitialiseJeep(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	JEEPINFO* jeep;
 
 	item = &items[item_number];
@@ -59,8 +59,8 @@ void InitialiseJeep(short item_number)
 
 static long GetOnJeep(short item_number, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	long h;
 	short room_number, ang;
 
@@ -121,7 +121,7 @@ static long GetOnJeep(short item_number, COLL_INFO* coll)
 	return 0;
 }
 
-void DrawJeepExtras(ITEM_INFO* item)
+void DrawJeepExtras(ItemInfo* item)
 {
 	JEEPINFO* jeep;
 
@@ -193,7 +193,7 @@ static void TriggerExhaustSmoke(long x, long y, long z, short angle, long veloci
 	sptr->Size = sptr->dSize >> 1;
 }
 
-void JeepExplode(ITEM_INFO* item)
+void JeepExplode(ItemInfo* item)
 {
 	if (room[item->room_number].flags & ROOM_UNDERWATER)
 		TriggerUnderwaterExplosion(item, 1);
@@ -284,8 +284,8 @@ static long DoDynamics(long height, long fallspeed, long* ypos, long zero)
 
 static long CanGetOff(short num)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	long x, y, z, h, c;
 	short yrot, room_number;
 
@@ -312,10 +312,10 @@ static long CanGetOff(short num)
 	return 0;
 }
 
-void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void JeepCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	JEEPINFO* jeep;
 	short ang;
 
@@ -385,7 +385,7 @@ void JeepCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-long GetCollisionAnim(ITEM_INFO* item, PHD_VECTOR* pos, BIKEINFO* vehicle)
+long GetCollisionAnim(ItemInfo* item, PHD_VECTOR* pos, BIKEINFO* vehicle)
 {
 	long sin, cos, fb, lr;
 	pos->x = item->pos.x_pos - pos->x;
@@ -415,9 +415,9 @@ long GetCollisionAnim(ITEM_INFO* item, PHD_VECTOR* pos, BIKEINFO* vehicle)
 	}
 }
 
-long DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos)
+long DoShift(ItemInfo* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long x, z, nX, nZ, oX, oZ, sX, sZ, h;
 	short room_number;
 
@@ -520,7 +520,7 @@ long DoShift(ITEM_INFO* item, PHD_VECTOR* newPos, PHD_VECTOR* oldPos)
 	return 0;
 }
 
-static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed)
+static void AnimateJeep(ItemInfo* item, long hitWall, long killed)
 {
 	JEEPINFO* jeep;
 	short state;
@@ -905,7 +905,7 @@ static void AnimateJeep(ITEM_INFO* item, long hitWall, long killed)
 	}
 }
 
-static long UserControl(ITEM_INFO* item, long height, long* pitch)
+static long UserControl(ItemInfo* item, long height, long* pitch)
 {
 	JEEPINFO* jeep;
 	PHD_VECTOR pos;
@@ -1059,10 +1059,10 @@ static long UserControl(ITEM_INFO* item, long height, long* pitch)
 	return 0;
 }
 
-void JeepBaddieCollision(ITEM_INFO* item)
+void JeepBaddieCollision(ItemInfo* item)
 {
 	JEEPINFO* jeep;
-	ITEM_INFO* collided;
+	ItemInfo* collided;
 	OBJECT_INFO* obj;
 	short* doors;
 	long j, dx, dy, dz;
@@ -1247,10 +1247,10 @@ void JeepCollideStaticObjects(long x, long y, long z, short room_number, long he
 	}
 }
 
-long JeepDynamics(ITEM_INFO* item)
+long JeepDynamics(ItemInfo* item)
 {
 	JEEPINFO* jeep;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR pos, newPos;
 	PHD_VECTOR flPos, frPos, blPos, brPos, fmPos, flPos2, frPos2, blPos2, brPos2, fmPos2;
 	long front_left, front_right, back_left, back_right, front_mid, front_left2, front_right2, back_left2, back_right2, front_mid2;
@@ -1490,9 +1490,9 @@ long JeepDynamics(ITEM_INFO* item)
 
 void JeepControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	JEEPINFO* jeep;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR flPos, frPos, fmPos;
 	PHD_VECTOR pos;
 	long front_left, front_right, front_mid;
@@ -1662,7 +1662,7 @@ void JeepControl(short item_number)
 	JeepCheckGetOut();
 }
 
-void JeepStart(ITEM_INFO* item, ITEM_INFO* l)
+void JeepStart(ItemInfo* item, ItemInfo* l)
 {
 	JEEPINFO* jeep;
 
@@ -1681,9 +1681,9 @@ void JeepStart(ITEM_INFO* item, ITEM_INFO* l)
 	jeep->gear = 0;
 }
 
-void JeepFireGrenade(ITEM_INFO* item)
+void JeepFireGrenade(ItemInfo* item)
 {
-	ITEM_INFO* grenade;
+	ItemInfo* grenade;
 	short item_number;
 
 	item_number = CreateItem();
@@ -1724,7 +1724,7 @@ void JeepFireGrenade(ITEM_INFO* item)
 
 void InitialiseEnemyJeep(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -1738,11 +1738,11 @@ void InitialiseEnemyJeep(short item_number)
 
 void EnemyJeepControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* jeep;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	CreatureInfo* jeep;
+	FloorInfo* floor;
 	AIOBJECT* aiobj;
-	AI_INFO info;
+	AIInfo info;
 	PHD_VECTOR pos;
 	long Xoffset, Zoffset, x, y, z, h1, h2, _h1, _h2, iAngle, iDist;
 	short room_number, xrot, zrot;
@@ -1751,7 +1751,7 @@ void EnemyJeepControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	jeep = (CREATURE_INFO*)item->data;
+	jeep = (CreatureInfo*)item->data;
 	Xoffset = 682 * phd_sin(item->pos.y_rot) >> W2V_SHIFT;
 	Zoffset = 682 * phd_cos(item->pos.y_rot) >> W2V_SHIFT;
 	x = item->pos.x_pos - Zoffset;

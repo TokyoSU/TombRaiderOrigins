@@ -658,8 +658,8 @@ bool LoadRooms()
 		r->y_size = *(short*)FileData;
 		FileData += sizeof(short);
 
-		size = r->x_size * r->y_size * sizeof(FLOOR_INFO);
-		r->floor = (FLOOR_INFO*)game_malloc(size);
+		size = r->x_size * r->y_size * sizeof(FloorInfo);
+		r->floor = (FloorInfo*)game_malloc(size);
 		memcpy(r->floor, FileData, size);
 		FileData += size;
 
@@ -1088,9 +1088,9 @@ bool LoadTextureInfos()
 
 bool LoadItems()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	STATIC_INFO* stat;
 	long x, y, z;
 
@@ -1101,7 +1101,7 @@ bool LoadItems()
 	if (!num_items)
 		return 1;
 
-	items = (ITEM_INFO*)game_malloc(256 * sizeof(ITEM_INFO));
+	items = (ItemInfo*)game_malloc(256 * sizeof(ItemInfo));
 	level_items = num_items;
 	InitialiseItemArray(256);
 

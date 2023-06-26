@@ -24,7 +24,7 @@ void InitialiseMapper(short item_number)
 
 void InitialiseLightningConductor(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long pack;
 
 	item = &items[item_number];
@@ -46,7 +46,7 @@ void InitialiseLightningConductor(short item_number)
 
 void InitialiseDoor(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* r;
 	ROOM_INFO* b;
 	DOOR_DATA* door;
@@ -82,7 +82,7 @@ void InitialiseDoor(short item_number)
 	}
 
 	door->d1.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
-	memcpy(&door->d1.data, door->d1.floor, sizeof(FLOOR_INFO));
+	memcpy(&door->d1.data, door->d1.floor, sizeof(FloorInfo));
 
 	if (r->flipped_room == -1)
 		door->d1flip.floor = 0;
@@ -101,7 +101,7 @@ void InitialiseDoor(short item_number)
 		}
 
 		door->d1flip.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
-		memcpy(&door->d1flip.data, door->d1flip.floor, sizeof(FLOOR_INFO));
+		memcpy(&door->d1flip.data, door->d1flip.floor, sizeof(FloorInfo));
 	}
 
 	two_room = GetDoor(door->d1.floor);
@@ -128,7 +128,7 @@ void InitialiseDoor(short item_number)
 		}
 
 		door->d2.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
-		memcpy(&door->d2.data, door->d2.floor, sizeof(FLOOR_INFO));
+		memcpy(&door->d2.data, door->d2.floor, sizeof(FloorInfo));
 
 		if (r->flipped_room == -1)
 			door->d2flip.floor = 0;
@@ -147,7 +147,7 @@ void InitialiseDoor(short item_number)
 			}
 
 			door->d2flip.block = (boxes[box_number].overlap_index & 0x8000) ? box_number : 2047;
-			memcpy(&door->d2flip.data, door->d2flip.floor, sizeof(FLOOR_INFO));
+			memcpy(&door->d2flip.data, door->d2flip.floor, sizeof(FloorInfo));
 		}
 
 		ShutThatDoor(&door->d2);
@@ -170,7 +170,7 @@ void InitialiseFallingBlock2(short item_number)
 
 void InitialiseFlameEmitter(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -195,7 +195,7 @@ void InitialiseFlameEmitter(short item_number)
 
 void InitialiseFlameEmitter2(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->pos.y_pos -= 64;
@@ -235,8 +235,8 @@ void InitialiseFlameEmitter2(short item_number)
 
 void InitialiseFlameEmitter3(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 
 	item = &items[item_number];
 
@@ -259,8 +259,8 @@ void InitialiseFlameEmitter3(short item_number)
 
 void InitialiseJobySpike(short item_number)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	long h, c;
 	short room_number;
 
@@ -276,7 +276,7 @@ void InitialiseJobySpike(short item_number)
 
 void InitialiseTwoBlockPlatform(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->item_flags[0] = (short)item->pos.y_pos;
@@ -285,7 +285,7 @@ void InitialiseTwoBlockPlatform(short item_number)
 
 void InitialiseSlicerDicer(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->pos.x_pos += 512 * phd_sin(item->pos.y_rot + 0x4000) >> W2V_SHIFT;
@@ -298,7 +298,7 @@ void InitialiseSlicerDicer(short item_number)
 
 void InitialiseScaledSpike(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short xzrots[8];
 
 	item = &items[item_number];
@@ -331,8 +331,8 @@ void InitialiseScaledSpike(short item_number)
 
 void InitialiseRaisingBlock(short item_number)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	short room_num;
 
 	item = &items[item_number];
@@ -367,7 +367,7 @@ void InitialiseBurningFloor(short item_number)
 
 void InitialiseSethBlade(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->anim_number = objects[SETH_BLADE].anim_index + 1;
@@ -379,8 +379,8 @@ void InitialiseSethBlade(short item_number)
 
 void InitialiseObelisk(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	short* ifl;
 
 	item = &items[item_number];
@@ -408,7 +408,7 @@ void InitialiseObelisk(short item_number)
 
 void InitialiseMineHelicopter(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -418,9 +418,9 @@ void InitialiseMineHelicopter(short item_number)
 
 void InitialiseSmashObject(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* rinfo;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 
 	item = &items[item_number];
 	item->flags = 0;
@@ -434,7 +434,7 @@ void InitialiseSmashObject(short item_number)
 
 void InitialiseStatuePlinth(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -444,7 +444,7 @@ void InitialiseStatuePlinth(short item_number)
 
 void InitialiseSmokeEmitter(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -473,7 +473,7 @@ void InitialiseSmokeEmitter(short item_number)
 
 void InitialisePulley(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->item_flags[3] = item->trigger_flags;
@@ -488,7 +488,7 @@ void InitialisePulley(short item_number)
 
 void InitialisePickUp(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* bounds;
 	short ocb;
 
@@ -512,7 +512,7 @@ void InitialisePickUp(short item_number)
 		item->flags |= IFL_TRIGGERED;
 }
 
-void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slength, ITEM_INFO* item)
+void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slength, ItemInfo* item)
 {
 	rope->Position = *pos;
 	rope->SegmentLength = slength << 16;
@@ -537,8 +537,8 @@ void CreateRope(ROPE_STRUCT* rope, PHD_VECTOR* pos, PHD_VECTOR* dir, long slengt
 void InitialiseRope(short item_number)
 {
 	PHD_VECTOR RopePos, RopeDir;
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	short room_number;
 
 	item = &items[item_number];

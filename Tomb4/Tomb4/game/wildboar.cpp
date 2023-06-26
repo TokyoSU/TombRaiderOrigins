@@ -8,11 +8,11 @@
 #include "control.h"
 #include "lot.h"
 
-static BITE_INFO wildboar_bite = { 0, 0, 0, 14 };
+static BiteInfo wildboar_bite = { 0, 0, 0, 14 };
 
 void InitialiseWildboar(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -24,11 +24,11 @@ void InitialiseWildboar(short item_number)
 
 void WildboarControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* target;
-	CREATURE_INFO* boar;
-	CREATURE_INFO* baddie;
-	AI_INFO info;
+	ItemInfo* item;
+	ItemInfo* target;
+	CreatureInfo* boar;
+	CreatureInfo* baddie;
+	AIInfo info;
 	long dx, dz, ldist, dist, max_dist;
 	short angle, neckX, neckY, headX, headY;
 
@@ -41,7 +41,7 @@ void WildboarControl(short item_number)
 	headX = 0;
 	headY = 0;
 	item = &items[item_number];
-	boar = (CREATURE_INFO*)item->data;
+	boar = (CreatureInfo*)item->data;
 
 	if (item->hit_points <= 0)
 	{

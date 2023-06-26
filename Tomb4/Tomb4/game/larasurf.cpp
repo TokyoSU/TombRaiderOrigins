@@ -11,7 +11,7 @@
 #include "camera.h"
 #include "input.h"
 
-void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_surfswim(ItemInfo* item, COLL_INFO* coll)
 {
 	if (item->hit_points <= 0)
 	{
@@ -35,7 +35,7 @@ void lara_as_surfswim(ITEM_INFO* item, COLL_INFO* coll)
 		item->fallspeed = 60;
 }
 
-void lara_as_surfback(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_surfback(ItemInfo* item, COLL_INFO* coll)
 {
 	if (item->hit_points <= 0)
 	{
@@ -59,7 +59,7 @@ void lara_as_surfback(ITEM_INFO* item, COLL_INFO* coll)
 		item->fallspeed = 60;
 }
 
-void lara_as_surfleft(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_surfleft(ItemInfo* item, COLL_INFO* coll)
 {
 	if (item->hit_points <= 0)
 	{
@@ -83,7 +83,7 @@ void lara_as_surfleft(ITEM_INFO* item, COLL_INFO* coll)
 		item->fallspeed = 60;
 }
 
-void lara_as_surfright(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_surfright(ItemInfo* item, COLL_INFO* coll)
 {
 	if (item->hit_points <= 0)
 	{
@@ -107,7 +107,7 @@ void lara_as_surfright(ITEM_INFO* item, COLL_INFO* coll)
 		item->fallspeed = 60;
 }
 
-void lara_as_surftread(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_surftread(ItemInfo* item, COLL_INFO* coll)
 {
 	item->fallspeed -= 4;
 
@@ -152,7 +152,7 @@ void lara_as_surftread(ITEM_INFO* item, COLL_INFO* coll)
 		lara.dive_count = 0;
 }
 
-void lara_col_surfswim(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_surfswim(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->bad_neg = -384;
 	lara.move_angle = item->pos.y_rot;
@@ -160,25 +160,25 @@ void lara_col_surfswim(ITEM_INFO* item, COLL_INFO* coll)
 	LaraTestWaterClimbOut(item, coll);
 }
 
-void lara_col_surfback(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_surfback(ItemInfo* item, COLL_INFO* coll)
 {
 	lara.move_angle = item->pos.y_rot + 32768;
 	LaraSurfaceCollision(item, coll);
 }
 
-void lara_col_surfleft(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_surfleft(ItemInfo* item, COLL_INFO* coll)
 {
 	lara.move_angle = item->pos.y_rot - 16384;
 	LaraSurfaceCollision(item, coll);
 }
 
-void lara_col_surfright(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_surfright(ItemInfo* item, COLL_INFO* coll)
 {
 	lara.move_angle = item->pos.y_rot + 16384;
 	LaraSurfaceCollision(item, coll);
 }
 
-void lara_col_surftread(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_surftread(ItemInfo* item, COLL_INFO* coll)
 {
 	if (item->goal_anim_state == AS_SWIM)
 	{
@@ -194,7 +194,7 @@ void lara_col_surftread(ITEM_INFO* item, COLL_INFO* coll)
 	LaraSurfaceCollision(item, coll);
 }
 
-void LaraSurface(ITEM_INFO* item, COLL_INFO* coll)
+void LaraSurface(ItemInfo* item, COLL_INFO* coll)
 {
 	camera.target_elevation = -4004;
 	coll->bad_pos = -NO_HEIGHT;
@@ -242,7 +242,7 @@ void LaraSurface(ITEM_INFO* item, COLL_INFO* coll)
 	TestTriggers(coll->trigger, 0, 0);
 }
 
-long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll)
+long LaraTestWaterClimbOut(ItemInfo* item, COLL_INFO* coll)
 {
 	long hdif;
 	short angle;
@@ -323,7 +323,7 @@ long LaraTestWaterClimbOut(ITEM_INFO* item, COLL_INFO* coll)
 	return 1;
 }
 
-long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll)
+long LaraTestWaterStepOut(ItemInfo* item, COLL_INFO* coll)
 {
 	if (coll->coll_type == CT_FRONT || coll->mid_type == BIG_SLOPE || coll->mid_type == DIAGONAL || coll->mid_floor >= 0)
 		return 0;
@@ -358,7 +358,7 @@ long LaraTestWaterStepOut(ITEM_INFO* item, COLL_INFO* coll)
 	return 1;
 }
 
-void LaraSurfaceCollision(ITEM_INFO* item, COLL_INFO* coll)
+void LaraSurfaceCollision(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->facing = lara.move_angle;
 	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos + 700, item->pos.z_pos, item->room_number, 800);

@@ -12,7 +12,7 @@ char GotLaraSpheres;
 static SPHERE LaraSpheres[15];
 static long NumLaraSpheres;
 
-long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
+long GetSpheres(ItemInfo* item, SPHERE* ptr, long WorldSpace)
 {
 	OBJECT_INFO* obj;
 	short** meshpp;
@@ -114,7 +114,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	return obj->nmeshes;
 }
 
-long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
+long TestCollision(ItemInfo* item, ItemInfo* l)
 {
 	SPHERE* itemSpheres;
 	SPHERE* laraSpheres;
@@ -185,7 +185,7 @@ void InitInterpolate2(long frac, long rate)
 	memcpy(mIMptr, mMXPtr, sizeof(MATRIX_FLT));
 }
 
-void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
+void GetJointAbsPosition(ItemInfo* item, PHD_VECTOR* pos, long joint)
 {
 	OBJECT_INFO* obj;
 	MATRIX_FLT* mMx;

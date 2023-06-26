@@ -14,9 +14,9 @@
 #include "newinv.h"
 #include "control.h"
 
-static BITE_INFO AGOffsets = { 0, 0, 0, 8 };
+static BiteInfo AGOffsets = { 0, 0, 0, 8 };
 
-void TriggerAutogunFlamethrower(ITEM_INFO* item)
+void TriggerAutogunFlamethrower(ItemInfo* item)
 {
 	SPARKS* sptr;
 	PHD_VECTOR pos;
@@ -77,7 +77,7 @@ void TriggerAutogunFlamethrower(ITEM_INFO* item)
 
 void InitialiseAutogun(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -88,9 +88,9 @@ void InitialiseAutogun(short item_number)
 
 void AutogunControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* autogun;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* autogun;
+	AIInfo info;
 	PHD_VECTOR pos;
 	long ang;
 	short ahead;
@@ -101,7 +101,7 @@ void AutogunControl(short item_number)
 	if (!CreatureActive(item_number))
 		return;
 
-	autogun = (CREATURE_INFO*)item->data;
+	autogun = (CreatureInfo*)item->data;
 
 	if (!autogun)
 		return;

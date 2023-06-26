@@ -20,10 +20,10 @@ static char footsounds[14] = { 0, 5, 3, 2, 1, 9, 9, 4, 6, 5, 3, 9, 4, 6 };
 FOOTPRINT FootPrint[32];
 long FootPrintNum;
 
-void AddFootPrint(ITEM_INFO* item)
+void AddFootPrint(ItemInfo* item)
 {
 	FOOTPRINT* print;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR pos;
 	short room_num;
 

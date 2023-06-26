@@ -5,12 +5,12 @@ void MakeMove(long piece, long displacement);
 void SenetControl(short item_number);
 long CheckSenetWinner(long won);
 void InitialiseGameStix(short item_number);
-void ThrowSticks(ITEM_INFO* item);
+void ThrowSticks(ItemInfo* item);
 void GameStixControl(short item_number);
-void GameStixCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll);
-void ShockwaveExplosion(ITEM_INFO* item, ulong col, long speed);
+void GameStixCollision(short item_number, ItemInfo* l, COLL_INFO* coll);
+void ShockwaveExplosion(ItemInfo* item, ulong col, long speed);
 void ControlGodHead(short item_number);
-void DrawGodHead(ITEM_INFO* item);
+void DrawGodHead(ItemInfo* item);
 
 extern long SenetTargetX;
 extern long SenetTargetZ;

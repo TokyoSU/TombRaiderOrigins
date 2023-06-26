@@ -84,7 +84,7 @@ char LibraryTab[8];
 
 void FlameEmitterControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ulong distance;
 	long x, z;
 
@@ -181,7 +181,7 @@ void FlameEmitterControl(short item_number)
 	}
 }
 
-static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z)
+static long OnTwoBlockPlatform(ItemInfo* item, long x, long z)
 {
 	long tx, tz;
 
@@ -208,7 +208,7 @@ static long OnTwoBlockPlatform(ITEM_INFO* item, long x, long z)
 	return 0;
 }
 
-void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height)
+void TwoBlockPlatformFloor(ItemInfo* item, long x, long y, long z, long* height)
 {
 	if (OnTwoBlockPlatform(item, x, z))
 	{
@@ -221,7 +221,7 @@ void TwoBlockPlatformFloor(ITEM_INFO* item, long x, long y, long z, long* height
 	}
 }
 
-void TwoBlockPlatformCeiling(ITEM_INFO* item, long x, long y, long z, long* height)
+void TwoBlockPlatformCeiling(ItemInfo* item, long x, long y, long z, long* height)
 {
 	if (OnTwoBlockPlatform(item, x, z))
 	{
@@ -232,7 +232,7 @@ void TwoBlockPlatformCeiling(ITEM_INFO* item, long x, long y, long z, long* heig
 
 void ControlTwoBlockPlatform(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long height;
 	short room_number;
 
@@ -289,7 +289,7 @@ void ControlTwoBlockPlatform(short item_number)
 
 void ControlJobySpike(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* frm[2];
 	long rate, y, h;
 
@@ -323,7 +323,7 @@ void ControlJobySpike(short item_number)
 	}
 }
 
-void DrawScaledSpike(ITEM_INFO* item)
+void DrawScaledSpike(ItemInfo* item)
 {
 	PHD_VECTOR scale;
 	ROOM_INFO* r;
@@ -405,7 +405,7 @@ void DrawScaledSpike(ITEM_INFO* item)
 
 void ControlSlicerDicer(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long distance;
 	short room_number;
 
@@ -428,7 +428,7 @@ void ControlSlicerDicer(short item_number)
 
 void ControlSprinkler(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	DRIP_STRUCT* drip;
 	SPARKS* sptr;
 	SMOKE_SPARKS* smokeptr;
@@ -538,8 +538,8 @@ void ControlSprinkler(short item_number)
 
 void ControlMineHelicopter(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* sentry;
+	ItemInfo* item;
+	ItemInfo* sentry;
 	SPHERE* sphere;
 	long nSpheres;
 	short sentries, fade;
@@ -603,10 +603,10 @@ void ControlMineHelicopter(short item_number)
 	}
 }
 
-void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void MineCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* mines;
+	ItemInfo* item;
+	ItemInfo* mines;
 
 	item = &items[item_number];
 
@@ -655,9 +655,9 @@ void MineCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void FallingSquishyBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void FallingSquishyBlockCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -684,7 +684,7 @@ void FallingSquishyBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* co
 
 void ControlFallingSquishyBlock(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -708,7 +708,7 @@ void ControlFallingSquishyBlock(short item_number)
 
 void ControlLRSquishyBlock(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ushort ang;
 	short frame;
 
@@ -743,7 +743,7 @@ void ControlLRSquishyBlock(short item_number)
 
 void ControlSethBlade(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short frame;
 
 	item = &items[item_number];
@@ -783,7 +783,7 @@ void ControlSethBlade(short item_number)
 
 void ControlPlinthBlade(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -802,7 +802,7 @@ void ControlPlinthBlade(short item_number)
 
 void ControlMovingBlade(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -817,7 +817,7 @@ void ControlMovingBlade(short item_number)
 
 void ControlCatwalkBlade(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -836,7 +836,7 @@ void ControlCatwalkBlade(short item_number)
 
 void ControlBirdBlade(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short frame;
 
 	item = &items[item_number];
@@ -861,7 +861,7 @@ void ControlBirdBlade(short item_number)
 
 void Control4xFloorRoofBlade(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short frame;
 
 	item = &items[item_number];
@@ -893,7 +893,7 @@ void Control4xFloorRoofBlade(short item_number)
 
 void ControlSpikeball(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short frame;
 
 	item = &items[item_number];
@@ -928,8 +928,8 @@ void ControlSpikeball(short item_number)
 
 void ControlHammer(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
+	ItemInfo* item;
+	ItemInfo* item2;
 	long hammered;		//hammer touched a pushable (Senet lose path)
 	short frame, target_item;
 
@@ -1048,7 +1048,7 @@ void ControlHammer(short item_number)
 
 void ControlStargate(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->item_flags[3] = 50;
@@ -1065,7 +1065,7 @@ void ControlStargate(short item_number)
 
 void ControlPlough(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->item_flags[3] = 50;
@@ -1081,7 +1081,7 @@ void ControlPlough(short item_number)
 
 void ControlChain(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -1114,8 +1114,8 @@ void ControlChain(short item_number)
 
 void ControlBurningFloor(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* torch;
+	ItemInfo* item;
+	ItemInfo* torch;
 	SPHERE* sphere;
 	long nSpheres, dx, dy, dz;
 	short torch_num, xoff, zoff, size;
@@ -1250,7 +1250,7 @@ void ControlBurningFloor(short item_number)
 
 void ControlRaisingBlock(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -1309,7 +1309,7 @@ void ControlRaisingBlock(short item_number)
 
 void ControlScaledSpike(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	short* bounds;
 	short* larabounds;
@@ -1450,7 +1450,7 @@ void ControlScaledSpike(short item_number)
 
 void FlameEmitter3Control(short item_number)
 {
-	ITEM_INFO* item, * item2;
+	ItemInfo* item, * item2;
 	PHD_3DPOS pos;
 	PHD_VECTOR s, d;
 	long x, z, distance, r, g, b;
@@ -1620,8 +1620,8 @@ void FlameControl(short fx_number)
 
 void FlameEmitter2Control(short item_number)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	long r, g;
 	short room_number;
 
@@ -1709,9 +1709,9 @@ void LaraBurn()
 	}
 }
 
-void LavaBurn(ITEM_INFO* item)
+void LavaBurn(ItemInfo* item)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	short room_number;
 
 	if (item->hit_points >= 0 && lara.water_status != LW_FLYCHEAT)
@@ -1728,7 +1728,7 @@ void LavaBurn(ITEM_INFO* item)
 	}
 }
 
-long TestBoundsCollideTeethSpikes(ITEM_INFO* item)
+long TestBoundsCollideTeethSpikes(ItemInfo* item)
 {
 	short* bounds;
 	long x, y, z, rad, xMin, xMax, zMin, zMax;
@@ -1764,7 +1764,7 @@ long TestBoundsCollideTeethSpikes(ITEM_INFO* item)
 
 void ControlRollingBall(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ushort tyrot, destyrot;
 	short room_number, velnotadjusted;
 	long h, fx, fz, fh, fhf, bz, bh, bhf, rx, rh, rhf, lx, lh, lhf;
@@ -1973,9 +1973,9 @@ void ControlRollingBall(short item_number)
 	TestTriggers(trigger_index, 1, 0);
 }
 
-void RollingBallCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void RollingBallCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -1996,8 +1996,8 @@ void RollingBallCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 
 void DartsControl(short item_number)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	long x, z, speed;
 	short room_num;
 
@@ -2039,8 +2039,8 @@ void DartsControl(short item_number)
 
 void DartEmitterControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* dart;
+	ItemInfo* item;
+	ItemInfo* dart;
 	long x, z, xLimit, zLimit, xv, zv, rand;
 	short num;
 
@@ -2116,7 +2116,7 @@ void DartEmitterControl(short item_number)
 
 void FallingCeiling(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short room_number;
 
 	item = &items[item_number];
@@ -2157,7 +2157,7 @@ void FallingCeiling(short item_number)
 
 void ControlSmashableBikeWall(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -2177,7 +2177,7 @@ void ControlSmashableBikeWall(short item_number)
 
 void ControlFallingBlock2(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -2193,7 +2193,7 @@ void ControlFallingBlock2(short item_number)
 	}
 }
 
-void FallingBlockCeiling(ITEM_INFO* item, long x, long y, long z, long* height)
+void FallingBlockCeiling(ItemInfo* item, long x, long y, long z, long* height)
 {
 	long tx, tz;
 
@@ -2207,7 +2207,7 @@ void FallingBlockCeiling(ITEM_INFO* item, long x, long y, long z, long* height)
 		*height = item->pos.y_pos + 256;
 }
 
-void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height)
+void FallingBlockFloor(ItemInfo* item, long x, long y, long z, long* height)
 {
 	long tx, tz;
 
@@ -2227,7 +2227,7 @@ void FallingBlockFloor(ITEM_INFO* item, long x, long y, long z, long* height)
 
 void FallingBlock(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -2245,9 +2245,9 @@ void FallingBlock(short item_number)
 	}
 }
 
-void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void FallingBlockCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long x, z, tx, tz;
 
 	item = &items[item_number];
@@ -2266,9 +2266,9 @@ void FallingBlockCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	}
 }
 
-void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void CeilingTrapDoorCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -2299,9 +2299,9 @@ void CeilingTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		UseForcedFixedCamera = 0;
 }
 
-void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void FloorTrapDoorCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long y;
 
 	item = &items[item_number];
@@ -2344,10 +2344,10 @@ void FloorTrapDoorCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		UseForcedFixedCamera = 0;
 }
 
-void OpenTrapDoor(ITEM_INFO* item)
+void OpenTrapDoor(ItemInfo* item)
 {
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	ushort pitsky;
 
 	pitsky = item->item_flags[3];
@@ -2372,10 +2372,10 @@ void OpenTrapDoor(ITEM_INFO* item)
 	item->item_flags[2] = 0;
 }
 
-void CloseTrapDoor(ITEM_INFO* item)
+void CloseTrapDoor(ItemInfo* item)
 {
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	ushort pitsky;
 
 	r = &room[item->room_number];
@@ -2413,7 +2413,7 @@ void CloseTrapDoor(ITEM_INFO* item)
 
 void TrapDoorControl(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -2435,10 +2435,10 @@ void TrapDoorControl(short item_number)
 
 void ControlObelisk(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* pulley;
-	ITEM_INFO* pyramid;
-	ITEM_INFO* disc;
+	ItemInfo* item;
+	ItemInfo* pulley;
+	ItemInfo* pyramid;
+	ItemInfo* disc;
 	PHD_VECTOR s;
 	PHD_VECTOR d;
 	long stop, rad;

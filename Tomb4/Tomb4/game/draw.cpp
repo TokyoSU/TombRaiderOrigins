@@ -29,7 +29,7 @@
 #include "lara.h"
 #include "gameflow.h"
 
-static BITE_INFO EnemyBites[2] =
+static BiteInfo EnemyBites[2] =
 {
 	{0, -40, 272, 7},
 	{0, -20, 180, 11}
@@ -298,7 +298,7 @@ void S_InsertRoom(short room_number)
 	InsertRoom(r);
 }
 
-void CalculateObjectLighting(ITEM_INFO* item, short* frame)
+void CalculateObjectLighting(ItemInfo* item, short* frame)
 {
 	long x, y, z;
 
@@ -365,10 +365,10 @@ void CalculateObjectLightingLara()
 	}
 }
 
-void DrawAnimatingItem(ITEM_INFO* item)
+void DrawAnimatingItem(ItemInfo* item)
 {
 	OBJECT_INFO* obj;
-	BITE_INFO* bite;
+	BiteInfo* bite;
 	short** meshpp;
 	long* bone;
 	short* frm[2];
@@ -1006,12 +1006,10 @@ void GetRoomBounds()
 			for (drn = *door++; drn > 0; drn--)
 			{
 				rn = *door++;
-
 				if (door[0] * long(r->x + door[3] - mW2V.m03) +
 					door[1] * long(r->y + door[4] - mW2V.m13) +
 					door[2] * long(r->z + door[5] - mW2V.m23) < 0)
 					SetRoomBounds(door, rn, r);
-
 				door += 15;
 			}
 		}
@@ -1204,7 +1202,7 @@ void PrintObjects(short room_number)
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	STATIC_INFO* sinfo;
-	ITEM_INFO* item;
+	ItemInfo* item;
 	OBJECT_INFO* obj;
 	FX_INFO* fx;
 	long clip;
@@ -1302,7 +1300,7 @@ void PrintObjects(short room_number)
 	r->bottom = 0;
 }
 
-long GetFrames(ITEM_INFO* item, short* frm[], long* rate)
+long GetFrames(ItemInfo* item, short* frm[], long* rate)
 {
 	ANIM_STRUCT* anim;
 	long frame, size, frac, num;
@@ -1328,7 +1326,7 @@ long GetFrames(ITEM_INFO* item, short* frm[], long* rate)
 	return frac;
 }
 
-short* GetBoundsAccurate(ITEM_INFO* item)
+short* GetBoundsAccurate(ItemInfo* item)
 {
 	short* bptr;
 	short* frmptr[2];
@@ -1352,7 +1350,7 @@ short* GetBoundsAccurate(ITEM_INFO* item)
 	return interpolated_bounds;
 }
 
-short* GetBestFrame(ITEM_INFO* item)
+short* GetBestFrame(ItemInfo* item)
 {
 	short* frm[2];
 	long rate, frac;
@@ -1484,7 +1482,7 @@ void mRotBoundingBoxNoPersp(short* bounds, short* rotatedBounds)
 	rotatedBounds[5] = zMax;
 }
 
-void calc_animating_item_clip_window(ITEM_INFO* item, short* bounds)
+void calc_animating_item_clip_window(ItemInfo* item, short* bounds)
 {
 	ROOM_INFO* r;
 	short* door;

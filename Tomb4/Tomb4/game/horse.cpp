@@ -12,16 +12,16 @@
 #include "effects.h"
 #include "lara.h"
 
-static BITE_INFO horseman_axe = { 0, 0, 0, 6 };
-static BITE_INFO horseman_lfoot = { 0, 0, 0, 14 };
-static BITE_INFO horseman_shield = { 0, 0, 0, 10 };
-static BITE_INFO horse_lfoot = { 0, 0, 0, 13 };
-static BITE_INFO horse_rfoot = { 0, 0, 0, 17 };
-static BITE_INFO horse_head = { 0, 0, 0, 19 };
+static BiteInfo horseman_axe = { 0, 0, 0, 6 };
+static BiteInfo horseman_lfoot = { 0, 0, 0, 14 };
+static BiteInfo horseman_shield = { 0, 0, 0, 10 };
+static BiteInfo horse_lfoot = { 0, 0, 0, 13 };
+static BiteInfo horse_rfoot = { 0, 0, 0, 17 };
+static BiteInfo horse_head = { 0, 0, 0, 19 };
 
 void InitialiseHorseman(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -37,10 +37,10 @@ void InitialiseHorseman(short item_number)
 #pragma warning(disable : 4551)
 void HorsemanControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	CREATURE_INFO* horseman;
-	AI_INFO info, larainfo;
+	ItemInfo* item;
+	ItemInfo* item2;
+	CreatureInfo* horseman;
+	AIInfo info, larainfo;
 	PHD_VECTOR v;
 	long x, z, c, s, h1, h2;
 	short room_number, angle, rot;
@@ -73,7 +73,7 @@ void HorsemanControl(short item_number)
 		else
 			item2 = 0;
 
-		horseman = (CREATURE_INFO*)item->data;
+		horseman = (CreatureInfo*)item->data;
 		angle = 0;
 
 		if (item2)
@@ -596,7 +596,7 @@ void TriggerHorsemanRicochets(PHD_VECTOR* pos, long yrot, long num)
 
 void InitialiseHorse(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->anim_number = objects[HORSE].anim_index + 2;

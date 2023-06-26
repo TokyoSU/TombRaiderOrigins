@@ -36,7 +36,7 @@ static PHD_VECTOR PlinthPickUpPosition = { 0, 0, -460 };
 static PHD_VECTOR PickUpPosition = { 0, 0, -100 };
 static PHD_VECTOR PickUpPositionUW = { 0, -200, -350 };
 
-void SarcophagusCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* coll)
+void SarcophagusCollision(short item_number, ItemInfo* laraitem, COLL_INFO* coll)
 {
 	auto* item = &items[item_number];
 
@@ -93,9 +93,9 @@ void SarcophagusCollision(short item_number, ITEM_INFO* laraitem, COLL_INFO* col
 	}
 }
 
-void KeyHoleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void KeyHoleCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short key, hole;
 
 	item = &items[item_number];
@@ -154,13 +154,13 @@ void KeyHoleCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 		ObjectCollision(item_number, l, coll);
 }
 
-void PuzzleDoneCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
+void PuzzleDoneCollision(short item_num, ItemInfo* l, COLL_INFO* coll)
 {
 	if (items[item_num].trigger_flags != 999)
 		ObjectCollision(item_num, l, coll);
 }
 
-void PuzzleDone(ITEM_INFO* item, short item_number)
+void PuzzleDone(ItemInfo* item, short item_number)
 {
 	item->object_number += 12;
 	item->anim_number = objects[item->object_number].anim_index;
@@ -180,9 +180,9 @@ void AnimatingPickUp(short item_number)
 		AnimateItem(item);
 }
 
-short* FindPlinth(ITEM_INFO* item)
+short* FindPlinth(ItemInfo* item)
 {
-	ITEM_INFO* plinth;
+	ItemInfo* plinth;
 	ROOM_INFO* r;
 	MESH_INFO* mesh;
 	short* p;
@@ -228,7 +228,7 @@ short* FindPlinth(ITEM_INFO* item)
 
 long KeyTrigger(short item_num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long oldkey;
 
 	item = &items[item_num];
@@ -247,7 +247,7 @@ long KeyTrigger(short item_num)
 
 long PickupTrigger(short item_num)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_num];
 
@@ -260,7 +260,7 @@ long PickupTrigger(short item_num)
 
 void RegeneratePickups()
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	short* ammo;
 	short objnum;
 
@@ -304,10 +304,10 @@ void RegeneratePickups()
 	}
 }
 
-void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void PickUpCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* itemme;
+	ItemInfo* item;
+	ItemInfo* itemme;
 	short* bounds;
 	long flag;
 	short rotx, roty, rotz, ocb;
@@ -635,9 +635,9 @@ void PickUpCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
 	item->pos.z_rot = rotz;
 }
 
-void PuzzleHoleCollision(short item_num, ITEM_INFO* l, COLL_INFO* coll)
+void PuzzleHoleCollision(short item_num, ItemInfo* l, COLL_INFO* coll)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	PHD_VECTOR pos;
 	short* bounds;
 	long PuzzleType, hole, puzzle;

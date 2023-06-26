@@ -121,7 +121,7 @@ void GetRopePos(ROPE_STRUCT* rope, long pos, long* x, long* y, long* z)
 	*z = (rope->NormalisedSegment[segment].z * pos >> (W2V_SHIFT + 2)) + (rope->MeshSegment[segment].z >> (W2V_SHIFT + 2)) + rope->Position.z;
 }
 
-void AlignLaraToRope(ITEM_INFO* l)
+void AlignLaraToRope(ItemInfo* l)
 {
 	ROPE_STRUCT* rope;
 	PHD_VECTOR n, v, u, n2, up;
@@ -496,7 +496,7 @@ void RopeControl(short item_num)
 		currope->Active = 0;
 }
 
-void RopeCollision(short item_number, ITEM_INFO* l, COLL_INFO* coll)
+void RopeCollision(short item_number, ItemInfo* l, COLL_INFO* coll)
 {
 	ROPE_STRUCT* rope;
 	int i;

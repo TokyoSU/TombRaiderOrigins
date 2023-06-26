@@ -11,7 +11,7 @@
 #include "input.h"
 #include "effect2.h"
 
-static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll)
+static void lara_as_swimcheat(ItemInfo* item, COLL_INFO* coll)
 {
 	if (input & IN_FORWARD)
 		item->pos.x_rot -= 546;
@@ -55,7 +55,7 @@ static void lara_as_swimcheat(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_swim(ItemInfo* item, COLL_INFO* coll)
 {
 	if (item->hit_points <= 0)
 	{
@@ -82,7 +82,7 @@ void lara_as_swim(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll)
+void LaraUnderWater(ItemInfo* item, COLL_INFO* coll)
 {
 	coll->bad_pos = -NO_HEIGHT;
 	coll->bad_neg = -400;
@@ -155,32 +155,32 @@ void LaraUnderWater(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_col_swim(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_swim(ItemInfo* item, COLL_INFO* coll)
 {
 	LaraSwimCollision(item, coll);
 }
 
-void lara_col_glide(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_glide(ItemInfo* item, COLL_INFO* coll)
 {
 	LaraSwimCollision(item, coll);
 }
 
-void lara_col_tread(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_tread(ItemInfo* item, COLL_INFO* coll)
 {
 	LaraSwimCollision(item, coll);
 }
 
-void lara_col_dive(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_dive(ItemInfo* item, COLL_INFO* coll)
 {
 	LaraSwimCollision(item, coll);
 }
 
-void lara_col_waterroll(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_waterroll(ItemInfo* item, COLL_INFO* coll)
 {
 	LaraSwimCollision(item, coll);
 }
 
-void lara_as_glide(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_glide(ItemInfo* item, COLL_INFO* coll)
 {
 	if (lara.water_status == LW_FLYCHEAT)
 		lara_as_swimcheat(item, coll);
@@ -216,7 +216,7 @@ void lara_as_glide(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void lara_as_tread(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_tread(ItemInfo* item, COLL_INFO* coll)
 {
 	if (item->hit_points <= 0)
 	{
@@ -249,13 +249,13 @@ void lara_as_tread(ITEM_INFO* item, COLL_INFO* coll)
 		lara.gun_status = LG_NO_ARMS;
 }
 
-void lara_as_dive(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_dive(ItemInfo* item, COLL_INFO* coll)
 {
 	if (input & IN_FORWARD)
 		item->pos.x_rot -= 182;
 }
 
-void lara_as_uwdeath(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_uwdeath(ItemInfo* item, COLL_INFO* coll)
 {
 	lara.look = 0;
 	item->fallspeed -= 8;
@@ -271,7 +271,7 @@ void lara_as_uwdeath(ITEM_INFO* item, COLL_INFO* coll)
 		item->pos.x_rot -= 364;
 }
 
-void lara_as_waterroll(ITEM_INFO* item, COLL_INFO* coll)
+void lara_as_waterroll(ItemInfo* item, COLL_INFO* coll)
 {
 	if (lara.water_status == LW_FLYCHEAT)
 		item->current_anim_state = AS_GLIDE;
@@ -279,7 +279,7 @@ void lara_as_waterroll(ITEM_INFO* item, COLL_INFO* coll)
 		item->fallspeed = 0;
 }
 
-void lara_col_uwdeath(ITEM_INFO* item, COLL_INFO* coll)
+void lara_col_uwdeath(ItemInfo* item, COLL_INFO* coll)
 {
 	long wh;
 
@@ -297,7 +297,7 @@ void lara_col_uwdeath(ITEM_INFO* item, COLL_INFO* coll)
 long GetWaterDepth(long x, long y, long z, short room_number)
 {
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long x_floor, y_floor, h;
 	short door;
 
@@ -379,7 +379,7 @@ long GetWaterDepth(long x, long y, long z, short room_number)
 	}
 }
 
-void SwimTurn(ITEM_INFO* item)
+void SwimTurn(ItemInfo* item)
 {
 	if (input & IN_FORWARD)
 		item->pos.x_rot -= 364;
@@ -406,9 +406,9 @@ void SwimTurn(ITEM_INFO* item)
 	}
 }
 
-void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll)
+void LaraTestWaterDepth(ItemInfo* item, COLL_INFO* coll)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	long wd;
 	short room_number;
 
@@ -439,7 +439,7 @@ void LaraTestWaterDepth(ITEM_INFO* item, COLL_INFO* coll)
 	}
 }
 
-void LaraSwimCollision(ITEM_INFO* item, COLL_INFO* coll)
+void LaraSwimCollision(ItemInfo* item, COLL_INFO* coll)
 {
 	long y;
 

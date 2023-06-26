@@ -15,7 +15,7 @@ static short WraithSpeed = 64;
 
 void InitialiseWraith(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	WRAITH_STRUCT* data;
 
 	item = &items[item_number];
@@ -168,11 +168,11 @@ void TriggerWraithEffect(long x, long y, long z, short vel, long objnum)
 
 void WraithControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	ITEM_INFO* target;
+	ItemInfo* item;
+	ItemInfo* item2;
+	ItemInfo* target;
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	WRAITH_STRUCT* wraith;
 	long x, y, z, dx, dy, dz, dist, oob, h, c;
 	short rotY, rotX, speed, room_number;

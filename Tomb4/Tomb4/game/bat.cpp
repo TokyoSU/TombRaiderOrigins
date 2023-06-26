@@ -8,11 +8,11 @@
 #include "control.h"
 #include "lot.h"
 
-static BITE_INFO bat_bite = { 0, 16, 45, 4 };
+static BiteInfo bat_bite = { 0, 16, 45, 4 };
 
 void InitialiseBat(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -24,11 +24,11 @@ void InitialiseBat(short item_number)
 
 void BatControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* item2;
-	CREATURE_INFO* bat;
-	CREATURE_INFO* baddie;
-	AI_INFO info;
+	ItemInfo* item;
+	ItemInfo* item2;
+	CreatureInfo* bat;
+	CreatureInfo* baddie;
+	AIInfo info;
 	long max_dist, dist, dx, dz;
 	short angle;
 
@@ -36,7 +36,7 @@ void BatControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	bat = (CREATURE_INFO*)item->data;
+	bat = (CreatureInfo*)item->data;
 	angle = 0;
 
 	if (item->hit_points <= 0)

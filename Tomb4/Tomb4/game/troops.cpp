@@ -11,11 +11,11 @@
 #include "control.h"
 #include "lot.h"
 
-static BITE_INFO troop_gun = { 0, 300, 64, 7 };
+static BiteInfo troop_gun = { 0, 300, 64, 7 };
 
 void InitialiseTroop(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -38,12 +38,12 @@ void InitialiseTroop(short item_number)
 
 void TroopControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
-	CREATURE_INFO* troop;
-	CREATURE_INFO* baddie;
+	ItemInfo* item;
+	ItemInfo* enemy;
+	CreatureInfo* troop;
+	CreatureInfo* baddie;
 	PHD_VECTOR pos;
-	AI_INFO info;
+	AIInfo info;
 	long dist, max_dist, dx, dz, iDistance;
 	short angle, tilt, torso_x, torso_y, head, iAngle;
 
@@ -51,7 +51,7 @@ void TroopControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	troop = (CREATURE_INFO*)item->data;
+	troop = (CreatureInfo*)item->data;
 	angle = 0;
 	tilt = 0;
 	torso_x = 0;

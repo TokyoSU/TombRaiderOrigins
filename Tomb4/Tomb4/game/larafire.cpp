@@ -182,8 +182,8 @@ static short HoldStates[] =
 static PHD_3DPOS bum_view;
 static GAME_VECTOR bum_vdest;
 static GAME_VECTOR bum_vsrc;
-static ITEM_INFO* TargetList[8];
-static ITEM_INFO* LastTargets[8];
+static ItemInfo* TargetList[8];
+static ItemInfo* LastTargets[8];
 
 static long CheckForHoldingState(long state)
 {
@@ -257,7 +257,7 @@ void InitialiseNewWeapon()
 	}
 }
 
-static void find_target_point(ITEM_INFO* item, GAME_VECTOR* target)
+static void find_target_point(ItemInfo* item, GAME_VECTOR* target)
 {
 	long x, y, z, c, s;
 	short* bounds;
@@ -394,7 +394,7 @@ short* get_current_ammo_pointer(long weapon_type)
 	return ammo;
 }
 
-long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* src, short* angles)
+long FireWeapon(long weapon_type, ItemInfo* target, ItemInfo* src, short* angles)
 {
 	WEAPON_INFO* winfo;
 	SPHERE* sptr;
@@ -508,9 +508,9 @@ void AimWeapon(WEAPON_INFO* winfo, LARA_ARM* arm)
 
 void LaraGetNewTarget(WEAPON_INFO* winfo)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* bestitem;
-	CREATURE_INFO* creature;
+	ItemInfo* item;
+	ItemInfo* bestitem;
+	CreatureInfo* creature;
 	GAME_VECTOR src, target;
 	long x, y, z, slot, dist, maxdist, maxdist2, bestdist;
 	short ang[2];
@@ -650,7 +650,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo)
 	LaraTargetInfo(winfo);
 }
 
-void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade)
+void HitTarget(ItemInfo* item, GAME_VECTOR* hitpos, long damage, long grenade)
 {
 	OBJECT_INFO* obj;
 
@@ -658,7 +658,7 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage, long grenade)
 	item->hit_status = 1;
 
 	if (item->data && item != lara_item)
-		((CREATURE_INFO*)item->data)->hurt_by_lara = 1;
+		((CreatureInfo*)item->data)->hurt_by_lara = 1;
 
 	if (hitpos && obj->hit_effect)
 	{
@@ -754,8 +754,8 @@ long WeaponObjectMesh(long weapon_type)
 
 void DoProperDetection(short item_number, long x, long y, long z, long xv, long yv, long zv)
 {
-	ITEM_INFO* item;
-	FLOOR_INFO* floor;
+	ItemInfo* item;
+	FloorInfo* floor;
 	long ceiling, height, oldtype, oldonobj, oldheight, bs, yang, xs;
 	short room_number;
 

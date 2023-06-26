@@ -13,11 +13,11 @@
 #include "control.h"
 #include "lot.h"
 
-static BITE_INFO right_hand = { 0, 128, 0, 2 };
-static BITE_INFO left_hand = { 0, 128, 0, 4 };
-static BITE_INFO right_hit = { 0, 0, 0, 2 };
-static BITE_INFO left_hit = { 0, 0, 0, 4 };
-static BITE_INFO tail_hit = { 0, 0, 0, 15 };
+static BiteInfo right_hand = { 0, 128, 0, 2 };
+static BiteInfo left_hand = { 0, 128, 0, 4 };
+static BiteInfo right_hit = { 0, 0, 0, 2 };
+static BiteInfo left_hit = { 0, 0, 0, 4 };
+static BiteInfo tail_hit = { 0, 0, 0, 15 };
 
 void TriggerHarpyMissileFlame(short fx_number, long xv, long yv, long zv)
 {
@@ -181,7 +181,7 @@ void TriggerHarpyFlame(short item_number, uchar NodeNumber, short size)
 	sptr->dSize = sptr->Size >> 4;
 }
 
-void DoHarpyEffects(ITEM_INFO* item, short item_number)
+void DoHarpyEffects(ItemInfo* item, short item_number)
 {
 	PHD_VECTOR pos;
 	PHD_VECTOR rh;
@@ -267,7 +267,7 @@ void DoHarpyEffects(ITEM_INFO* item, short item_number)
 
 void InitialiseHarpy(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -279,11 +279,11 @@ void InitialiseHarpy(short item_number)
 
 void HarpyControl(short item_number)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
-	CREATURE_INFO* harpy;
-	CREATURE_INFO* baddie;
-	AI_INFO info;
+	ItemInfo* item;
+	ItemInfo* enemy;
+	CreatureInfo* harpy;
+	CreatureInfo* baddie;
+	AIInfo info;
 	long dx, dy, dz, dist, max_dist;
 	short angle, head, torso_x, torso_y;
 
@@ -291,7 +291,7 @@ void HarpyControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	harpy = (CREATURE_INFO*)item->data;
+	harpy = (CreatureInfo*)item->data;
 	angle = 0;
 	head = 0;
 	torso_x = 0;

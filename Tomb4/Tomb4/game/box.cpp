@@ -22,8 +22,8 @@ long num_boxes;
 
 void CreatureDie(short item_number, long explode)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* pickup;
+	ItemInfo* item;
+	ItemInfo* pickup;
 	short pickup_number, room_number;
 
 	item = &items[item_number];
@@ -76,7 +76,7 @@ void CreatureDie(short item_number, long explode)
 
 void InitialiseCreature(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	item->collidable = 1;
@@ -85,7 +85,7 @@ void InitialiseCreature(short item_number)
 
 long CreatureActive(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 
@@ -103,18 +103,18 @@ long CreatureActive(short item_number)
 	return 1;
 }
 
-void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
+void CreatureAIInfo(ItemInfo* item, AIInfo* info)
 {
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 	OBJECT_INFO* obj;
-	ITEM_INFO* enemy;
+	ItemInfo* enemy;
 	ROOM_INFO* r;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	short* zone;
 	long x, y, z;
 	short pivot, ang, state;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 
 	if (!creature)
 		return;
@@ -330,7 +330,7 @@ void TargetBox(LOT_INFO* LOT, short box_number)
 		LOT->target.y = box->height;
 }
 
-long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
+long EscapeBox(ItemInfo* item, ItemInfo* enemy, short box_number)
 {
 	BOX_INFO* box;
 	long x, z;
@@ -345,12 +345,12 @@ long EscapeBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
 	return z > 0 == item->pos.z_pos > enemy->pos.z_pos || x > 0 == item->pos.x_pos > enemy->pos.x_pos;
 }
 
-long ValidBox(ITEM_INFO* item, short zone_number, short box_number)
+long ValidBox(ItemInfo* item, short zone_number, short box_number)
 {
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 	BOX_INFO* box;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 
 	if (!creature->LOT.fly && ground_zone[creature->LOT.zone][flip_status][box_number] != zone_number)
 		return 0;
@@ -367,7 +367,7 @@ long ValidBox(ITEM_INFO* item, short zone_number, short box_number)
 	return 1;
 }
 
-long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
+long StalkBox(ItemInfo* item, ItemInfo* enemy, short box_number)
 {
 	BOX_INFO* box;
 	long x, z, xrange, zrange, enemy_quad, box_quad, baddie_quad;
@@ -394,7 +394,7 @@ long StalkBox(ITEM_INFO* item, ITEM_INFO* enemy, short box_number)
 	return enemy_quad != baddie_quad || abs(enemy_quad - box_quad) != 2;
 }
 
-target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
+target_type CalculateTarget(PHD_VECTOR* target, ItemInfo* item, LOT_INFO* LOT)
 {
 	BOX_INFO* box;
 	long box_number, box_left, box_right, box_top, box_bottom;
@@ -616,15 +616,15 @@ target_type CalculateTarget(PHD_VECTOR* target, ITEM_INFO* item, LOT_INFO* LOT)
 	return NO_TARGET;
 }
 
-void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
+void CreatureMood(ItemInfo* item, AIInfo* info, long violent)
 {
-	CREATURE_INFO* creature;
-	ITEM_INFO* enemy;
+	CreatureInfo* creature;
+	ItemInfo* enemy;
 	LOT_INFO* LOT;
 	static target_type type;
 	short index, box_no;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 
 	if (!creature)
 		return;
@@ -724,14 +724,14 @@ void CreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 	}
 }
 
-void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
+void GetCreatureMood(ItemInfo* item, AIInfo* info, long violent)
 {
-	CREATURE_INFO* creature;
-	ITEM_INFO* enemy;
+	CreatureInfo* creature;
+	ItemInfo* enemy;
 	LOT_INFO* LOT;
 	MOOD_TYPES mood;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 
 	if (!creature)
 		return;
@@ -839,7 +839,7 @@ void GetCreatureMood(ITEM_INFO* item, AI_INFO* info, long violent)
 
 long CreatureCreature(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long x, z, dx, dz, dist;
 	short yrot, rad, item_num;
 
@@ -869,7 +869,7 @@ long CreatureCreature(short item_number)
 
 long BadFloor(long x, long y, long z, long box_height, long next_height, short room_number, LOT_INFO* LOT)
 {
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	BOX_INFO* box;
 
 	floor = GetFloor(x, y, z, &room_number);
@@ -899,10 +899,10 @@ long BadFloor(long x, long y, long z, long box_height, long next_height, short r
 
 long CreatureAnimation(short item_number, short angle, short tilt)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
+	ItemInfo* item;
+	CreatureInfo* creature;
 	LOT_INFO* LOT;
-	FLOOR_INFO* floor;
+	FloorInfo* floor;
 	PHD_VECTOR oldPos;
 	short* zone;
 	short* bounds;
@@ -910,7 +910,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 	short room_number, rad;
 
 	item = &items[item_number];
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 
 	if (!creature)
 		return 0;
@@ -1211,14 +1211,14 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 	return 1;
 }
 
-short CreatureTurn(ITEM_INFO* item, short maximum_turn)
+short CreatureTurn(ItemInfo* item, short maximum_turn)
 {
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 	ROOM_INFO* r;
 	long x, z, feelxplus, feelzplus, feelxminus, feelzminus, feelxmid, feelzmid, feelplus, feelminus, feelmid;
 	short angle;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 
 	if (!creature || !maximum_turn)
 		return 0;
@@ -1274,7 +1274,7 @@ short CreatureTurn(ITEM_INFO* item, short maximum_turn)
 	return angle;
 }
 
-void CreatureTilt(ITEM_INFO* item, short angle)
+void CreatureTilt(ItemInfo* item, short angle)
 {
 	angle = (angle << 2) - item->pos.z_rot;
 
@@ -1284,12 +1284,12 @@ void CreatureTilt(ITEM_INFO* item, short angle)
 		item->pos.z_rot += 546;
 }
 
-void CreatureJoint(ITEM_INFO* item, short joint, short required)
+void CreatureJoint(ItemInfo* item, short joint, short required)
 {
-	CREATURE_INFO* creature;
+	CreatureInfo* creature;
 	short change;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 
 	if (!creature)
 		return;
@@ -1311,7 +1311,7 @@ void CreatureJoint(ITEM_INFO* item, short joint, short required)
 
 void CreatureFloat(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long water_level;
 	short room_number;
 
@@ -1345,7 +1345,7 @@ void CreatureFloat(short item_number)
 	}
 }
 
-void CreatureUnderwater(ITEM_INFO* item, long depth)
+void CreatureUnderwater(ItemInfo* item, long depth)
 {
 	long water_level, floorheight;
 	short room_number;
@@ -1369,7 +1369,7 @@ void CreatureUnderwater(ITEM_INFO* item, long depth)
 	}
 }
 
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number))
+short CreatureEffect(ItemInfo* item, BiteInfo* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number))
 {
 	PHD_VECTOR pos;
 
@@ -1380,7 +1380,7 @@ short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, 
 	return generate(pos.x, pos.y, pos.z, item->speed, item->pos.y_rot, item->room_number);
 }
 
-short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angle,
+short CreatureEffectT(ItemInfo* item, BiteInfo* bite, short damage, short angle,
 	short(*generate)(long x, long y, long z, short damage, short angle, short room_number))
 {
 	PHD_VECTOR pos;
@@ -1394,7 +1394,7 @@ short CreatureEffectT(ITEM_INFO* item, BITE_INFO* bite, short damage, short angl
 
 long CreatureVault(short item_number, short angle, long vault, long shift)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	long x, y, z, x_floor, z_floor;
 	short room_number;
 
@@ -1468,7 +1468,7 @@ long CreatureVault(short item_number, short angle, long vault, long shift)
 	return vault;
 }
 
-void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara_anim)
+void CreatureKill(ItemInfo* item, short kill_anim, short kill_state, short lara_anim)
 {
 	item->anim_number = objects[item->object_number].anim_index + kill_anim;
 	item->frame_number = anims[item->anim_number].frame_base;
@@ -1505,8 +1505,8 @@ void CreatureKill(ITEM_INFO* item, short kill_anim, short kill_state, short lara
 
 void AlertAllGuards(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* creature;
+	ItemInfo* item;
+	CreatureInfo* creature;
 
 	item = &items[item_number];
 
@@ -1522,10 +1522,10 @@ void AlertAllGuards(short item_number)
 	}
 }
 
-void AlertNearbyGuards(ITEM_INFO* item)
+void AlertNearbyGuards(ItemInfo* item)
 {
-	ITEM_INFO* target;
-	CREATURE_INFO* creature;
+	ItemInfo* target;
+	CreatureInfo* creature;
 	long dx, dy, dz, dist;
 
 	for (int i = 0; i < 5; i++)
@@ -1553,7 +1553,7 @@ void AlertNearbyGuards(ITEM_INFO* item)
 	}
 }
 
-short AIGuard(CREATURE_INFO* creature)
+short AIGuard(CreatureInfo* creature)
 {
 	long rnd;
 
@@ -1590,10 +1590,10 @@ short AIGuard(CREATURE_INFO* creature)
 	return 0;
 }
 
-void FindAITargetObject(CREATURE_INFO* creature, short obj_num)
+void FindAITargetObject(CreatureInfo* creature, short obj_num)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
+	ItemInfo* item;
+	ItemInfo* enemy;
 	AIOBJECT* aiObj;
 	ROOM_INFO* r;
 	short* zone;
@@ -1643,10 +1643,10 @@ void FindAITargetObject(CREATURE_INFO* creature, short obj_num)
 	}
 }
 
-void GetAITarget(CREATURE_INFO* creature)
+void GetAITarget(CreatureInfo* creature)
 {
-	ITEM_INFO* item;
-	ITEM_INFO* enemy;
+	ItemInfo* item;
+	ItemInfo* enemy;
 	short enemy_object;
 	char ai_bits;
 
@@ -1737,9 +1737,9 @@ void GetAITarget(CREATURE_INFO* creature)
 	}
 }
 
-short SameZone(CREATURE_INFO* creature, ITEM_INFO* target_item)
+short SameZone(CreatureInfo* creature, ItemInfo* target_item)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 	ROOM_INFO* r;
 	short* zone;
 
@@ -1796,4 +1796,64 @@ long MoveCreature3DPos(PHD_3DPOS* srcpos, PHD_3DPOS* destpos, long velocity, sho
 
 	return srcpos->x_pos == destpos->x_pos && srcpos->y_pos == destpos->y_pos &&
 		srcpos->z_pos == destpos->z_pos && srcpos->y_rot == destpos->y_rot;
+}
+
+RotateBasedOnSlope RotateItemBasedOnSlope_Begin(ItemInfo* item, CreatureInfo* creature, long distance, long height_max)
+{
+	FloorInfo* floor = nullptr;
+	long heightfront = 0, heightback = 0;
+	long s = 0, c = 0, x = 0, z = 0;
+	short x_rot = 0, z_rot = 0, room_number = 255;
+	s = (distance * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+	c = (distance * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
+	x = item->pos.x_pos + s;
+	z = item->pos.z_pos + c;
+	room_number = item->room_number;
+	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
+	heightfront = GetHeight(floor, x, item->pos.y_pos, z);
+	if (abs(item->pos.y_pos - heightfront) > height_max)
+		heightfront = item->pos.y_pos;
+	x = item->pos.x_pos - s;
+	z = item->pos.z_pos - c;
+	room_number = item->room_number;
+	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
+	heightback = GetHeight(floor, x, item->pos.y_pos, z);
+	if (abs(item->pos.y_pos - heightback) > height_max)
+		heightback = item->pos.y_pos;
+	short xrot = (short)phd_atan(distance * 2, heightback - heightfront);
+	s = (distance * phd_sin(item->pos.y_rot)) >> W2V_SHIFT;
+	c = (distance * phd_cos(item->pos.y_rot)) >> W2V_SHIFT;
+	x = item->pos.x_pos - c;
+	z = item->pos.z_pos + s;
+	room_number = item->room_number;
+	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
+	heightfront = GetHeight(floor, x, item->pos.y_pos, z);
+	if (abs(item->pos.y_pos - heightfront) > height_max)
+		heightfront = item->pos.y_pos;
+	x = item->pos.x_pos + c;
+	z = item->pos.z_pos - s;
+	room_number = item->room_number;
+	floor = GetFloor(x, item->pos.y_pos, z, &room_number);
+	heightback = GetHeight(floor, x, item->pos.y_pos, z);
+	if (abs(item->pos.y_pos - heightback) > height_max)
+		heightback = item->pos.y_pos;
+	short zrot = (short)phd_atan(distance * 2, heightback - heightfront);
+	return RotateBasedOnSlope(xrot, zrot);
+}
+
+void RotateItemBasedOnSlope_End(ItemInfo* item, RotateBasedOnSlope& slope, long click)
+{
+	if (abs(slope.x_rot - item->pos.x_rot) < click)
+		item->pos.x_rot = slope.x_rot;
+	else if (slope.x_rot > item->pos.x_rot)
+		item->pos.x_rot += click;
+	else if (slope.x_rot < item->pos.x_rot)
+		item->pos.x_rot -= click;
+
+	if (abs(slope.z_rot - item->pos.z_rot) < click)
+		item->pos.z_rot = slope.z_rot;
+	else if (slope.z_rot > item->pos.z_rot)
+		item->pos.z_rot += click;
+	else if (slope.z_rot < item->pos.z_rot)
+		item->pos.z_rot -= click;
 }

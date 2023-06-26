@@ -41,15 +41,15 @@ short GunMiss(long x, long y, long z, short speed, short yrot, short room_number
 	return GunShot(x, y, z, speed, yrot, room_number);
 }
 
-long TargetVisible(ITEM_INFO* item, AI_INFO* info)
+long TargetVisible(ItemInfo* item, AIInfo* info)
 {
-	ITEM_INFO* enemy;
-	CREATURE_INFO* creature;
+	ItemInfo* enemy;
+	CreatureInfo* creature;
 	GAME_VECTOR start;
 	GAME_VECTOR target;
 	short* bounds;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 	enemy = creature->enemy;
 
 	if (!enemy || enemy->hit_points <= 0 || !enemy->data || info->angle - creature->joint_rotation[2] <= -0x4000 ||
@@ -69,15 +69,15 @@ long TargetVisible(ITEM_INFO* item, AI_INFO* info)
 	return LOS(&start, &target);
 }
 
-long Targetable(ITEM_INFO* item, AI_INFO* info)
+long Targetable(ItemInfo* item, AIInfo* info)
 {
-	ITEM_INFO* enemy;
-	CREATURE_INFO* creature;
+	ItemInfo* enemy;
+	CreatureInfo* creature;
 	GAME_VECTOR start;
 	GAME_VECTOR target;
 	short* bounds;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 	enemy = creature->enemy;
 
 	if (!enemy || enemy->hit_points <= 0 || !enemy->data || !info->ahead || info->distance >= 0x4000000 && item->object_number != SETHA)
@@ -96,14 +96,14 @@ long Targetable(ITEM_INFO* item, AI_INFO* info)
 	return LOS(&start, &target);
 }
 
-long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, short extra_rotation, long damage)
+long ShotLara(ItemInfo* item, AIInfo* info, BiteInfo* gun, short extra_rotation, long damage)
 {
-	ITEM_INFO* enemy;
-	CREATURE_INFO* creature;
+	ItemInfo* enemy;
+	CreatureInfo* creature;
 	PHD_VECTOR pos;
 	long hit, targetable, random, distance;
 
-	creature = (CREATURE_INFO*)item->data;
+	creature = (CreatureInfo*)item->data;
 	enemy = creature->enemy;
 
 	if (info->distance <= 0x4000000 && Targetable(item, info))

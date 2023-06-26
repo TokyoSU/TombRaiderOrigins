@@ -8,12 +8,12 @@
 #include "lara.h"
 #include "control.h"
 
-static BITE_INFO left_hand = { 0, 0, 0, 11 };
-static BITE_INFO right_hand = { 0, 0, 0, 14 };
+static BiteInfo left_hand = { 0, 0, 0, 11 };
+static BiteInfo right_hand = { 0, 0, 0, 14 };
 
 void InitialiseMummy(short item_number)
 {
-	ITEM_INFO* item;
+	ItemInfo* item;
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
@@ -37,9 +37,9 @@ void InitialiseMummy(short item_number)
 
 void MummyControl(short item_number)
 {
-	ITEM_INFO* item;
-	CREATURE_INFO* mummy;
-	AI_INFO info;
+	ItemInfo* item;
+	CreatureInfo* mummy;
+	AIInfo info;
 	long stop;
 	short angle, head, torso_x, torso_y;
 
@@ -47,7 +47,7 @@ void MummyControl(short item_number)
 		return;
 
 	item = &items[item_number];
-	mummy = (CREATURE_INFO*)item->data;
+	mummy = (CreatureInfo*)item->data;
 	angle = 0;
 	head = 0;
 	torso_x = 0;
