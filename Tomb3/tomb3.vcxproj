@@ -271,6 +271,7 @@
     <ClInclude Include="tomb3\game\tiger.h" />
     <ClInclude Include="tomb3\game\tonyboss.h" />
     <ClInclude Include="tomb3\game\tr1_bat.h" />
+    <ClInclude Include="tomb3\game\tr1_bear.h" />
     <ClInclude Include="tomb3\game\tr1_dartemitter.h" />
     <ClInclude Include="tomb3\game\tr1_wolf.h" />
     <ClInclude Include="tomb3\game\train.h" />
@@ -418,6 +419,7 @@
     <ClCompile Include="tomb3\game\tiger.cpp" />
     <ClCompile Include="tomb3\game\tonyboss.cpp" />
     <ClCompile Include="tomb3\game\tr1_bat.cpp" />
+    <ClCompile Include="tomb3\game\tr1_bear.cpp" />
     <ClCompile Include="tomb3\game\tr1_dartemitter.cpp" />
     <ClCompile Include="tomb3\game\tr1_wolf.cpp" />
     <ClCompile Include="tomb3\game\train.cpp" />

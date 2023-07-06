@@ -10,7 +10,7 @@ constexpr short MESH_BITS(short x) { return 1 << x; }
 constexpr short ANGLE(short x) { return x * 182; }
 constexpr long BLOCK(long x) { return x * 1024; }
 constexpr long CLICK(long x) { return x * 256; }
-#define SQUARE(x) ((x)*(x))
+constexpr auto SQUARE(long x) { return x * x; }
 constexpr auto BLOCK_SQR(long x) { return SQUARE(BLOCK(x)); }
 constexpr auto CLICK_SQR(long x) { return SQUARE(CLICK(x)); }
 #define	TRIGMULT2(a, b)	(((a) * (b)) >> W2V_SHIFT)

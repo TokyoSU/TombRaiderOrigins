@@ -95,6 +95,7 @@
 #include "tr1_dartemitter.h"
 #include "tr1_wolf.h"
 #include "tr1_bat.h"
+#include "tr1_bear.h"
 #include "../newstuff/map.h"
 #include "../tomb3/tomb3.h"
 
@@ -1295,6 +1296,23 @@ static void BaddyObjects()
 		obj->save_flags = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
+	}
+
+	obj = &objects[TR1_BEAR];
+	if (obj->loaded)
+	{
+		obj->initialise = InitialiseCreature;
+		obj->control = TR1::BearControl;
+		obj->collision = CreatureCollision;
+		obj->hit_points = 25;
+		obj->intelligent = 1;
+		obj->radius = 204;
+		obj->shadow_size = 128;
+		obj->save_anim = 1;
+		obj->save_flags = 1;
+		obj->save_hitpoints = 1;
+		obj->save_position = 1;
+		bones[obj->bone_index + 13 * 4] |= BN_X | BN_Y;
 	}
 
 	obj = &objects[AI_GUARD];

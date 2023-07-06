@@ -18,11 +18,10 @@ namespace TR1
 		BAT_DEATH
 	};
 
-	constexpr auto BAT_DAMAGE = 2;
+	constexpr auto BAT_DAMAGE = 4;
 	constexpr auto BAT_TURN = ANGLE(20);
 	constexpr auto BAT_WAKE_RANGE = SQUARE(BLOCK(5));
 	constexpr auto BAT_ATTACK_RANGE = SQUARE(CLICK(1));
-	constexpr auto BAT_ESCAPE_CHANCE = 0x20;
 	const BiteInfo BatBite = MakeBiteInfo(0, 16, 45, 4);
 
 	void BatControl(short item_number)
@@ -53,10 +52,10 @@ namespace TR1
 		{
 			AI_INFO info;
 			CreatureAIInfo(item, &info);
-			GetCreatureMood(item, &info, FALSE);
+			GetCreatureMood(item, &info, 0);
 			if (creature->flags != 0)
 				creature->mood = ESCAPE_MOOD;
-			CreatureMood(item, &info, FALSE);
+			CreatureMood(item, &info, 0);
 			angle = CreatureTurn(item, BAT_TURN);
 
 			switch (item->current_anim_state)
