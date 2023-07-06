@@ -252,14 +252,8 @@ static void MoveCamPos(PHD_VECTOR* pos, long dir)
 
 static void PrintMapObjects(short room_number)
 {
-	ROOM_INFO* r;
-	MESH_INFO* mesh;
-	ITEM_INFO* item;
-	long clip;
-	short item_num, obj_num;
-
 	CurrentRoom = room_number;
-	r = &room[room_number];
+	auto* r = &room[room_number];
 
 	if (r->flags & ROOM_UNDERWATER)
 		S_SetupBelowWater(camera_underwater);
@@ -269,18 +263,18 @@ static void PrintMapObjects(short room_number)
 	phd_PushMatrix();
 	phd_TranslateAbs(r->x, r->y, r->z);
 
+	nPolyType = PT_STATICS;
 	for (int i = 0; i < r->num_meshes; i++)
 	{
-		mesh = &r->mesh[i];
+		auto* mesh = &r->mesh[i];
 		CurrentMesh = mesh;
-		nPolyType = 4;
 
 		if (static_objects[mesh->static_number].flags & 2)
 		{
 			phd_PushMatrix();
 			phd_TranslateAbs(mesh->x, mesh->y, mesh->z);
 			phd_RotY(mesh->y_rot);
-			clip = S_GetObjectBounds(&static_objects[mesh->static_number].x_minp);
+			auto clip = S_GetObjectBounds(&static_objects[mesh->static_number].x_minp);
 
 			if (clip)
 			{
@@ -292,22 +286,16 @@ static void PrintMapObjects(short room_number)
 		}
 	}
 
-	nPolyType = 5;
-
-	for (item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item)
+	nPolyType = PT_OBJECTS;
+	for (auto item_num = r->item_number; item_num != NO_ITEM;)
 	{
-		item = &items[item_num];
-
+		auto* item = &items[item_num];
 		if (item->status != ITEM_INVISIBLE)
-		{
-			obj_num = item->object_number;
-			nPolyType = 5;
-			objects[obj_num].draw_routine(item);
-		}
+			objects[item->object_number].draw_routine(item);
+		item_num = item->next_item;
 	}
 
-	nPolyType = 6;
-
+	nPolyType = PT_EFFECT;
 	for (int i = r->fx_number; i != NO_ITEM; i = effects[i].next_fx)
 		DrawEffect(i);
 
@@ -329,23 +317,20 @@ static void DrawMapRooms(long nList, short* rList)
 	outside = 0;
 
 	obj = &objects[0];
-
 	if (obj->loaded && !(lara_item->flags & IFL_INVISIBLE))
 	{
-		nPolyType = 2;
+		nPolyType = PT_LARA;
 		NewDrawLara(lara_item);
-
 		if (DrawBoxes)
 			SuperDrawBox(lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, GetBoundsAccurate(lara_item), 0xFF0000FF);
 	}
-
-	nPolyType = 3;
 
 	phd_left = 0;
 	phd_top = 0;
 	phd_right = phd_winxmax;
 	phd_bottom = phd_winymax;
 
+	nPolyType = PT_ROOM;
 	for (int i = 0; i < nList; i++)
 	{
 		r = &room[rList[i]];
@@ -368,20 +353,19 @@ static void DrawMapRooms(long nList, short* rList)
 	for (int i = 0; i < nList; i++)
 		PrintMapObjects(rList[i]);
 
-	nPolyType = 6;
+	nPolyType = PT_EFFECT;
 	S_DrawSparks();
 	S_DrawSplashes();
 	S_DrawBat();
 
-	if (CurrentLevel == LV_ANTARC || CurrentLevel == LV_CHAMBER)
+	if (GF_Snow)
 		DoSnow();
-
-	if (CurrentLevel == LV_JUNGLE || CurrentLevel == LV_QUADBIKE || CurrentLevel == LV_ROOFTOPS || CurrentLevel == LV_OFFICE || CurrentLevel == LV_STPAULS)
+	if (GF_Rain)
 		DoRain();
 
 	S_DrawFootPrints();
 
-	if (CurrentLevel == LV_RAPIDS || CurrentLevel == LV_SEWER || CurrentLevel == LV_TOWER)
+	if (GF_WaterParts)
 		DoUwEffect();
 }
 

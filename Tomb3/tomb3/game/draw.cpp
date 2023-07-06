@@ -42,7 +42,7 @@ short draw_rooms[100];
 char IsJointUnderwater[15];
 char GotJointPos[15];
 
-long nPolyType;
+PolyTypes nPolyType = PT_NONE;
 long camera_underwater;
 long mid_sort = 0;
 
@@ -813,11 +813,11 @@ void PrintObjects(short room_number)
 	phd_top = r->top;
 	phd_bottom = r->bottom;
 
+	nPolyType = PT_STATICS;
 	for (int i = 0; i < r->num_meshes; i++)
 	{
 		mesh = &r->mesh[i];
 		CurrentMesh = mesh;
-		nPolyType = 4;
 
 		if (static_objects[mesh->static_number].flags & 2)
 		{
@@ -842,8 +842,8 @@ void PrintObjects(short room_number)
 	phd_top = 0;
 	phd_right = phd_winxmax + 1;
 	phd_bottom = phd_winymax + 1;
-	nPolyType = 5;
 
+	nPolyType = PT_OBJECTS;
 	for (item_num = r->item_number; item_num != NO_ITEM; item_num = item->next_item)
 	{
 		item = &items[item_num];
@@ -855,11 +855,11 @@ void PrintObjects(short room_number)
 				obj_num = item->object_number;
 
 				if (objects[obj_num].intelligent)
-					nPolyType = 5;
+					nPolyType = PT_OBJECTS;
 				else if ((obj_num < PLAYER_1 || obj_num > PLAYER_10) && (obj_num < VEHICLE_EXTRA || obj_num > QUADBIKE))
-					nPolyType = 4;
+					nPolyType = PT_STATICS;
 				else
-					nPolyType = 5;
+					nPolyType = PT_OBJECTS;
 
 				objects[obj_num].draw_routine(item);
 			}
@@ -867,7 +867,6 @@ void PrintObjects(short room_number)
 			if (item->after_death < 32 && item->after_death > 0)
 			{
 				item->after_death++;
-
 				if (item->after_death == 2 || item->after_death == 5 || item->after_death == 11 || item->after_death == 20 ||
 					item->after_death == 27 || item->after_death == 32 || !(GetRandomDraw() & 7))
 					DoLotsOfBloodD(item->pos.x_pos, item->pos.y_pos - 64, item->pos.z_pos, 0, short(GetRandomDraw() << 1), item->room_number, 1);
@@ -875,8 +874,7 @@ void PrintObjects(short room_number)
 		}
 	}
 
-	nPolyType = 6;
-
+	nPolyType = PT_EFFECT;
 	for (int i = r->fx_number; i != NO_ITEM; i = effects[i].next_fx)
 		DrawEffect(i);
 
@@ -1128,16 +1126,14 @@ void DrawRooms(short current_room)
 		if (mid_sort)
 			mid_sort--;
 
-		nPolyType = 2;
-
+		nPolyType = PT_LARA;
 		if (bLaraOn)
 			NewDrawLara(lara_item);
 	}
 
 	if (bRoomOn)
 	{
-		nPolyType = 3;
-
+		nPolyType = PT_ROOM;
 		for (int i = 0; i < number_draw_rooms; i++)
 			PrintRooms(draw_rooms[i]);
 	}
@@ -1147,47 +1143,31 @@ void DrawRooms(short current_room)
 
 	if (bEffectOn)
 	{
-		SwapLaraWithCamera(0);
+		SwapLaraWithCamera(false);
 
-		nPolyType = 6;
+		nPolyType = PT_EFFECT;
 		S_DrawSparks();
 		S_DrawSplashes();
 		S_DrawBat();
 
-		if (tomb3.gold)
-			fx = 0;
-		else
-			fx = GF_Snow != 0;
-
-		if (fx)
+		if (GF_Snow != 0)
 			DoSnow();
 
-		if (tomb3.gold)
-			fx = CurrentLevel == LV_JUNGLE || CurrentLevel == LV_ROOFTOPS;
-		else
-			fx = GF_Rain != 0;
-
-		if (fx)
+		if (GF_Rain != 0)
 			DoRain();
 
 		S_DrawFootPrints();
 
-		if (tomb3.gold)
-			fx = 0;
-		else
-			fx = GF_WaterParts != 0;
-
-		if (fx)
+		if (GF_WaterParts != 0)
 			DoUwEffect();
 
-		SwapLaraWithCamera(1);
+		SwapLaraWithCamera(true);
 	}
 
 	if (lara.electric)
 	{
 		if (lara.electric < 16)
 			lara.electric++;
-
 		UpdateElectricityPoints();
 		LaraElectricDeath(0, lara_item);
 		LaraElectricDeath(1, lara_item);

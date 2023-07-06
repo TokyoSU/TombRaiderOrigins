@@ -480,7 +480,7 @@ void S_InsertBackground(short* objptr)
 	short* triPtr;
 	long nTris;
 
-	nPolyType = 1;
+	nPolyType = PT_HORIZON;
 	phd_leftfloat = float(phd_winxmin + phd_left);
 	phd_topfloat = float(phd_winymin + phd_top);
 	phd_rightfloat = float(phd_right + phd_winxmin + 1);
