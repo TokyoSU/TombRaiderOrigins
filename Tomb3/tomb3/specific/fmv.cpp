@@ -12,7 +12,7 @@
 
 long fmv_playing;
 
-#if !defined(FFPLAY_FEATURE)
+#if (DIRECT3D_VERSION <= 0x500)
 static LPVOID MovieContext;
 static LPVOID FmvContext;
 static LPVOID FmvSoundContext;
@@ -23,9 +23,7 @@ static LPVOID FmvSoundContext;
 	if(!proc) throw #proc; \
 }
 
-#if (DIRECT3D_VERSION < 0x900)
 static long(__cdecl* Player_PassInDirectDrawObject)(LPDIRECTDRAWX);
-#endif
 static long(__cdecl* Player_InitMovie)(LPVOID, long, long, const char*, long);
 static long(__cdecl* Player_InitVideo)(LPVOID, LPVOID, long, long, long, long, long, long, long, long, long, long, long);
 static long(__cdecl* Player_InitPlaybackMode)(HWND, LPVOID, long, long);
@@ -61,19 +59,14 @@ bool LoadWinPlay()
 {
 #if defined(FFPLAY_FEATURE)
 	return FFPlayInit();
-#else
-#if (DIRECT3D_VERSION >= 0x900)
-	return false;
-#endif
+#elif (DIRECT3D_VERSION <= 0x500) // DirectX5
 	hWinPlay = LoadLibrary("WINPLAY.DLL");
 	if (hWinPlay == NULL)
 		return false;
 
 	try
 	{
-#if (DIRECT3D_VERSION < 0x900)
 		GET_DLL_PROC(hWinPlay, Player_PassInDirectDrawObject);
-#endif
 		GET_DLL_PROC(hWinPlay, Player_InitMovie);
 		GET_DLL_PROC(hWinPlay, Player_InitVideo);
 		GET_DLL_PROC(hWinPlay, Player_InitPlaybackMode);
@@ -116,7 +109,7 @@ void FreeWinPlay()
 {
 #if defined(FFPLAY_FEATURE)
 	FFPlayCleanup();
-#else
+#elif (DIRECT3D_VERSION <= 0x500) // DirectX5
 	if (hWinPlay)
 	{
 		FreeLibrary(hWinPlay);
@@ -175,10 +168,7 @@ void WinPlayFMV(const char* name, bool play)
 {
 #if defined(FFPLAY_FEATURE)
 	FFPlay(name);
-#else
-#if (DIRECT3D_VERSION >= 0x900)
-	return;
-#endif
+#elif (DIRECT3D_VERSION <= 0x500) // DirectX5
 	long xSize, ySize, xOffset, yOffset;
 	long lp;
 	RECT r;
@@ -187,10 +177,8 @@ void WinPlayFMV(const char* name, bool play)
 	r.right = 640;
 	r.bottom = 480;
 
-#if (DIRECT3D_VERSION < 0x900)
 	if (Player_PassInDirectDrawObject(App.DDraw) || Player_InitMovie(&MovieContext, 0, 0, name, 0x200000) || Movie_GetFormat(MovieContext) != 130)
 		return;
-#endif
 
 	xSize = Movie_GetXSize(MovieContext);
 	ySize = Movie_GetYSize(MovieContext);
@@ -239,11 +227,7 @@ void WinPlayFMV(const char* name, bool play)
 
 void WinStopFMV(bool play)
 {
-#if defined(FFPLAY_FEATURE)
-#else
-#if (DIRECT3D_VERSION >= 0x900)
-	return;
-#endif
+#if (DIRECT3D_VERSION <= 0x500) // DirectX5
 	Player_StopTimer(MovieContext);
 	Player_ShutDownSound(&FmvSoundContext);
 	Player_ShutDownVideo(&FmvContext);
