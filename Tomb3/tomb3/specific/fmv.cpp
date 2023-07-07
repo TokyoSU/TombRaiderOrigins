@@ -5,10 +5,14 @@
 #include "file.h"
 #include "input.h"
 #include "audio.h"
+#include "../newstuff/ffplay.h"
 #include "../tomb3/tomb3.h"
+#include "texture.h"
+#include "hwrender.h"
 
 long fmv_playing;
 
+#if !defined(FFPLAY_FEATURE)
 static LPVOID MovieContext;
 static LPVOID FmvContext;
 static LPVOID FmvSoundContext;
@@ -51,13 +55,19 @@ static long(__cdecl* Movie_GetCurrentFrame)(LPVOID);
 static long(__cdecl* Movie_GetTotalFrames)(LPVOID);
 
 static HMODULE hWinPlay;
+#endif
 
 bool LoadWinPlay()
 {
+#if defined(FFPLAY_FEATURE)
+	return FFPlayInit();
+#else
+#if (DIRECT3D_VERSION >= 0x900)
+	return false;
+#endif
 	hWinPlay = LoadLibrary("WINPLAY.DLL");
-
-	if (!hWinPlay)
-		return 0;
+	if (hWinPlay == NULL)
+		return false;
 
 	try
 	{
@@ -96,28 +106,28 @@ bool LoadWinPlay()
 	{
 		FreeLibrary(hWinPlay);
 		hWinPlay = 0;
-		return 0;
+		return false;
 	}
-
-	return 1;
+	return true;
+#endif
 }
 
 void FreeWinPlay()
 {
+#if defined(FFPLAY_FEATURE)
+	FFPlayCleanup();
+#else
 	if (hWinPlay)
 	{
 		FreeLibrary(hWinPlay);
 		hWinPlay = 0;
 	}
+#endif
 }
 
 long FMV_Play(char* name)
 {
-#if (DIRECT3D_VERSION >= 0x900)
-	return 0;
-#endif
-
-	if (App.Windowed || !App.WinPlayLoaded)
+	if (!App.WinPlayLoaded)
 		return 0;
 
 	fmv_playing = 1;
@@ -129,7 +139,9 @@ long FMV_Play(char* name)
 	fmv_playing = 0;
 
 	if (!GtWindowClosed)
+	{
 		WinDXInit(&App.DeviceInfo, &App.DXConfig, 0);
+	}
 
 	ShowCursor(1);
 	return GtWindowClosed;
@@ -137,15 +149,12 @@ long FMV_Play(char* name)
 
 long FMV_PlayIntro(char* name1, char* name2)
 {
-#if (DIRECT3D_VERSION >= 0x900)
-	return 0;
-#endif
-
-	if (App.Windowed || !App.WinPlayLoaded)
+	if (!App.WinPlayLoaded)
 		return 0;
 
 	fmv_playing = 1;
 	ShowCursor(0);
+	S_CDStop();
 	WinFreeDX(0);
 	WinPlayFMV(GetFullPath(name1), 1);
 	WinStopFMV(1);
@@ -154,7 +163,9 @@ long FMV_PlayIntro(char* name1, char* name2)
 	fmv_playing = 0;
 
 	if (!GtWindowClosed)
+	{
 		WinDXInit(&App.DeviceInfo, &App.DXConfig, 0);
+	}
 
 	ShowCursor(1);
 	return GtWindowClosed;
@@ -162,14 +173,15 @@ long FMV_PlayIntro(char* name1, char* name2)
 
 void WinPlayFMV(const char* name, bool play)
 {
-	long xSize, ySize, xOffset, yOffset;
-	long lp;
-	RECT r;
-
+#if defined(FFPLAY_FEATURE)
+	FFPlay(name);
+#else
 #if (DIRECT3D_VERSION >= 0x900)
 	return;
 #endif
-
+	long xSize, ySize, xOffset, yOffset;
+	long lp;
+	RECT r;
 	r.left = 0;
 	r.top = 0;
 	r.right = 640;
@@ -222,10 +234,13 @@ void WinPlayFMV(const char* name, bool play)
 		if (input & IN_OPTION)
 			break;
 	}
+#endif
 }
 
 void WinStopFMV(bool play)
 {
+#if defined(FFPLAY_FEATURE)
+#else
 #if (DIRECT3D_VERSION >= 0x900)
 	return;
 #endif
@@ -237,4 +252,5 @@ void WinStopFMV(bool play)
 
 	if (play)
 		Player_ReturnPlaybackMode();
+#endif
 }

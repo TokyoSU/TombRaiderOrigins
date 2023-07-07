@@ -434,6 +434,7 @@
     <ClInclude Include="tomb3\game\tr1_wolf.h" />
     <ClInclude Include="tomb3\game\tr1_bat.h" />
     <ClInclude Include="tomb3\game\tr1_bear.h" />
+    <ClInclude Include="tomb3\newstuff\ffplay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tomb3\game\51baton.cpp">
@@ -840,6 +841,7 @@
     <ClCompile Include="tomb3\game\tr1_wolf.cpp" />
     <ClCompile Include="tomb3\game\tr1_bat.cpp" />
     <ClCompile Include="tomb3\game\tr1_bear.cpp" />
+    <ClCompile Include="tomb3\newstuff\ffplay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tomb3.rc" />
