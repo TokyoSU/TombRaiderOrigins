@@ -14,8 +14,8 @@
 #include "people.h"
 #include "lara.h"
 
-static BITE_INFO claw_bite_left = { 19, -13, 3, 7 };
-static BITE_INFO claw_bite_right = { 19, -13, 3, 4 };
+static BiteInfo claw_bite_left = { 19, -13, 3, 7 };
+static BiteInfo claw_bite_right = { 19, -13, 3, 4 };
 
 static void TriggerPlasmaBallFlame(short fx_number, long type, long xv, long yv, long zv)
 {

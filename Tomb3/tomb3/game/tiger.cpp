@@ -7,7 +7,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO tiger_bite = { 19, -13, 3, 26 };
+static BiteInfo tiger_bite = { 19, -13, 3, 26 };
 
 void TigerControl(short item_number)
 {
@@ -28,7 +28,7 @@ void TigerControl(short item_number)
 	{
 		if (item->current_anim_state != TIGER_DEATH)
 		{
-			item->anim_number = objects[TIGER].anim_index + 11;
+			item->anim_number = objects[TR3_TIGER].anim_index + 11;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = TIGER_DEATH;
 		}

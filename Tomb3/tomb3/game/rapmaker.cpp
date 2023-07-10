@@ -36,7 +36,7 @@ void RaptorEmitterControl(short item_number)
 		{
 			raptor = &items[lp];
 
-			if (raptor->object_number == RAPTOR && raptor->ai_bits & MODIFY)
+			if (raptor->object_number == TR3_RAPTOR && raptor->ai_bits & MODIFY)
 				RaptorItem[nRaptor++] = lp;
 
 			if (nRaptor > 2)

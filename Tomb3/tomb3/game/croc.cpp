@@ -6,7 +6,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO croc_bite = { 5, -21, 467, 9 };
+static BiteInfo croc_bite = { 5, -21, 467, 9 };
 
 void CrocControl(short item_number)
 {
@@ -26,7 +26,7 @@ void CrocControl(short item_number)
 	{
 		if (item->current_anim_state != CROC_DEATH)
 		{
-			item->anim_number = objects[CROCODILE].anim_index + 4;
+			item->anim_number = objects[TR3_CROCODILE].anim_index + 4;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = CROC_DEATH;
 			item->hit_points = DONT_TARGET;

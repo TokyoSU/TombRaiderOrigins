@@ -173,7 +173,7 @@ void ResetTargets()
 
 		for (lp = 0; lp < level_items; lp++)
 		{
-			if (items[lp].object_number == TARGETS)
+			if (items[lp].object_number == TR3_TARGETS)
 			{
 				InitialiseTarget((short)lp);
 				assault_targets++;

@@ -7,7 +7,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO cobra_hit = { 0, 0, 0, 13 };
+static BiteInfo cobra_hit = { 0, 0, 0, 13 };
 
 void InitialiseCobra(short item_number)
 {

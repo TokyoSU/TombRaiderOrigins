@@ -18,12 +18,12 @@
 #include "../specific/init.h"
 #include "camera.h"
 
-static BITE_INFO teeth1a = { -23, 0, -1718, 0 };
-static BITE_INFO teeth1b = { 71, 0, -1718, 1 };
-static BITE_INFO teeth2a = { -23, 10, -1718, 0 };
-static BITE_INFO teeth2b = { 71, 10, -1718, 1 };
-static BITE_INFO teeth3a = { -23, -10, -1718, 0 };
-static BITE_INFO teeth3b = { 71, -10, -1718, 1 };
+static BiteInfo teeth1a = { -23, 0, -1718, 0 };
+static BiteInfo teeth1b = { 71, 0, -1718, 1 };
+static BiteInfo teeth2a = { -23, 10, -1718, 0 };
+static BiteInfo teeth2b = { 71, 10, -1718, 1 };
+static BiteInfo teeth3a = { -23, -10, -1718, 0 };
+static BiteInfo teeth3b = { 71, -10, -1718, 1 };
 
 void LaraBurn()
 {

@@ -362,11 +362,11 @@ long FireWeapon(long weapon_type, ITEM_INFO* target, ITEM_INFO* source, short* a
 
 	obj_num = target->object_number;
 
-	if (obj_num != SHIVA && obj_num != ARMY_WINSTON && obj_num != LON_BOSS && (obj_num != TRIBEBOSS || !TribeBossShieldOn))
+	if (obj_num != TR3_SHIVA && obj_num != TR3_ARMY_WINSTON && obj_num != TR3_LONDON_BOSS && (obj_num != TR3_TRIBEBOSS || !TribeBossShieldOn))
 		HitTarget(target, &dest, wep->damage);
-	else if (obj_num == TRIBEBOSS)
+	else if (obj_num == TR3_TRIBEBOSS)
 		FindClosestShieldPoint(dest.x - ((dest.x - start.x) >> 5), dest.y - ((dest.y - start.y) >> 5), dest.z - ((dest.z - start.z) >> 5), target);
-	else if (obj_num == ARMY_WINSTON || obj_num == LON_BOSS)
+	else if (obj_num == TR3_ARMY_WINSTON || obj_num == TR3_LONDON_BOSS)
 	{
 		target->hit_status = 1;
 		target->hit_points--;
@@ -404,16 +404,16 @@ void HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, long damage)
 	if (item->data)
 		((CREATURE_INFO*)item->data)->hurt_by_lara = 1;
 
-	if (hitpos && item->object_number != TRIBEBOSS)
+	if (hitpos && item->object_number != TR3_TRIBEBOSS)
 	{
-		if (item->object_number == ROBOT_SENTRY_GUN)
+		if (item->object_number == TR3_ROBOT_SENTRY_GUN)
 		{
 			for (int i = 0; i < 3; i++)
 				TriggerRicochetSpark(hitpos, GetRandomControl() & 0xFFF, 0);
 
 			SoundEffect(SFX_LARA_RICOCHET, &item->pos, SFX_DEFAULT);
 		}
-		else if (item->object_number != TARGETS)
+		else if (item->object_number != TR3_TARGETS)
 			DoBloodSplat(hitpos->x, hitpos->y, hitpos->z, item->speed, item->pos.y_rot, item->room_number);
 	}
 }

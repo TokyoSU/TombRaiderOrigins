@@ -261,7 +261,7 @@ void S_DrawLaser(ITEM_INFO* item)
 			{
 				target = &items[lp2];
 
-				if ((target->object_number == STROBE_LIGHT || target->object_number == ROBOT_SENTRY_GUN) && TriggerActive(target))
+				if ((target->object_number == STROBE_LIGHT || target->object_number == TR3_ROBOT_SENTRY_GUN) && TriggerActive(target))
 					target->really_active = 1;
 			}
 		}

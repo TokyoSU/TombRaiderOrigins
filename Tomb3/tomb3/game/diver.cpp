@@ -10,7 +10,7 @@
 #include "lara.h"
 #include "effects.h"
 
-static BITE_INFO diver_poon = { 17, 164, 44, 18 };
+static BiteInfo diver_poon = { 17, 164, 44, 18 };
 
 long GetWaterSurface(long x, long y, long z, short room_number)
 {
@@ -162,7 +162,7 @@ void DiverControl(short item_number)
 	{
 		if (item->current_anim_state != 9)
 		{
-			item->anim_number = objects[DIVER].anim_index + 16;
+			item->anim_number = objects[TR3_DIVER].anim_index + 16;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 9;
 		}

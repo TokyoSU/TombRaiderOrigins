@@ -8,7 +8,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO tribeaxe_hit = { 0, 16, 265, 13 };
+static BiteInfo tribeaxe_hit = { 0, 16, 265, 13 };
 
 static uchar tribeaxe_hitframes[13][3] =
 {

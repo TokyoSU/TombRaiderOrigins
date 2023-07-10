@@ -9,7 +9,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO wing_bite = { 0, 0, 0, 12 };
+static BiteInfo wing_bite = { 0, 0, 0, 12 };
 
 static void TriggerWingMuteParticles(short item_number)
 {
@@ -67,7 +67,7 @@ void InitialiseWingmute(short item_number)
 
 	InitialiseCreature(item_number);
 	item = &items[item_number];
-	item->anim_number = objects[MUTANT1].anim_index + 2;
+	item->anim_number = objects[TR3_MUTANT1].anim_index + 2;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = WING_WAIT;
 	item->goal_anim_state = WING_WAIT;
@@ -111,7 +111,7 @@ void WingmuteControl(short item_number)
 		}
 		else
 		{
-			item->anim_number = objects[MUTANT1].anim_index + 5;
+			item->anim_number = objects[TR3_MUTANT1].anim_index + 5;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = WING_FALL;
 			item->gravity_status = 1;

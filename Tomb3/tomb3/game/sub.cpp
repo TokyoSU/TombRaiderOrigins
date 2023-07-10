@@ -23,7 +23,7 @@
 #include "savegame.h"
 #include "../newstuff/LaraDraw.h"
 
-BITE_INFO sub_bites[6] =
+BiteInfo sub_bites[6] =
 {
 	{ 0, 0, 0, 3 },
 	{ 0, 96, 256, 0 },
@@ -952,7 +952,7 @@ static void TriggerSubMist(long x, long y, long z, long speed, short angle)
 
 static void DoWake(ITEM_INFO* item, short lr)
 {
-	BITE_INFO* bite;
+	BiteInfo* bite;
 	PHD_VECTOR pos;
 
 	if (TriggerActive(item) && !SubWakePts[SubCurrentStartWake][lr].life)

@@ -14,7 +14,7 @@
 #include "lot.h"
 #include "lara.h"
 
-static BITE_INFO mpgun_gun = { 0, 160, 40, 13 };
+static BiteInfo mpgun_gun = { 0, 160, 40, 13 };
 
 void MPGunControl(short item_number)
 {
@@ -78,7 +78,7 @@ void MPGunControl(short item_number)
 				{
 					candidate = &items[target->item_num];
 
-					if (candidate->object_number == LARA || candidate->object_number == BOB)
+					if (candidate->object_number == LARA || candidate->object_number == TR3_BOB)
 					{
 						dx = candidate->pos.x_pos - item->pos.x_pos;
 						dz = candidate->pos.z_pos - item->pos.z_pos;
@@ -258,8 +258,8 @@ void MPGunControl(short item_number)
 				torso_x = info.x_angle;
 			}
 
-			if (item->anim_number == objects[MP2].anim_index + 12 ||
-				(item->anim_number == objects[MP2].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
+			if (item->anim_number == objects[TR3_MP2].anim_index + 12 ||
+				(item->anim_number == objects[TR3_MP2].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
 			{
 				if (!ShotLara(item, &info, &mpgun_gun, torso_y, 32))
 					item->required_anim_state = MPGUN_WAIT;
@@ -353,8 +353,8 @@ void MPGunControl(short item_number)
 				torso_x = info.x_angle;
 			}
 
-			if (item->anim_number == objects[MP2].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17
-				|| item->anim_number == objects[MP2].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
+			if (item->anim_number == objects[TR3_MP2].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17
+				|| item->anim_number == objects[TR3_MP2].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
 			{
 				if (!ShotLara(item, &info, &mpgun_gun, torso_y, 32))
 					item->required_anim_state = MPGUN_WALK;

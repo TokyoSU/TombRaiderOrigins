@@ -13,7 +13,7 @@
 #include "sound.h"
 #include "lara.h"
 
-static BITE_INFO civvy_hit = { 0, 0, 0, 13 };
+static BiteInfo civvy_hit = { 0, 0, 0, 13 };
 
 static void TriggerFenceSparks(long x, long y, long z, long kill)
 {
@@ -226,7 +226,7 @@ void InitialiseCivvy(short item_number)
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[CIVVIE].anim_index + 6;
+	item->anim_number = objects[TR3_CIVVIE].anim_index + 6;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = CIVVY_STOP;
 	item->goal_anim_state = CIVVY_STOP;
@@ -264,7 +264,7 @@ void CivvyControl(short item_number)
 	{
 		if (item->current_anim_state != CIVVY_DEATH)
 		{
-			item->anim_number = objects[CIVVIE].anim_index + 26;
+			item->anim_number = objects[TR3_CIVVIE].anim_index + 26;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = CIVVY_DEATH;
 			civvy->LOT.step = 256;
@@ -580,7 +580,7 @@ void CivvyControl(short item_number)
 
 		case 4:
 			civvy->maximum_turn = 0;
-			item->anim_number = objects[CIVVIE].anim_index + 27;
+			item->anim_number = objects[TR3_CIVVIE].anim_index + 27;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = CIVVY_CLIMB3;
 			break;

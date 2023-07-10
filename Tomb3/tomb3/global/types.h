@@ -1,18 +1,17 @@
 #pragma once
 #include "math_tbls.h"
 
-/*typedefs*/
+// Typedefs
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;
 
-#define SQUARE(x) ((x)*(x))
 #define	TRIGMULT2(a, b)	(((a) * (b)) >> W2V_SHIFT)
 #define	TRIGMULT3(a, b, c)	(TRIGMULT2((TRIGMULT2(a, b)), c))
 #define key_pressed(x) (keymap[x] & 0x80)
 #define RGBA(r, g, b, a)	((a << 24) | (r << 16) | (g << 8) | (b))
 
-//S_DrawSprite flags
+// S_DrawSprite flags
 #define SPR_RGB(r, g, b)	((r) | ((g) << 8) | ((b) << 16))
 #define SPR_ABS				0x1000000
 #define SPR_SEMITRANS		0x2000000
@@ -22,7 +21,7 @@ typedef unsigned long ulong;
 #define SPR_BLEND_ADD		0x20000000
 #define SPR_BLEND_SUB		0x40000000
 
-/********************DX defs********************/
+// DX defs
 #if (DIRECT3D_VERSION >= 0x900)
 #define LPDIRECT3DX				LPDIRECT3D9
 #define LPDIRECT3DDEVICEX		LPDIRECT3DDEVICE9
@@ -72,39 +71,46 @@ typedef unsigned long ulong;
 /***********************************************/
 
 //constants
-#define NO_HEIGHT		-32512
-#define DONT_TARGET		-16384
-#define NO_ITEM			-1
-#define W2V_SHIFT		14
-#define NO_ROOM			255
-#define WALL_SHIFT		10
-#define WALL_SIZE		(1 << WALL_SHIFT)
-#define WALL_MASK		(WALL_SIZE - 1)
-#define MAX_LOT			20		//was 5
-#define MAX_NONLOT		20		//was 12
+constexpr auto NO_HEIGHT = -32512;
+constexpr auto DONT_TARGET = -16384;
+constexpr auto NO_ITEM = -1;
+constexpr auto W2V_SHIFT = 14;
+constexpr auto NO_ROOM = 255;
+constexpr auto WALL_SHIFT = 10;
+constexpr auto WALL_SIZE = (1 << WALL_SHIFT);
+constexpr auto WALL_MASK = (WALL_SIZE - 1);
+constexpr auto MAX_LOT = 20; // NOTE: Was increased to 20 from 5.
+constexpr auto MAX_NONLOT = 20; // NOTE: Was increased to 20 from 12.
 
-#define MAX_BUCKETS		6
-#define BUCKET_EXTRA	32
-#define BUCKET_VERTS	(256 + BUCKET_EXTRA)
+constexpr auto MAX_BUCKETS = 8;
+constexpr auto BUCKET_EXTRA = 32;
+constexpr auto BUCKET_VERTS = (256 + BUCKET_EXTRA);
 
-#define MAX_TLVERTICES	0x12000	//*8
-#define MAX_SORTLISTS	0x17700	//*8
-#define MAX_VBUF		12000	//*8
-#define MAX_VINFO		320		//*8
-#define MAX_TPAGES		128		//*4
-#define MAX_TINFOS		0x4000	//*4
+constexpr auto MAX_TLVERTICES = 9218 * 8;
+constexpr auto MAX_SORTLISTS = 12000 * 8;
+constexpr auto MAX_VBUF = 1500 * 8;
+constexpr auto MAX_VINFO = 40 * 8;
+constexpr auto MAX_TPAGES = 32 * 8;
+constexpr auto MAX_TINFOS = 2048 * 8;
 
-#define MAX_STATICS		256		//was 50
-#define MAX_ITEMS		1024	//was 256
-#define NLAYOUTKEYS		15
-#define MAX_WEATHER		256
-#define MAX_WEATHER_ALIVE	16	//was 8
+constexpr auto MAX_STATICS = 256;
+constexpr auto MAX_ITEMS = 1024;
+constexpr auto NLAYOUTKEYS = 15;
+constexpr auto MAX_WEATHER = 256;
+constexpr auto MAX_WEATHER_ALIVE = 16;
 
-#define MALLOC_SIZE	15000000	//15 MB (was around 3.6 MB)
+// 15 MB (was around 3.6 MB)
+constexpr auto MALLOC_SIZE = 15000000;
 
-#define FRAMES_PER_SECOND	30
-#define TICKS_PER_FRAME		2
-#define TICKS_PER_SECOND	(FRAMES_PER_SECOND * TICKS_PER_FRAME)
+constexpr auto FRAMES_PER_SECOND = 30;
+constexpr auto TICKS_PER_FRAME = 2;
+constexpr auto TICKS_PER_SECOND = (FRAMES_PER_SECOND * TICKS_PER_FRAME);
+
+constexpr short ANGLE(short x) { return x * 182; }
+constexpr long BLOCK(long x) { return x * WALL_SIZE; }
+constexpr long CLICK(long x) { return x * (WALL_SIZE / 4); }
+constexpr long SQUARE(long x) { return x * x; }
+constexpr long MESH_BITS(long x) { return 1 << x; }
 
 /*enums*/
 enum texture_flags
@@ -704,6 +710,7 @@ struct ITEM_INFO
 	ushort clear_body : 1;
 	ushort ai_bits : 5;
 	ushort really_active : 1;
+	short ocb;
 };
 
 struct BOX_NODE
@@ -1654,13 +1661,16 @@ struct HWCONFIG
 	long nFillMode;
 };
 
-struct BITE_INFO
+struct BiteInfo
 {
-	long x;
-	long y;
-	long z;
-	long mesh_num;
+	long x = 0;
+	long y = 0;
+	long z = 0;
+	long mesh_num = 0;
+	BiteInfo() = default;
+	BiteInfo(const long& _x, const long& _y, const long& _z, const long& _mesh_num) : x(_x), y(_y), z(_z), mesh_num(_mesh_num) {}
 };
+static BiteInfo MakeBiteInfo(long _x, long _y, long _z, long _mesh_num) { return BiteInfo(_x, _y, _z, _mesh_num); }
 
 struct WATERTAB
 {

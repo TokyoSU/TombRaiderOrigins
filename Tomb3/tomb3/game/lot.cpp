@@ -79,21 +79,21 @@ void InitialiseNonLotAI(short item_number, long slot)
 		creature->LOT.fly = 256;
 		break;
 
-	case WHALE:
-	case DIVER:
-	case CROW:
-	case VULTURE:
+	case TR3_WHALE:
+	case TR3_DIVER:
+	case TR3_CROW:
+	case TR3_VULTURE:
 		creature->LOT.step = 20480;
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 16;
 
-		if (item->object_number == WHALE)
+		if (item->object_number == TR3_WHALE)
 			creature->LOT.block_mask = 0x8000;
 
 		break;
 
-	case LIZARD_MAN:
-	case MP1:
+	case TR3_LIZARD_MAN:
+	case TR3_MP1:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -1024;
 		break;
@@ -302,45 +302,44 @@ void InitialiseSlot(short item_number, long slot)
 		creature->LOT.fly = 256;
 		break;
 
-	case WHALE:
-	case DIVER:
-	case CROW:
-	case VULTURE:
-	case CROCODILE:
-	case MUTANT1:
+	case TR1_BAT:
+	case TR3_WHALE:
+	case TR3_DIVER:
+	case TR3_CROW:
+	case TR3_VULTURE:
+	case TR3_CROCODILE:
+	case TR3_MUTANT1:
 		creature->LOT.step = 20480;
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 16;
-
-		if (item->object_number == WHALE)
+		if (item->object_number == TR3_WHALE)
 			creature->LOT.block_mask = 0x8000;
 
 		break;
 
-	case LIZARD_MAN:
-	case WILLARD_BOSS:
-	case PUNK1:
-	case MP1:
-	case BOB:
-	case CIVVIE:
-	case MONKEY:
+	case TR3_LIZARD_MAN:
+	case TR3_WILLARD_BOSS:
+	case TR3_PUNK1:
+	case TR3_MP1:
+	case TR3_BOB:
+	case TR3_CIVVIE:
+	case TR3_MONKEY:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -1024;
 		break;
 
-	case LON_BOSS:
+	case TR3_LONDON_BOSS:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -768;
 		break;
 
-	case SHIVA:
-	case TREX:
+	case TR3_SHIVA:
+	case TR3_TREX:
 		creature->LOT.block_mask = 0x8000;
 		break;
 	}
 
 	ClearLOT(&creature->LOT);
-
 	if (item_number != lara.item_number)
 		CreateZone(item);
 

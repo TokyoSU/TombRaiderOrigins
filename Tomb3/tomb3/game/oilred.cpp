@@ -12,7 +12,7 @@
 #include "../specific/game.h"
 #include "lara.h"
 
-static BITE_INFO oilred_gun = { 0, 160, 40, 13 };
+static BiteInfo oilred_gun = { 0, 160, 40, 13 };
 
 void OilRedControl(short item_number)
 {
@@ -54,7 +54,7 @@ void OilRedControl(short item_number)
 
 		if (item->current_anim_state != OILRED_DEATH)
 		{
-			item->anim_number = objects[OILRED].anim_index + 14;
+			item->anim_number = objects[TR3_OILRED].anim_index + 14;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = OILRED_DEATH;
 		}
@@ -129,7 +129,7 @@ void OilRedControl(short item_number)
 		case OILRED_WAIT:
 			head = larainfo.angle;
 
-			if (item->anim_number == objects[OILRED].anim_index + 17 || item->anim_number == objects[OILRED].anim_index + 27 || item->anim_number == objects[OILRED].anim_index + 28)
+			if (item->anim_number == objects[TR3_OILRED].anim_index + 17 || item->anim_number == objects[TR3_OILRED].anim_index + 27 || item->anim_number == objects[TR3_OILRED].anim_index + 28)
 			{
 				if (abs(info.angle) < 1820)
 					item->pos.y_rot += info.angle;
@@ -250,8 +250,8 @@ void OilRedControl(short item_number)
 				torso_y = info.angle;
 			}
 
-			if (item->anim_number == objects[OILRED].anim_index + 12 ||
-				(item->anim_number == objects[OILRED].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
+			if (item->anim_number == objects[TR3_OILRED].anim_index + 12 ||
+				(item->anim_number == objects[TR3_OILRED].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
 			{
 				if (!ShotLara(item, &info, &oilred_gun, torso_y, 35))
 					item->required_anim_state = OILRED_WAIT;
@@ -348,8 +348,8 @@ void OilRedControl(short item_number)
 				torso_y = info.angle;
 			}
 
-			if (item->anim_number == objects[OILRED].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17 ||
-				item->anim_number == objects[OILRED].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
+			if (item->anim_number == objects[TR3_OILRED].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17 ||
+				item->anim_number == objects[TR3_OILRED].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
 			{
 				if (!ShotLara(item, &info, &oilred_gun, torso_y, 35))
 					item->required_anim_state = OILRED_WALK;

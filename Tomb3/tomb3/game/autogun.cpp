@@ -13,15 +13,15 @@
 #include "people.h"
 #include "sound.h"
 
-static BITE_INFO autogun_left = { 110, -30, -530, 2 };
-static BITE_INFO autogun_right = { -110, -30, -530, 2 };
+static BiteInfo autogun_left = { 110, -30, -530, 2 };
+static BiteInfo autogun_right = { -110, -30, -530, 2 };
 
 void InitialiseAutogun(short item_number)
 {
 	ITEM_INFO* item;
 
 	item = &items[item_number];
-	item->anim_number = objects[ROBOT_SENTRY_GUN].anim_index + 1;
+	item->anim_number = objects[TR3_ROBOT_SENTRY_GUN].anim_index + 1;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = AUTOGUN_STILL;
 	item->goal_anim_state = AUTOGUN_STILL;

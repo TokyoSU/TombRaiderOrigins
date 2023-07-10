@@ -7,7 +7,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO mouse_bite = { 0, 0, 57, 2 };
+static BiteInfo mouse_bite = { 0, 0, 57, 2 };
 
 void MouseControl(short item_number)
 {
@@ -29,7 +29,7 @@ void MouseControl(short item_number)
 	{
 		if (item->current_anim_state != MOUSE_DEATH)
 		{
-			item->anim_number = objects[SMALL_RAT].anim_index + 9;
+			item->anim_number = objects[TR3_SMALL_RAT].anim_index + 9;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MOUSE_DEATH;
 		}

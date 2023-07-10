@@ -163,7 +163,7 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter)
 				fx->fallspeed = (short)-GetRandomControl() >> 8;
 
 				if (obj_num == SMASH_WINDOW || obj_num == SMASH_OBJECT1 || obj_num == SMASH_OBJECT2 ||
-					obj_num == SMASH_OBJECT3 || obj_num == MUTANT2 || obj_num == QUADBIKE)
+					obj_num == SMASH_OBJECT3 || obj_num == TR3_MUTANT2 || obj_num == QUADBIKE)
 					fx->counter = 0;
 				else
 					fx->counter = (counter << 2) | GetRandomControl() & 3;
@@ -221,7 +221,7 @@ long ExplodingDeath(short item_number, long mesh_bits, short counter)
 					fx->fallspeed = (short)-GetRandomControl() >> 8;
 
 					if (obj_num == SMASH_WINDOW || obj_num == SMASH_OBJECT1 || obj_num == SMASH_OBJECT2 ||
-						obj_num == SMASH_OBJECT3 || obj_num == MUTANT2 || obj_num == QUADBIKE)
+						obj_num == SMASH_OBJECT3 || obj_num == TR3_MUTANT2 || obj_num == QUADBIKE)
 						fx->counter = 0;
 					else
 						fx->counter = (counter << 2) | GetRandomControl() & 3;

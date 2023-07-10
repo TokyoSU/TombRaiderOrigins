@@ -17,7 +17,7 @@
 #include "lara.h"
 #include "effects.h"
 
-static BITE_INFO flamer_gun = { 0, 340, 64, 7 };
+static BiteInfo flamer_gun = { 0, 340, 64, 7 };
 
 static void TriggerPilotFlame(short item_number)
 {
@@ -158,7 +158,7 @@ static void TriggerFlamethrowerFlame(long x, long y, long z, long xv, long yv, l
 	}
 }
 
-static short TriggerFlameThrower(ITEM_INFO* item, BITE_INFO* bite, short speed)
+static short TriggerFlameThrower(ITEM_INFO* item, BiteInfo* bite, short speed)
 {
 	FX_INFO* fx;
 	PHD_VECTOR pos1;
@@ -288,8 +288,8 @@ void FlamerControl(short item_number)
 				enemy = &items[target->item_num];
 
 				if (enemy->object_number == LARA ||
-					enemy->object_number == WHITE_SOLDIER ||
-					enemy->object_number == FLAMETHROWER_BLOKE ||
+					enemy->object_number == TR3_WHITE_SOLDIER ||
+					enemy->object_number == TR3_FLAMETHROWER_BLOKE ||
 					enemy->hit_points <= 0)
 					continue;
 
@@ -439,7 +439,7 @@ void FlamerControl(short item_number)
 			{
 				TriggerFlameThrower(item, &flamer_gun, (GetRandomControl() & 0x1F) + 12);
 
-				if (enemy && enemy->object_number == BURNT_MUTANT)
+				if (enemy && enemy->object_number == TR3_BURNT_MUTANT)
 					enemy->item_flags[0]++;
 			}
 
@@ -502,7 +502,7 @@ void FlamerControl(short item_number)
 			{
 				TriggerFlameThrower(item, &flamer_gun, (GetRandomControl() & 0x1F) + 12);
 
-				if (enemy && enemy->object_number == BURNT_MUTANT)
+				if (enemy && enemy->object_number == TR3_BURNT_MUTANT)
 					enemy->item_flags[0]++;
 			}
 

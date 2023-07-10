@@ -25,7 +25,7 @@
 #include "savegame.h"
 #include "../newstuff/LaraDraw.h"
 
-static BITE_INFO quad_bites[6] =
+static BiteInfo quad_bites[6] =
 {
 	{-56, -32, -380, 0},
 	{56, -32, -380, 0},

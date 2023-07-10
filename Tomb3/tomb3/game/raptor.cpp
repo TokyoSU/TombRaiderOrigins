@@ -8,7 +8,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO raptor_bite = { 0, 66, 318, 22 };
+static BiteInfo raptor_bite = { 0, 66, 318, 22 };
 
 void RaptorControl(short item_number)
 {
@@ -73,7 +73,7 @@ void RaptorControl(short item_number)
 				}
 			}
 
-			if (enemy && (enemy->object_number != RAPTOR || GetRandomControl() < 0x400 && best_dist < 0x400000))
+			if (enemy && (enemy->object_number != TR3_RAPTOR || GetRandomControl() < 0x400 && best_dist < 0x400000))
 				raptor->enemy = enemy;
 
 			//Favor Lara if she's closer

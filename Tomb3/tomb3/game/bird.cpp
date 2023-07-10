@@ -6,8 +6,8 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO bird_bite = { 15, 46, 21, 6 };
-static BITE_INFO crow_bite = { 2, 10, 60, 14 };
+static BiteInfo bird_bite = { 15, 46, 21, 6 };
+static BiteInfo crow_bite = { 2, 10, 60, 14 };
 
 void InitialiseVulture(short item_number)
 {
@@ -16,16 +16,16 @@ void InitialiseVulture(short item_number)
 	InitialiseCreature(item_number);
 	item = &items[item_number];
 
-	if (item->object_number == CROW)
+	if (item->object_number == TR3_CROW)
 	{
-		item->anim_number = objects[CROW].anim_index + 14;
+		item->anim_number = objects[TR3_CROW].anim_index + 14;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->current_anim_state = BIRD_EAT;
 		item->goal_anim_state = BIRD_EAT;
 	}
 	else
 	{
-		item->anim_number = objects[VULTURE].anim_index + 5;
+		item->anim_number = objects[TR3_VULTURE].anim_index + 5;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->current_anim_state = BIRD_STOP;
 		item->goal_anim_state = BIRD_STOP;
@@ -62,10 +62,10 @@ void VultureControl(short item_number)
 			item->pos.y_pos = item->floor;
 		else
 		{
-			if (item->object_number == CROW)
-				item->anim_number = objects[CROW].anim_index + 1;
+			if (item->object_number == TR3_CROW)
+				item->anim_number = objects[TR3_CROW].anim_index + 1;
 			else
-				item->anim_number = objects[VULTURE].anim_index + 8;
+				item->anim_number = objects[TR3_VULTURE].anim_index + 8;
 
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BIRD_FALL;
@@ -127,7 +127,7 @@ void VultureControl(short item_number)
 				lara_item->hit_points -= 20;
 				lara_item->hit_status = 1;
 
-				if (item->object_number == CROW)
+				if (item->object_number == TR3_CROW)
 					CreatureEffect(item, &crow_bite, DoBloodSplat);
 				else
 					CreatureEffect(item, &bird_bite, DoBloodSplat);

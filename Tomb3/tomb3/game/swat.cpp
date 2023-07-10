@@ -13,7 +13,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO swat_gun = { 0, 300, 64, 7 };
+static BiteInfo swat_gun = { 0, 300, 64, 7 };
 
 void InitialiseSwat(short item_number)
 {
@@ -94,7 +94,7 @@ void SwatControl(short item_number)
 
 					ShotLara(item, &info, &swat_gun, info.angle, 84);
 
-					if (item->object_number == LON_MERCENARY1)
+					if (item->object_number == TR3_LONDON_MERCENARY1)
 						SoundEffect(SFX_OIL_SMG_FIRE, &item->pos, 0x6000);
 					else
 						SoundEffect(SFX_SWAT_SMG_FIRE, &item->pos, 0x6000);
@@ -143,7 +143,7 @@ void SwatControl(short item_number)
 		{
 			if (!swat->alerted)
 			{
-				if (item->object_number == SWAT_GUN)
+				if (item->object_number == TR3_SWAT_GUN)
 					SoundEffect(SFX_AMERCAN_HOY, &item->pos, SFX_DEFAULT);
 				else
 					SoundEffect(SFX_ENGLISH_HOY, &item->pos, SFX_DEFAULT);

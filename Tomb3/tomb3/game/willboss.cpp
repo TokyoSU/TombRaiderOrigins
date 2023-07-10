@@ -19,8 +19,8 @@
 #include "lara.h"
 #include "setup.h"
 
-static BITE_INFO willboss_bite_left = { 19, -13, 3, 20 };
-static BITE_INFO willboss_bite_right = { 19, -13, 3, 23 };
+static BiteInfo willboss_bite_left = { 19, -13, 3, 20 };
+static BiteInfo willboss_bite_right = { 19, -13, 3, 23 };
 
 static long dradii[5] = { 1600, 5600, 6400, 5600, 1600 };
 static long dheights1[5] = { -7680, -4224, -768, 2688, 6144 };

@@ -12,7 +12,7 @@
 #include "objects.h"
 #include "lara.h"
 
-static BITE_INFO londsec_gun = { 0, 160, 40, 13 };
+static BiteInfo londsec_gun = { 0, 160, 40, 13 };
 
 void LondSecControl(short item_number)
 {
@@ -256,8 +256,8 @@ void LondSecControl(short item_number)
 				torso_y = info.angle;
 			}
 
-			if (item->anim_number == objects[SECURITY_GUARD].anim_index + 12 ||
-				(item->anim_number == objects[SECURITY_GUARD].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
+			if (item->anim_number == objects[TR3_SECURITY_GUARD].anim_index + 12 ||
+				(item->anim_number == objects[TR3_SECURITY_GUARD].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
 			{
 				if (!ShotLara(item, &info, &londsec_gun, torso_y, 32))
 					item->required_anim_state = LONDSEC_WAIT;
@@ -354,8 +354,8 @@ void LondSecControl(short item_number)
 				torso_y = info.angle;
 			}
 
-			if (item->anim_number == objects[SECURITY_GUARD].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17 ||
-				item->anim_number == objects[SECURITY_GUARD].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
+			if (item->anim_number == objects[TR3_SECURITY_GUARD].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17 ||
+				item->anim_number == objects[TR3_SECURITY_GUARD].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
 			{
 				if (!ShotLara(item, &info, &londsec_gun, torso_y, 32))
 					item->required_anim_state = LONDSEC_WALK;

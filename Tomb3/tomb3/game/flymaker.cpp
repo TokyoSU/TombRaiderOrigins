@@ -28,7 +28,7 @@ void FlyEmitterControl(short item_number)
 		{
 			fly = &items[lp];
 
-			if (fly->object_number == MUTANT1 && fly->ai_bits & MODIFY)
+			if (fly->object_number == TR3_MUTANT1 && fly->ai_bits & MODIFY)
 			{
 				FlyItem[nFly++] = lp;
 				KillItem(lp);

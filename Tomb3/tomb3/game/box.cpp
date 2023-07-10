@@ -19,6 +19,11 @@ short* overlap;
 short* ground_zone[4][2];
 short* fly_zone[2];
 
+CREATURE_INFO* GetCreatureInfo(ITEM_INFO* item)
+{
+	return reinterpret_cast<CREATURE_INFO*>(item->data);
+}
+
 void AlertNearbyGuards(ITEM_INFO* item)
 {
 	ITEM_INFO* target;
@@ -56,7 +61,7 @@ void InitialiseCreature(short item_number)
 
 	item = &items[item_number];
 
-	if (item->object_number != ELECTRIC_CLEANER && item->object_number != SHIVA && item->object_number != TARGETS)
+	if (item->object_number != TR3_ELECTRIC_CLEANER && item->object_number != TR3_SHIVA && item->object_number != TR3_TARGETS)
 		item->pos.y_rot += short((GetRandomControl() - 0x4000) >> 1);
 
 	item->collidable = 1;
@@ -1140,7 +1145,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 			CreatureTilt(item, 2 * tilt);
 	}
 
-	if (item->object_number != TREX && item->speed && item->hit_points > 0)
+	if (item->object_number != TR3_TREX && item->speed && item->hit_points > 0)
 		angle = (short)CreatureCreature(item_number);
 	else
 		angle = 0;
@@ -1186,7 +1191,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 		{
 			height = GetCeiling(floor, item->pos.x_pos, y, item->pos.z_pos);
 
-			if (item->object_number == WHALE)
+			if (item->object_number == TR3_WHALE)
 				top = 128;
 			else
 				top = bounds[2];
@@ -1237,7 +1242,7 @@ long CreatureAnimation(short item_number, short angle, short tilt)
 		floor = GetFloor(item->pos.x_pos, y, item->pos.z_pos, &room_number);
 		height = GetCeiling(floor, item->pos.x_pos, y, item->pos.z_pos);
 
-		if (item->object_number == TREX || item->object_number == SHIVA || item->object_number == MUTANT2)
+		if (item->object_number == TR3_TREX || item->object_number == TR3_SHIVA || item->object_number == TR3_MUTANT2)
 			top = 768;
 		else
 			top = bounds[2];
@@ -1353,10 +1358,9 @@ void CreatureUnderwater(ITEM_INFO* item, long depth)
 	}
 }
 
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number))
+short CreatureEffect(ITEM_INFO* item, const BiteInfo* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number))
 {
 	PHD_VECTOR pos;
-
 	pos.x = bite->x;
 	pos.y = bite->y;
 	pos.z = bite->z;
@@ -1379,9 +1383,9 @@ long CreatureVault(short item_number, short angle, long vault, long shift)
 
 	if (item->floor > y + 896)
 		vault = -4;
-	else if (item->floor > y + 640 && item->object_number == MONKEY)
+	else if (item->floor > y + 640 && item->object_number == TR3_MONKEY)
 		vault = -3;
-	else if (item->floor > y + 384 && item->object_number == MONKEY)
+	else if (item->floor > y + 384 && item->object_number == TR3_MONKEY)
 		vault = -2;
 	else
 	{
@@ -1641,14 +1645,14 @@ void GetAITarget(CREATURE_INFO* creature)
 					target = &items[lp];
 
 					if (target->object_number == AI_AMBUSH && target->room_number != NO_ROOM && SameZone(creature, target) &&
-						(target->pos.y_rot == item->item_flags[3] || item->object_number == MONKEY))
+						(target->pos.y_rot == item->item_flags[3] || item->object_number == TR3_MONKEY))
 					{
 						creature->enemy = target;
 						return;
 					}
 				}
 			}
-			else if (item->object_number != MONKEY)
+			else if (item->object_number != TR3_MONKEY)
 			{
 				if (abs(enemy->pos.x_pos - item->pos.x_pos) < 768 && abs(enemy->pos.y_pos - item->pos.y_pos) < 768 && abs(enemy->pos.z_pos - item->pos.z_pos) < 768)
 				{
@@ -1696,7 +1700,7 @@ void GetAITarget(CREATURE_INFO* creature)
 			item->ai_bits &= ~FOLLOW;
 		}
 	}
-	else if (item->object_number == MONKEY && item->carried_item == NO_ITEM)
+	else if (item->object_number == TR3_MONKEY && item->carried_item == NO_ITEM)
 	{
 		if (item->ai_bits == MODIFY)
 		{
@@ -1749,4 +1753,24 @@ void AdjustStopperFlag(ITEM_INFO* item, long dir, long set)
 	GetFloor(x, item->pos.y_pos, z, &room_number);
 	r = &room[room_number];
 	r->floor[((z - r->z) >> WALL_SHIFT) + r->x_size * ((x - r->x) >> WALL_SHIFT)].stopper = set;
+}
+
+void SetAnimation(ITEM_INFO* item, int anim_number, int frame_number)
+{
+	auto& obj = objects[item->object_number];
+	item->anim_number = obj.anim_index + anim_number;
+
+	auto& anim = anims[item->anim_number];
+	item->frame_number = anim.frame_base + frame_number;
+	item->current_anim_state = anim.current_anim_state;
+	item->goal_anim_state = item->current_anim_state;
+}
+
+void DamageTarget(ITEM_INFO* target, int damage)
+{
+	if (target != nullptr)
+	{
+		target->hit_points -= damage;
+		target->hit_status = 1;
+	}
 }

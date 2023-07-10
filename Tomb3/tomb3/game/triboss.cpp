@@ -17,7 +17,7 @@
 #include "setup.h"
 #include "lara.h"
 
-BITE_INFO tribeboss_hit[6] =
+BiteInfo tribeboss_hit[6] =
 {
 	{ 120, 68, 136, 8 },
 	{ 128, -64, 136, 8 },
@@ -56,7 +56,7 @@ static short FindLizardManItemNumber(short room_number)
 	{
 		item = &items[i];
 
-		if (item->object_number == LIZARD_MAN && item->room_number == room_number)
+		if (item->object_number == TR3_LIZARD_MAN && item->room_number == room_number)
 			return i;
 	}
 
@@ -271,12 +271,12 @@ void TriggerLizardMan()
 	short room_number;
 
 	item = &items[bossdata.LizmanItem];
-	item->object_number = LIZARD_MAN;
+	item->object_number = TR3_LIZARD_MAN;
 	item->room_number = bossdata.LizmanRoom;
 	item->pos.x_pos = lizman_summon_coords[bossdata.attack_type - 1][0];
 	item->pos.y_pos = lizman_summon_coords[bossdata.attack_type - 1][1];
 	item->pos.z_pos = lizman_summon_coords[bossdata.attack_type - 1][2];
-	item->anim_number = objects[LIZARD_MAN].anim_index;
+	item->anim_number = objects[TR3_LIZARD_MAN].anim_index;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = anims[item->anim_number].current_anim_state;
 	item->goal_anim_state = anims[item->anim_number].current_anim_state;
@@ -293,7 +293,7 @@ void TriggerLizardMan()
 	item->flags = 0;
 	item->data = 0;
 	item->mesh_bits = -1;
-	item->hit_points = objects[LIZARD_MAN].hit_points;
+	item->hit_points = objects[TR3_LIZARD_MAN].hit_points;
 	item->active = 0;
 	item->status = ITEM_ACTIVE;
 	item->collidable = 1;

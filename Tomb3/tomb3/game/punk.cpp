@@ -15,7 +15,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO punk_hit = { 16, 48, 320, 13 };
+static BiteInfo punk_hit = { 16, 48, 320, 13 };
 
 static void TriggerPunkFlame(short item_number)
 {
@@ -92,7 +92,7 @@ void InitialisePunk(short item_number)
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[PUNK1].anim_index + 6;
+	item->anim_number = objects[TR3_PUNK1].anim_index + 6;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = 1;
 	item->goal_anim_state = 1;
@@ -138,7 +138,7 @@ void PunkControl(short item_number)
 	{
 		if (item->current_anim_state != 11)
 		{
-			item->anim_number = objects[PUNK1].anim_index + 26;
+			item->anim_number = objects[TR3_PUNK1].anim_index + 26;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 11;
 			punk->LOT.step = 256;
@@ -445,28 +445,28 @@ void PunkControl(short item_number)
 		{
 		case -4:
 			punk->maximum_turn = 0;
-			item->anim_number = objects[PUNK1].anim_index + 30;
+			item->anim_number = objects[TR3_PUNK1].anim_index + 30;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 15;
 			break;
 
 		case 2:
 			punk->maximum_turn = 0;
-			item->anim_number = objects[PUNK1].anim_index + 28;
+			item->anim_number = objects[TR3_PUNK1].anim_index + 28;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 13;
 			break;
 
 		case 3:
 			punk->maximum_turn = 0;
-			item->anim_number = objects[PUNK1].anim_index + 29;
+			item->anim_number = objects[TR3_PUNK1].anim_index + 29;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 14;
 			break;
 
 		case 4:
 			punk->maximum_turn = 0;
-			item->anim_number = objects[PUNK1].anim_index + 27;
+			item->anim_number = objects[TR3_PUNK1].anim_index + 27;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = 12;
 			break;

@@ -14,9 +14,9 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO lizman_bite_hit = { 0, -120, 120, 10 };
-static BITE_INFO lizman_swipe_hit = { 0, 0, 0, 5 };
-static BITE_INFO lizman_gas = { 0, -64, 56, 9 };
+static BiteInfo lizman_bite_hit = { 0, -120, 120, 10 };
+static BiteInfo lizman_swipe_hit = { 0, 0, 0, 5 };
+static BiteInfo lizman_gas = { 0, -64, 56, 9 };
 
 static void TriggerLizmanGas(long x, long y, long z, long xv, long yv, long zv, long FxObj)
 {
@@ -108,7 +108,7 @@ static void TriggerLizmanGas(long x, long y, long z, long xv, long yv, long zv, 
 	}
 }
 
-static short TriggerLizmanGasThrower(ITEM_INFO* item, BITE_INFO* bite, short speed)
+static short TriggerLizmanGasThrower(ITEM_INFO* item, BiteInfo* bite, short speed)
 {
 	FX_INFO* fx;
 	PHD_VECTOR pos;
@@ -188,7 +188,7 @@ void LizManControl(short item_number)
 	{
 		if (item->current_anim_state != LIZMAN_DEATH)
 		{
-			item->anim_number = objects[LIZARD_MAN].anim_index + 26;
+			item->anim_number = objects[TR3_LIZARD_MAN].anim_index + 26;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LIZMAN_DEATH;
 		}
@@ -244,7 +244,7 @@ void LizManControl(short item_number)
 			if (info.ahead)
 				neck = info.angle;
 
-			if (item->anim_number == objects[LIZARD_MAN].anim_index + 23 || item->anim_number == objects[LIZARD_MAN].anim_index + 31)
+			if (item->anim_number == objects[TR3_LIZARD_MAN].anim_index + 23 || item->anim_number == objects[TR3_LIZARD_MAN].anim_index + 31)
 				lizman->maximum_turn = 0;
 			else
 				lizman->maximum_turn = 1820;
@@ -436,28 +436,28 @@ void LizManControl(short item_number)
 		{
 		case -4:
 			lizman->maximum_turn = 0;
-			item->anim_number = objects[LIZARD_MAN].anim_index + 30;
+			item->anim_number = objects[TR3_LIZARD_MAN].anim_index + 30;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LIZMAN_FALL3;
 			break;
 
 		case 2:
 			lizman->maximum_turn = 0;
-			item->anim_number = objects[LIZARD_MAN].anim_index + 28;
+			item->anim_number = objects[TR3_LIZARD_MAN].anim_index + 28;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LIZMAN_CLIMB1;
 			break;
 
 		case 3:
 			lizman->maximum_turn = 0;
-			item->anim_number = objects[LIZARD_MAN].anim_index + 29;
+			item->anim_number = objects[TR3_LIZARD_MAN].anim_index + 29;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LIZMAN_CLIMB2;
 			break;
 
 		case 4:
 			lizman->maximum_turn = 0;
-			item->anim_number = objects[LIZARD_MAN].anim_index + 27;
+			item->anim_number = objects[TR3_LIZARD_MAN].anim_index + 27;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LIZMAN_CLIMB3;
 			break;

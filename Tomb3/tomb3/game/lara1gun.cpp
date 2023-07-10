@@ -96,7 +96,7 @@ void ControlHarpoonBolt(short item_number)
 		{
 			if (objects[obj_num].intelligent)
 			{
-				if (obj_num == TRIBEBOSS)
+				if (obj_num == TR3_TRIBEBOSS)
 				{
 					if (TribeBossShieldOn)
 						FindClosestShieldPoint(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, target);
@@ -108,7 +108,7 @@ void ControlHarpoonBolt(short item_number)
 				}
 				else
 				{
-					if (obj_num != LON_BOSS)
+					if (obj_num != TR3_LONDON_BOSS)
 						DoLotsOfBlood(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, 0, 0, item->room_number, 3);
 
 					HitTarget(target, 0, weapons[LG_HARPOON].damage << item->item_flags[0]);
@@ -385,7 +385,7 @@ void ControlRocket(short item_number)
 			}
 			else if (obj_num != SMASH_OBJECT1)
 			{
-				if (obj_num == TRIBEBOSS && TribeBossShieldOn)
+				if (obj_num == TR3_TRIBEBOSS && TribeBossShieldOn)
 					FindClosestShieldPoint(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, target);
 				else
 					HitTarget(target, 0, 30 << item->item_flags[0]);
@@ -394,10 +394,10 @@ void ControlRocket(short item_number)
 
 				if (target->hit_points <= 0)
 				{
-					if (obj_num != TRIBEBOSS && obj_num != WILLARD_BOSS && obj_num != TONY && obj_num != LON_BOSS &&
-						obj_num != ELECTRIC_CLEANER && obj_num != WHALE && obj_num != FLYING_MUTANT_EMITTER)
+					if (obj_num != TR3_TRIBEBOSS && obj_num != TR3_WILLARD_BOSS && obj_num != TR3_TONY && obj_num != TR3_LONDON_BOSS &&
+						obj_num != TR3_ELECTRIC_CLEANER && obj_num != TR3_WHALE && obj_num != FLYING_MUTANT_EMITTER)
 					{
-						if (obj_num == LIZARD_MAN && lizard_man_active)
+						if (obj_num == TR3_LIZARD_MAN && lizard_man_active)
 							lizard_man_active = 0;
 
 						item_after_projectile = target->next_active;
@@ -617,7 +617,7 @@ void ControlGrenade(short item_number)
 			}
 			else if (obj_num != SMASH_OBJECT1)
 			{
-				if (obj_num == TRIBEBOSS && TribeBossShieldOn)
+				if (obj_num == TR3_TRIBEBOSS && TribeBossShieldOn)
 					FindClosestShieldPoint(item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, target);
 				else
 					HitTarget(target, 0, 20);
@@ -626,10 +626,10 @@ void ControlGrenade(short item_number)
 
 				if (target->hit_points <= 0)
 				{
-					if (obj_num != TRIBEBOSS && obj_num != WHALE && obj_num != WILLARD_BOSS && obj_num != TONY &&
-						obj_num != LON_BOSS && obj_num != ELECTRIC_CLEANER && obj_num != FLYING_MUTANT_EMITTER)
+					if (obj_num != TR3_TRIBEBOSS && obj_num != TR3_WHALE && obj_num != TR3_WILLARD_BOSS && obj_num != TR3_TONY &&
+						obj_num != TR3_LONDON_BOSS && obj_num != TR3_ELECTRIC_CLEANER && obj_num != FLYING_MUTANT_EMITTER)
 					{
-						if (obj_num == LIZARD_MAN && lizard_man_active)
+						if (obj_num == TR3_LIZARD_MAN && lizard_man_active)
 							lizard_man_active = 0;
 
 						item_after_projectile = target->next_active;

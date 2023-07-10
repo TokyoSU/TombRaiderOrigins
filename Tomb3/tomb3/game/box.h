@@ -1,6 +1,7 @@
 #pragma once
 #include "../global/types.h"
 
+CREATURE_INFO* GetCreatureInfo(ITEM_INFO* item);
 void AlertNearbyGuards(ITEM_INFO* item);
 void InitialiseCreature(short item_number);
 long CreatureActive(short item_number);
@@ -23,7 +24,7 @@ void CreatureTilt(ITEM_INFO* item, short angle);
 void CreatureJoint(ITEM_INFO* item, short joint, short required);
 void CreatureFloat(short item_number);
 void CreatureUnderwater(ITEM_INFO* item, long depth);
-short CreatureEffect(ITEM_INFO* item, BITE_INFO* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number));
+short CreatureEffect(ITEM_INFO* item, const BiteInfo* bite, short(*generate)(long x, long y, long z, short speed, short yrot, short room_number));
 long CreatureVault(short item_number, short angle, long vault, long shift);
 void CreatureKill(ITEM_INFO* item, long kill_anim, long kill_state, long lara_kill_state);
 short AIGuard(CREATURE_INFO* creature);
@@ -31,6 +32,8 @@ void AlertAllGuards(short item_number);
 short SameZone(CREATURE_INFO* creature, ITEM_INFO* target_item);
 void GetAITarget(CREATURE_INFO* creature);
 void AdjustStopperFlag(ITEM_INFO* item, long dir, long set);
+void SetAnimation(ITEM_INFO* item, int anim_number, int frame_number = 0);
+void DamageTarget(ITEM_INFO* target, int damage);
 
 extern BOX_INFO* boxes;
 extern long number_boxes;

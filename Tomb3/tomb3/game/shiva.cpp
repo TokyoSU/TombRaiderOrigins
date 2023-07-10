@@ -14,8 +14,8 @@
 #include "../specific/output.h"
 #include "../3dsystem/3d_gen.h"
 
-static BITE_INFO shiva_right = { 0, 0, 920, 22 };
-static BITE_INFO shiva_left = { 0, 0, 920, 13 };
+static BiteInfo shiva_right = { 0, 0, 920, 22 };
+static BiteInfo shiva_left = { 0, 0, 920, 13 };
 static long effect_mesh;
 
 static void TriggerShivaSmoke(long x, long y, long z, long yt)
@@ -137,9 +137,9 @@ void InitialiseShiva(short item_number)
 
 	item = &items[item_number];
 
-	if (item->object_number == SHIVA)
+	if (item->object_number == TR3_SHIVA)
 	{
-		item->anim_number = objects[SHIVA].anim_index + 14;
+		item->anim_number = objects[TR3_SHIVA].anim_index + 14;
 		item->frame_number = anims[item->anim_number].frame_base;
 		item->current_anim_state = SHIVA_START;
 		item->goal_anim_state = SHIVA_START;
@@ -479,7 +479,7 @@ void DrawShiva(ITEM_INFO* item)
 	extra_rotation = (short*)item->data;
 	bit = 1;
 
-	mesh = &meshes[objects[SHIVA].mesh_index];
+	mesh = &meshes[objects[TR3_SHIVA].mesh_index];
 	swap = &meshes[objects[MESHSWAP1].mesh_index];
 	bone = &bones[obj->bone_index];
 

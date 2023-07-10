@@ -749,7 +749,7 @@ void InitialiseFinalLevel()
 	{
 		item = &items[i];
 
-		if (item->object_number == DOG)
+		if (item->object_number == TR3_DOG)
 			final_level_count++;
 	}
 }

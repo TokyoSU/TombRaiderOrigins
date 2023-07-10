@@ -12,7 +12,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO oilsmg_gun = { 0, 400, 64, 7 };
+static BiteInfo oilsmg_gun = { 0, 400, 64, 7 };
 
 void InitialiseOilSMG(short item_number)
 {
@@ -20,7 +20,7 @@ void InitialiseOilSMG(short item_number)
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[WHITE_SOLDIER].anim_index + 12;
+	item->anim_number = objects[TR3_WHITE_SOLDIER].anim_index + 12;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = OILSMG_STOP;
 	item->goal_anim_state = OILSMG_STOP;

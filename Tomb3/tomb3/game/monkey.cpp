@@ -13,7 +13,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO monkey_hit = { 10, 10, 11, 13 };
+static BiteInfo monkey_hit = { 10, 10, 11, 13 };
 
 void InitialiseMonkey(short item_number)
 {
@@ -21,7 +21,7 @@ void InitialiseMonkey(short item_number)
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[MONKEY].anim_index + 2;
+	item->anim_number = objects[TR3_MONKEY].anim_index + 2;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = MONKEY_SIT;
 	item->goal_anim_state = MONKEY_SIT;
@@ -52,7 +52,7 @@ void MonkeyControl(short item_number)
 		if (item->current_anim_state != MONKEY_DEATH)
 		{
 			item->mesh_bits = -1;
-			item->anim_number = objects[MONKEY].anim_index + 14;
+			item->anim_number = objects[TR3_MONKEY].anim_index + 14;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MONKEY_DEATH;
 		}
@@ -78,7 +78,7 @@ void MonkeyControl(short item_number)
 
 		CreatureAIInfo(item, &info);
 
-		if (!monkey->hurt_by_lara && monkey->enemy == lara_item && objects[TIGER].loaded)
+		if (!monkey->hurt_by_lara && monkey->enemy == lara_item && objects[TR3_TIGER].loaded)
 			monkey->enemy = 0;
 
 		if (monkey->enemy == lara_item)
@@ -457,42 +457,42 @@ void MonkeyControl(short item_number)
 		{
 		case -4:
 			monkey->maximum_turn = 0;
-			item->anim_number = objects[MONKEY].anim_index + 20;
+			item->anim_number = objects[TR3_MONKEY].anim_index + 20;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MONKEY_DOWN4;
 			break;
 
 		case -3:
 			monkey->maximum_turn = 0;
-			item->anim_number = objects[MONKEY].anim_index + 21;
+			item->anim_number = objects[TR3_MONKEY].anim_index + 21;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MONKEY_DOWN3;
 			break;
 
 		case -2:
 			monkey->maximum_turn = 0;
-			item->anim_number = objects[MONKEY].anim_index + 22;
+			item->anim_number = objects[TR3_MONKEY].anim_index + 22;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MONKEY_DOWN2;
 			break;
 
 		case 2:
 			monkey->maximum_turn = 0;
-			item->anim_number = objects[MONKEY].anim_index + 19;
+			item->anim_number = objects[TR3_MONKEY].anim_index + 19;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MONKEY_CLIMB2;
 			break;
 
 		case 3:
 			monkey->maximum_turn = 0;
-			item->anim_number = objects[MONKEY].anim_index + 18;
+			item->anim_number = objects[TR3_MONKEY].anim_index + 18;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MONKEY_CLIMB3;
 			break;
 
 		case 4:
 			monkey->maximum_turn = 0;
-			item->anim_number = objects[MONKEY].anim_index + 17;
+			item->anim_number = objects[TR3_MONKEY].anim_index + 17;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = MONKEY_CLIMB4;
 			break;
@@ -533,7 +533,7 @@ void DrawMonkey(ITEM_INFO* item)
 	CalculateObjectLighting(item, frm[0]);
 	extra_rotation = (short*)item->data;
 
-	mesh = &meshes[objects[MONKEY].mesh_index];
+	mesh = &meshes[objects[TR3_MONKEY].mesh_index];
 
 	if (item->ai_bits == MODIFY)
 		swap = &meshes[objects[MESHSWAP3].mesh_index];

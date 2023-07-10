@@ -14,7 +14,7 @@
 #include "lara.h"
 #include "effects.h"
 
-static BITE_INFO seal_gas = { 0, 48, 140, 10 };
+static BiteInfo seal_gas = { 0, 48, 140, 10 };
 
 static void TriggerSealmuteGas(long x, long y, long z, long xv, long yv, long zv, long FxObj)
 {
@@ -106,7 +106,7 @@ static void TriggerSealmuteGas(long x, long y, long z, long xv, long yv, long zv
 	}
 }
 
-static short TriggerSealmuteGasThrower(ITEM_INFO* item, BITE_INFO* bite, short speed)
+static short TriggerSealmuteGasThrower(ITEM_INFO* item, BiteInfo* bite, short speed)
 {
 	FX_INFO* fx;
 	PHD_VECTOR pos;
@@ -264,7 +264,7 @@ void SealmuteControl(short item_number)
 
 				enemy = &items[baddie_slots[lp].item_num];
 				
-				if ((enemy->object_number == LARA || enemy->object_number == FLAMETHROWER_BLOKE) && enemy->hit_points > 0)
+				if ((enemy->object_number == LARA || enemy->object_number == TR3_FLAMETHROWER_BLOKE) && enemy->hit_points > 0)
 				{
 					dx = enemy->pos.x_pos - item->pos.x_pos;
 					dz = enemy->pos.z_pos - item->pos.z_pos;

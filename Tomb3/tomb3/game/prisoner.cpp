@@ -10,7 +10,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO bob_hit = { 10, 10, 11, 13 };
+static BiteInfo bob_hit = { 10, 10, 11, 13 };
 
 void InitialisePrisoner(short item_number)
 {
@@ -18,7 +18,7 @@ void InitialisePrisoner(short item_number)
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[BOB].anim_index + 6;
+	item->anim_number = objects[TR3_BOB].anim_index + 6;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = BOB_STOP;
 	item->goal_anim_state = BOB_STOP;
@@ -55,7 +55,7 @@ void PrisonerControl(short item_number)
 	{
 		if (item->current_anim_state != BOB_DEATH)
 		{
-			item->anim_number = objects[BOB].anim_index + 26;
+			item->anim_number = objects[TR3_BOB].anim_index + 26;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BOB_DEATH;
 			bob->LOT.step = 256;
@@ -79,7 +79,7 @@ void PrisonerControl(short item_number)
 
 				enemy = &items[baddie_slots[lp].item_num];
 
-				if (enemy->object_number == LARA || enemy->object_number == BOB || enemy->object_number == ROBOT_SENTRY_GUN || enemy->hit_points <= 0)
+				if (enemy->object_number == LARA || enemy->object_number == TR3_BOB || enemy->object_number == TR3_ROBOT_SENTRY_GUN || enemy->hit_points <= 0)
 					continue;
 
 				dx = enemy->pos.x_pos - item->pos.x_pos;
@@ -427,28 +427,28 @@ void PrisonerControl(short item_number)
 		{
 		case -4:
 			bob->maximum_turn = 0;
-			item->anim_number = objects[BOB].anim_index + 30;
+			item->anim_number = objects[TR3_BOB].anim_index + 30;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BOB_FALL3;
 			break;
 
 		case 2:
 			bob->maximum_turn = 0;
-			item->anim_number = objects[BOB].anim_index + 28;
+			item->anim_number = objects[TR3_BOB].anim_index + 28;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BOB_CLIMB1;
 			break;
 
 		case 3:
 			bob->maximum_turn = 0;
-			item->anim_number = objects[BOB].anim_index + 29;
+			item->anim_number = objects[TR3_BOB].anim_index + 29;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BOB_CLIMB2;
 			break;
 
 		case 4:
 			bob->maximum_turn = 0;
-			item->anim_number = objects[BOB].anim_index + 27;
+			item->anim_number = objects[TR3_BOB].anim_index + 27;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BOB_CLIMB3;
 			break;

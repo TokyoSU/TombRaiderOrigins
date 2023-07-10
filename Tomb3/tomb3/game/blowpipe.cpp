@@ -13,8 +13,8 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO blow_biff_hit = { 0, 0, -200, 13 };
-static BITE_INFO blow_shoot_hit = { 8, 40, -248, 13 };
+static BiteInfo blow_biff_hit = { 0, 0, -200, 13 };
+static BiteInfo blow_shoot_hit = { 8, 40, -248, 13 };
 
 static void BlowpipeDart(ITEM_INFO* item)	//NEW FUNCTION, NOT IN ORIGINAL CODE!
 {

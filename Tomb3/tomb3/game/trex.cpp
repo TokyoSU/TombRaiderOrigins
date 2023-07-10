@@ -10,7 +10,7 @@
 #include "draw.h"
 #include "control.h"
 
-static BITE_INFO trex_hit = { 0, 32, 64, 13 };
+static BiteInfo trex_hit = { 0, 32, 64, 13 };
 
 void DinoControl(short item_number)
 {
@@ -48,7 +48,7 @@ void DinoControl(short item_number)
 			{
 				candidate = &items[n];
 
-				if ((candidate->object_number == FLARE_ITEM || candidate->object_number == RAPTOR) &&
+				if ((candidate->object_number == FLARE_ITEM || candidate->object_number == TR3_RAPTOR) &&
 					candidate->hit_points && candidate->status == ITEM_ACTIVE)
 				{
 					x = (candidate->pos.x_pos - item->pos.x_pos) >> 6;
@@ -196,9 +196,9 @@ void DinoControl(short item_number)
 			}
 			else if (rex->enemy && item->frame_number == anims[item->anim_number].frame_base + 20)
 			{
-				x = abs(rex->enemy->pos.x_pos - ((objects[TREX].pivot_length * phd_sin(item->pos.y_rot)) >> W2V_SHIFT) - item->pos.x_pos);
+				x = abs(rex->enemy->pos.x_pos - ((objects[TR3_TREX].pivot_length * phd_sin(item->pos.y_rot)) >> W2V_SHIFT) - item->pos.x_pos);
 				y = abs(rex->enemy->pos.y_pos - item->pos.y_pos);
-				z = abs(rex->enemy->pos.z_pos - ((objects[TREX].pivot_length * phd_cos(item->pos.y_rot)) >> W2V_SHIFT) - item->pos.z_pos);
+				z = abs(rex->enemy->pos.z_pos - ((objects[TR3_TREX].pivot_length * phd_cos(item->pos.y_rot)) >> W2V_SHIFT) - item->pos.z_pos);
 
 				if (x < 0x718E4 && y < 0x718E4 && z < 0x718E4)
 				{

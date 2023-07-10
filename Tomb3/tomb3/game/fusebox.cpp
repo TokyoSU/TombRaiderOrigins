@@ -43,7 +43,7 @@ void ControlFusebox(short item_number)
 			{
 				sophia = &items[i];
 
-				if (sophia->object_number == LON_BOSS)
+				if (sophia->object_number == TR3_LONDON_BOSS)
 				{
 					sophia->item_flags[2] = 1;
 					break;

@@ -46,7 +46,7 @@ short GunMiss(long x, long y, long z, short speed, short yrot, short room_number
 	return GunShot(x, y, z, speed, yrot, room_number);
 }
 
-long ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* bite, short extra_rotation, long damage)
+long ShotLara(ITEM_INFO* item, AI_INFO* info, BiteInfo* bite, short extra_rotation, long damage)
 {
 	ITEM_INFO* enemy;
 	CREATURE_INFO* creature;

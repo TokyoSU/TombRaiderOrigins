@@ -1013,7 +1013,7 @@ void RumbleNoShake(ITEM_INFO* item)
 	flipeffect = -1;
 }
 
-void BaddieBiteEffect(ITEM_INFO* item, BITE_INFO* bite)
+void BaddieBiteEffect(ITEM_INFO* item, BiteInfo* bite)
 {
 	PHD_VECTOR pos;
 

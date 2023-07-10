@@ -13,7 +13,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO army_gun = { 0, 300, 64, 7 };
+static BiteInfo army_gun = { 0, 300, 64, 7 };
 
 void InitialiseArmySMG(short item_number)
 {
@@ -21,7 +21,7 @@ void InitialiseArmySMG(short item_number)
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[STHPAC_MERCENARY].anim_index + 12;
+	item->anim_number = objects[TR3_STHPAC_MERCENARY].anim_index + 12;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = ARMY_STOP;
 	item->goal_anim_state = ARMY_STOP;
@@ -91,7 +91,7 @@ void ArmySMGControl(short item_number)
 
 				enemy = &items[baddie_slots[lp].item_num];
 
-				if (enemy->object_number == LARA || enemy->object_number == STHPAC_MERCENARY || enemy == lara_item)
+				if (enemy->object_number == LARA || enemy->object_number == TR3_STHPAC_MERCENARY || enemy == lara_item)
 					continue;
 
 				x = enemy->pos.x_pos - item->pos.x_pos;

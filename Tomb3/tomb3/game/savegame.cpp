@@ -358,7 +358,7 @@ void CreateSaveGameInfo()
 		objnum = item->object_number;
 		obj = &objects[objnum];
 
-		if (objnum == TONY && item->hit_points > 0 && bossdata.explode_count || bossdata.dead)
+		if (objnum == TR3_TONY && item->hit_points > 0 && bossdata.explode_count || bossdata.dead)
 			TonyExploding = 1;
 
 		if (obj->save_position)
@@ -686,7 +686,7 @@ void ExtractSaveGameInfo()
 				SetupCleanerFromSavegame(item, 1);
 		}
 
-		if (objnum == ELECTRIC_CLEANER)
+		if (objnum == TR3_ELECTRIC_CLEANER)
 			SetupCleanerFromSavegame(item, 0);
 
 		if (objnum == TROPICAL_FISH || objnum == PIRAHNAS)
@@ -716,7 +716,7 @@ void ExtractSaveGameInfo()
 		if (item->object_number == AREA51_LASER)
 			ReadSG(&item->shadeB, sizeof(short));
 
-		if (item->object_number == MONKEY)
+		if (item->object_number == TR3_MONKEY)
 		{
 			if (item->carried_item != NO_ITEM)
 			{

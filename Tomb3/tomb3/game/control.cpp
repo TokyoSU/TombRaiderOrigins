@@ -1226,7 +1226,7 @@ void TestTriggers(short* data, long heavy)
 						item->status = ITEM_ACTIVE;
 						AddActiveItem(value);
 
-						if (item->object_number != TARGETS)
+						if (item->object_number != TR3_TARGETS)
 							EnableBaddieAI(value, 1);
 					}
 					else if (item->status == ITEM_INVISIBLE)

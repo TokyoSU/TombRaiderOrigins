@@ -20,7 +20,7 @@
 #include "laraelec.h"
 #include "setup.h"
 
-static BITE_INFO londonboss_points[3] =
+static BiteInfo londonboss_points[3] =
 {
 	{ 16, 56, 356, 10 },
 	{ -28, 48, 304, 10 },
@@ -915,28 +915,28 @@ void LondonBossControl(short item_number)
 		{
 		case -4:
 			sophia->maximum_turn = 0;
-			item->anim_number = objects[LON_BOSS].anim_index + 21;
+			item->anim_number = objects[TR3_LONDON_BOSS].anim_index + 21;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LONDONBOSS_GODOWN;
 			break;
 
 		case 2:
 			sophia->maximum_turn = 0;
-			item->anim_number = objects[LON_BOSS].anim_index + 9;
+			item->anim_number = objects[TR3_LONDON_BOSS].anim_index + 9;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LONDONBOSS_VAULT2;
 			break;
 
 		case 3:
 			sophia->maximum_turn = 0;
-			item->anim_number = objects[LON_BOSS].anim_index + 18;
+			item->anim_number = objects[TR3_LONDON_BOSS].anim_index + 18;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LONDONBOSS_VAULT3;
 			break;
 
 		case 4:
 			sophia->maximum_turn = 0;
-			item->anim_number = objects[LON_BOSS].anim_index + 15;
+			item->anim_number = objects[TR3_LONDON_BOSS].anim_index + 15;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = LONDONBOSS_VAULT4;
 			break;

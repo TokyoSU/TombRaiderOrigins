@@ -10,7 +10,7 @@
 #include "control.h"
 #include "effects.h"
 
-static BITE_INFO seal_gas = { 0, 48, 140, 10 };
+static BiteInfo seal_gas = { 0, 48, 140, 10 };
 
 static void TriggerSealmuteGas(long x, long y, long z, long xv, long yv, long zv, long FxObj)
 {
@@ -102,7 +102,7 @@ static void TriggerSealmuteGas(long x, long y, long z, long xv, long yv, long zv
 	}
 }
 
-static short TriggerSealmuteGasThrower(ITEM_INFO* item, BITE_INFO* bite, short speed)
+static short TriggerSealmuteGasThrower(ITEM_INFO* item, BiteInfo* bite, short speed)
 {
 	FX_INFO* fx;
 	PHD_VECTOR pos;

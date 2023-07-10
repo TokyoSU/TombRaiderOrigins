@@ -18,6 +18,7 @@
 #include "pickup.h"
 #include "collide.h"
 #include "../specific/winmain.h"
+#include "box.h"
 #include "draw.h"
 #include "cobra.h"
 #include "monkey.h"
@@ -91,6 +92,10 @@
 #include "demo.h"
 #include "camera.h"
 #include "footprnt.h"
+#include "tr1_dartemitter.h"
+#include "tr1_wolf.h"
+#include "tr1_bat.h"
+#include "tr1_bear.h"
 #include "../newstuff/map.h"
 #include "../tomb3/tomb3.h"
 
@@ -127,7 +132,7 @@ void GetAIPickups()
 						ai_item->room_number = NO_ROOM;
 					}
 				}
-				else if (ai_item->object_number == FLAME_EMITTER && item->object_number == PUNK1)
+				else if (ai_item->object_number == FLAME_EMITTER && item->object_number == TR3_PUNK1)
 				{
 					item->item_flags[2] = 3;
 					KillItem(ai_item_number);
@@ -287,7 +292,7 @@ long InitialiseLevel(long level, long type)
 		if (GF_CDtracks[0])
 		{
 			S_CDPlay(GF_CDtracks[0], 1);
-			CurrentAtmosphere = (char)GF_CDtracks[0];
+			CurrentAtmosphere = (uchar)GF_CDtracks[0];
 			IsAtmospherePlaying = 1;
 		}
 	}
@@ -332,7 +337,7 @@ void BuildOutsideTable()
 	max_slots = 0;
 	OutsideRoomTable = (char*)game_malloc(0xB640);
 	memset(OutsideRoomTable, 0xFF, 0xB640);
-	printf("X %d, Y %d, Z %d, Xs %d, Ys %d\n", room->x, room->y, room->z, room->x_size, room->y_size);
+	//printf("X %d, Y %d, Z %d, Xs %d, Ys %d\n", room->x, room->y, room->z, room->x_size, room->y_size);
 
 	for (y = 0; y < 108; y += 4)
 	{
@@ -429,7 +434,7 @@ void BuildOutsideTable()
 	}
 
 	game_free(((long)OutsideRoomTable - (long)oTable + 0xB643) & ~3);	//free unused space (get rid of this asap btw)
-	printf("Ouside room table = %d bytes, max_slots = %d\n", (long)oTable - (long)OutsideRoomTable, max_slots);
+	//printf("Ouside room table = %d bytes, max_slots = %d\n", (long)oTable - (long)OutsideRoomTable, max_slots);
 }
 
 static void BaddyObjects()
@@ -449,8 +454,7 @@ static void BaddyObjects()
 	obj = &objects[LARA_EXTRA];
 	obj->control = ControlLaraExtra;
 
-	obj = &objects[COBRA];
-
+	obj = &objects[TR3_COBRA];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseCobra;
@@ -469,8 +473,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 24] |= 8;
 	}
 
-	obj = &objects[MONKEY];
-
+	obj = &objects[TR3_MONKEY];
 	if (obj->loaded)
 	{
 		if (!objects[MESHSWAP2].loaded)
@@ -494,8 +497,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[ROBOT_SENTRY_GUN];
-
+	obj = &objects[TR3_ROBOT_SENTRY_GUN];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseAutogun;
@@ -504,19 +506,17 @@ static void BaddyObjects()
 		obj->shadow_size = 0;
 		obj->hit_points = 100;
 		obj->radius = 102;
-		obj->bite_offset = AUTOGUN_LEFT_BITE;
-		obj->intelligent = 1;
-		obj->non_lot = 1;
-		obj->save_position = 1;
-		obj->save_hitpoints = 1;
-		obj->save_flags = 1;
-		obj->save_anim = 1;
-		bones[obj->bone_index] |= 8;
-		bones[obj->bone_index + 4] |= 4;
+		obj->intelligent = TRUE;
+		obj->non_lot = TRUE;
+		obj->save_position = TRUE;
+		obj->save_hitpoints = TRUE;
+		obj->save_flags = TRUE;
+		obj->save_anim = TRUE;
+		bones[obj->bone_index + 0 * 4] |= 8; // Y
+		bones[obj->bone_index + 1 * 4] |= 4; // X
 	}
 
-	obj = &objects[DIVER];
-
+	obj = &objects[TR3_DIVER];
 	if (obj->loaded)
 	{
 		obj->control = DiverControl;
@@ -533,8 +533,7 @@ static void BaddyObjects()
 		obj->water_creature = 1;
 	}
 
-	obj = &objects[WHALE];
-
+	obj = &objects[TR3_WHALE];
 	if (obj->loaded)
 	{
 		obj->control = OrcaControl;
@@ -551,8 +550,7 @@ static void BaddyObjects()
 		obj->water_creature = 1;
 	}
 
-	obj = &objects[TREX];
-
+	obj = &objects[TR3_TREX];
 	if (obj->loaded)
 	{
 		obj->control = DinoControl;
@@ -572,8 +570,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 88] |= 8;
 	}
 
-	obj = &objects[RAPTOR];
-
+	obj = &objects[TR3_RAPTOR];
 	if (obj->loaded)
 	{
 		obj->control = RaptorControl;
@@ -593,7 +590,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 100] |= 8;
 	}
 
-	obj = &objects[DOG];
+	obj = &objects[TR3_DOG];
 
 	if (obj->loaded)
 	{
@@ -613,7 +610,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 8] |= 4;
 	}
 
-	obj = &objects[HUSKIE];
+	obj = &objects[TR3_HUSKIE];
 
 	if (obj->loaded)
 	{
@@ -633,7 +630,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 8] |= 4;
 	}
 
-	obj = &objects[SMALL_RAT];
+	obj = &objects[TR3_SMALL_RAT];
 
 	if (obj->loaded)
 	{
@@ -651,7 +648,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 12] |= 8;
 	}
 
-	obj = &objects[COMPY];
+	obj = &objects[TR3_COMPY];
 
 	if (obj->loaded)
 	{
@@ -672,8 +669,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 8] |= 8;
 	}
 
-	obj = &objects[TRIBEBOSS];
-
+	obj = &objects[TR3_TRIBEBOSS];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseTribeBoss;
@@ -693,8 +689,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 0xC;
 	}
 
-	obj = &objects[TONY];
-
+	obj = &objects[TR3_TONY];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseTonyBoss;
@@ -715,8 +710,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[LON_BOSS];
-
+	obj = &objects[TR3_LONDON_BOSS];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseLondonBoss;
@@ -737,8 +731,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[WILLARD_BOSS];
-
+	obj = &objects[TR3_WILLARD_BOSS];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseWillBoss;
@@ -756,8 +749,7 @@ static void BaddyObjects()
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[TIGER];
-
+	obj = &objects[TR3_TIGER];
 	if (obj->loaded)
 	{
 		obj->control = TigerControl;
@@ -774,8 +766,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 84] |= 8;
 	}
 
-	obj = &objects[SHIVA];
-
+	obj = &objects[TR3_SHIVA];
 	if (obj->loaded)
 	{
 		if (!objects[MESHSWAP1].loaded)
@@ -800,8 +791,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 100] |= 4;
 	}
 
-	obj = &objects[WHITE_SOLDIER];
-
+	obj = &objects[TR3_WHITE_SOLDIER];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseOilSMG;
@@ -822,8 +812,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[MUTANT2];
-
+	obj = &objects[TR3_MUTANT2];
 	if (obj->loaded)
 	{
 		obj->control = ClawmuteControl;
@@ -842,8 +831,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[MUTANT3];
-
+	obj = &objects[TR3_MUTANT3];
 	if (obj->loaded)
 	{
 		obj->control = HybridControl;
@@ -862,8 +850,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[BURNT_MUTANT];
-
+	obj = &objects[TR3_BURNT_MUTANT];
 	if (obj->loaded)
 	{
 		obj->control = SealmuteControl;
@@ -882,8 +869,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 36] |= 8;
 	}
 
-	obj = &objects[SWAT_GUN];
-
+	obj = &objects[TR3_SWAT_GUN];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseSwat;
@@ -904,8 +890,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[STHPAC_MERCENARY];
-
+	obj = &objects[TR3_STHPAC_MERCENARY];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseArmySMG;
@@ -926,8 +911,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[LIZARD_MAN];
-
+	obj = &objects[TR3_LIZARD_MAN];
 	if (obj->loaded)
 	{
 		obj->control = LizManControl;
@@ -945,8 +929,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 36] |= 0x10;
 	}
 
-	obj = &objects[MP1];
-
+	obj = &objects[TR3_MP1];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseBaton;
@@ -966,8 +949,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[CIVVIE];
-
+	obj = &objects[TR3_CIVVIE];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseCivvy;
@@ -987,8 +969,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[BOB];
-
+	obj = &objects[TR3_BOB];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialisePrisoner;
@@ -1008,8 +989,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[FLAMETHROWER_BLOKE];
-
+	obj = &objects[TR3_FLAMETHROWER_BLOKE];
 	if (obj->loaded)
 	{
 		obj->control = FlamerControl;
@@ -1028,8 +1008,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[TRIBEAXE];
-
+	obj = &objects[TR3_TRIBEAXE];
 	if (obj->loaded)
 	{
 		obj->control = TribeAxeControl;
@@ -1047,8 +1026,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 24] |= 8;
 	}
 
-	obj = &objects[BLOWPIPE];
-
+	obj = &objects[TR3_BLOWPIPE];
 	if (obj->loaded)
 	{
 		obj->control = BlowpipeControl;
@@ -1067,8 +1045,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 4;
 	}
 
-	obj = &objects[MUTANT1];
-
+	obj = &objects[TR3_MUTANT1];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseWingmute;
@@ -1085,8 +1062,7 @@ static void BaddyObjects()
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[VULTURE];
-
+	obj = &objects[TR3_VULTURE];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseVulture;
@@ -1103,8 +1079,7 @@ static void BaddyObjects()
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[CROW];
-
+	obj = &objects[TR3_CROW];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseVulture;
@@ -1121,8 +1096,7 @@ static void BaddyObjects()
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[OILRED];
-
+	obj = &objects[TR3_OILRED];
 	if (obj->loaded)
 	{
 		obj->control = OilRedControl;
@@ -1142,8 +1116,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[SECURITY_GUARD];
-
+	obj = &objects[TR3_SECURITY_GUARD];
 	if (obj->loaded)
 	{
 		obj->control = LondSecControl;
@@ -1163,8 +1136,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[ELECTRIC_CLEANER];
-
+	obj = &objects[TR3_ELECTRIC_CLEANER];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseCleaner;
@@ -1181,8 +1153,7 @@ static void BaddyObjects()
 		obj->save_anim = 1;
 	}
 
-	obj = &objects[MP2];
-
+	obj = &objects[TR3_MP2];
 	if (obj->loaded)
 	{
 		obj->control = MPGunControl;
@@ -1202,8 +1173,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[LON_MERCENARY1];
-
+	obj = &objects[TR3_LONDON_MERCENARY1];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialiseSwat;
@@ -1224,8 +1194,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[PUNK1];
-
+	obj = &objects[TR3_PUNK1];
 	if (obj->loaded)
 	{
 		obj->initialise = InitialisePunk;
@@ -1245,8 +1214,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 52] |= 8;
 	}
 
-	obj = &objects[CROCODILE];
-
+	obj = &objects[TR3_CROCODILE];
 	if (obj->loaded)
 	{
 		obj->control = CrocControl;
@@ -1264,8 +1232,7 @@ static void BaddyObjects()
 		bones[obj->bone_index + 28] |= 8;
 	}
 
-	obj = &objects[WINSTON];
-
+	obj = &objects[TR3_WINSTON];
 	if (obj->loaded)
 	{
 		obj->control = OldWinstonControl;
@@ -1276,8 +1243,7 @@ static void BaddyObjects()
 		obj->intelligent = 1;
 	}
 
-	obj = &objects[ARMY_WINSTON];
-
+	obj = &objects[TR3_ARMY_WINSTON];
 	if (obj->loaded)
 	{
 		obj->control = WinstonControl;
@@ -1288,8 +1254,7 @@ static void BaddyObjects()
 		obj->intelligent = 1;
 	}
 
-	obj = &objects[TARGETS];
-
+	obj = &objects[TR3_TARGETS];
 	if (obj->loaded)
 	{
 		obj->control = TargetControl;
@@ -1300,8 +1265,53 @@ static void BaddyObjects()
 		obj->intelligent = 1;
 	}
 
-	obj = &objects[AI_GUARD];
+	obj = &objects[TR1_WOLF];
+	if (obj->loaded)
+	{
+		obj->initialise = TR1::InitialiseWolf;
+		obj->control = TR1::WolfControl;
+		obj->collision = CreatureCollision;
+		obj->shadow_size = 128;
+		obj->hit_points = 5;
+		obj->radius = 102;
+		obj->intelligent = 1;
+		obj->save_anim = 1;
+		obj->save_flags = 1;
+		obj->save_position = 1;
+		obj->save_hitpoints = 1;
+		bones[obj->bone_index + 2 * 4] |= 8 | 4;
+	}
 
+	obj = &objects[TR1_BAT];
+	if (obj->loaded)
+	{
+		obj->initialise = InitialiseCreature;
+		obj->control = TR1::BatControl;
+		obj->collision = CreatureCollision;
+		obj->hit_points = 5;
+		obj->shadow_size = 128;
+		obj->radius = 102;
+		obj->intelligent = 1;
+		obj->save_hitpoints = 1;
+		obj->save_position = 1;
+	}
+
+	obj = &objects[TR1_BEAR];
+		obj->initialise = InitialiseCreature;
+		obj->control = TR1::BearControl;
+		obj->collision = CreatureCollision;
+		obj->hit_points = 25;
+		obj->intelligent = 1;
+		obj->radius = 204;
+		obj->shadow_size = 128;
+		obj->save_anim = 1;
+		obj->save_flags = 1;
+		obj->save_hitpoints = 1;
+		obj->save_position = 1;
+		bones[obj->bone_index + 13 * 4] |= 8 | 4;
+	}
+
+	obj = &objects[AI_GUARD];
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1310,7 +1320,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_AMBUSH];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1319,7 +1328,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_PATROL1];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1328,7 +1336,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_PATROL2];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1337,7 +1344,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_FOLLOW];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1346,7 +1352,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_X1];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1355,7 +1360,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_X2];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1364,7 +1368,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_X3];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1373,7 +1376,6 @@ static void BaddyObjects()
 	}
 
 	obj = &objects[AI_MODIFY];
-
 	if (obj->loaded)
 	{
 		obj->draw_routine = DrawDummyItem;
@@ -1656,6 +1658,22 @@ static void TrapObjects()
 	obj = &objects[FLAME];
 	obj->control = FlameControl;
 	obj->draw_routine = DrawDummyItem;
+
+	obj = &objects[TR1_DART];
+	if (obj->loaded)
+	{
+		obj->collision = TrapCollision;
+		obj->control = TR1::DartControl;
+		obj->save_position = true;
+	}
+
+	obj = &objects[TR1_DART_EMITTER];
+	if (obj->loaded)
+	{
+		obj->collision = ObjectCollision;
+		obj->control = TR1::DartEmitterControl;
+		obj->save_anim = true;
+	}
 }
 
 static void ObjectObjects()
@@ -1924,13 +1942,13 @@ static void ObjectObjects()
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[SWITCH_TYPE1];
+	obj = &objects[ABOVE_WATER_SWITCH];
 	obj->control = SwitchControl;
 	obj->collision = SwitchCollision;
 	obj->save_flags = 1;
 	obj->save_anim = 1;
 
-	obj = &objects[SWITCH_TYPE2];
+	obj = &objects[UNDERWATER_SWITCH];
 	obj->control = SwitchControl;
 	obj->collision = SwitchCollision2;
 	obj->save_flags = 1;
@@ -2297,6 +2315,10 @@ static void ObjectObjects()
 
 	obj = &objects[SHOTGUNSHELL];
 	obj->control = ControlGunShell;
+
+	obj = &objects[STATIC_2D];
+	if (obj->loaded)
+		obj->semi_transparent = TRUE;
 }
 
 void InitialiseObjects()

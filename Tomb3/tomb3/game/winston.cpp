@@ -92,7 +92,7 @@ void WinstonControl(short item_number)
 		{
 			old = &baddie_slots[i];
 
-			if (items[old->item_num].object_number == WINSTON)
+			if (items[old->item_num].object_number == TR3_WINSTON)
 			{
 				items[old->item_num].status = ITEM_INVISIBLE;
 				CreatureDie(old->item_num, 0);
@@ -145,7 +145,7 @@ void WinstonControl(short item_number)
 			break;
 
 		default:
-			item->anim_number = objects[ARMY_WINSTON].anim_index + 16;
+			item->anim_number = objects[TR3_ARMY_WINSTON].anim_index + 16;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = WINSTON_FALLDOWN;
 			item->goal_anim_state = WINSTON_FALLDOWN;

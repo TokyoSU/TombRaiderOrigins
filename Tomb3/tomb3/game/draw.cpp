@@ -54,7 +54,7 @@ static long outside_bottom;
 MESH_INFO* CurrentMesh;
 long CurrentRoom;
 
-static BITE_INFO EnemyBites[16] =	//bite_offsets enum
+static BiteInfo EnemyBites[16] =	//bite_offsets enum
 {
 	{ 0, 192, 40, 13 },
 	{ 0, 400, 64, 7 },
@@ -1211,7 +1211,7 @@ long DrawPhaseGame()
 void DrawAnimatingItem(ITEM_INFO* item)
 {
 	OBJECT_INFO* obj;
-	BITE_INFO* bite;
+	BiteInfo* bite;
 	PHD_VECTOR pos;
 	GAME_VECTOR src;
 	GAME_VECTOR dest;
@@ -1390,7 +1390,7 @@ void DrawAnimatingItem(ITEM_INFO* item)
 				phd_PushMatrix();
 				phd_TranslateRel(bite->x, bite->y, bite->z);
 
-				if (item->object_number == ROBOT_SENTRY_GUN)
+				if (item->object_number == TR3_ROBOT_SENTRY_GUN)
 					phd_RotYXZ(0, 32760, (rnd << 14) + (rnd >> 2) - 4096);
 				else
 					phd_RotYXZ(0, -16380, (rnd << 14) + (rnd >> 2) - 4096);

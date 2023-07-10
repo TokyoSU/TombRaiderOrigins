@@ -74,7 +74,7 @@ void Exercise8_87(ITEM_INFO* item);
 void ResetExercises(ITEM_INFO* item);
 void TubeTrain(ITEM_INFO* item);
 void RumbleNoShake(ITEM_INFO* item);
-void BaddieBiteEffect(ITEM_INFO* item, BITE_INFO* bite);
+void BaddieBiteEffect(ITEM_INFO* item, BiteInfo* bite);
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number);
 short DoBloodSplatD(long x, long y, long z, short speed, short ang, short room_number);
 void DoLotsOfBlood(long x, long y, long z, short speed, short direction, short room_num, long num);

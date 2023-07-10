@@ -11,8 +11,8 @@
 #include "control.h"
 #include "lara.h"
 
-static BITE_INFO baton_hit = { 247, 10, 11, 13 };
-static BITE_INFO baton_kick = { 0, 0, 100, 6 };
+static BiteInfo baton_hit = { 247, 10, 11, 13 };
+static BiteInfo baton_kick = { 0, 0, 100, 6 };
 
 void InitialiseBaton(short item_number)
 {
@@ -20,7 +20,7 @@ void InitialiseBaton(short item_number)
 
 	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[MP1].anim_index + 6;
+	item->anim_number = objects[TR3_MP1].anim_index + 6;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = BATON_STOP;
 	item->goal_anim_state = BATON_STOP;
@@ -76,7 +76,7 @@ void BatonControl(short item_number)
 				{
 					candidate = &items[target->item_num];
 
-					if (candidate->object_number == LARA || candidate->object_number == BOB)
+					if (candidate->object_number == LARA || candidate->object_number == TR3_BOB)
 					{
 						dx = candidate->pos.x_pos - item->pos.x_pos;
 						dz = candidate->pos.z_pos - item->pos.z_pos;
@@ -457,7 +457,7 @@ void BatonControl(short item_number)
 	{
 		if (item->current_anim_state != BATON_DEATH)
 		{
-			item->anim_number = objects[MP1].anim_index + 26;
+			item->anim_number = objects[TR3_MP1].anim_index + 26;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BATON_DEATH;
 			mp->LOT.step = 256;
@@ -480,28 +480,28 @@ void BatonControl(short item_number)
 		{
 		case -4:
 			mp->maximum_turn = 0;
-			item->anim_number = objects[MP1].anim_index + 30;
+			item->anim_number = objects[TR3_MP1].anim_index + 30;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BATON_FALL3;
 			break;
 
 		case 2:
 			mp->maximum_turn = 0;
-			item->anim_number = objects[MP1].anim_index + 28;
+			item->anim_number = objects[TR3_MP1].anim_index + 28;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BATON_CLIMB1;
 			break;
 
 		case 3:
 			mp->maximum_turn = 0;
-			item->anim_number = objects[MP1].anim_index + 29;
+			item->anim_number = objects[TR3_MP1].anim_index + 29;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BATON_CLIMB2;
 			break;
 
 		case 4:
 			mp->maximum_turn = 0;
-			item->anim_number = objects[MP1].anim_index + 27;
+			item->anim_number = objects[TR3_MP1].anim_index + 27;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = BATON_CLIMB3;
 			break;
