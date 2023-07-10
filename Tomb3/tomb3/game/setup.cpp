@@ -1292,11 +1292,15 @@ static void BaddyObjects()
 		obj->shadow_size = 128;
 		obj->radius = 102;
 		obj->intelligent = 1;
+		obj->save_anim = 1;
+		obj->save_flags = 1;
 		obj->save_hitpoints = 1;
 		obj->save_position = 1;
 	}
 
 	obj = &objects[TR1_BEAR];
+	if (obj->loaded)
+	{
 		obj->initialise = InitialiseCreature;
 		obj->control = TR1::BearControl;
 		obj->collision = CreatureCollision;
