@@ -15,7 +15,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo punk_hit = { 16, 48, 320, 13 };
+static BITE_INFO punk_hit = { 16, 48, 320, 13 };
 
 static void TriggerPunkFlame(short item_number)
 {

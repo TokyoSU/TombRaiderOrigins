@@ -921,8 +921,8 @@ long GetHeight(FLOOR_INFO* floor, long x, long y, long z)
 
 		default:
 			S_ExitSystem("GetHeight(): Unknown type");
-			break;
 		}
+
 	} while (!(type & 0x8000));
 
 	return h;
@@ -1075,6 +1075,7 @@ void TestTriggers(short* data, long heavy)
 		case PAD:
 		case ANTIPAD:
 			LaraOnPad = 1;
+
 			if (lara_item->pos.y_pos != lara_item->floor || lara_item->item_flags[0])
 				return;
 
@@ -1082,6 +1083,7 @@ void TestTriggers(short* data, long heavy)
 			{
 				if (lara_item->item_flags[1] == 1)
 					return;
+
 				lara_item->item_flags[1] = 1;
 			}
 
@@ -1089,29 +1091,39 @@ void TestTriggers(short* data, long heavy)
 
 		case SWITCH:
 			value = *data++ & 0x3FF;
+
 			if (flags & IFL_INVISIBLE)
 				items[value].item_flags[0] = 1;
+
 			if (!SwitchTrigger(value, timer))
 				return;
+
 			switch_off = items[value].current_anim_state == 1;
 			break;
 
 		case KEY:
 			value = *data++ & 0x3FF;
+
 			if (KeyTrigger(value))
 				break;
+
 			return;
 
 		case PICKUP:
 			value = *data++ & 0x3FF;
+
 			if (PickupTrigger(value))
 				break;
+
 			return;
 
 		case COMBAT:
+
 			if (lara.gun_status == LG_READY)
 				break;
-			return;
+
+			//fallthrough
+
 		case HEAVY:
 		case DUMMY:
 			return;
@@ -1275,10 +1287,8 @@ void TestTriggers(short* data, long heavy)
 			break;
 
 		case TO_FLIPMAP:
-			if (value < 0 || value >= 10)
-				break;
-
 			flip_available = 1;
+
 			if (flipmap[value] & IFL_INVISIBLE)
 				break;
 
@@ -1301,20 +1311,16 @@ void TestTriggers(short* data, long heavy)
 			break;
 
 		case TO_FLIPON:
-			if (value < 0 || value >= 10)
-				break;
-
 			flip_available = 1;
+
 			if ((flipmap[value] & IFL_CODEBITS) == IFL_CODEBITS && !flip_status)
 				flip = 1;
 
 			break;
 
 		case TO_FLIPOFF:
-			if (value < 0 || value >= 10)
-				break;
-
 			flip_available = 1;
+
 			if ((flipmap[value] & IFL_CODEBITS) == IFL_CODEBITS && flip_status)
 				flip = 1;
 
@@ -1337,11 +1343,13 @@ void TestTriggers(short* data, long heavy)
 			break;
 
 		case TO_SECRET:
+
 			if (!(savegame.secrets & 1 << value))
 			{
 				S_CDPlay(122, 0);
 				savegame.secrets |= 1 << value;
 			}
+
 			break;
 
 		case TO_BODYBAG:
@@ -1364,18 +1372,26 @@ void TestTriggers(short* data, long heavy)
 	}
 }
 
-bool TriggerActive(ITEM_INFO* item)
+long TriggerActive(ITEM_INFO* item)
 {
-	bool reverse = (item->flags & IFL_REVERSE) ? 0 : 1;
+	long reverse;
+
+	reverse = (item->flags & IFL_REVERSE) ? 0 : 1;
+
 	if ((item->flags & IFL_CODEBITS) != IFL_CODEBITS)
 		return !reverse;
-	if (item->timer == 0)
+
+	if (!item->timer)
 		return reverse;
+
 	if (item->timer == -1)
 		return !reverse;
+
 	item->timer--;
-	if (item->timer == 0)
+
+	if (!item->timer)
 		item->timer = -1;
+
 	return reverse;
 }
 
@@ -2467,12 +2483,4 @@ long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z)
 
 	height -= 256 * (abs(h1) + abs(h2));
 	return height;
-}
-
-void SetAnimation(ITEM_INFO* item, int anim_index, int frame_number)
-{
-	item->anim_number = objects[item->object_number].anim_index + anim_index;
-	item->frame_number = anims[item->anim_number].frame_base + frame_number;
-	item->goal_anim_state = anims[item->anim_number].current_anim_state;
-	item->current_anim_state = item->goal_anim_state;
 }

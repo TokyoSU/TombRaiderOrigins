@@ -20,7 +20,7 @@
 #include "laraelec.h"
 #include "setup.h"
 
-static BiteInfo londonboss_points[3] =
+static BITE_INFO londonboss_points[3] =
 {
 	{ 16, 56, 356, 10 },
 	{ -28, 48, 304, 10 },

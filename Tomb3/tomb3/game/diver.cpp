@@ -10,7 +10,7 @@
 #include "lara.h"
 #include "effects.h"
 
-static BiteInfo diver_poon = { 17, 164, 44, 18 };
+static BITE_INFO diver_poon = { 17, 164, 44, 18 };
 
 long GetWaterSurface(long x, long y, long z, short room_number)
 {

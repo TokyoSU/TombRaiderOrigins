@@ -248,10 +248,11 @@ void S_DrawLaser(ITEM_INFO* item)
 				else
 					lara_item->hit_points -= 10;
 
-				DoLotsOfBloodD(lara_item->pos.x_pos, item->pos.y_pos + y, lara_item->pos.z_pos, (GetRandomDraw() & 0x7F) + 128, short(GetRandomDraw() << 1), lara_item->room_number, 1);
+				DoLotsOfBloodD(lara_item->pos.x_pos, item->pos.y_pos + y, lara_item->pos.z_pos, (GetRandomDraw() & 0x7F) + 128,
+					short(GetRandomDraw() << 1), lara_item->room_number, 1);
 			}
 
-			if (item->pos.y_rot == 0 || item->pos.y_rot == -0x8000)
+			if (!item->pos.y_rot || item->pos.y_rot == -0x8000)
 				t.z = lara_item->pos.z_pos;
 			else
 				t.x = lara_item->pos.x_pos;
@@ -259,6 +260,7 @@ void S_DrawLaser(ITEM_INFO* item)
 			for (lp2 = 0; lp2 < level_items; lp2++)
 			{
 				target = &items[lp2];
+
 				if ((target->object_number == STROBE_LIGHT || target->object_number == ROBOT_SENTRY_GUN) && TriggerActive(target))
 					target->really_active = 1;
 			}

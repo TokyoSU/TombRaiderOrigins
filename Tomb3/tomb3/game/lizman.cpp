@@ -14,9 +14,9 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo lizman_bite_hit = { 0, -120, 120, 10 };
-static BiteInfo lizman_swipe_hit = { 0, 0, 0, 5 };
-static BiteInfo lizman_gas = { 0, -64, 56, 9 };
+static BITE_INFO lizman_bite_hit = { 0, -120, 120, 10 };
+static BITE_INFO lizman_swipe_hit = { 0, 0, 0, 5 };
+static BITE_INFO lizman_gas = { 0, -64, 56, 9 };
 
 static void TriggerLizmanGas(long x, long y, long z, long xv, long yv, long zv, long FxObj)
 {
@@ -108,7 +108,7 @@ static void TriggerLizmanGas(long x, long y, long z, long xv, long yv, long zv, 
 	}
 }
 
-static short TriggerLizmanGasThrower(ITEM_INFO* item, BiteInfo* bite, short speed)
+static short TriggerLizmanGasThrower(ITEM_INFO* item, BITE_INFO* bite, short speed)
 {
 	FX_INFO* fx;
 	PHD_VECTOR pos;

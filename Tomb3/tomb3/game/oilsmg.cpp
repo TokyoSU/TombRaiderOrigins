@@ -12,13 +12,15 @@
 #include "control.h"
 #include "lara.h"
 
-static CreatureBiteOffset offset(BiteInfo(0, 400, 64, 7), 0, 0, 0, 0, false, true);
+static BITE_INFO oilsmg_gun = { 0, 400, 64, 7 };
 
 void InitialiseOilSMG(short item_number)
 {
-	auto* item = &items[item_number];
+	ITEM_INFO* item;
+
+	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[item->object_number].anim_index + 12;
+	item->anim_number = objects[WHITE_SOLDIER].anim_index + 12;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = OILSMG_STOP;
 	item->goal_anim_state = OILSMG_STOP;
@@ -34,19 +36,29 @@ void OilSMGControl(short item_number)
 	AI_INFO info;
 	AI_INFO larainfo;
 	long x, z, mood;
-	short angle, tilt, head, torso_x, torso_y;
+	short angle, tilt, head, torso_x, torso_y, frame, base;
 
 	if (!CreatureActive(item_number))
 		return;
 
 	item = &items[item_number];
 	smg = (CREATURE_INFO*)item->data;
-	smg->offset[0] = offset;
 	angle = 0;
 	tilt = 0;
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
+
+	if (item->fired_weapon)
+	{
+		phd_PushMatrix();
+		pos.x = oilsmg_gun.x;
+		pos.y = oilsmg_gun.y;
+		pos.z = oilsmg_gun.z;
+		GetJointAbsPosition(item, &pos, oilsmg_gun.mesh_num);
+		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 8, 192, 128, 32);
+		phd_PopMatrix();
+	}
 
 	if (item->hit_points <= 0)
 	{
@@ -59,12 +71,15 @@ void OilSMGControl(short item_number)
 		}
 		else if (smg->flags)
 		{
-			if (item->frame_number > anims[item->anim_number].frame_base + 3 && item->frame_number < anims[item->anim_number].frame_base + 31 && !(item->frame_number & 3))
+			frame = item->frame_number;
+			base = anims[item->anim_number].frame_base;
+
+			if (frame > base + 3 && frame < base + 31 && !(frame & 3))
 			{
 				CreatureAIInfo(item, &info);
 				head = info.angle;
 				torso_y = info.angle;
-				ShotLaraNew(item, &info, smg, 0, torso_y, 28);
+				ShotLara(item, &info, &oilsmg_gun, 0, 0);
 				SoundEffect(SFX_OIL_SMG_FIRE, &item->pos, 0x6000);
 			}
 		}
@@ -253,7 +268,7 @@ void OilSMGControl(short item_number)
 				smg->flags--;
 			else
 			{
-				ShotLaraNew(item, &info, smg, 0, torso_y, 28);
+				ShotLara(item, &info, &oilsmg_gun, torso_y, 28);
 				smg->flags = 5;
 			}
 
@@ -298,5 +313,5 @@ void OilSMGControl(short item_number)
 	CreatureJoint(item, 0, torso_y);
 	CreatureJoint(item, 1, torso_x);
 	CreatureJoint(item, 2, head);
-	CreatureAnimation(item_number, angle, tilt);
+	CreatureAnimation(item_number, angle, 0);
 }

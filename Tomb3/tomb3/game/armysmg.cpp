@@ -13,13 +13,15 @@
 #include "control.h"
 #include "lara.h"
 
-static CreatureBiteOffset offset(MakeBiteInfo(0, 300, 64, 7), 0, 0, 0, 0, false, true);
+static BITE_INFO army_gun = { 0, 300, 64, 7 };
 
 void InitialiseArmySMG(short item_number)
 {
-	auto* item = &items[item_number];
+	ITEM_INFO* item;
+
+	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[item->object_number].anim_index + 12;
+	item->anim_number = objects[STHPAC_MERCENARY].anim_index + 12;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = ARMY_STOP;
 	item->goal_anim_state = ARMY_STOP;
@@ -40,12 +42,26 @@ void ArmySMGControl(short item_number)
 
 	item = &items[item_number];
 	army = (CREATURE_INFO*)item->data;
-	army->offset[0] = offset;
+
+	if (!army)
+		return;
+
 	tilt = 0;
 	angle = 0;
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
+
+	if (item->fired_weapon)
+	{
+		phd_PushMatrix();
+		pos.x = army_gun.x;
+		pos.y = army_gun.y;
+		pos.z = army_gun.z;
+		GetJointAbsPosition(item, &pos, army_gun.mesh_num);
+		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 8, 192, 128, 32);
+		phd_PopMatrix();
+	}
 
 	if (item->hit_points <= 0)
 	{
@@ -259,7 +275,7 @@ void ArmySMGControl(short item_number)
 				army->flags--;
 			else
 			{
-				ShotLaraNew(item, &info, army, 0, torso_y, 28);
+				ShotLara(item, &info, &army_gun, torso_y, 28);
 				army->flags = 5;
 			}
 
@@ -304,5 +320,5 @@ void ArmySMGControl(short item_number)
 	CreatureJoint(item, 0, torso_y);
 	CreatureJoint(item, 1, torso_x);
 	CreatureJoint(item, 2, head);
-	CreatureAnimation(item_number, angle, tilt);
+	CreatureAnimation(item_number, angle, 0);
 }

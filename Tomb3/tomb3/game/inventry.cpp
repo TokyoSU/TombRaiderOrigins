@@ -138,10 +138,11 @@ void DrawInventoryItem(INVENTORY_ITEM* item)
 	long m, h, s, x, y, z, clip;
 	short mesh, bit;
 
+	nPolyType = 7;
+
 	if (bInvItemsOff)
 		return;
 
-	nPolyType = PT_INVENTORY;
 	if (item->object_number == MAP_OPTION)
 	{
 		s = savegame.timer / 30;
@@ -163,16 +164,18 @@ void DrawInventoryItem(INVENTORY_ITEM* item)
 		phd_RotYXZ(GlobeYRot, GlobeXRot, GlobeZRot);
 
 	obj = &objects[item->object_number];
+
 	if (!obj->loaded)
 		return;
 
 	if (obj->nmeshes < 0)
 	{
-		S_DrawSprite(SPR_SEMITRANS|SPR_IGNORE_FOG, 0, 0, 0, obj->mesh_index, 0, 0);
+		S_DrawSprite(0, 0, 0, 0, obj->mesh_index, 0, 0);
 		return;
 	}
 
 	slist = item->sprlist;
+
 	if (slist)
 	{
 		z = phd_mxptr[M23];
@@ -189,7 +192,7 @@ void DrawInventoryItem(INVENTORY_ITEM* item)
 				switch (sp->shape)
 				{
 				case 1:
-					S_DrawScreenSprite(x + sp->x, y + sp->y, sp->z, sp->param1, sp->param2, objects[ALPHABET].mesh_index + sp->sprnum, 0x200000, 0);
+					S_DrawScreenSprite(x + sp->x, y + sp->y, sp->z, sp->param1, sp->param2, static_objects[ALPHABET].mesh_number + sp->sprnum, 0x200000, 0);
 					break;
 
 				case 2:
@@ -215,6 +218,7 @@ void DrawInventoryItem(INVENTORY_ITEM* item)
 	phd_PushMatrix();
 
 	clip = S_GetObjectBounds(frame);
+
 	if (!clip)
 	{
 		phd_PopMatrix();
@@ -246,6 +250,7 @@ void DrawInventoryItem(INVENTORY_ITEM* item)
 
 		if (bone[0] & 1)
 			phd_PopMatrix();
+
 		if (bone[0] & 2)
 			phd_PushMatrix();
 

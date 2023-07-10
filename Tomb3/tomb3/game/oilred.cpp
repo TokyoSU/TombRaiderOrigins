@@ -12,7 +12,7 @@
 #include "../specific/game.h"
 #include "lara.h"
 
-static BiteInfo oilred_gun = { 0, 160, 40, 13 };
+static BITE_INFO oilred_gun = { 0, 160, 40, 13 };
 
 void OilRedControl(short item_number)
 {

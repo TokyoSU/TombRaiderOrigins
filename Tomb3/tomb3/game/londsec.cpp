@@ -12,7 +12,7 @@
 #include "objects.h"
 #include "lara.h"
 
-static CreatureBiteOffset offset(BiteInfo(0, 160, 40, 13), 0, 0, 0, 0, false, true);
+static BITE_INFO londsec_gun = { 0, 160, 40, 13 };
 
 void LondSecControl(short item_number)
 {
@@ -31,12 +31,22 @@ void LondSecControl(short item_number)
 
 	item = &items[item_number];
 	sec = (CREATURE_INFO*)item->data;
-	sec->offset[0] = offset;
 	angle = 0;
 	tilt = 0;
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
+
+	if (item->fired_weapon)
+	{
+		phd_PushMatrix();
+		pos.x = londsec_gun.x;
+		pos.y = londsec_gun.y;
+		pos.z = londsec_gun.z;
+		GetJointAbsPosition(item, &pos, londsec_gun.mesh_num);
+		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 4, 192, 128, 32);
+		phd_PopMatrix();
+	}
 
 	if (item->hit_points <= 0)
 	{
@@ -50,16 +60,17 @@ void LondSecControl(short item_number)
 		}
 		else if (GetRandomControl() & 1)
 		{
-			if ((item->frame_number == anims[item->anim_number].frame_base + 3) || (item->frame_number == anims[item->anim_number].frame_base + 28))
+			if (item->frame_number == anims[item->anim_number].frame_base + 3 || item->frame_number == anims[item->anim_number].frame_base + 28)
 			{
 				CreatureAIInfo(item, &info);
-				if (Targetable(item, &info) && info.angle > -0x2000 && info.angle < 0x2000)
+
+				if (Targetable(item, &info))
 				{
 					if (info.angle > -0x2000 && info.angle < 0x2000)
 					{
 						torso_y = info.angle;
 						head = info.angle;
-						ShotLaraNew(item, &info, sec, 0, info.angle, 64);
+						ShotLara(item, &info, &londsec_gun, info.angle, 64);
 						SoundEffect(SFX_SECURITY_GUARD_FIRE, &item->pos, 0x6000);
 					}
 				}
@@ -248,7 +259,7 @@ void LondSecControl(short item_number)
 			if (item->anim_number == objects[SECURITY_GUARD].anim_index + 12 ||
 				(item->anim_number == objects[SECURITY_GUARD].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
 			{
-				if (!ShotLaraNew(item, &info, sec, 0, torso_y, 32))
+				if (!ShotLara(item, &info, &londsec_gun, torso_y, 32))
 					item->required_anim_state = LONDSEC_WAIT;
 			}
 			else if (item->hit_status && !(GetRandomControl() & 3) && near_cover)
@@ -282,7 +293,7 @@ void LondSecControl(short item_number)
 
 			if (item->frame_number == anims[item->anim_number].frame_base)
 			{
-				if (!ShotLaraNew(item, &info, sec, 0, torso_y, 32))
+				if (!ShotLara(item, &info, &londsec_gun, torso_y, 32))
 					item->goal_anim_state = LONDSEC_WAIT;
 			}
 			else if (item->hit_status && !(GetRandomControl() & 3) && near_cover)
@@ -304,7 +315,7 @@ void LondSecControl(short item_number)
 
 			if (item->frame_number == anims[item->anim_number].frame_base || item->frame_number == anims[item->anim_number].frame_base + 11)
 			{
-				if (!ShotLaraNew(item, &info, sec, 0, torso_y, 32))
+				if (!ShotLara(item, &info, &londsec_gun, torso_y, 32))
 					item->goal_anim_state = LONDSEC_WAIT;
 			}
 			else if (item->hit_status && !(GetRandomControl() & 3) && near_cover)
@@ -327,7 +338,7 @@ void LondSecControl(short item_number)
 			if (item->required_anim_state == LONDSEC_WALK)
 				item->goal_anim_state = LONDSEC_WALK;
 
-			if (item->frame_number == anims[item->anim_number].frame_base + 16 && !ShotLaraNew(item, &info, sec, 0, torso_y, 32))
+			if (item->frame_number == anims[item->anim_number].frame_base + 16 && !ShotLara(item, &info, &londsec_gun, torso_y, 32))
 				item->goal_anim_state = LONDSEC_WALK;
 
 			if (info.distance < 0x400000)
@@ -346,7 +357,7 @@ void LondSecControl(short item_number)
 			if (item->anim_number == objects[SECURITY_GUARD].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17 ||
 				item->anim_number == objects[SECURITY_GUARD].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
 			{
-				if (!ShotLaraNew(item, &info, sec, 0, torso_y, 32))
+				if (!ShotLara(item, &info, &londsec_gun, torso_y, 32))
 					item->required_anim_state = LONDSEC_WALK;
 			}
 			else if (item->hit_status && !(GetRandomControl() & 3) && near_cover)
@@ -390,17 +401,20 @@ void LondSecControl(short item_number)
 			break;
 
 		case LONDSEC_DUCKSHOT:
+
 			if (info.ahead)
 				torso_y = info.angle;
 
 			if (item->frame_number == anims[item->anim_number].frame_base)
 			{
-				if (!ShotLaraNew(item, &info, sec, 0, torso_y, 32) || !(GetRandomControl() & 7))
+				if (!ShotLara(item, &info, &londsec_gun, torso_y, 32) || !(GetRandomControl() & 7))
 					item->goal_anim_state = LONDSEC_DUCKED;
 			}
+
 			break;
 
 		case LONDSEC_DUCKWALK:
+
 			if (info.ahead)
 				head = info.angle;
 
@@ -408,6 +422,7 @@ void LondSecControl(short item_number)
 
 			if (Targetable(item, &info) || item->hit_status || !near_cover || info.ahead && !(GetRandomControl() & 0x1F))
 				item->goal_anim_state = LONDSEC_DUCKED;
+
 			break;
 		}
 	}

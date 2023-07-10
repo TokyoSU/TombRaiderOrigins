@@ -17,7 +17,7 @@
 #include "setup.h"
 #include "lara.h"
 
-BiteInfo tribeboss_hit[6] =
+BITE_INFO tribeboss_hit[6] =
 {
 	{ 120, 68, 136, 8 },
 	{ 128, -64, 136, 8 },

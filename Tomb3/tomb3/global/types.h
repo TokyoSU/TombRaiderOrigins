@@ -6,21 +6,14 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;
 
-constexpr short MESH_BITS(short x) { return 1 << x; }
-constexpr short ANGLE(short x) { return x * 182; }
-constexpr long BLOCK(long x) { return x * 1024; }
-constexpr long CLICK(long x) { return x * 256; }
-constexpr auto SQUARE(long x) { return x * x; }
-constexpr auto BLOCK_SQR(long x) { return SQUARE(BLOCK(x)); }
-constexpr auto CLICK_SQR(long x) { return SQUARE(CLICK(x)); }
+#define SQUARE(x) ((x)*(x))
 #define	TRIGMULT2(a, b)	(((a) * (b)) >> W2V_SHIFT)
 #define	TRIGMULT3(a, b, c)	(TRIGMULT2((TRIGMULT2(a, b)), c))
 #define key_pressed(x) (keymap[x] & 0x80)
 #define RGBA(r, g, b, a)	((a << 24) | (r << 16) | (g << 8) | (b))
 
 //S_DrawSprite flags
-#define SPR_IGNORE_FOG      0x0020000
-#define SPR_RGB	            0x0100000
+#define SPR_RGB(r, g, b)	((r) | ((g) << 8) | ((b) << 16))
 #define SPR_ABS				0x1000000
 #define SPR_SEMITRANS		0x2000000
 #define SPR_SCALE			0x4000000
@@ -556,15 +549,6 @@ enum sfx_types
 	SFX_WATERONLY = 0x8000
 };
 
-enum zone_type
-{
-	SKELLY_ZONE,
-	BASIC_ZONE,
-	CROC_ZONE,
-	HUMAN_ZONE,
-	FLYER_ZONE,
-};
-
 /*structs*/
 #if (DIRECT3D_VERSION >= 0x900)
 struct D3DTLVERTEX
@@ -593,11 +577,9 @@ struct GOURAUD_OUTLINE
 
 struct PHD_VECTOR
 {
-	long x = 0;
-	long y = 0;
-	long z = 0;
-	PHD_VECTOR() = default;
-	PHD_VECTOR(long x, long y, long z) : x(x), y(y), z(z) {}
+	long x;
+	long y;
+	long z;
 };
 
 struct PHD_3DPOS
@@ -612,13 +594,11 @@ struct PHD_3DPOS
 
 struct GAME_VECTOR
 {
-	long x = 0;
-	long y = 0;
-	long z = 0;
-	short room_number = 255;
-	short box_number = 2047;
-	GAME_VECTOR() = default;
-	GAME_VECTOR(long x, long y, long z, short room_number, short box_number) : x(x), y(y), z(z), room_number(room_number), box_number(box_number) {}
+	long x;
+	long y;
+	long z;
+	short room_number;
+	short box_number;
 };
 
 struct SPHERE
@@ -687,7 +667,6 @@ struct ITEM_LIGHT
 
 struct ITEM_INFO
 {
-	short index;
 	long floor;
 	ulong touch_bits;
 	ulong mesh_bits;
@@ -707,11 +686,11 @@ struct ITEM_INFO
 	short timer;
 	short flags;
 	short shade;
-	short ocb;
+	short shadeB;
 	short carried_item;
 	short after_death;
 	ushort fired_weapon;
-	short item_flags[5];
+	short item_flags[4];
 	void* data;
 	PHD_3DPOS pos;
 	ITEM_LIGHT il;
@@ -726,18 +705,6 @@ struct ITEM_INFO
 	ushort ai_bits : 5;
 	ushort really_active : 1;
 };
-
-struct BiteInfo
-{
-	long x = 0;
-	long y = 0;
-	long z = 0;
-	long mesh_num = 0;
-	BiteInfo() = default;
-	BiteInfo(long x, long y, long z, long mesh_num) : x(x), y(y), z(z), mesh_num(mesh_num) {}
-};
-
-static BiteInfo MakeBiteInfo(long x, long y, long z, long mesh_num) { return BiteInfo(x, y, z, mesh_num); }
 
 struct BOX_NODE
 {
@@ -761,24 +728,6 @@ struct LOT_INFO
 	short target_box;
 	short required_box;
 	PHD_VECTOR target;
-	zone_type zone;
-};
-
-struct CreatureBiteOffset
-{
-	BiteInfo bite = {};
-	int delay = 0;
-	short rot_x_adder = 0;
-	short rot_y_adder = 0;
-	short rot_z_adder = 0;
-	bool is_m16_gunflash = false;
-	bool use_smoke = true;
-
-	CreatureBiteOffset() = default;
-	CreatureBiteOffset(const BiteInfo& bite, int delay, short rot_x_adder, short rot_y_adder, short rot_z_adder, bool is_m16_gunflash, bool use_smoke)
-		: bite(bite), delay(delay), rot_x_adder(rot_x_adder), rot_y_adder(rot_y_adder), rot_z_adder(rot_z_adder), is_m16_gunflash(is_m16_gunflash), use_smoke(use_smoke)
-	{
-	}
 };
 
 struct CREATURE_INFO
@@ -797,16 +746,11 @@ struct CREATURE_INFO
 	PHD_VECTOR target;
 	ITEM_INFO* enemy;
 	LOT_INFO LOT;
-	CreatureBiteOffset offset[2]; // left and right offset.
 };
 
 struct AMMO_INFO
 {
 	long ammo;
-	AMMO_INFO() = default;
-	AMMO_INFO(long ammo) : ammo(ammo)
-	{
-	}
 };
 
 struct LARA_INFO
@@ -1708,6 +1652,14 @@ struct HWCONFIG
 	long nFilter;
 	long nShadeMode;
 	long nFillMode;
+};
+
+struct BITE_INFO
+{
+	long x;
+	long y;
+	long z;
+	long mesh_num;
 };
 
 struct WATERTAB

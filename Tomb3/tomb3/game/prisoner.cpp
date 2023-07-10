@@ -10,7 +10,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo bob_hit = { 10, 10, 11, 13 };
+static BITE_INFO bob_hit = { 10, 10, 11, 13 };
 
 void InitialisePrisoner(short item_number)
 {

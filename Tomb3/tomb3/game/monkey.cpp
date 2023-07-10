@@ -13,7 +13,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo monkey_hit = { 10, 10, 11, 13 };
+static BITE_INFO monkey_hit = { 10, 10, 11, 13 };
 
 void InitialiseMonkey(short item_number)
 {

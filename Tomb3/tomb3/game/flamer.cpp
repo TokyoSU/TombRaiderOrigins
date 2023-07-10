@@ -17,7 +17,7 @@
 #include "lara.h"
 #include "effects.h"
 
-static BiteInfo flamer_gun = { 0, 340, 64, 7 };
+static BITE_INFO flamer_gun = { 0, 340, 64, 7 };
 
 static void TriggerPilotFlame(short item_number)
 {
@@ -158,7 +158,7 @@ static void TriggerFlamethrowerFlame(long x, long y, long z, long xv, long yv, l
 	}
 }
 
-static short TriggerFlameThrower(ITEM_INFO* item, BiteInfo* bite, short speed)
+static short TriggerFlameThrower(ITEM_INFO* item, BITE_INFO* bite, short speed)
 {
 	FX_INFO* fx;
 	PHD_VECTOR pos1;

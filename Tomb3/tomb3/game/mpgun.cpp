@@ -14,7 +14,7 @@
 #include "lot.h"
 #include "lara.h"
 
-static CreatureBiteOffset offset(BiteInfo(0, 240, 40, 13), 0, 0, 0, 0, false, true);
+static BITE_INFO mpgun_gun = { 0, 160, 40, 13 };
 
 void MPGunControl(short item_number)
 {
@@ -35,48 +35,34 @@ void MPGunControl(short item_number)
 
 	item = &items[item_number];
 	mp = (CREATURE_INFO*)item->data;
-	mp->offset[0] = offset;
 	tilt = 0;
 	torso_y = 0;
 	torso_x = 0;
 	head = 0;
 	angle = 0;
 
+	if (item->fired_weapon)
+	{
+		phd_PushMatrix();
+		pos.x = mpgun_gun.x;
+		pos.y = mpgun_gun.y;
+		pos.z = mpgun_gun.z;
+		GetJointAbsPosition(item, &pos, mpgun_gun.mesh_num);
+		TriggerDynamic(pos.x, pos.y, pos.z, 2 * item->fired_weapon + 4, 192, 128, 32);
+		phd_PopMatrix();
+	}
+
 	if (boxes[item->box_number].overlap_index & 0x4000)
 	{
-		DoLotsOfBloodD(item->pos.x_pos, item->pos.y_pos - (GetRandomControl() & 0xFF) - 32, item->pos.z_pos, (GetRandomControl() & 0x7F) + 128, short(GetRandomControl() << 1), item->room_number, 3);
+		DoLotsOfBloodD(item->pos.x_pos, item->pos.y_pos - (GetRandomControl() & 0xFF) - 32, item->pos.z_pos,
+			(GetRandomControl() & 0x7F) + 128, short(GetRandomControl() << 1), item->room_number, 3);
 		item->hit_points -= 20;
 	}
 
-	if (item->hit_points <= 0)
-	{
-		if (item->current_anim_state != MPGUN_DEATH)
-		{
-			item->anim_number = objects[item->object_number].anim_index + 14;
-			item->frame_number = anims[item->anim_number].frame_base;
-			item->current_anim_state = MPGUN_DEATH;
-		}
-		else if (!(GetRandomControl() & 3) && item->frame_number == anims[item->anim_number].frame_base + 1)
-		{
-			CreatureAIInfo(item, &info);
-			if (Targetable(item, &info))
-			{
-				if (info.angle > -0x2000 && info.angle < 0x2000)
-				{
-					torso_y = info.angle;
-					head = info.angle;
-					ShotLaraNew(item, &info, mp, 0, info.angle, 32);
-					SoundEffect(SFX_OIL_SMG_FIRE, &item->pos, 0x6000);
-				}
-			}
-		}
-	}
-	else
+	if (item->hit_points > 0)
 	{
 		if (item->ai_bits)
-		{
 			GetAITarget(mp);
-		}
 		else
 		{
 			mp->enemy = lara_item;
@@ -87,13 +73,16 @@ void MPGunControl(short item_number)
 			for (int i = 0; i < MAX_LOT; i++)
 			{
 				target = &baddie_slots[i];
+
 				if (target->item_num != NO_ITEM && target->item_num != item_number)
 				{
 					candidate = &items[target->item_num];
+
 					if (candidate->object_number == LARA || candidate->object_number == BOB)
 					{
 						dx = candidate->pos.x_pos - item->pos.x_pos;
 						dz = candidate->pos.z_pos - item->pos.z_pos;
+
 						if (SQUARE(dx) + SQUARE(dz) < lara_info.distance)
 							mp->enemy = candidate;
 					}
@@ -144,6 +133,7 @@ void MPGunControl(short item_number)
 		{
 			if (!mp->alerted)
 				SoundEffect(SFX_AMERCAN_HOY, &item->pos, SFX_DEFAULT);
+
 			AlertAllGuards(item_number);
 		}
 
@@ -271,7 +261,7 @@ void MPGunControl(short item_number)
 			if (item->anim_number == objects[MP2].anim_index + 12 ||
 				(item->anim_number == objects[MP2].anim_index + 1 && item->frame_number == anims[item->anim_number].frame_base + 10))
 			{
-				if (!ShotLaraNew(item, &info, mp, 0, torso_y, 32))
+				if (!ShotLara(item, &info, &mpgun_gun, torso_y, 32))
 					item->required_anim_state = MPGUN_WAIT;
 			}
 			else if (item->hit_status && !(GetRandomControl() & 3) && near_cover)
@@ -324,7 +314,7 @@ void MPGunControl(short item_number)
 
 			if (item->frame_number == anims[item->anim_number].frame_base || item->frame_number == anims[item->anim_number].frame_base + 11)
 			{
-				if (!ShotLaraNew(item, &info, mp, 0, torso_y, 32))
+				if (!ShotLara(item, &info, &mpgun_gun, torso_y, 32))
 					item->goal_anim_state = MPGUN_WAIT;
 			}
 			else if (item->hit_status && !(GetRandomControl() & 3) && near_cover)
@@ -345,14 +335,12 @@ void MPGunControl(short item_number)
 			}
 
 			if (item->required_anim_state == MPGUN_WALK)
-			{
 				item->goal_anim_state = MPGUN_WALK;
-				break;
-			}
 
-			if (item->frame_number == anims[item->anim_number].frame_base + 16 && !ShotLaraNew(item, &info, mp, 0, torso_y, 32))
+			if (item->frame_number == anims[item->anim_number].frame_base + 16 && !ShotLara(item, &info, &mpgun_gun, torso_y, 32))
 				item->goal_anim_state = MPGUN_WALK;
-			else if (info.distance < 0x240000)
+
+			if (info.distance < 0x240000)
 				item->goal_anim_state = MPGUN_WALK;
 
 			break;
@@ -368,7 +356,7 @@ void MPGunControl(short item_number)
 			if (item->anim_number == objects[MP2].anim_index + 18 && item->frame_number == anims[item->anim_number].frame_base + 17
 				|| item->anim_number == objects[MP2].anim_index + 19 && item->frame_number == anims[item->anim_number].frame_base + 6)
 			{
-				if (!ShotLaraNew(item, &info, mp, 0, torso_y, 32))
+				if (!ShotLara(item, &info, &mpgun_gun, torso_y, 32))
 					item->required_anim_state = MPGUN_WALK;
 			}
 			else if (item->hit_status && !(GetRandomControl() & 3) && near_cover)
@@ -410,10 +398,11 @@ void MPGunControl(short item_number)
 			break;
 
 		case MPGUN_DUCKSHOT:
+
 			if (info.ahead)
 				torso_y = info.angle;
 
-			if (item->frame_number == anims[item->anim_number].frame_base && (!ShotLaraNew(item, &info, mp, 0, torso_y, 32) || !(GetRandomControl() & 7)))
+			if (item->frame_number == anims[item->anim_number].frame_base && (!ShotLara(item, &info, &mpgun_gun, torso_y, 32) || !(GetRandomControl() & 7)))
 				item->goal_anim_state = MPGUN_DUCKED;
 
 			break;
@@ -431,10 +420,36 @@ void MPGunControl(short item_number)
 			break;
 		}
 	}
+	else
+	{
+		item->hit_points = 0;
+
+		if (item->current_anim_state != MPGUN_DEATH)
+		{
+			item->anim_number = objects[item->object_number].anim_index + 14;
+			item->frame_number = anims[item->anim_number].frame_base;
+			item->current_anim_state = MPGUN_DEATH;
+		}
+		else if (!(GetRandomControl() & 3) && item->frame_number == anims[item->anim_number].frame_base + 1)
+		{
+			CreatureAIInfo(item, &info);
+
+			if (Targetable(item, &info))
+			{
+				if (info.angle > -0x2000 && info.angle < 0x2000)
+				{
+					torso_y = info.angle;
+					head = info.angle;
+					ShotLara(item, &info, &mpgun_gun, info.angle, 32);
+					SoundEffect(SFX_OIL_SMG_FIRE, &item->pos, 0x6000);
+				}
+			}
+		}
+	}
 
 	CreatureTilt(item, tilt);
 	CreatureJoint(item, 0, torso_y);
 	CreatureJoint(item, 1, torso_x);
 	CreatureJoint(item, 2, head);
-	CreatureAnimation(item_number, angle, tilt);
+	CreatureAnimation(item_number, angle, 0);
 }

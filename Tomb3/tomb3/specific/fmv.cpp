@@ -5,14 +5,10 @@
 #include "file.h"
 #include "input.h"
 #include "audio.h"
-#include "../newstuff/ffplay.h"
 #include "../tomb3/tomb3.h"
-#include "texture.h"
-#include "hwrender.h"
 
 long fmv_playing;
 
-#if (DIRECT3D_VERSION <= 0x500)
 static LPVOID MovieContext;
 static LPVOID FmvContext;
 static LPVOID FmvSoundContext;
@@ -23,7 +19,9 @@ static LPVOID FmvSoundContext;
 	if(!proc) throw #proc; \
 }
 
+#if (DIRECT3D_VERSION < 0x900)
 static long(__cdecl* Player_PassInDirectDrawObject)(LPDIRECTDRAWX);
+#endif
 static long(__cdecl* Player_InitMovie)(LPVOID, long, long, const char*, long);
 static long(__cdecl* Player_InitVideo)(LPVOID, LPVOID, long, long, long, long, long, long, long, long, long, long, long);
 static long(__cdecl* Player_InitPlaybackMode)(HWND, LPVOID, long, long);
@@ -53,20 +51,19 @@ static long(__cdecl* Movie_GetCurrentFrame)(LPVOID);
 static long(__cdecl* Movie_GetTotalFrames)(LPVOID);
 
 static HMODULE hWinPlay;
-#endif
 
 bool LoadWinPlay()
 {
-#if defined(FFPLAY_FEATURE)
-	return FFPlayInit();
-#elif (DIRECT3D_VERSION <= 0x500) // DirectX5
 	hWinPlay = LoadLibrary("WINPLAY.DLL");
-	if (hWinPlay == NULL)
-		return false;
+
+	if (!hWinPlay)
+		return 0;
 
 	try
 	{
+#if (DIRECT3D_VERSION < 0x900)
 		GET_DLL_PROC(hWinPlay, Player_PassInDirectDrawObject);
+#endif
 		GET_DLL_PROC(hWinPlay, Player_InitMovie);
 		GET_DLL_PROC(hWinPlay, Player_InitVideo);
 		GET_DLL_PROC(hWinPlay, Player_InitPlaybackMode);
@@ -99,36 +96,40 @@ bool LoadWinPlay()
 	{
 		FreeLibrary(hWinPlay);
 		hWinPlay = 0;
-		return false;
+		return 0;
 	}
-	return true;
-#endif
+
+	return 1;
 }
 
 void FreeWinPlay()
 {
-#if defined(FFPLAY_FEATURE)
-	FFPlayCleanup();
-#elif (DIRECT3D_VERSION <= 0x500) // DirectX5
 	if (hWinPlay)
 	{
 		FreeLibrary(hWinPlay);
 		hWinPlay = 0;
 	}
-#endif
 }
 
 long FMV_Play(char* name)
 {
-	if (!App.WinPlayLoaded)
+#if (DIRECT3D_VERSION >= 0x900)
+	return 0;
+#endif
+
+	if (App.Windowed || !App.WinPlayLoaded)
 		return 0;
 
 	fmv_playing = 1;
 	S_CDStop();
 	ShowCursor(0);
+	WinFreeDX(0);
 	WinPlayFMV(GetFullPath(name), 1);
 	WinStopFMV(1);
 	fmv_playing = 0;
+
+	if (!GtWindowClosed)
+		WinDXInit(&App.DeviceInfo, &App.DXConfig, 0);
 
 	ShowCursor(1);
 	return GtWindowClosed;
@@ -136,17 +137,24 @@ long FMV_Play(char* name)
 
 long FMV_PlayIntro(char* name1, char* name2)
 {
-	if (!App.WinPlayLoaded)
+#if (DIRECT3D_VERSION >= 0x900)
+	return 0;
+#endif
+
+	if (App.Windowed || !App.WinPlayLoaded)
 		return 0;
 
 	fmv_playing = 1;
 	ShowCursor(0);
-	S_CDStop();
+	WinFreeDX(0);
 	WinPlayFMV(GetFullPath(name1), 1);
 	WinStopFMV(1);
 	WinPlayFMV(GetFullPath(name2), 1);
 	WinStopFMV(1);
 	fmv_playing = 0;
+
+	if (!GtWindowClosed)
+		WinDXInit(&App.DeviceInfo, &App.DXConfig, 0);
 
 	ShowCursor(1);
 	return GtWindowClosed;
@@ -154,19 +162,23 @@ long FMV_PlayIntro(char* name1, char* name2)
 
 void WinPlayFMV(const char* name, bool play)
 {
-#if defined(FFPLAY_FEATURE)
-	FFPlay(name);
-#elif (DIRECT3D_VERSION <= 0x500) // DirectX5
 	long xSize, ySize, xOffset, yOffset;
 	long lp;
 	RECT r;
+
+#if (DIRECT3D_VERSION >= 0x900)
+	return;
+#endif
+
 	r.left = 0;
 	r.top = 0;
 	r.right = 640;
 	r.bottom = 480;
 
+#if (DIRECT3D_VERSION < 0x900)
 	if (Player_PassInDirectDrawObject(App.DDraw) || Player_InitMovie(&MovieContext, 0, 0, name, 0x200000) || Movie_GetFormat(MovieContext) != 130)
 		return;
+#endif
 
 	xSize = Movie_GetXSize(MovieContext);
 	ySize = Movie_GetYSize(MovieContext);
@@ -210,12 +222,13 @@ void WinPlayFMV(const char* name, bool play)
 		if (input & IN_OPTION)
 			break;
 	}
-#endif
 }
 
 void WinStopFMV(bool play)
 {
-#if (DIRECT3D_VERSION <= 0x500) // DirectX5
+#if (DIRECT3D_VERSION >= 0x900)
+	return;
+#endif
 	Player_StopTimer(MovieContext);
 	Player_ShutDownSound(&FmvSoundContext);
 	Player_ShutDownVideo(&FmvContext);
@@ -224,5 +237,4 @@ void WinStopFMV(bool play)
 
 	if (play)
 		Player_ReturnPlaybackMode();
-#endif
 }

@@ -432,15 +432,25 @@ long LoadBoxes(HANDLE file)
 
 	for (int i = 0; i < 2; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < 4; j++)
 		{
 			ground_zone[j][i] = (short*)game_malloc(sizeof(short) * number_boxes);
 			MyReadFile(file, ground_zone[j][i], sizeof(short) * number_boxes, &read, 0);
+
 			if (read != sizeof(short) * number_boxes)
 			{
 				lstrcpy(exit_message, "LoadBoxes(): Unable to load 'ground_zone'");
 				return 0;
 			}
+		}
+
+		fly_zone[i] = (short*)game_malloc(sizeof(short) * number_boxes);
+		MyReadFile(file, fly_zone[i], sizeof(short) * number_boxes, &read, 0);
+
+		if (read != sizeof(short) * number_boxes)
+		{
+			lstrcpy(exit_message, "LoadBoxes(): Unable to load 'fly_zone'");
+			return 0;
 		}
 	}
 
@@ -532,12 +542,14 @@ long LoadItems(HANDLE file)
 
 		MyReadFile(file, &item->object_number, sizeof(short), &read, 0);
 		MyReadFile(file, &item->room_number, sizeof(short), &read, 0);
+
 		MyReadFile(file, &item->pos.x_pos, sizeof(long), &read, 0);
 		MyReadFile(file, &item->pos.y_pos, sizeof(long), &read, 0);
 		MyReadFile(file, &item->pos.z_pos, sizeof(long), &read, 0);
 		MyReadFile(file, &item->pos.y_rot, sizeof(short), &read, 0);
+
 		MyReadFile(file, &item->shade, sizeof(short), &read, 0);
-		MyReadFile(file, &item->ocb, sizeof(short), &read, 0);
+		MyReadFile(file, &item->shadeB, sizeof(short), &read, 0);
 		MyReadFile(file, &item->flags, sizeof(short), &read, 0);
 
 		if (item->object_number < 0 || item->object_number > NUMBER_OBJECTS)

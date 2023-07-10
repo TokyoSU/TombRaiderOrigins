@@ -134,20 +134,24 @@ void LaraBreath(ITEM_INFO* item)
 	TriggerBreath(p.x, p.y, p.z, v.x - p.x, v.y - p.y, v.z - p.z);
 }
 
-bool ItemNearLara(PHD_3DPOS* pos, long rad)
+long ItemNearLara(PHD_3DPOS* pos, long rad)
 {
-	auto dx = pos->x_pos - lara_item->pos.x_pos;
-	auto dy = pos->y_pos - lara_item->pos.y_pos;
-	auto dz = pos->z_pos - lara_item->pos.z_pos;
+	short* bounds;
+	long dx, dy, dz;
+
+	dx = pos->x_pos - lara_item->pos.x_pos;
+	dy = pos->y_pos - lara_item->pos.y_pos;
+	dz = pos->z_pos - lara_item->pos.z_pos;
 
 	if (dx >= -rad && dx <= rad && dz >= -rad && dz <= rad && dy >= -3072 && dy <= 3072 && SQUARE(dx) + SQUARE(dz) <= SQUARE(rad))
 	{
-		auto* bounds = GetBoundsAccurate(lara_item);
+		bounds = GetBoundsAccurate(lara_item);
+
 		if (dy >= bounds[2] && dy <= bounds[3] + 100)
-			return true;
+			return 1;
 	}
 
-	return false;
+	return 0;
 }
 
 void SoundEffects()
@@ -157,6 +161,7 @@ void SoundEffects()
 	for (int i = 0; i < number_sound_effects; i++)
 	{
 		sfx = &sound_effects[i];
+
 		if (flip_status)
 		{
 			if (sfx->flags & 0x40)
@@ -166,7 +171,6 @@ void SoundEffects()
 			SoundEffect(sfx->data, (PHD_3DPOS*)sfx, 0);
 	}
 
-	// TODO: since it not add item it just crash...
 	if (flipeffect != -1)
 		effect_routines[flipeffect](0);
 
@@ -414,18 +418,22 @@ void BoilerFX(ITEM_INFO* item)
 void FloodFX(ITEM_INFO* item)
 {
 	PHD_3DPOS pos;
+
 	if (fliptimer > 120)
 		flipeffect = -1;
 	else
 	{
 		pos.x_pos = lara_item->pos.x_pos;
+
 		if (fliptimer >= 30)
 			pos.y_pos = camera.target.y + 100 * (fliptimer - 30);
 		else
 			pos.y_pos = camera.target.y + 100 * (30 - fliptimer);
+
 		pos.z_pos = lara_item->pos.z_pos;
 		SoundEffect(SFX_RESERVOIR_FLUSH, &pos, SFX_DEFAULT);
 	}
+
 	fliptimer++;
 }
 
@@ -1005,7 +1013,7 @@ void RumbleNoShake(ITEM_INFO* item)
 	flipeffect = -1;
 }
 
-void BaddieBiteEffect(ITEM_INFO* item, BiteInfo* bite)
+void BaddieBiteEffect(ITEM_INFO* item, BITE_INFO* bite)
 {
 	PHD_VECTOR pos;
 

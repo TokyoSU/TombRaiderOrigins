@@ -8,7 +8,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo dog_bite = { 0, 0, 100, 3 };
+static BITE_INFO dog_bite = { 0, 0, 100, 3 };
 
 void InitialiseDog(short item_number)
 {

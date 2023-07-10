@@ -105,7 +105,7 @@ long GetSpheres(ITEM_INFO* item, SPHERE* ptr, long WorldSpace)
 	return obj->nmeshes;
 }
 
-long TestCollision(ITEM_INFO* item, ITEM_INFO* laraitem)
+long TestCollision(ITEM_INFO* item, ITEM_INFO* l)
 {
 	SPHERE* itemSpheres;
 	SPHERE* laraSpheres;
@@ -117,8 +117,8 @@ long TestCollision(ITEM_INFO* item, ITEM_INFO* laraitem)
 	long nItemSpheres, nLaraSpheres, ir, lr;
 
 	touch_bits = 0;
-	nItemSpheres = GetSpheres(item, slist_baddie, TRUE);
-	nLaraSpheres = GetSpheres(laraitem, slist_lara, TRUE);
+	nItemSpheres = GetSpheres(item, slist_baddie, 1);
+	nLaraSpheres = GetSpheres(l, slist_lara, 1);
 
 	for (int i = 0; i < nItemSpheres; i++)
 	{
@@ -179,8 +179,10 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* pos, long joint)
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
 	extra_rotation = (short*)item->data;
+
 	if (!extra_rotation)
 		extra_rotation = null_rotations;
+
 	bone = &bones[obj->bone_index];
 
 	if (frac)

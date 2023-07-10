@@ -9,7 +9,7 @@ void FindClosestShieldPoint(long x, long y, long z, ITEM_INFO* item);
 void S_DrawTribeBoss(ITEM_INFO* item);
 void TribeBossControl(short item_number);
 
-extern BiteInfo tribeboss_hit[6];
+extern BITE_INFO tribeboss_hit[6];
 extern SHIELD_POINTS TribeBossShield[40];
 extern PHD_VECTOR TrigDynamics[3];
 extern ITEM_INFO* TribeBossItem;

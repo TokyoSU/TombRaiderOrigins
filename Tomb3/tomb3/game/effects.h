@@ -1,9 +1,8 @@
 #pragma once
 #include "../global/types.h"
 
-bool ItemNearLara(PHD_3DPOS* pos, long rad);
-
 void LaraBreath(ITEM_INFO* item);
+long ItemNearLara(PHD_3DPOS* pos, long rad);
 void SoundEffects();
 void Richochet(GAME_VECTOR* pos);
 void CreateBubble(PHD_3DPOS* pos, short room_number, long size, long sizerange);
@@ -75,7 +74,7 @@ void Exercise8_87(ITEM_INFO* item);
 void ResetExercises(ITEM_INFO* item);
 void TubeTrain(ITEM_INFO* item);
 void RumbleNoShake(ITEM_INFO* item);
-void BaddieBiteEffect(ITEM_INFO* item, BiteInfo* bite);
+void BaddieBiteEffect(ITEM_INFO* item, BITE_INFO* bite);
 short DoBloodSplat(long x, long y, long z, short speed, short ang, short room_number);
 short DoBloodSplatD(long x, long y, long z, short speed, short ang, short room_number);
 void DoLotsOfBlood(long x, long y, long z, short speed, short direction, short room_num, long num);

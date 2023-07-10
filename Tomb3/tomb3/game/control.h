@@ -10,7 +10,7 @@ long GetWaterHeight(long x, long y, long z, short room_number);
 long GetHeight(FLOOR_INFO* floor, long x, long y, long z);
 void RefreshCamera(short type, short* data);
 void TestTriggers(short* data, long heavy);
-bool TriggerActive(ITEM_INFO* item);
+long TriggerActive(ITEM_INFO* item);
 long GetCeiling(FLOOR_INFO* floor, long x, long y, long z);
 short GetDoor(FLOOR_INFO* floor);
 long LOS(GAME_VECTOR* start, GAME_VECTOR* target);
@@ -28,7 +28,6 @@ long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z);
 long IsRoomOutside(long x, long y, long z);
 long GetMaximumFloor(FLOOR_INFO* floor, long x, long z);
 long GetMinimumCeiling(FLOOR_INFO* floor, long x, long z);
-void SetAnimation(ITEM_INFO* item, int anim_index, int frame_number = 0);
 
 extern ITEM_INFO* items;
 extern ANIM_STRUCT* anims;

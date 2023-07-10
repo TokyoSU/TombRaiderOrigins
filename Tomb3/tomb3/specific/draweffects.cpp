@@ -29,7 +29,7 @@
 #include "../newstuff/LaraDraw.h"
 #include "../tomb3/tomb3.h"
 
-static BiteInfo NodeOffsets[16] =
+static BITE_INFO NodeOffsets[16] =
 {
 	{0, 340, 64, 7},
 	{0, 0, -96, 10},
@@ -5155,7 +5155,7 @@ void S_DrawSubWakeFX(ITEM_INFO* item)
 {
 	DISPLAYMODE* dm;
 	SUB_WAKE_PTS* pt;
-	BiteInfo* bite;
+	BITE_INFO* bite;
 	PHD_VECTOR pos;
 	long* pXY;
 	long* pZ;

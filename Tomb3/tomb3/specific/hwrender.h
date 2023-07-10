@@ -16,7 +16,7 @@ void HWR_DrawRoutines(long nVtx, D3DTLVERTEX* vtx, long nDrawType, long TPage);
 void HWR_DrawRoutinesStippledAlpha(long nVtx, D3DTLVERTEX* vtx, long nDrawType, long TPage);
 void HWR_DrawRoutinesNoAlpha(long nVtx, D3DTLVERTEX* vtx, long nDrawType, long TPage);
 #endif
-void HWR_InitGamma(float gamma);
+__inline void HWR_InitGamma(float gamma);
 void HWR_InitState();
 bool HWR_Init();
 void HWR_DrawPolyList(long num, long* pSort);

@@ -52,11 +52,11 @@ short layout[2][NLAYOUTKEYS] =
 	DIK_RMENU, DIK_RCONTROL, DIK_SPACE, DIK_NUMPAD5, DIK_NUMPAD0, DIK_END, DIK_ESCAPE, DIK_P}
 };
 
-bool bLaraOn = true;
-bool bRoomOn = true;
-bool bObjectOn = true;
-bool bAObjectOn = true;
-bool bEffectOn = true;
+long bLaraOn = 1;
+long bRoomOn = 1;
+long bObjectOn = 1;
+long bAObjectOn = 1;
+long bEffectOn = 1;
 char bInvItemsOff = 0;
 
 long input;
@@ -131,7 +131,6 @@ long S_UpdateInput()
 	long linput;
 	static long med_debounce = 0;
 	static bool pause_debounce = 0;
-	static long lara_debounce = 0;
 #if (DIRECT3D_VERSION >= 0x900)
 	static bool F7_debounce = 0;
 #endif
@@ -247,14 +246,14 @@ long S_UpdateInput()
 	{
 		if (!F7_debounce)
 		{
-			F7_debounce = true;
+			F7_debounce = 1;
 			tomb3.psx_contrast = !tomb3.psx_contrast;
 			HWR_InitState();
 			S_SaveSettings();
 		}
 	}
 	else
-		F7_debounce = false;
+		F7_debounce = 0;
 #endif
 
 	if (key_pressed(DIK_1) && Inv_RequestItem(GUN_OPTION))
@@ -314,16 +313,6 @@ long S_UpdateInput()
 		else if (key_pressed(DIK_F6))
 			linput |= IN_LOAD;
 	}
-
-#if defined(_DEBUG) // For taking screenshot without lara...
-	if (key_pressed(DIK_F8) && !lara_debounce)
-	{
-		bLaraOn = !bLaraOn;
-		lara_debounce = 10;
-	}
-	else if (lara_debounce)
-		lara_debounce--;
-#endif
 
 	input = linput;
 	return GtWindowClosed;

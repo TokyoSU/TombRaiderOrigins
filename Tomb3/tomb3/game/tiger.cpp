@@ -7,7 +7,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo tiger_bite = { 19, -13, 3, 26 };
+static BITE_INFO tiger_bite = { 19, -13, 3, 26 };
 
 void TigerControl(short item_number)
 {

@@ -7,7 +7,7 @@ void SubDraw(ITEM_INFO* item);
 long SubControl();
 void SubEffects(short item_number);
 
-extern BiteInfo sub_bites[6];
+extern BITE_INFO sub_bites[6];
 extern SUB_WAKE_PTS SubWakePts[32][2];
 extern uchar SubWakeShade;
 extern uchar SubCurrentStartWake;

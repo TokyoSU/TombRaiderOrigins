@@ -1,18 +1,6 @@
 #pragma once
 #include "../global/types.h"
 
-enum PolyTypes : long
-{
-	PT_NONE,
-	PT_HORIZON,
-	PT_LARA,
-	PT_ROOM,
-	PT_STATICS,
-	PT_OBJECTS,
-	PT_EFFECT,
-	PT_INVENTORY
-};
-
 void phd_PopMatrix_I();
 void phd_PushMatrix_I();
 void phd_RotY_I(short angle);
@@ -57,7 +45,7 @@ extern short draw_rooms[100];
 extern char IsJointUnderwater[15];
 extern char GotJointPos[15];
 
-extern PolyTypes nPolyType;
+extern long nPolyType;
 extern long camera_underwater;
 extern long mid_sort;
 

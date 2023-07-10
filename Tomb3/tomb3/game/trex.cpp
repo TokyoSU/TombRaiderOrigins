@@ -10,7 +10,7 @@
 #include "draw.h"
 #include "control.h"
 
-static BiteInfo trex_hit = { 0, 32, 64, 13 };
+static BITE_INFO trex_hit = { 0, 32, 64, 13 };
 
 void DinoControl(short item_number)
 {

@@ -1214,6 +1214,10 @@ void lara_col_crawlb(ITEM_INFO* item, COLL_INFO* coll)
 
 void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll)
 {
+	short* bounds;
+	long edge, edge_catch;
+	short angle;
+
 	if (item->anim_number != ANIM_CRAWL_TO_HANG)
 		return;
 
@@ -1225,13 +1229,13 @@ void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll)
 	lara.move_angle = item->pos.y_rot;
 	coll->facing = lara.move_angle;
 	GetCollisionInfo(coll, item->pos.x_pos, item->pos.y_pos, item->pos.z_pos, item->room_number, 870);
+	edge_catch = LaraTestEdgeCatch(item, coll, &edge);
 
-	long edge;
-	auto edge_catch = LaraTestEdgeCatch(item, coll, &edge);
-	if (edge_catch == 0 || (edge_catch < 0 && !LaraTestHangOnClimbWall(item, coll)))
+	if (edge_catch <= 0 && !LaraTestHangOnClimbWall(item, coll))
 		return;
 
-	auto angle = item->pos.y_rot;
+	angle = item->pos.y_rot;
+
 	if (angle >= -6370 && angle <= 6370)
 		angle = 0;
 	else if (angle >= 10014 && angle <= 22754)
@@ -1263,11 +1267,10 @@ void lara_col_crawl2hang(ITEM_INFO* item, COLL_INFO* coll)
 		item->goal_anim_state = AS_HANG;
 	}
 
-	auto* bounds = GetBoundsAccurate(item);
+	bounds = GetBoundsAccurate(item);
+
 	if (edge_catch <= 0)
-	{
 		item->pos.y_pos = edge - bounds[2];
-	}
 	else
 	{
 		item->pos.y_pos += coll->front_floor - bounds[2];

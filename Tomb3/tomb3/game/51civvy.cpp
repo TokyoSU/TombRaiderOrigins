@@ -13,7 +13,7 @@
 #include "sound.h"
 #include "lara.h"
 
-static BiteInfo civvy_hit = { 0, 0, 0, 13 };
+static BITE_INFO civvy_hit = { 0, 0, 0, 13 };
 
 static void TriggerFenceSparks(long x, long y, long z, long kill)
 {
@@ -222,9 +222,11 @@ void ControlElectricFence(short item_number)
 
 void InitialiseCivvy(short item_number)
 {
-	auto* item = &items[item_number];
+	ITEM_INFO* item;
+
+	item = &items[item_number];
 	InitialiseCreature(item_number);
-	item->anim_number = objects[item->object_number].anim_index + 6;
+	item->anim_number = objects[CIVVIE].anim_index + 6;
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = CIVVY_STOP;
 	item->goal_anim_state = CIVVY_STOP;
@@ -253,7 +255,8 @@ void CivvyControl(short item_number)
 
 	if (boxes[item->box_number].overlap_index & 0x4000)
 	{
-		DoLotsOfBloodD(item->pos.x_pos, item->pos.y_pos - (GetRandomControl() & 0xFF) - 32, item->pos.z_pos, (GetRandomControl() & 0x7F) + 128, short(GetRandomControl() << 1), item->room_number, 3);
+		DoLotsOfBloodD(item->pos.x_pos, item->pos.y_pos - (GetRandomControl() & 0xFF) - 32, item->pos.z_pos,
+			(GetRandomControl() & 0x7F) + 128, short(GetRandomControl() << 1), item->room_number, 3);
 		item->hit_points -= 20;
 	}
 
@@ -261,10 +264,10 @@ void CivvyControl(short item_number)
 	{
 		if (item->current_anim_state != CIVVY_DEATH)
 		{
-			item->anim_number = objects[item->object_number].anim_index + 26;
+			item->anim_number = objects[CIVVIE].anim_index + 26;
 			item->frame_number = anims[item->anim_number].frame_base;
 			item->current_anim_state = CIVVY_DEATH;
-			item->goal_anim_state = CIVVY_DEATH;
+			civvy->LOT.step = 256;
 		}
 	}
 	else
@@ -304,6 +307,7 @@ void CivvyControl(short item_number)
 		{
 			if (!civvy->alerted)
 				SoundEffect(SFX_AMERCAN_HOY, &item->pos, SFX_DEFAULT);
+
 			AlertAllGuards(item_number);
 		}
 
@@ -544,8 +548,9 @@ void CivvyControl(short item_number)
 	CreatureJoint(item, 1, torso_x);
 	CreatureJoint(item, 2, head);
 
-	if (item->current_anim_state > CIVVY_DEATH)
+	if (item->current_anim_state >= CIVVY_DEATH)
 	{
+		civvy->maximum_turn = 0;
 		CreatureAnimation(item_number, angle, 0);
 	}
 	else

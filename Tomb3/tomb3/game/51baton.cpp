@@ -11,8 +11,8 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo baton_hit = { 247, 10, 11, 13 };
-static BiteInfo baton_kick = { 0, 0, 100, 6 };
+static BITE_INFO baton_hit = { 247, 10, 11, 13 };
+static BITE_INFO baton_kick = { 0, 0, 100, 6 };
 
 void InitialiseBaton(short item_number)
 {

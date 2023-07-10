@@ -14,8 +14,8 @@
 #include "../specific/output.h"
 #include "../3dsystem/3d_gen.h"
 
-static BiteInfo shiva_right = { 0, 0, 920, 22 };
-static BiteInfo shiva_left = { 0, 0, 920, 13 };
+static BITE_INFO shiva_right = { 0, 0, 920, 22 };
+static BITE_INFO shiva_left = { 0, 0, 920, 13 };
 static long effect_mesh;
 
 static void TriggerShivaSmoke(long x, long y, long z, long yt)

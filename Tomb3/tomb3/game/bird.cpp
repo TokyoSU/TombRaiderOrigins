@@ -6,8 +6,8 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo bird_bite = { 15, 46, 21, 6 };
-static BiteInfo crow_bite = { 2, 10, 60, 14 };
+static BITE_INFO bird_bite = { 15, 46, 21, 6 };
+static BITE_INFO crow_bite = { 2, 10, 60, 14 };
 
 void InitialiseVulture(short item_number)
 {

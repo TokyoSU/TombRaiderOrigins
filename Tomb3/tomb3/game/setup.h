@@ -1,17 +1,6 @@
 #pragma once
 #include "../global/types.h"
 
-enum BoneFlags
-{
-	BN_None = 0x0,
-	BN_Pop = 0x1,
-	BN_Push = 0x2,
-	BN_X = 0x4,
-	BN_Y = 0x8,
-	BN_Z = 0x10,
-	BN_Rotation = BN_X|BN_Y|BN_Z
-};
-
 void GetAIPickups();
 void GetCarriedItems();
 void InitialiseLevelFlags();

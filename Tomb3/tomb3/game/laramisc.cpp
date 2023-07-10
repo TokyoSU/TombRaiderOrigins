@@ -1060,8 +1060,7 @@ void UseItem(short object_number)
 
 void ControlLaraExtra(short item_number)
 {
-	auto* item = &items[item_number];
-	AnimateItem(item);
+	AnimateItem(&items[item_number]);
 }
 
 void InitialiseLaraLoad(short item_number)

@@ -13,11 +13,13 @@
 #include "control.h"
 #include "lara.h"
 
-static CreatureBiteOffset offset(MakeBiteInfo(0, 270, 55, 7), 0, 0, 0, 0, false, true);
+static BITE_INFO swat_gun = { 0, 300, 64, 7 };
 
 void InitialiseSwat(short item_number)
 {
-	auto* item = &items[item_number];
+	ITEM_INFO* item;
+
+	item = &items[item_number];
 	InitialiseCreature(item_number);
 	item->anim_number = objects[item->object_number].anim_index + 12;
 	item->frame_number = anims[item->anim_number].frame_base;
@@ -41,16 +43,31 @@ void SwatControl(short item_number)
 
 	item = &items[item_number];
 	swat = (CREATURE_INFO*)item->data;
-	swat->offset[0] = offset;
+
+	if (!swat)
+		return;
+
 	angle = 0;
 	tilt = 0;
 	head = 0;
 	torso_x = 0;
 	torso_y = 0;
 
+	if (item->fired_weapon)
+	{
+		phd_PushMatrix();
+		pos.x = swat_gun.x;
+		pos.y = swat_gun.y;
+		pos.z = swat_gun.z;
+		GetJointAbsPosition(item, &pos, swat_gun.mesh_num);
+		TriggerDynamic(pos.x, pos.y, pos.z, (item->fired_weapon << 1) + 8, 192, 128, 32);
+		phd_PopMatrix();
+	}
+
 	if (boxes[item->box_number].overlap_index & 0x4000)
 	{
-		DoLotsOfBloodD(item->pos.x_pos, item->pos.y_pos - GetRandomControl() - 32, item->pos.z_pos, (GetRandomControl() & 0x7F) + 128, short(GetRandomControl() << 1), item->room_number, 3);
+		DoLotsOfBloodD(item->pos.x_pos, item->pos.y_pos - GetRandomControl() - 32, item->pos.z_pos,
+			(GetRandomControl() & 0x7F) + 128, short(GetRandomControl() << 1), item->room_number, 3);
 		item->hit_points -= 20;
 	}
 
@@ -63,16 +80,25 @@ void SwatControl(short item_number)
 			item->current_anim_state = SWAT_DEATH;
 			swat->flags = !(GetRandomControl() & 1);
 		}
-		else if (swat->flags && item->frame_number > anims[item->anim_number].frame_base + 44 && item->frame_number < anims[item->anim_number].frame_base + 52 && !(item->frame_number & 3))
+		else if (swat->flags && item->frame_number > anims[item->anim_number].frame_base + 44 &&
+			item->frame_number < anims[item->anim_number].frame_base + 52 && !(item->frame_number & 3))
 		{
 			CreatureAIInfo(item, &info);
-			if (Targetable(item, &info) && info.angle > -0x2000 && info.angle < 0x2000)
+
+			if (Targetable(item, &info))
 			{
-				ShotLaraNew(item, &info, swat, 0, info.angle, 84);
-				if (item->object_number == LON_MERCENARY1)
-					SoundEffect(SFX_OIL_SMG_FIRE, &item->pos, 0x6000);
-				else
-					SoundEffect(SFX_SWAT_SMG_FIRE, &item->pos, 0x6000);
+				if (info.angle > -0x2000 && info.angle < 0x2000)
+				{
+					torso_y = info.angle;
+					head = info.angle;
+
+					ShotLara(item, &info, &swat_gun, info.angle, 84);
+
+					if (item->object_number == LON_MERCENARY1)
+						SoundEffect(SFX_OIL_SMG_FIRE, &item->pos, 0x6000);
+					else
+						SoundEffect(SFX_SWAT_SMG_FIRE, &item->pos, 0x6000);
+				}
 			}
 		}
 	}
@@ -275,7 +301,7 @@ void SwatControl(short item_number)
 				swat->flags--;
 			else
 			{
-				ShotLaraNew(item, &info, swat, 0, torso_y, 28);
+				ShotLara(item, &info, &swat_gun, torso_y, 28);
 				swat->flags = 5;
 			}
 
@@ -322,5 +348,5 @@ void SwatControl(short item_number)
 	CreatureJoint(item, 0, torso_y);
 	CreatureJoint(item, 1, torso_x);
 	CreatureJoint(item, 2, head);
-	CreatureAnimation(item_number, angle, tilt);
+	CreatureAnimation(item_number, angle, 0);
 }

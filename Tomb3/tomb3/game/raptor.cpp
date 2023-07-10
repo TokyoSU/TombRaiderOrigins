@@ -8,7 +8,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo raptor_bite = { 0, 66, 318, 22 };
+static BITE_INFO raptor_bite = { 0, 66, 318, 22 };
 
 void RaptorControl(short item_number)
 {

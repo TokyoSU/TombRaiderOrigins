@@ -14,28 +14,37 @@ static CREATURE_INFO* non_lot_slots;
 
 void InitialiseLOTarray()
 {
+	CREATURE_INFO* creature;
+
 	baddie_slots = (CREATURE_INFO*)game_malloc(MAX_LOT * sizeof(CREATURE_INFO));
+
 	for (int i = 0; i < MAX_LOT; i++)
 	{
-		auto* creature = &baddie_slots[i];
+		creature = &baddie_slots[i];
 		creature->item_num = NO_ITEM;
 		creature->LOT.node = (BOX_NODE*)game_malloc(sizeof(BOX_NODE) * number_boxes);
 	}
+
 	slots_used = 0;
 
 	non_lot_slots = (CREATURE_INFO*)game_malloc(MAX_NONLOT * sizeof(CREATURE_INFO));
+
 	for (int i = 0; i < MAX_NONLOT; i++)
 	{
-		auto* creature = &non_lot_slots[i];
+		creature = &non_lot_slots[i];
 		creature->item_num = NO_ITEM;
 	}
+
 	nonlot_slots_used = 0;
 }
 
 void InitialiseNonLotAI(short item_number, long slot)
 {
-	auto* item = &items[item_number];
-	auto* creature = &non_lot_slots[slot];
+	ITEM_INFO* item;
+	CREATURE_INFO* creature;
+
+	item = &items[item_number];
+	creature = &non_lot_slots[slot];
 
 	if (item_number == lara.item_number)
 		lara.creature = creature;
@@ -61,7 +70,6 @@ void InitialiseNonLotAI(short item_number, long slot)
 	creature->LOT.drop = -512;
 	creature->LOT.block_mask = 0x4000;
 	creature->LOT.fly = 0;
-	creature->LOT.zone = BASIC_ZONE;
 
 	switch (item->object_number)
 	{
@@ -73,67 +81,70 @@ void InitialiseNonLotAI(short item_number, long slot)
 
 	case WHALE:
 	case DIVER:
-		creature->LOT.step = 20480;
-		creature->LOT.drop = -20480;
-		creature->LOT.fly = 16;
-		creature->LOT.zone = CROC_ZONE;
-		if (item->object_number == WHALE)
-			creature->LOT.block_mask = 0x8000;
-		break;
 	case CROW:
 	case VULTURE:
-	case TR1_BAT:
 		creature->LOT.step = 20480;
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 16;
-		creature->LOT.zone = FLYER_ZONE;
+
+		if (item->object_number == WHALE)
+			creature->LOT.block_mask = 0x8000;
+
 		break;
 
 	case LIZARD_MAN:
 	case MP1:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -1024;
-		creature->LOT.zone = HUMAN_ZONE;
 		break;
 	}
 
 	nonlot_slots_used++;
 }
 
-bool EnableNonLotAI(short item_number, long Always)
+long EnableNonLotAI(short item_number, long Always)
 {
+	ITEM_INFO* item;
+	CREATURE_INFO* creature;
+	long x, y, z, slot, worstslot, dist, worstdist;
+
+	item = &items[item_number];
+
 	if (nonlot_slots_used < MAX_NONLOT)
 	{
 		for (int i = 0; i < MAX_NONLOT; i++)
 		{
-			auto* creature = &non_lot_slots[i];
+			creature = &non_lot_slots[i];
+
 			if (creature->item_num == NO_ITEM)
 			{
 				InitialiseNonLotAI(item_number, i);
-				return true;
+				return 1;
 			}
 		}
 	}
 
-	long worstdist = 0;
-	long worstslot = -1;
-	if (!Always)
+	if (Always)
+		worstdist = 0;
+	else
 	{
-		auto* item = &items[item_number];
-		auto x = (item->pos.x_pos - camera.pos.x) >> 8;
-		auto y = (item->pos.y_pos - camera.pos.y) >> 8;
-		auto z = (item->pos.z_pos - camera.pos.z) >> 8;
+		x = (item->pos.x_pos - camera.pos.x) >> 8;
+		y = (item->pos.y_pos - camera.pos.y) >> 8;
+		z = (item->pos.z_pos - camera.pos.z) >> 8;
 		worstdist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 	}
 
-	for (auto slot = 0; slot < MAX_NONLOT; slot++)
+	worstslot = -1;
+
+	for (slot = 0; slot < MAX_NONLOT; slot++)
 	{
-		auto* creature = &non_lot_slots[slot];
-		auto* item = &items[creature->item_num];
-		auto x = (item->pos.x_pos - camera.pos.x) >> 8;
-		auto y = (item->pos.y_pos - camera.pos.y) >> 8;
-		auto z = (item->pos.z_pos - camera.pos.z) >> 8;
-		auto dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
+		creature = &non_lot_slots[slot];
+		item = &items[creature->item_num];
+		x = (item->pos.x_pos - camera.pos.x) >> 8;
+		y = (item->pos.y_pos - camera.pos.y) >> 8;
+		z = (item->pos.z_pos - camera.pos.z) >> 8;
+		dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
+
 		if (dist > worstdist)
 		{
 			worstslot = slot;
@@ -146,30 +157,34 @@ bool EnableNonLotAI(short item_number, long Always)
 		items[non_lot_slots[worstslot].item_num].status = ITEM_INVISIBLE;
 		DisableBaddieAI(non_lot_slots[worstslot].item_num);
 		InitialiseNonLotAI(item_number, worstslot);
-		return true;
+		return 1;
 	}
-	return false;
+
+	return 0;
 }
 
 void DisableBaddieAI(short item_number)
 {
+	ITEM_INFO* item;
 	CREATURE_INFO* creature;
-	auto* item = &items[item_number];
+
+	item = &items[item_number];
 
 	if (item_number == lara.item_number)
 	{
 		creature = lara.creature;
-		lara.creature = nullptr;
+		lara.creature = 0;
 	}
 	else
 	{
 		creature = (CREATURE_INFO*)item->data;
-		item->data = nullptr;
+		item->data = 0;
 	}
 
-	if (creature != nullptr)
+	if (creature)
 	{
 		creature->item_num = NO_ITEM;
+
 		if (objects[item->object_number].non_lot)
 			nonlot_slots_used--;
 		else
@@ -179,17 +194,19 @@ void DisableBaddieAI(short item_number)
 
 void ClearLOT(LOT_INFO* lot)
 {
-	lot->tail = NO_BOX;
-	lot->head = NO_BOX;
-	lot->search_number = 0;
-	lot->target_box = NO_BOX;
-	lot->required_box = NO_BOX;
+	BOX_NODE* node;
 
-	auto* node = lot->node;
+	lot->tail = 2047;
+	lot->head = 2047;
+	lot->search_number = 0;
+	lot->target_box = 2047;
+	lot->required_box = 2047;
+	node = lot->node;
+
 	for (int i = 0; i < number_boxes; i++)
 	{
-		node->next_expansion = NO_BOX;
-		node->exit_box = NO_BOX;
+		node->next_expansion = 2047;
+		node->exit_box = 2047;
 		node->search_number = 0;
 		node++;
 	}
@@ -197,15 +214,22 @@ void ClearLOT(LOT_INFO* lot)
 
 void CreateZone(ITEM_INFO* item)
 {
-	auto* creature = (CREATURE_INFO*)item->data;
-	auto* r = &room[item->room_number];
+	CREATURE_INFO* creature;
+	ROOM_INFO* r;
+	BOX_NODE* node;
+	short* zone;
+	short* flip;
+	short zone_number, flip_number;
+
+	creature = (CREATURE_INFO*)item->data;
+	r = &room[item->room_number];
 	item->box_number = r->floor[((item->pos.z_pos - r->z) >> WALL_SHIFT) + r->x_size * ((item->pos.x_pos - r->x) >> WALL_SHIFT)].box;
 
-	if (creature->LOT.fly > 0)
+	if (creature->LOT.fly)
 	{
 		creature->LOT.zone_count = 0;
+		node = creature->LOT.node;
 
-		auto* node = creature->LOT.node;
 		for (int i = 0; i < number_boxes; i++)
 		{
 			node->box_number = i;
@@ -215,13 +239,13 @@ void CreateZone(ITEM_INFO* item)
 	}
 	else
 	{
-		auto* zone = ground_zone[creature->LOT.zone][FALSE];
-		auto* flip = ground_zone[creature->LOT.zone][TRUE];
-		auto zone_number = zone[item->box_number];
-		auto flip_number = flip[item->box_number];
+		zone = ground_zone[(creature->LOT.step >> 8) - 1][0];
+		flip = ground_zone[(creature->LOT.step >> 8) - 1][1];
+		zone_number = zone[item->box_number];
+		flip_number = flip[item->box_number];
 		creature->LOT.zone_count = 0;
+		node = creature->LOT.node;
 
-		auto* node = creature->LOT.node;
 		for (int i = 0; i < number_boxes; i++)
 		{
 			if (*zone == zone_number || *flip == flip_number)
@@ -239,8 +263,11 @@ void CreateZone(ITEM_INFO* item)
 
 void InitialiseSlot(short item_number, long slot)
 {
-	auto* item = &items[item_number];
-	auto* creature = &baddie_slots[slot];
+	ITEM_INFO* item;
+	CREATURE_INFO* creature;
+
+	item = &items[item_number];
+	creature = &baddie_slots[slot];
 
 	if (item_number == lara.item_number)
 		lara.creature = creature;
@@ -253,20 +280,19 @@ void InitialiseSlot(short item_number, long slot)
 	creature->joint_rotation[1] = 0;
 	creature->joint_rotation[2] = 0;
 	creature->joint_rotation[3] = 0;
-	creature->alerted = FALSE;
-	creature->head_left = FALSE;
-	creature->head_right = FALSE;
-	creature->reached_goal = FALSE;
-	creature->hurt_by_lara = FALSE;
-	creature->patrol2 = FALSE;
-	creature->maximum_turn = ANGLE(1);
-	creature->flags = NULL;
-	creature->enemy = nullptr;
+	creature->alerted = 0;
+	creature->head_left = 0;
+	creature->head_right = 0;
+	creature->reached_goal = 0;
+	creature->hurt_by_lara = 0;
+	creature->patrol2 = 0;
+	creature->maximum_turn = 182;
+	creature->flags = 0;
+	creature->enemy = 0;
 	creature->LOT.step = 256;
 	creature->LOT.drop = -512;
-	creature->LOT.block_mask = BLOCK_SEARCH;
+	creature->LOT.block_mask = 0x4000;
 	creature->LOT.fly = 0;
-	creature->LOT.zone = BASIC_ZONE;
 
 	switch (item->object_number)
 	{
@@ -277,23 +303,18 @@ void InitialiseSlot(short item_number, long slot)
 		break;
 
 	case WHALE:
-		creature->LOT.block_mask = BLOCKED_SEARCH; // fallthrough to get the zone step etc...
 	case DIVER:
-	case CROCODILE:
-		creature->LOT.step = 20480;
-		creature->LOT.drop = -20480;
-		creature->LOT.fly = 16;
-		creature->LOT.zone = CROC_ZONE;
-		break;
-
 	case CROW:
 	case VULTURE:
-	case TINNOS_WASP:
-	case TR1_BAT:
+	case CROCODILE:
+	case MUTANT1:
 		creature->LOT.step = 20480;
 		creature->LOT.drop = -20480;
 		creature->LOT.fly = 16;
-		creature->LOT.zone = FLYER_ZONE;
+
+		if (item->object_number == WHALE)
+			creature->LOT.block_mask = 0x8000;
+
 		break;
 
 	case LIZARD_MAN:
@@ -305,74 +326,84 @@ void InitialiseSlot(short item_number, long slot)
 	case MONKEY:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -1024;
-		creature->LOT.zone = HUMAN_ZONE;
 		break;
 
 	case LON_BOSS:
 		creature->LOT.step = 1024;
 		creature->LOT.drop = -768;
-		creature->LOT.zone = HUMAN_ZONE;
 		break;
 
 	case SHIVA:
 	case TREX:
-		creature->LOT.block_mask = BLOCKED_SEARCH;
+		creature->LOT.block_mask = 0x8000;
 		break;
 	}
 
 	ClearLOT(&creature->LOT);
+
 	if (item_number != lara.item_number)
 		CreateZone(item);
+
 	slots_used++;
 }
 
-bool EnableBaddieAI(short item_number, long Always)
+long EnableBaddieAI(short item_number, long Always)
 {
-	auto* item = &items[item_number];
+	ITEM_INFO* item;
+	CREATURE_INFO* creature;
+	long x, y, z, slot, worstslot, dist, worstdist;
+
+	item = &items[item_number];
+
 	if (lara.item_number == item_number)
 	{
-		if (lara.creature != nullptr)
-			return true;
+		if (lara.creature)
+			return 1;
 	}
 	else
 	{
-		if (item->data != nullptr)
-			return true;
+		if (item->data)
+			return 1;
+
 		if (objects[item->object_number].non_lot)
 			return EnableNonLotAI(item_number, Always);
 	}
 
 	if (slots_used < MAX_LOT)
 	{
-		for (auto slot = 0; slot < MAX_LOT; slot++)
+		for (slot = 0; slot < MAX_LOT; slot++)
 		{
-			auto* creature = &baddie_slots[slot];
+			creature = &baddie_slots[slot];
+
 			if (creature->item_num == NO_ITEM)
 			{
 				InitialiseSlot(item_number, slot);
-				return true;
+				return 1;
 			}
 		}
 	}
 
-	long worstdist = 0;
-	long worstslot = -1;
-	if (!Always)
+	if (Always)
+		worstdist = 0;
+	else
 	{
-		auto x = (item->pos.x_pos - camera.pos.x) >> 8;
-		auto y = (item->pos.y_pos - camera.pos.y) >> 8;
-		auto z = (item->pos.z_pos - camera.pos.z) >> 8;
+		x = (item->pos.x_pos - camera.pos.x) >> 8;
+		y = (item->pos.y_pos - camera.pos.y) >> 8;
+		z = (item->pos.z_pos - camera.pos.z) >> 8;
 		worstdist = SQUARE(x) + SQUARE(y) + SQUARE(z);
 	}
 
-	for (auto slot = 0; slot < MAX_LOT; slot++)
+	worstslot = -1;
+
+	for (slot = 0; slot < MAX_LOT; slot++)
 	{
-		auto* creature = &baddie_slots[slot];
+		creature = &baddie_slots[slot];
 		item = &items[creature->item_num];
-		auto x = (item->pos.x_pos - camera.pos.x) >> 8;
-		auto y = (item->pos.y_pos - camera.pos.y) >> 8;
-		auto z = (item->pos.z_pos - camera.pos.z) >> 8;
-		auto dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
+		x = (item->pos.x_pos - camera.pos.x) >> 8;
+		y = (item->pos.y_pos - camera.pos.y) >> 8;
+		z = (item->pos.z_pos - camera.pos.z) >> 8;
+		dist = SQUARE(x) + SQUARE(y) + SQUARE(z);
+
 		if (dist > worstdist)
 		{
 			worstslot = slot;
@@ -385,7 +416,8 @@ bool EnableBaddieAI(short item_number, long Always)
 		items[baddie_slots[worstslot].item_num].status = ITEM_INVISIBLE;
 		DisableBaddieAI(baddie_slots[worstslot].item_num);
 		InitialiseSlot(item_number, worstslot);
-		return true;
+		return 1;
 	}
-	return false;
+
+	return 0;
 }

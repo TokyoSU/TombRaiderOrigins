@@ -6,7 +6,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo croc_bite = { 5, -21, 467, 9 };
+static BITE_INFO croc_bite = { 5, -21, 467, 9 };
 
 void CrocControl(short item_number)
 {

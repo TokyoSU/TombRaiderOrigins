@@ -347,7 +347,7 @@ void CreateSaveGameInfo()
 		WriteSG(&flip, sizeof(char));
 	}
 
-	WriteSG(cd_flags, sizeof(cd_flags));
+	WriteSG(cd_flags, 128);
 
 	for (int i = 0; i < number_cameras; i++)
 		WriteSG(&camera.fixed[i].flags, sizeof(short));
@@ -408,23 +408,29 @@ void CreateSaveGameInfo()
 			if (flags & (1 << 31))
 				WriteSG(item->data, 18);
 
-			WriteSG(item->item_flags, sizeof(item->item_flags));
+			WriteSG(item->item_flags, sizeof(short) * 4);
 		}
 
 		if (objnum == BIGGUN)
 			WriteSG(item->data, sizeof(BIGGUNINFO));
+
 		if (objnum == BOAT)
 			WriteSG(item->data, sizeof(BOAT_INFO));
+
 		if (objnum == KAYAK)
 			WriteSG(item->data, sizeof(KAYAKINFO));
+
 		if (objnum == MINECART)
 			WriteSG(item->data, sizeof(CARTINFO));
+
 		if (objnum == QUADBIKE)
 			WriteSG(item->data, sizeof(QUADINFO));
+
 		if (objnum == UPV)
 			WriteSG(item->data, sizeof(SUBINFO));
+
 		if (objnum == AREA51_LASER)
-			WriteSG(&item->shade, sizeof(short));
+			WriteSG(&item->shadeB, sizeof(short));
 	}
 
 	explode_count = bossdata.explode_count;
@@ -484,6 +490,7 @@ void CreateSaveGameInfo()
 	for (int i = level_items; i < MAX_ITEMS; i++)
 	{
 		item = &items[i];
+
 		if (item->active && item->object_number == FLARE_ITEM)
 		{
 			WriteSG(&item->pos, sizeof(PHD_3DPOS));
@@ -668,7 +675,7 @@ void ExtractSaveGameInfo()
 					item->mesh_bits = 0x100;
 			}
 
-			ReadSG(item->item_flags, sizeof(item->item_flags));
+			ReadSG(item->item_flags, sizeof(short) * 4);
 		}
 
 		if (obj->control == MovableBlock)
@@ -690,18 +697,24 @@ void ExtractSaveGameInfo()
 
 		if (item->object_number == BIGGUN)
 			ReadSG(item->data, sizeof(BIGGUNINFO));
+
 		if (item->object_number == BOAT)
 			ReadSG(item->data, sizeof(BOAT_INFO));
+
 		if (item->object_number == KAYAK)
 			ReadSG(item->data, sizeof(KAYAKINFO));
+
 		if (item->object_number == MINECART)
 			ReadSG(item->data, sizeof(CARTINFO));
+
 		if (item->object_number == QUADBIKE)
 			ReadSG(item->data, sizeof(QUADINFO));
+
 		if (item->object_number == UPV)
 			ReadSG(item->data, sizeof(SUBINFO));
+
 		if (item->object_number == AREA51_LASER)
-			ReadSG(&item->shade, sizeof(short));
+			ReadSG(&item->shadeB, sizeof(short));
 
 		if (item->object_number == MONKEY)
 		{

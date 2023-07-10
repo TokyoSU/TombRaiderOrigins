@@ -7,7 +7,7 @@
 #include "control.h"
 #include "lara.h"
 
-static BiteInfo mouse_bite = { 0, 0, 57, 2 };
+static BITE_INFO mouse_bite = { 0, 0, 57, 2 };
 
 void MouseControl(short item_number)
 {

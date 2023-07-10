@@ -660,7 +660,10 @@ void S_AnimateTextures(long n)
 
 void S_InitialisePolyList(bool clearBackBuffer)
 {
-	nPolyType = PT_NONE;
+	ulong flags;
+
+	nPolyType = 0;
+
 	if (GtFullScreenClearNeeded)
 	{
 #if (DIRECT3D_VERSION < 0x900)
@@ -675,9 +678,11 @@ void S_InitialisePolyList(bool clearBackBuffer)
 		clearBackBuffer = 0;
 	}
 
-	ulong flags = 256;
+	flags = 256;
+
 	if (clearBackBuffer || HWConfig.nFillMode < D3DFILL_SOLID)
 		flags |= 2;
+
 	flags |= 8;
 
 	DXClearBuffers(flags, 0);

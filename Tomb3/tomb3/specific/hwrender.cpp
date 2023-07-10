@@ -8,7 +8,6 @@
 #include "output.h"
 #include "drawbars.h"
 #include "../tomb3/tomb3.h"
-#include "../3dsystem/3d_gen.h"
 
 #if (DIRECT3D_VERSION >= 0x900)
 HRESULT (*DrawPrimitive)(D3DPRIMITIVETYPE, LPVOID, ulong);
@@ -227,66 +226,67 @@ void HWR_DrawRoutines(long nVtx, D3DTLVERTEX* vtx, long nDrawType, long TPage)
 	{
 	case DT_POLY_GT:
 		HWR_EnableAlphaBlend(0);
+		HWR_EnableAlphaBlend(0);
 		HWR_SetCurrentTexture(TexturePtrs[TPage]);
 		DrawPrimitive(dpPrimitiveType, vtx, nVtx);
 		return;
 
 	case DT_POLY_WGT:
+		HWR_SetCurrentTexture(TexturePtrs[TPage]);
 		HWR_EnableZBuffer(1, 1);
 		HWR_EnableAlphaBlend(1);
 		HWR_EnableColorAddition(0);
-		HWR_SetCurrentTexture(TexturePtrs[TPage]);
 		DrawPrimitive(dpPrimitiveType, vtx, nVtx);
 		HWR_EnableZBuffer(0, 1);
 		return;
 
 	case DT_POLY_G:
-		HWR_EnableAlphaBlend(0);
 		HWR_SetCurrentTexture(0);
+		HWR_EnableAlphaBlend(0);
 		DrawPrimitive(dpPrimitiveType, vtx, nVtx);
 		return;
 
 	case DT_LINE_SOLID:
+		HWR_SetCurrentTexture(0);
 		HWR_EnableAlphaBlend(0);
 		HWR_EnableColorAddition(0);
-		HWR_SetCurrentTexture(0);
 		DrawPrimitive(D3DPT_LINELIST, vtx, nVtx);
 		return;
 
 	case DT_LINE_ALPHA:
+		HWR_SetCurrentTexture(0);
 		HWR_EnableAlphaBlend(1);
 		HWR_EnableColorAddition(1);
-		HWR_SetCurrentTexture(0);
 		DrawPrimitive(D3DPT_LINELIST, vtx, nVtx);
 		return;
 
 	case DT_POLY_GA:
+		HWR_SetCurrentTexture(0);
 		HWR_EnableAlphaBlend(1);
 		HWR_EnableColorAddition(0);
-		HWR_SetCurrentTexture(0);
 		DrawPrimitive(dpPrimitiveType, vtx, nVtx);
 		return;
 
 	case DT_POLY_WGTA:
 		HWR_EnableZBuffer(0, 1);
-		HWR_EnableAlphaBlend(1);
-		HWR_EnableColorAddition(1);
 		HWR_SetCurrentTexture(TexturePtrs[TPage]);
+		HWR_EnableColorAddition(1);
+		HWR_EnableAlphaBlend(1);
 		DrawPrimitive(dpPrimitiveType, vtx, nVtx);
 		return;
 
 	case DT_POLY_COLSUB:
 		HWR_EnableZBuffer(0, 1);
+		HWR_SetCurrentTexture(TexturePtrs[TPage]);
 		HWR_EnableColorSubtraction(1);
 		HWR_EnableAlphaBlend(1);
-		HWR_SetCurrentTexture(TexturePtrs[TPage]);
 		DrawPrimitive(dpPrimitiveType, vtx, nVtx);
 		return;
 
 	case DT_POLY_GTA:
+		HWR_SetCurrentTexture(0);
 		HWR_EnableAlphaBlend(1);
 		HWR_EnableColorAddition(1);
-		HWR_SetCurrentTexture(0);
 		DrawPrimitive(dpPrimitiveType, vtx, nVtx);
 		return;
 	}
@@ -515,7 +515,7 @@ void HWR_DrawRoutinesNoAlpha(long nVtx, D3DTLVERTEX* vtx, long nDrawType, long T
 }
 #endif
 
-void HWR_InitGamma(float gamma)
+__inline void HWR_InitGamma(float gamma)
 {
 #if (DIRECT3D_VERSION >= 0x900)
 	if (tomb3.psx_contrast)
@@ -654,6 +654,7 @@ void HWR_DrawPolyList(long num, long* pSort)
 	for (int i = 0; i < num; i++)
 	{
 		pInfo = (short*)pSort[0];
+
 		polyType = pSort[2];
 
 		if (polyType == POLYTYPE_HEALTHBAR ||
